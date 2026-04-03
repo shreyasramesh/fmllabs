@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react";
 
+export type LandingTabId = "journaling" | "pomodoro" | "deepThinking";
+
 export interface LandingDateItem {
   key: string;
   weekdayLabel: string;

@@ -52,9 +52,6 @@ interface LandingFocusCanvasProps {
   focusTrackerSaving: boolean;
   focusTrackerError: string | null;
   pomodoroJustLogged: boolean;
-  weightCurrentKg: number | null;
-  weightTargetKg: number | null;
-  weightEntryCount: number;
   customFocusTagInput: string;
   customFocusMinutesInput: string;
   customFocusTimeInput: string;
@@ -67,7 +64,6 @@ interface LandingFocusCanvasProps {
   onPausePomodoro: () => void;
   onResetPomodoro: () => void;
   onEndPomodoro: () => void;
-  onOpenWeight: () => void;
   onCustomFocusTagInputChange: (value: string) => void;
   onCustomFocusMinutesInputChange: (value: string) => void;
   onCustomFocusTimeInputChange: (value: string) => void;
@@ -103,9 +99,6 @@ export function LandingFocusCanvas({
   focusTrackerSaving,
   focusTrackerError,
   pomodoroJustLogged,
-  weightCurrentKg,
-  weightTargetKg,
-  weightEntryCount,
   customFocusTagInput,
   customFocusMinutesInput,
   customFocusTimeInput,
@@ -118,7 +111,6 @@ export function LandingFocusCanvas({
   onPausePomodoro,
   onResetPomodoro,
   onEndPomodoro,
-  onOpenWeight,
   onCustomFocusTagInputChange,
   onCustomFocusMinutesInputChange,
   onCustomFocusTimeInputChange,
@@ -133,26 +125,25 @@ export function LandingFocusCanvas({
   const fatRatio = clampRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
   const leftOrbs = quickCaptures.slice(0, 3);
   const rightOrbs = quickCaptures.slice(3, 6);
-  const weightSummaryLabel =
-    weightCurrentKg == null
-      ? "No weight yet"
-      : weightTargetKg == null
-        ? `${weightCurrentKg.toFixed(1)} kg current`
-        : `${weightCurrentKg.toFixed(1)} / ${weightTargetKg.toFixed(1)} kg`;
 
   return (
     <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/85 sm:p-5">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-1.5 text-center">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+            {eyebrow}
+          </p>
           <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
             {title}
           </h2>
-          <p className="max-w-2xl text-sm text-neutral-400 dark:text-neutral-500">{subtitle}</p>
+          <p className="max-w-2xl text-sm text-neutral-500 dark:text-neutral-400">
+            {subtitle}
+          </p>
         </div>
 
-        <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-5 dark:border-[#60402B] dark:bg-[radial-gradient(circle_at_top,rgba(42,30,22,0.98),rgba(24,19,15,0.96)_58%,rgba(20,15,12,0.92)_100%)] sm:px-6">
-          <div className="mx-auto flex max-w-[64rem] items-center justify-center gap-2 sm:gap-6">
-            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-7">
+        <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-[#60402B] dark:bg-[radial-gradient(circle_at_top,rgba(42,30,22,0.98),rgba(24,19,15,0.96)_58%,rgba(20,15,12,0.92)_100%)] sm:px-6">
+          <div className="mx-auto flex max-w-[64rem] items-center justify-center gap-3 sm:gap-6">
+            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-6">
               {leftOrbs.map((item, index) => (
                 <button
                   key={item.key}
@@ -167,24 +158,24 @@ export function LandingFocusCanvas({
             </div>
 
             <div className="min-w-0 flex-1">
-              <div className="mx-auto flex max-w-[32rem] flex-col items-center">
-                <div className="relative flex h-[20rem] w-[20rem] items-center justify-center sm:h-[24.5rem] sm:w-[24.5rem]">
+              <div className="mx-auto flex max-w-[30rem] flex-col items-center">
+                <div className="relative flex h-[20rem] w-[20rem] items-center justify-center sm:h-[24rem] sm:w-[24rem]">
                   <svg
                     viewBox="0 0 320 320"
                     className="absolute inset-0 h-full w-full"
                     aria-hidden
                   >
-                    <circle cx="160" cy="160" r="126" fill="none" stroke="rgba(229,220,210,0.92)" strokeWidth="12" />
+                    <circle cx="160" cy="160" r="126" fill="none" stroke="rgba(229,220,210,0.95)" strokeWidth="12" />
                     <circle
                       cx="160"
                       cy="160"
                       r="126"
                       fill="none"
-                      stroke="#8FB9DE"
+                      stroke="#7FB1DA"
                       strokeWidth="12"
                       strokeLinecap="round"
                       strokeDasharray={`${Math.max(28, Math.round(250 * caloriesRatio))} 790`}
-                      transform="rotate(136 160 160)"
+                      transform="rotate(140 160 160)"
                     />
                     <circle cx="160" cy="160" r="102" fill="none" stroke="rgba(229,220,210,0.8)" strokeWidth="10" />
                     <circle
@@ -196,7 +187,7 @@ export function LandingFocusCanvas({
                       strokeWidth="10"
                       strokeLinecap="round"
                       strokeDasharray={`${Math.max(24, Math.round(220 * focusRatio))} 642`}
-                      transform="rotate(308 160 160)"
+                      transform="rotate(300 160 160)"
                     />
                     <circle cx="160" cy="160" r="82" fill="none" stroke="rgba(229,220,210,0.7)" strokeWidth="8" />
                     <circle
@@ -208,18 +199,18 @@ export function LandingFocusCanvas({
                       strokeWidth="8"
                       strokeLinecap="round"
                       strokeDasharray={`${Math.max(20, Math.round(180 * (proteinRatio * 0.65 + fatRatio * 0.35)))} 515`}
-                      transform="rotate(334 160 160)"
+                      transform="rotate(330 160 160)"
                     />
                   </svg>
 
-                  <div className="absolute top-[2.4rem] text-center text-[13px] font-medium leading-tight text-foreground sm:top-[2.9rem] sm:text-[15px]">
+                  <div className="absolute top-[2.1rem] text-center text-[13px] font-medium leading-tight text-foreground sm:top-[2.55rem] sm:text-[16px]">
                     <div>{nutritionLabel}</div>
                     <div>{liveFocusLabel}</div>
                   </div>
 
-                  <div className="absolute inset-[3.1rem] rounded-full border border-[#EADFD3] bg-[radial-gradient(circle,rgba(255,247,230,0.98),rgba(255,239,210,0.95)_70%,rgba(255,232,186,0.9)_100%)] shadow-[0_0_45px_rgba(251,191,36,0.22)] dark:border-[#5F4634] dark:bg-[radial-gradient(circle,rgba(70,51,35,0.96),rgba(52,38,28,0.94)_70%,rgba(38,28,20,0.9)_100%)] sm:inset-[3.7rem]">
+                  <div className="absolute inset-[3.1rem] rounded-full border border-[#EADFD3] bg-[radial-gradient(circle,rgba(255,247,230,0.96),rgba(255,239,210,0.94)_70%,rgba(255,232,186,0.88)_100%)] shadow-[0_0_45px_rgba(251,191,36,0.22)] dark:border-[#5F4634] dark:bg-[radial-gradient(circle,rgba(70,51,35,0.96),rgba(52,38,28,0.94)_70%,rgba(38,28,20,0.9)_100%)] sm:inset-[3.7rem]">
                     <div className="absolute inset-[0.7rem] rounded-full border border-[#ECD7BC]/80 dark:border-[#70513A]/70" />
-                    <div className="absolute inset-[1.15rem] rounded-full border border-dashed border-[#D7B98C]/80 [stroke-dasharray:2_10] dark:border-[#8B6C4D]/60" />
+                    <div className="absolute inset-[1.15rem] rounded-full border border-dashed border-[#D7B98C]/80 dark:border-[#8B6C4D]/60" />
                   </div>
 
                   <div className="relative z-10 flex flex-col items-center text-center">
@@ -237,7 +228,7 @@ export function LandingFocusCanvas({
                       <circle cx="12" cy="12" r="8" />
                       <path d="M12 8v4l2.5 1.5" />
                     </svg>
-                    <p className="mt-3 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-[4.25rem]">
+                    <p className="mt-3 text-5xl font-semibold tracking-[-0.06em] text-foreground sm:text-6xl">
                       {pomodoroClockLabel}
                     </p>
                     <p className="mt-2 text-[13px] text-neutral-600 dark:text-neutral-300">
@@ -252,13 +243,13 @@ export function LandingFocusCanvas({
                     </button>
                   </div>
 
-                  <p className="absolute bottom-[1.65rem] left-1/2 -translate-x-1/2 text-center text-[12px] font-semibold text-foreground sm:bottom-[2.15rem] sm:text-[15px]">
+                  <p className="absolute bottom-[1.9rem] left-1/2 -translate-x-1/2 text-center text-[12px] font-semibold text-foreground sm:bottom-[2.35rem] sm:text-[15px]">
                     Pomodoro controls
                   </p>
                 </div>
 
-                <div className="mt-4 w-full max-w-[40rem] space-y-3">
-                  <div className="grid items-center gap-2 lg:grid-cols-[auto_auto_auto_minmax(0,1fr)_auto_14rem]">
+                <div className="mt-4 w-full max-w-[34rem] space-y-3">
+                  <div className="flex flex-wrap items-center justify-center gap-2">
                     {[30, 60, 90].map((minutes) => (
                       <button
                         key={`focus-canvas-duration-${minutes}`}
@@ -281,7 +272,7 @@ export function LandingFocusCanvas({
                       onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
                       placeholder="Tag this focus session..."
                       disabled={focusTrackerSaving}
-                      className="min-w-0 rounded-full border border-neutral-300 bg-white/88 px-5 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-950/85"
+                      className="min-w-[15rem] flex-1 rounded-full border border-neutral-300 bg-white/88 px-5 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-950/85"
                     />
 
                     <button
@@ -291,24 +282,6 @@ export function LandingFocusCanvas({
                       className="rounded-full bg-white/90 px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm ring-1 ring-[#E4D8CB] transition-colors hover:bg-white disabled:opacity-50 dark:bg-neutral-900/90 dark:ring-white/10 dark:hover:bg-neutral-900"
                     >
                       {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start"}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={onOpenWeight}
-                      className="hidden h-full min-h-[4.5rem] rounded-[1.3rem] border border-[#E4D8CB] bg-white/88 px-4 py-3 text-left shadow-sm transition-colors hover:bg-white dark:border-white/10 dark:bg-neutral-900/86 dark:hover:bg-neutral-900 lg:block"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Weight entries</p>
-                          <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                            {weightSummaryLabel}
-                          </p>
-                        </div>
-                        <span className="rounded-full border border-neutral-200 px-2 py-0.5 text-[10px] text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
-                          {weightEntryCount} item{weightEntryCount === 1 ? "" : "s"}
-                        </span>
-                      </div>
                     </button>
                   </div>
 
@@ -409,7 +382,7 @@ export function LandingFocusCanvas({
               </div>
             </div>
 
-            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-7">
+            <div className="hidden md:flex min-w-[72px] flex-col items-center gap-6">
               {rightOrbs.map((item, index) => (
                 <button
                   key={item.key}
@@ -439,24 +412,6 @@ export function LandingFocusCanvas({
               ))}
             </div>
           )}
-
-          <button
-            type="button"
-            onClick={onOpenWeight}
-            className="mt-3 rounded-[1.3rem] border border-[#E4D8CB] bg-white/88 px-4 py-3 text-left shadow-sm transition-colors hover:bg-white dark:border-white/10 dark:bg-neutral-900/86 dark:hover:bg-neutral-900 lg:hidden"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold text-foreground">Weight entries</p>
-                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                  {weightSummaryLabel}
-                </p>
-              </div>
-              <span className="rounded-full border border-neutral-200 px-2 py-0.5 text-[10px] text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
-                {weightEntryCount} item{weightEntryCount === 1 ? "" : "s"}
-              </span>
-            </div>
-          </button>
 
           <div className="hidden">
             <button type="button" onClick={onOpenNutrition}>

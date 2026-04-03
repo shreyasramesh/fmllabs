@@ -4480,7 +4480,6 @@ export default function ChatPage() {
   const [pomodoroCustomMinutesInput, setPomodoroCustomMinutesInput] = useState("25");
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
   const [pomodoroSessionStartIso, setPomodoroSessionStartIso] = useState<string | null>(null);
-  const [pomodoroFullscreenDismissed, setPomodoroFullscreenDismissed] = useState(false);
   const [pomodoroJustLogged, setPomodoroJustLogged] = useState(false);
   const [pomodoroConfettiVisible, setPomodoroConfettiVisible] = useState(false);
   const pomodoroConfettiTimeoutRef = useRef<number | null>(null);
@@ -8342,14 +8341,12 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
-    if (messages.length !== 0) return;
     if (weightTrackerEntries.length > 0 || weightTrackerLoading || weightTrackerModalOpen) return;
     void fetchWeightTracker();
   }, [
     fetchWeightTracker,
     incognitoMode,
     isAnonymous,
-    messages.length,
     userId,
     weightTrackerEntries.length,
     weightTrackerLoading,
@@ -8526,7 +8523,11 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
-    if (messages.length !== 0) return;
+    void fetchFocusTrackerEntries();
+  }, [fetchFocusTrackerEntries, incognitoMode, isAnonymous, userId]);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
     if (focusTrackerEntries.length > 0 || focusTrackerLoading) return;
     void fetchFocusTrackerEntries();
   }, [
@@ -8535,7 +8536,6 @@ export default function ChatPage() {
     focusTrackerLoading,
     incognitoMode,
     isAnonymous,
-    messages.length,
     userId,
   ]);
 
@@ -8544,11 +8544,6 @@ export default function ChatPage() {
     setPomodoroSecondsRemaining(pomodoroDurationMinutes * 60);
     setPomodoroEndsAtMs(null);
   }, [pomodoroDurationMinutes, pomodoroRunning, pomodoroSessionStartIso]);
-  useEffect(() => {
-    if (pomodoroSessionStartIso) {
-      setPomodoroFullscreenDismissed(false);
-    }
-  }, [pomodoroSessionStartIso]);
 
   useEffect(() => {
     setPomodoroCustomMinutesInput(String(pomodoroDurationMinutes));
@@ -10028,7 +10023,7 @@ export default function ChatPage() {
       replaceComposerInput("");
       router.push("/chat/new");
     },
-    [closeAllModalsExceptLeftPanel, isAnonymous, replaceComposerInput, router]
+    [closeAllModalsExceptLeftPanel, replaceComposerInput, router]
   );
 
   useEffect(() => {
@@ -10390,17 +10385,11 @@ export default function ChatPage() {
     else setWaysOfLookingAtCategory(null);
   }, []);
 
-  const isLandingUtilityTab =
-    messages.length === 0 &&
-    !incognitoMode &&
-    !isAnonymous;
   const shouldHideBottomBar =
-    (messages.length === 0 &&
-      !incognitoMode &&
-      !isAnonymous) ||
+    (messages.length === 0 && !incognitoMode) ||
     (!!currentSession?.isCollapsed && !!collapsedSummary);
   const isPomodoroFocusMode =
-    !incognitoMode && !isAnonymous && !!pomodoroSessionStartIso && !pomodoroFullscreenDismissed;
+    !incognitoMode && !isAnonymous && messages.length === 0 && !!pomodoroSessionStartIso;
   const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
     <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
       {pomodoroConfettiPieces.map((piece) => (
@@ -10475,7 +10464,7 @@ export default function ChatPage() {
           type="button"
           onClick={() => {
             playSelectionChime();
-            setPomodoroFullscreenDismissed(true);
+            resetPomodoro();
           }}
           className="absolute left-4 top-[calc(12px+env(safe-area-inset-top))] z-[96] rounded-xl border border-neutral-300 dark:border-neutral-600 px-3 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
         >
@@ -10779,13 +10768,13 @@ export default function ChatPage() {
                                 } ${isToday && !isSelected ? "border-neutral-200 dark:border-neutral-700" : ""}`}
                               >
                                 <span className={showStrike ? "text-neutral-500 dark:text-neutral-400" : undefined}>
-                                  {cellDate.getDate()}
+                                {cellDate.getDate()}
                                 </span>
                                 {showStrike && (
                                   <svg
                                     className="pointer-events-none absolute inset-[14%] z-10 overflow-visible"
                                     viewBox="0 0 100 100"
-                                    aria-hidden
+                                      aria-hidden
                                   >
                                     <line
                                       x1="20"
@@ -13206,7 +13195,7 @@ export default function ChatPage() {
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
                   : `flex-1 min-h-0 flex flex-col items-center justify-start ${
-                      !incognitoMode && !isAnonymous ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
+                      !incognitoMode ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
                     } px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
@@ -13248,7 +13237,7 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    {!incognitoMode && (
+                {!incognitoMode && (
                       <LandingShell
                         dashboardEyebrow={landingTranslations.landingDashboardEyebrow}
                         title={landingShellTitle}
@@ -13280,8 +13269,8 @@ export default function ChatPage() {
                           label: entry.tag?.trim()
                             ? entry.tag
                             : new Date(entry.endedAt).toLocaleTimeString(undefined, {
-                                hour: "numeric",
-                                minute: "2-digit",
+                                              hour: "numeric",
+                                              minute: "2-digit",
                               }),
                           minutes: entry.minutes,
                         }))}
@@ -13370,23 +13359,23 @@ export default function ChatPage() {
                           setLibraryPanelOpen("concepts");
                         }}
                         onOpenLearnMentalModel={() => {
-                          playSelectionChime();
-                          activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                          void handleTeachMeClick();
-                        }}
+                            playSelectionChime();
+                                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                                  void handleTeachMeClick();
+                                }}
                         onOpenPromptGames={() => {
-                          playSelectionChime();
-                          activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                          setLibraryPanelOpen(null);
-                          setWaysOfLookingAtModalOpen(true);
-                          setWaysOfLookingAtDrawMode(false);
-                          setWaysOfLookingAtCategory(null);
-                          setWaysOfLookingAtCity(null);
-                          setWaysOfLookingAtCuisine(null);
-                          setWaysOfLookingAtMicrocosm(null);
-                          setWaysOfLookingAtHuman(null);
-                          setWaysOfLookingAtDigital(null);
-                        }}
+                                  playSelectionChime();
+                                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                                  setLibraryPanelOpen(null);
+                                  setWaysOfLookingAtModalOpen(true);
+                                  setWaysOfLookingAtDrawMode(false);
+                                  setWaysOfLookingAtCategory(null);
+                                  setWaysOfLookingAtCity(null);
+                                  setWaysOfLookingAtCuisine(null);
+                                  setWaysOfLookingAtMicrocosm(null);
+                                  setWaysOfLookingAtHuman(null);
+                                  setWaysOfLookingAtDigital(null);
+                                }}
                         onOpenGoals={openGoalsModal}
                         onOpenWeeklySummary={openWeeklySummaryModal}
                         onOpenHabits={() => {
@@ -13432,9 +13421,9 @@ export default function ChatPage() {
                         timelineLabel={headerCalendarLabel}
                         timelineEvents={selectedLandingDayTimelineEvents}
                       />
-                    )}
+                      )}
                     {journalEntryJustSaved && (
-                      <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
+                        <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
                         {landingTranslations.journalEntrySavedHint}
                       </p>
                     )}
@@ -13741,202 +13730,192 @@ export default function ChatPage() {
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
         {!shouldHideBottomBar && (
           <div
-            className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
-              isLandingUtilityTab
-                ? "border-t-0"
-                : "border-t border-neutral-200 dark:border-neutral-800"
-            } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}
+            className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}
           >
             <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
-                {!isLandingUtilityTab && (
-                  <div className="w-full flex flex-col items-center">
-                    <ChatComposer
-                      value={input}
-                      syncRevision={composerInputSyncRevision}
-                      inputRef={inputRef}
-                      onDraftChange={handleMainInputChange}
-                      onSend={sendMessage}
-                      mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
-                        id,
-                        name,
-                      }))}
-                      longTermMemories={longTermMemories.map((ltm) => ({
-                        _id: ltm._id,
-                        title: translatedTitles[ltm._id] ?? ltm.title,
-                        enrichmentPrompt: ltm.enrichmentPrompt,
-                      }))}
-                      customConcepts={customConcepts.map((cc) => ({
-                        _id: cc._id,
-                        title: translatedTitles[cc._id] ?? cc.title,
-                        enrichmentPrompt: cc.enrichmentPrompt,
-                      }))}
-                      conceptGroups={conceptGroups.map((cg) => ({
-                        _id: cg._id,
-                        title: translatedTitles[cg._id] ?? cg.title,
-                      }))}
-                      mentionTranslations={getMentionTranslations(language)}
-                      placeholder={
-                        multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "What do you want to ask your mentors?"
-                          : landingAnimatedPlaceholder
-                      }
-                      placeholderMobile={
-                        multiMentorMode && selectedMentorFigureIds.length >= 2
-                          ? "What do you want to ask your mentors?"
-                          : landingAnimatedPlaceholder
-                      }
-                      disabled={
-                        sessionLoading ||
-                        !!currentSession?.isCollapsed ||
-                        isLoading
-                      }
-                      isLoading={isLoading}
-                      canSubmit={!(messages.length === 0 && !incognitoMode && !isAnonymous)}
-                      language={language}
-                      onMentalModelClick={handleMentalModelClick}
-                      onLtmClick={(id) => {
-                        const ltm = longTermMemories.find((l) => l._id === id);
-                        if (ltm) setLtmDetailModal(ltm);
-                      }}
-                      onCustomConceptClick={(id) => {
-                        const cc = customConcepts.find((c) => c._id === id);
-                        if (cc) openConceptDetail(cc);
-                      }}
-                      onConceptGroupClick={(id) => {
-                        const cg = conceptGroups.find((g) => g._id === id);
-                        if (cg) {
-                          fetch(`/api/me/concept-groups/${id}`)
-                            .then((r) => (r.ok ? r.json() : Promise.reject()))
-                            .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
-                            .catch(() => setCgDetailModal(cg));
-                        }
-                      }}
-                      previewMap={previewMap}
-                    />
-                    <div className="relative w-full max-w-2xl lg:max-w-4xl">
-                      <button
-                        ref={chatInputLensMenuButtonRef}
-                        type="button"
-                        onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
-                        className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                        aria-expanded={chatInputLensMenuOpen}
-                        aria-haspopup="menu"
-                        aria-label="Refine options"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
-                          <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
-                          <path d="M19 16v5" />
-                          <path d="M16.5 18.5h5" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-                      {chatInputLensMenuOpen && (
-                        <div
-                          ref={chatInputLensMenuRef}
-                          role="menu"
-                          aria-label="Lens options"
-                          className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
+              <div className="w-full flex flex-col items-center">
+                <ChatComposer
+                  value={input}
+                  syncRevision={composerInputSyncRevision}
+                  inputRef={inputRef}
+                  onDraftChange={handleMainInputChange}
+                  onSend={sendMessage}
+                  mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
+                    id,
+                    name,
+                  }))}
+                  longTermMemories={longTermMemories.map((ltm) => ({
+                    _id: ltm._id,
+                    title: translatedTitles[ltm._id] ?? ltm.title,
+                    enrichmentPrompt: ltm.enrichmentPrompt,
+                  }))}
+                  customConcepts={customConcepts.map((cc) => ({
+                    _id: cc._id,
+                    title: translatedTitles[cc._id] ?? cc.title,
+                    enrichmentPrompt: cc.enrichmentPrompt,
+                  }))}
+                  conceptGroups={conceptGroups.map((cg) => ({
+                    _id: cg._id,
+                    title: translatedTitles[cg._id] ?? cg.title,
+                  }))}
+                  mentionTranslations={getMentionTranslations(language)}
+                  placeholder={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "What do you want to ask your mentors?"
+                      : landingAnimatedPlaceholder
+                  }
+                  placeholderMobile={
+                    multiMentorMode && selectedMentorFigureIds.length >= 2
+                      ? "What do you want to ask your mentors?"
+                      : landingAnimatedPlaceholder
+                  }
+                  disabled={sessionLoading || !!currentSession?.isCollapsed || isLoading}
+                  isLoading={isLoading}
+                  canSubmit={!(messages.length === 0 && !incognitoMode)}
+                  language={language}
+                  onMentalModelClick={handleMentalModelClick}
+                  onLtmClick={(id) => {
+                    const ltm = longTermMemories.find((l) => l._id === id);
+                    if (ltm) setLtmDetailModal(ltm);
+                  }}
+                  onCustomConceptClick={(id) => {
+                    const cc = customConcepts.find((c) => c._id === id);
+                    if (cc) openConceptDetail(cc);
+                  }}
+                  onConceptGroupClick={(id) => {
+                    const cg = conceptGroups.find((g) => g._id === id);
+                    if (cg) {
+                      fetch(`/api/me/concept-groups/${id}`)
+                        .then((r) => (r.ok ? r.json() : Promise.reject()))
+                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                        .catch(() => setCgDetailModal(cg));
+                    }
+                  }}
+                  previewMap={previewMap}
+                />
+                <div className="relative w-full max-w-2xl lg:max-w-4xl">
+                  <button
+                    ref={chatInputLensMenuButtonRef}
+                    type="button"
+                    onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
+                    className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                    aria-expanded={chatInputLensMenuOpen}
+                    aria-haspopup="menu"
+                    aria-label="Refine options"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
+                      <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
+                      <path d="M19 16v5" />
+                      <path d="M16.5 18.5h5" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                  {chatInputLensMenuOpen && (
+                    <div
+                      ref={chatInputLensMenuRef}
+                      role="menu"
+                      aria-label="Lens options"
+                      className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
+                    >
+                      <div className="inline-grid grid-cols-1 gap-1">
+                        {CHAT_INPUT_LENSES.map((lens) => {
+                          const selected = chatInputLens === lens.id;
+                          const isSuggested =
+                            lens.id !== "none" &&
+                            autoSuggestedChatLensMeta.suggested != null &&
+                            autoSuggestedChatLensMeta.suggested === lens.id;
+                          return (
+                            <button
+                              key={`chat-lens-menu-${lens.id}`}
+                              type="button"
+                              onClick={() => {
+                                setChatInputLens(lens.id);
+                                if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                                if (chatInputLensError) setChatInputLensError(null);
+                              }}
+                              className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
+                                selected
+                                  ? "border-accent text-accent bg-accent/10"
+                                  : isSuggested
+                                    ? "border-accent/60 text-accent bg-accent/5"
+                                    : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                              }`}
+                              aria-pressed={selected}
+                            >
+                              <span className="inline-flex items-center gap-1.5">
+                                {lens.label}
+                                {isSuggested && (
+                                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                )}
+                              </span>
+                            </button>
+                          );
+                        })}
+                        <button
+                          type="button"
+                          onClick={() => void refineMainInputWithLens()}
+                          disabled={
+                            chatInputLensLoading ||
+                            !input.trim() ||
+                            chatInputLens === "none" ||
+                            sessionLoading ||
+                            !!currentSession?.isCollapsed ||
+                            isLoading
+                          }
+                          className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
                         >
-                          <div className="inline-grid grid-cols-1 gap-1">
-                            {CHAT_INPUT_LENSES.map((lens) => {
-                              const selected = chatInputLens === lens.id;
-                              const isSuggested =
-                                lens.id !== "none" &&
-                                autoSuggestedChatLensMeta.suggested != null &&
-                                autoSuggestedChatLensMeta.suggested === lens.id;
-                              return (
-                                <button
-                                  key={`chat-lens-menu-${lens.id}`}
-                                  type="button"
-                                  onClick={() => {
-                                    setChatInputLens(lens.id);
-                                    if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-                                    if (chatInputLensError) setChatInputLensError(null);
-                                  }}
-                                  className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
-                                    selected
-                                      ? "border-accent text-accent bg-accent/10"
-                                      : isSuggested
-                                        ? "border-accent/60 text-accent bg-accent/5"
-                                        : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                  }`}
-                                  aria-pressed={selected}
-                                >
-                                  <span className="inline-flex items-center gap-1.5">
-                                    {lens.label}
-                                    {isSuggested && (
-                                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                                    )}
-                                  </span>
-                                </button>
-                              );
-                            })}
+                          {chatInputLensLoading ? "Refining..." : "Refine message"}
+                        </button>
+                      </div>
+                      {chatInputLensError && (
+                        <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
+                      )}
+                      {chatInputLensRefinedText && (
+                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
+                          <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
+                            Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
+                          </p>
+                          <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
+                            {chatInputLensRefinedText}
+                          </p>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-2">
                             <button
                               type="button"
-                              onClick={() => void refineMainInputWithLens()}
-                              disabled={
-                                chatInputLensLoading ||
-                                !input.trim() ||
-                                chatInputLens === "none" ||
-                                sessionLoading ||
-                                !!currentSession?.isCollapsed ||
-                                isLoading
-                              }
-                              className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                              onClick={() => {
+                                replaceComposerInput(chatInputLensRefinedText);
+                                setChatInputLensRefinedText("");
+                                setChatInputLensError(null);
+                                setChatInputLensMenuOpen(false);
+                              }}
+                              className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
                             >
-                              {chatInputLensLoading ? "Refining..." : "Refine message"}
+                              Use refined
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setChatInputLensRefinedText("")}
+                              className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            >
+                              Keep original
                             </button>
                           </div>
-                          {chatInputLensError && (
-                            <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
-                          )}
-                          {chatInputLensRefinedText && (
-                            <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
-                              <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                                Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
-                              </p>
-                              <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
-                                {chatInputLensRefinedText}
-                              </p>
-                              <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    replaceComposerInput(chatInputLensRefinedText);
-                                    setChatInputLensRefinedText("");
-                                    setChatInputLensError(null);
-                                    setChatInputLensMenuOpen(false);
-                                  }}
-                                  className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
-                                >
-                                  Use refined
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setChatInputLensRefinedText("")}
-                                  className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                >
-                                  Keep original
-                                </button>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       )}
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
                 <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
                   FixMyLife Labs is AI and can make mistakes.
                 </p>
+              </div>
             </div>
           </div>
         )}
 
         </>
-      )}
+        )}
       </main>
       </div>
 

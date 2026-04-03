@@ -303,9 +303,6 @@ export function LandingShell({
         focusTrackerSaving={focusTrackerSaving}
         focusTrackerError={focusTrackerError}
         pomodoroJustLogged={pomodoroJustLogged}
-        weightCurrentKg={weightCurrentKg}
-        weightTargetKg={weightTargetKg}
-        weightEntryCount={weightEntryCount}
         customFocusTagInput={customFocusTagInput}
         customFocusMinutesInput={customFocusMinutesInput}
         customFocusTimeInput={customFocusTimeInput}
@@ -318,7 +315,6 @@ export function LandingShell({
         onPausePomodoro={onPausePomodoro}
         onResetPomodoro={onResetPomodoro}
         onEndPomodoro={onEndPomodoro}
-        onOpenWeight={onOpenWeight}
         onCustomFocusTagInputChange={onCustomFocusTagInputChange}
         onCustomFocusMinutesInputChange={onCustomFocusMinutesInputChange}
         onCustomFocusTimeInputChange={onCustomFocusTimeInputChange}
