@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     const db = await getDb();
     const now = new Date();
     const lines: string[] = [];
-    lines.push("# FML Labs Data Export");
+    lines.push("# FixMyLife Labs Data Export");
     lines.push("");
     lines.push(`- **Generated:** ${now.toISOString()}`);
     lines.push(`- **User ID:** ${userId}`);

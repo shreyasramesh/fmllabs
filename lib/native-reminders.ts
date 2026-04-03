@@ -47,7 +47,6 @@ function randomMentalModelPrompt(): string {
   return MENTAL_MODEL_PROMPTS[Math.floor(Math.random() * MENTAL_MODEL_PROMPTS.length)]!;
 }
 
-const NIGHTLY_DAILY_REPORT_BASE_ID = 1400;
 const POMODORO_COMPLETION_NOTIFICATION_ID = 1600;
 
 function toCapacitorWeekday(day: number): number {
@@ -60,14 +59,10 @@ function allManagedIds(): number[] {
     const base = BASE_IDS[type];
     for (let day = 0; day <= 6; day++) ids.push(base + day);
   }
-  for (let day = 0; day <= 6; day++) ids.push(NIGHTLY_DAILY_REPORT_BASE_ID + day);
   return ids;
 }
 
-function buildNotifications(
-  preferences: ReminderPreferences,
-  options?: { nightlyNutritionReportNotificationEnabled?: boolean }
-): LocalNotificationSchema[] {
+function buildNotifications(preferences: ReminderPreferences): LocalNotificationSchema[] {
   const notifications: LocalNotificationSchema[] = [];
   for (const type of Object.keys(BASE_IDS) as ReminderType[]) {
     const schedule = preferences[type];
@@ -90,31 +85,10 @@ function buildNotifications(
       });
     }
   }
-  if (options?.nightlyNutritionReportNotificationEnabled) {
-    for (let day = 0; day <= 6; day++) {
-      notifications.push({
-        id: NIGHTLY_DAILY_REPORT_BASE_ID + day,
-        title: "Your daily coach report is ready",
-        body: "Open your daily recap to carry momentum into tomorrow.",
-        schedule: {
-          repeats: true,
-          allowWhileIdle: true,
-          on: {
-            weekday: toCapacitorWeekday(day),
-            hour: 21,
-            minute: 0,
-          },
-        },
-      });
-    }
-  }
   return notifications;
 }
 
-export async function syncNativeReminders(
-  preferences: ReminderPreferences,
-  options?: { nightlyNutritionReportNotificationEnabled?: boolean }
-): Promise<{
+export async function syncNativeReminders(preferences: ReminderPreferences): Promise<{
   ok: boolean;
   reason?: "not-native" | "permission-denied";
 }> {
@@ -130,7 +104,7 @@ export async function syncNativeReminders(
     notifications: allManagedIds().map((id) => ({ id })),
   });
 
-  const notifications = buildNotifications(preferences, options);
+  const notifications = buildNotifications(preferences);
   if (notifications.length > 0) {
     await LocalNotifications.schedule({ notifications });
   }

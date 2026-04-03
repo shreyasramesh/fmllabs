@@ -222,12 +222,7 @@ export function parseRelevantContextFromStreamStart(content: string): {
 const JOURNAL_CHECKPOINT_MARKER = "---JOURNAL-CHECKPOINT---";
 const JOURNAL_CHECKPOINT_END_MARKER = "---END-JOURNAL-CHECKPOINT---";
 
-/** Used by API and client to delimit the journal checkpoint block */
-export function getJournalCheckpointBlockDelimiters() {
-  return { start: JOURNAL_CHECKPOINT_MARKER, end: JOURNAL_CHECKPOINT_END_MARKER };
-}
-
-export interface JournalCheckpoint {
+interface JournalCheckpoint {
   prompt: string;
   options: string[];
 }
@@ -308,17 +303,6 @@ export function parseJournalCheckpointBlock(content: string): {
     contentWithoutBlock,
     journalCheckpoint,
   };
-}
-
-/**
- * When the stream contains a JOURNAL-CHECKPOINT block, extract it.
- * Returns { contentWithoutBlock, journalCheckpoint }.
- */
-export function parseJournalCheckpointFromStream(content: string): {
-  contentWithoutBlock: string;
-  journalCheckpoint: JournalCheckpoint | null;
-} {
-  return parseJournalCheckpointBlock(content);
 }
 
 const OPTIONS_MARKER_REGEX = /-{2,3}\s*OPTIONS\s*-{2,3}/i;

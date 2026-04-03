@@ -107,21 +107,7 @@ const SYSTEM_PROMPT_TAGGING = `## System Tagging & Syntax Strict Rules
 
 `;
 
-const SYSTEM_PROMPT_JOURNAL_AND_OPTIONS = `## Optional: Journal Checkpoint
-When the conversation reaches a reflective moment—the user lands on a conclusion, expresses a realization, or identifies a concrete next step—you MAY include a journal checkpoint. This is OPTIONAL; omit it if the moment does not warrant it. Include at most 2 journal checkpoints per conversation total; if you have already included 2, do not add another. **Only include a journal checkpoint in your final or concluding response**—never in intermediate responses during an ongoing back-and-forth.
-
-If you include it, place it AFTER your main text and BEFORE ---OPTIONS---. Format exactly (always include all three lines; the closing ---END-JOURNAL-CHECKPOINT--- is required so the app can parse it):
-
----JOURNAL-CHECKPOINT---
-{"prompt": "Today I realized _____", "options": ["option 1", "option 2", "option 3", "option 4"]}
----END-JOURNAL-CHECKPOINT---
-
-- **prompt:** One or more fill-in-the-blank sentences (use _____ for each blank). First-person, reflective. You may use multiple blanks, e.g. "Today I realized _____ and I want to _____".
-- **options:** 3–6 short phrases the user can select for each blank. First-person.
-
-Example prompts: "Today I realized _____", "What I want to remember is _____", "I realized _____ and tomorrow I will _____".
-
-## Output Requirement: Follow-up Options
+const SYSTEM_PROMPT_OPTIONS = `## Output Requirement: Follow-up Options
 ALWAYS end EVERY response with exactly 4 follow-up options the user can choose from. 
 
 - **Voice:** Phrased in the USER'S VOICE (first-person), as if they are an internal realization or a chosen direction.
@@ -163,16 +149,6 @@ const PERSPECTIVE_CARD_SYSTEM_PROMPT = `You are a guide helping the user dive de
 - **Meet them where they are:** If they name something specific (an artwork, a decision, a memory), use the card to explore it. If they're unsure, offer a concrete way to start—e.g., "What's one thing in front of you right now we could look at through this lens?"
 - **When they ask for knowledge, give it:** If the user explicitly asks for information, explanation, or guidance—e.g., "tell me more about X," "explain Y," "help me understand," "guide me with better knowledge"—provide that knowledge directly. The perspective card is a lens to explore with, not a constraint. Share what you know when they ask for it, then you can weave the card back in to deepen their understanding.
 - **Keep it scannable:** Short paragraphs, **bold** for emphasis, bullet points when helpful.
-
-## Optional: Journal Checkpoint
-When the user reaches a reflective moment or fresh perspective, you MAY include a journal checkpoint. Include at most 2 per conversation total. **Only include it in your final or concluding response**—never in intermediate responses. Place it AFTER your main text and BEFORE ---OPTIONS---. Format exactly:
-
----JOURNAL-CHECKPOINT---
-{"prompt": "Through this lens I noticed _____", "options": ["option 1", "option 2", "option 3", "option 4"]}
----END-JOURNAL-CHECKPOINT---
-
-- **prompt:** One or more fill-in-the-blanks (use _____ for each). First-person, reflective. May have multiple blanks.
-- **options:** 3–6 short phrases per blank. First-person.
 
 ## Output Requirement
 ALWAYS end EVERY response with exactly 4 follow-up options the user can choose from. Phrase them in the user's voice (first-person), as potential directions or realizations. Format:
@@ -239,7 +215,7 @@ Your goal is to help the user navigate their own life, not to lecture them on yo
 const COMPACT_RESPONSE_VERBOSITY_ADDENDUM = `
 ## Response verbosity mode: compact
 - This mode is STRICT: keep the main reply short and scannable.
-- Target about 60-120 words for the main body (excluding ---OPTIONS--- and optional journal block).
+- Target about 60-120 words for the main body (excluding ---OPTIONS---).
 - Use at most 2 short paragraphs OR 3 concise bullets.
 - No long preamble, no repeated restatements, and no stacked mental-model name dropping.
 - If the user asks for "deeper" or "full detail", give a compact answer first, then offer one short follow-up path.
@@ -328,7 +304,6 @@ export async function POST(request: Request) {
   let activeCardName: string | undefined;
   let activeCardFigureId: string | undefined;
   let activeCardFigureName: string | undefined;
-  let journalCheckpoint: string | undefined;
   let multiMentorMode = false;
   let multiMentorFigureIds: string[] = [];
   let resolvedOneOnOneFigure: FamousFigure | null = null;
@@ -410,9 +385,6 @@ export async function POST(request: Request) {
           ? body.activeCardFigureName.trim()
           : undefined;
       }
-    }
-    if (typeof body.journalCheckpoint === "string" && body.journalCheckpoint.trim()) {
-      journalCheckpoint = body.journalCheckpoint.trim();
     }
     if (body.multiMentorMode === true) {
       multiMentorMode = true;
@@ -771,7 +743,7 @@ export async function POST(request: Request) {
           : "";
 
       if (sessionId) {
-        await appendMessage(sessionId, "user", rawMessage ?? message, journalCheckpoint ? { journalCheckpoint } : undefined);
+        await appendMessage(sessionId, "user", rawMessage ?? message);
       }
 
       const mentorResponses: MentorResponse[] = [];
@@ -945,7 +917,7 @@ ${userNamePromptSuffix}${langInstr}`;
       SYSTEM_PROMPT_CORE +
       SECOND_ORDER_REASONING_ADDENDUM +
       SECOND_ORDER_PLAIN_LANGUAGE_FOOTER +
-      SYSTEM_PROMPT_JOURNAL_AND_OPTIONS.replace(
+      SYSTEM_PROMPT_OPTIONS.replace(
         "[Options Style Instruction]",
         optionsStyleInstructionSo
       ) +
@@ -1270,7 +1242,7 @@ ${userNamePromptSuffix}${langInstr}`;
     SYSTEM_PROMPT_CORE +
     (secondOrderWithCitations ? SECOND_ORDER_REASONING_ADDENDUM : "") +
     SYSTEM_PROMPT_TAGGING +
-    SYSTEM_PROMPT_JOURNAL_AND_OPTIONS +
+    SYSTEM_PROMPT_OPTIONS +
     SYSTEM_PROMPT_INDEX_FOOTER;
 
   fullSystemPrompt =
@@ -1355,7 +1327,7 @@ ${userNamePromptSuffix}${langInstr}`;
   if (process.env.NODE_ENV === "development") {
     const modeLabel = secondOrderMode
       ? secondOrderPlainMode
-        ? "second-order plain (core + second-order addendum + journal/options; no index/RAG)"
+        ? "second-order plain (core + second-order addendum + options-only; no index/RAG)"
         : "second-order + citations (full SYSTEM_PROMPT + second-order addendum + RAG)"
       : mentorOneOnOne
         ? "mentor (MENTOR_ONE_ON_ONE_SYSTEM_PROMPT only, no RAG)"
@@ -1375,7 +1347,7 @@ ${userNamePromptSuffix}${langInstr}`;
 
   try {
     if (!isAnonymous && !incognito && sessionId) {
-      await appendMessage(sessionId, "user", rawMessage ?? message, journalCheckpoint ? { journalCheckpoint } : undefined);
+      await appendMessage(sessionId, "user", rawMessage ?? message);
     }
 
     const encoder = new TextEncoder();

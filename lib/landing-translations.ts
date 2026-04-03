@@ -121,34 +121,6 @@ export interface LandingTranslations {
   nutritionGoalsWizardRecalculating: string;
   nutritionGoalsWizardCalculationError: string;
   nutritionGoalsSaveError: string;
-  nutritionAnalysisButtonLabel: string;
-  dailyReportButtonLabel: string;
-  nutritionAnalysisModalTitle: string;
-  nutritionAnalysisModalSubtitle: string;
-  nutritionAnalysisFocusLabel: string;
-  nutritionAnalysisFocusPlaceholder: string;
-  nutritionAnalysisScopeToday: string;
-  nutritionAnalysisScopeSelectedDay: string;
-  nutritionAnalysisGenerate: string;
-  nutritionAnalysisGenerating: string;
-  nutritionAnalysisNoDataError: string;
-  nutritionAnalysisRequestError: string;
-  nutritionAnalysisSummaryHeading: string;
-  nutritionAnalysisGoalStatusHeading: string;
-  nutritionAnalysisHighlightsHeading: string;
-  nutritionAnalysisTipsHeading: string;
-  dailyReportBannerCta: string;
-  dailyReportModalTitle: string;
-  dailyReportModalSubtitle: string;
-  dailyReportChooseDateLabel: string;
-  dailyReportGenerate: string;
-  dailyReportGenerating: string;
-  dailyReportNoDataError: string;
-  dailyReportRequestError: string;
-  dailyReportCoachStyleLabel: string;
-  dailyReportWinsHeading: string;
-  dailyReportMomentumHeading: string;
-  dailyReportTomorrowHeading: string;
   weeklySummaryButtonLabel: string;
   weeklySummaryModalTitle: string;
   weeklySummaryLoading: string;
@@ -175,6 +147,54 @@ export interface LandingTranslations {
   journalingTabLabel: string;
   deepThinkingTabLabel: string;
   landingSelectedDateLabel: string;
+  landingDashboardEyebrow: string;
+  landingDateStripLabel: string;
+  landingDateStripHint: string;
+  landingFocusCanvasEyebrow: string;
+  landingFocusCanvasTitle: string;
+  landingFocusCanvasSubtitle: string;
+  landingFocusCanvasModeJournaling: string;
+  landingFocusCanvasModePomodoro: string;
+  landingFocusCanvasModeDeepThinking: string;
+  landingNutritionLabel: string;
+  landingCaloriesRemainingLabel: string;
+  landingFoodLoggedLabel: string;
+  landingCarbsLabel: string;
+  landingProteinLabel: string;
+  landingFocusSummaryLabel: string;
+  landingNoFocusLogged: string;
+  landingLiveFocusLabel: string;
+  landingQuickCaptureTitle: string;
+  landingManualFocusLogTitle: string;
+  landingMindLabTitle: string;
+  landingMindLabDescription: string;
+  landingMentalModelsLabel: string;
+  landingSavedPerspectiveCardsLabel: string;
+  landingConceptsAndPlaygroundsLabel: string;
+  landingSavedMemoriesLabel: string;
+  landingLearnMentalModelLabel: string;
+  landingPromptGamesLabel: string;
+  landingMentorHubTitle: string;
+  landingMentorHubDescription: string;
+  landingFollowMentorsHint: string;
+  landingMentorChatLabel: string;
+  landingAskMentorsLabel: string;
+  landingGrowthStudioTitle: string;
+  landingGrowthStudioDescription: string;
+  landingExperimentsLabel: string;
+  landingSavedConversationsLabel: string;
+  landingSetGoalsLabel: string;
+  landingWeeklySummaryLabel: string;
+  landingWeightTitle: string;
+  landingWeightDescription: string;
+  landingCurrentWeightLabel: string;
+  landingTargetWeightLabel: string;
+  landingNoTargetYet: string;
+  landingOpenLabel: string;
+  landingActivityTitle: string;
+  landingActivityDescription: string;
+  landingTapToInspectLabel: string;
+  landingTimelineEyebrow: string;
 }
 
 const EN: LandingTranslations = {
@@ -296,36 +316,6 @@ const EN: LandingTranslations = {
   nutritionGoalsWizardRecalculating: "Updating macro grams with AI...",
   nutritionGoalsWizardCalculationError: "Couldn’t calculate goals. Try again.",
   nutritionGoalsSaveError: "Couldn’t save goals. Try again.",
-  nutritionAnalysisButtonLabel: "Analyze nutrition",
-  dailyReportButtonLabel: "Daily report",
-  nutritionAnalysisModalTitle: "Nutrition analysis",
-  nutritionAnalysisModalSubtitle:
-    "Get a simple report based on your goals and your nutrition/exercise logs for the day.",
-  nutritionAnalysisFocusLabel: "Optional focus",
-  nutritionAnalysisFocusPlaceholder:
-    "e.g. Focus on protein balance, late-night eating, and workout fuel",
-  nutritionAnalysisScopeToday: "Today",
-  nutritionAnalysisScopeSelectedDay: "Selected day",
-  nutritionAnalysisGenerate: "Generate report",
-  nutritionAnalysisGenerating: "Generating report...",
-  nutritionAnalysisNoDataError: "Add a nutrition or exercise log first for this day.",
-  nutritionAnalysisRequestError: "Couldn’t generate report. Try again.",
-  nutritionAnalysisSummaryHeading: "Summary",
-  nutritionAnalysisGoalStatusHeading: "Goal status",
-  nutritionAnalysisHighlightsHeading: "Highlights",
-  nutritionAnalysisTipsHeading: "Tips for tomorrow",
-  dailyReportBannerCta: "Your daily report is ready. Open your coach recap for tomorrow",
-  dailyReportModalTitle: "Daily report",
-  dailyReportModalSubtitle: "Your coach-style day recap with momentum for tomorrow",
-  dailyReportChooseDateLabel: "Choose date",
-  dailyReportGenerate: "Generate report",
-  dailyReportGenerating: "Generating...",
-  dailyReportNoDataError: "Add some activity entries first for this day.",
-  dailyReportRequestError: "Could not generate your daily report. Try again.",
-  dailyReportCoachStyleLabel: "Coach style",
-  dailyReportWinsHeading: "Today's wins",
-  dailyReportMomentumHeading: "Momentum signals",
-  dailyReportTomorrowHeading: "Tomorrow game plan",
   weeklySummaryButtonLabel: "Weekly Summary",
   weeklySummaryModalTitle: "Weekly Summary",
   weeklySummaryLoading: "Loading weekly summary...",
@@ -352,6 +342,60 @@ const EN: LandingTranslations = {
   journalingTabLabel: "Journaling",
   deepThinkingTabLabel: "Deep Thinking",
   landingSelectedDateLabel: "Selected date",
+  landingDashboardEyebrow: "Dashboard",
+  landingDateStripLabel: "Date strip",
+  landingDateStripHint: "Tap a day to pivot the dashboard.",
+  landingFocusCanvasEyebrow: "Focus Canvas",
+  landingFocusCanvasTitle: "Wellness, nutrition, and momentum in one place",
+  landingFocusCanvasSubtitle:
+    "Shared across desktop, mobile, and Android with the same empty-chat landing flow.",
+  landingFocusCanvasModeJournaling: "Journaling",
+  landingFocusCanvasModePomodoro: "Focus mode",
+  landingFocusCanvasModeDeepThinking: "Deep thinking",
+  landingNutritionLabel: "Nutrition",
+  landingCaloriesRemainingLabel: "calories remaining",
+  landingFoodLoggedLabel: "food logged",
+  landingCarbsLabel: "carbs",
+  landingProteinLabel: "protein",
+  landingFocusSummaryLabel: "Focus summary",
+  landingNoFocusLogged: "No focus sessions logged for this day yet.",
+  landingLiveFocusLabel: "Live focus",
+  landingQuickCaptureTitle: "Quick capture",
+  landingManualFocusLogTitle: "Manual focus log",
+  landingMindLabTitle: "Mental models, lenses, and saved context",
+  landingMindLabDescription:
+    "Keep your model library, prompt games, and thinking tools one tap away.",
+  landingMentalModelsLabel: "mental models",
+  landingSavedPerspectiveCardsLabel: "saved perspective cards",
+  landingConceptsAndPlaygroundsLabel: "concepts + playgrounds",
+  landingSavedMemoriesLabel: "saved memories",
+  landingLearnMentalModelLabel: "Learn a mental model",
+  landingPromptGamesLabel: "Prompt games",
+  landingMentorHubTitle: "Advisors and guided conversations",
+  landingMentorHubDescription:
+    "Switch between 1:1 coaching and multi-mentor recommendations without leaving the landing surface.",
+  landingFollowMentorsHint: "Follow mentors to personalize this hub.",
+  landingMentorChatLabel: "1:1 mentor chat",
+  landingAskMentorsLabel: "Ask mentors",
+  landingGrowthStudioTitle: "Goals, experiments, and review loops",
+  landingGrowthStudioDescription:
+    "Keep weekly planning, nutrition goals, and longer-running experiments grouped together.",
+  landingExperimentsLabel: "30 day experiments",
+  landingSavedConversationsLabel: "saved conversations",
+  landingSetGoalsLabel: "Set goals",
+  landingWeeklySummaryLabel: "Weekly summary",
+  landingWeightTitle: "Weight trend",
+  landingWeightDescription:
+    "Keep your current and target weight visible without opening the full tracker.",
+  landingCurrentWeightLabel: "current",
+  landingTargetWeightLabel: "target",
+  landingNoTargetYet: "No target yet",
+  landingOpenLabel: "Open",
+  landingActivityTitle: "What got logged on this date",
+  landingActivityDescription:
+    "Group summaries stay connected to the underlying existing day-level landing activity modal.",
+  landingTapToInspectLabel: "Tap to inspect entries",
+  landingTimelineEyebrow: "Timeline",
 };
 
 const TRANSLATIONS: Partial<Record<LanguageCode, Partial<LandingTranslations>>> = {

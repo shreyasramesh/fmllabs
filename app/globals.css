@@ -215,44 +215,6 @@ html {
   );
 }
 
-@keyframes daily-report-hanger-sway {
-  0%, 100% { transform: translateX(-50%) rotate(-0.6deg); }
-  50% { transform: translateX(-50%) rotate(0.6deg); }
-}
-
-.daily-report-hanger {
-  width: 2px;
-  height: 14px;
-  background: color-mix(in srgb, var(--foreground) 22%, transparent);
-  margin: 0 auto;
-  animation: daily-report-hanger-sway 4.2s ease-in-out infinite;
-}
-
-.daily-report-hanging-banner {
-  position: relative;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--background) 96%, white 4%);
-  border-color: rgb(184 123 81 / 0.95);
-  color: var(--foreground);
-  min-width: min(94vw, 660px);
-}
-
-.dark .daily-report-hanging-banner {
-  background: color-mix(in srgb, var(--background) 92%, black 8%);
-  border-color: rgb(184 123 81 / 0.72);
-  color: var(--foreground);
-}
-
-.daily-report-banner-close {
-  color: color-mix(in srgb, var(--foreground) 65%, transparent);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.daily-report-banner-close:hover {
-  background: color-mix(in srgb, var(--foreground) 10%, transparent);
-  color: var(--foreground);
-}
-
 /* Shimmer sweep for Generate button text - light streak moves across */
 @keyframes shimmer-sweep {
   0% { background-position: 200% 0; }

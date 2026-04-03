@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Journal entry · FigureMyLife Labs",
+  title: "Journal entry · FixMyLife Labs",
   description: "Write a freeform journal entry saved to your library.",
 };
 

@@ -8,12 +8,11 @@ import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
 import { NativeHaptics } from "@/components/NativeHaptics";
 import { NativeAppUrlHandler } from "@/components/NativeAppUrlHandler";
-import { DailyReportHangingBanner } from "@/components/DailyReportHangingBanner";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FigureMyLife Labs",
+  title: "FixMyLife Labs",
   description: PRODUCT_TAGLINE,
   manifest: "/manifest.json",
   icons: {
@@ -23,16 +22,16 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "FigureMyLife Labs",
+    title: "FixMyLife Labs",
   },
   openGraph: {
-    title: "FigureMyLife Labs",
+    title: "FixMyLife Labs",
     description: PRODUCT_TAGLINE,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FigureMyLife Labs",
+    title: "FixMyLife Labs",
     description: PRODUCT_TAGLINE,
   },
 };
@@ -56,12 +55,12 @@ export default function RootLayout({
       localization={{
         signIn: {
           start: {
-            title: "Sign In - FigureMyLife Labs",
+            title: "Sign In - FixMyLife Labs",
           },
         },
         signUp: {
           start: {
-            title: "Sign Up - FigureMyLife Labs",
+            title: "Sign Up - FixMyLife Labs",
           },
         },
       }}
@@ -91,7 +90,6 @@ export default function RootLayout({
               <UserTypeProvider>
                 <TtsSpeedProvider>
                   <BackgroundProvider>
-                    <DailyReportHangingBanner />
                     {children}
                   </BackgroundProvider>
                 </TtsSpeedProvider>

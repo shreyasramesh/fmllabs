@@ -85,7 +85,7 @@ function buildWeeklyReflectionEmailHtml(args: {
       ${bulletList(args.mentorInsights)}
       <h3>Next Week Actions</h3>
       ${bulletList(args.nextWeekActions)}
-      <p style="margin-top: 20px; color: #6b7280; font-size: 12px;">Sent by FigureMyLife Labs weekly reflections.</p>
+      <p style="margin-top: 20px; color: #6b7280; font-size: 12px;">Sent by FixMyLife Labs weekly reflections.</p>
     </div>
   `;
 }

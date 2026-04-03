@@ -12,7 +12,6 @@ const GOAL_CALORIES_MAX = 6000;
 const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
-const WEATHER_FORMATS = ["condition-temp", "emoji-temp", "temp-only"] as const;
 const PREFERRED_NAME_MAX = 80;
 const NUTRITION_GOAL_INTENT_MAX = 500;
 const FASTING_WINDOW_MIN_HOURS = 4;
@@ -41,10 +40,6 @@ function clampGoalMacro(v: number): number {
 
 function isValidBackground(b: unknown): b is "default" | "air" | "water" | "earth" | "fire" {
   return typeof b === "string" && BACKGROUND_ELEMENTS.includes(b as (typeof BACKGROUND_ELEMENTS)[number]);
-}
-
-function isValidWeatherFormat(v: unknown): v is "condition-temp" | "emoji-temp" | "temp-only" {
-  return typeof v === "string" && WEATHER_FORMATS.includes(v as (typeof WEATHER_FORMATS)[number]);
 }
 
 function isNutritionFatLossMethod(
@@ -178,11 +173,6 @@ export async function PATCH(request: Request) {
         updates.background = body.background;
       }
     }
-    if (body.weatherFormat !== undefined) {
-      if (isValidWeatherFormat(body.weatherFormat)) {
-        updates.weatherFormat = body.weatherFormat;
-      }
-    }
     if (body.clonedVoiceId !== undefined) {
       updates.clonedVoiceId = typeof body.clonedVoiceId === "string" ? body.clonedVoiceId || undefined : undefined;
     }
@@ -208,9 +198,6 @@ export async function PATCH(request: Request) {
     }
     if (body.reminderPreferences !== undefined) {
       updates.reminderPreferences = normalizeReminderPreferences(body.reminderPreferences);
-    }
-    if (body.nightlyNutritionReportNotificationEnabled !== undefined) {
-      updates.nightlyNutritionReportNotificationEnabled = Boolean(body.nightlyNutritionReportNotificationEnabled);
     }
 
     if (Object.keys(updates).length === 0) {

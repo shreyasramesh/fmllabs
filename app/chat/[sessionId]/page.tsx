@@ -9,13 +9,11 @@ import {
   parseRelevantContextBlock,
   parseRelevantContextFromStreamStart,
   parseJournalCheckpointBlock,
-  parseJournalCheckpointFromStream,
   parseMentorResponsesBlock,
   extractRelevanceContext,
   extractMentalModelIds,
   type RelevantContextItem,
   type RelevantContext,
-  type JournalCheckpoint,
 } from "@/lib/chat-utils";
 
 import { ChatMarkdown } from "@/components/ChatMarkdown";
@@ -27,6 +25,9 @@ import {
   MentionInput,
   parseMentionsFromMessage,
 } from "@/components/MentionInput";
+import { ChatComposer } from "@/components/ChatComposer";
+import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
+import { LandingShell } from "@/components/landing/LandingShell";
 import { UserMessageContent } from "@/components/UserMessageContent";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -282,7 +283,6 @@ interface Message {
   secondOrderThinking?: boolean;
   /** Plain vs citations (intro message before session is persisted); optional on history */
   secondOrderPlain?: boolean;
-  journalCheckpoint?: string;
   mentorResponses?: Array<{ figureId: string; figureName: string; content: string }>;
 }
 
@@ -467,7 +467,6 @@ function HabitIntendedPeriodFields({
   );
 }
 
-type WeatherFormat = "condition-temp" | "emoji-temp" | "temp-only";
 const REMINDER_TYPES: ReminderType[] = ["nutrition", "exercise", "gratitude", "weight", "mentalModel"];
 const REMINDER_TYPE_LABELS: Record<ReminderType, string> = {
   nutrition: "Nutrition",
@@ -658,8 +657,6 @@ function MessageBubble({
   isRtl,
   showConvertToDeep = false,
   onConvertToDeep,
-  onManualJournalCheckpoint,
-  manualJournalLoading = false,
   isFindingGuide = false,
   askMentorsSlot,
   language = "en",
@@ -690,10 +687,8 @@ function MessageBubble({
   isRtl?: boolean;
   showConvertToDeep?: boolean;
   onConvertToDeep?: () => void;
-  onManualJournalCheckpoint?: () => void;
-  manualJournalLoading?: boolean;
   isFindingGuide?: boolean;
-  /** Renders next to Journal button on last assistant message */
+  /** Renders in the assistant action menu on last assistant message */
   askMentorsSlot?: React.ReactNode;
   language?: LanguageCode;
   /** When true, hide "Context used" (mentor / perspective-card immersive chats). Convert-to-deep still shows if enabled. */
@@ -883,11 +878,6 @@ function MessageBubble({
         message.role === "user" ? "items-end" : "items-start"
       }`}
     >
-      {message.role === "user" && message.journalCheckpoint && (
-        <div className="max-w-[85%] rounded-2xl px-3 py-2 text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60">
-          Journal Checkpoint: {message.journalCheckpoint}
-        </div>
-      )}
       <div
           className={`group/tts relative rounded-3xl px-4 py-3 transition-shadow duration-200 ${
             message.role === "user"
@@ -1036,30 +1026,6 @@ function MessageBubble({
                 className="absolute bottom-full left-0 z-20 mb-2 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl"
               >
                 <div className="p-2 space-y-1.5">
-                  {onManualJournalCheckpoint && isLastAssistant && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAssistantMoreMenuOpen(false);
-                        onManualJournalCheckpoint();
-                      }}
-                      disabled={manualJournalLoading}
-                      className="inline-flex w-full items-center justify-start gap-2 rounded-xl px-3 py-2 text-left text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors disabled:opacity-70 disabled:cursor-wait"
-                    >
-                      {manualJournalLoading ? (
-                        <svg className="h-3.5 w-3.5 animate-spin text-accent" viewBox="0 0 24 24" fill="none" aria-hidden>
-                          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
-                          <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
-                          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
-                        </svg>
-                      )}
-                      Journal
-                    </button>
-                  )}
                   {message.role === "assistant" &&
                     hideContextUsed &&
                     showConvertToDeep &&
@@ -3314,6 +3280,7 @@ export default function ChatPage() {
   const { user } = useUser();
   const { language, setLanguage, showLanguageChangeBanner, dismissLanguageChangeBanner } = useLanguage();
   const { userType, setUserType, showUserTypeChangeBanner, dismissUserTypeChangeBanner } = useUserType();
+  const landingTranslations = getLandingTranslations(language);
   const languageRef = useRef(language);
   languageRef.current = language;
   const userTypeRef = useRef(userType);
@@ -3323,9 +3290,6 @@ export default function ChatPage() {
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
   const [landingTab, setLandingTab] = useState<LandingTab>("journaling");
-  const [landingJournalingExpandedCard, setLandingJournalingExpandedCard] = useState<
-    "insights" | "snapshot" | "entries" | null
-  >("snapshot");
   const landingTabStorageReadyRef = useRef(false);
   const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
   const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
@@ -3359,12 +3323,6 @@ export default function ChatPage() {
       setLandingTab("deepThinking");
     }
   }, [isAnonymous, landingTab]);
-
-  useEffect(() => {
-    if (landingTab !== "journaling") {
-      setLandingJournalingExpandedCard(null);
-    }
-  }, [landingTab]);
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -3451,11 +3409,9 @@ export default function ChatPage() {
   const [exportMarkdownLoading, setExportMarkdownLoading] = useState(false);
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
   const { background, setBackground } = useBackground();
-  const [weatherFormat, setWeatherFormat] = useState<WeatherFormat>("condition-temp");
   const [reminderPreferences, setReminderPreferences] = useState<ReminderPreferences>(
     DEFAULT_REMINDER_PREFERENCES
   );
-  const [nightlyNutritionReportNotificationEnabled, setNightlyNutritionReportNotificationEnabled] = useState(false);
   const [reminderSaveState, setReminderSaveState] = useState<{
     saving: boolean;
     message: string | null;
@@ -3495,6 +3451,8 @@ export default function ChatPage() {
   const [goalsWizardError, setGoalsWizardError] = useState<string | null>(null);
   const [nutritionGoalIntent, setNutritionGoalIntent] = useState("");
   const [goalsCoachIntentDraft, setGoalsCoachIntentDraft] = useState("");
+  const goalsCoachIntentDraftRef = useRef("");
+  const [goalsCoachIntentDraftRevision, setGoalsCoachIntentDraftRevision] = useState(0);
   const [goalsCoachLoading, setGoalsCoachLoading] = useState(false);
   const [goalsCoachError, setGoalsCoachError] = useState<string | null>(null);
   const [goalsCoachResult, setGoalsCoachResult] = useState<{
@@ -3666,6 +3624,8 @@ export default function ChatPage() {
   const [ccYoutubeModal, setCcYoutubeModal] = useState(false);
   const [ccYoutubeUrl, setCcYoutubeUrl] = useState("");
   const [ccYoutubeExtractPrompt, setCcYoutubeExtractPrompt] = useState("");
+  const ccYoutubeExtractPromptRef = useRef("");
+  const [ccYoutubeExtractPromptRevision, setCcYoutubeExtractPromptRevision] = useState(0);
   const [ccYoutubeTranscriptId, setCcYoutubeTranscriptId] = useState<string | null>(null);
   const [ccYoutubeLoading, setCcYoutubeLoading] = useState(false);
   const [ccYoutubeResult, setCcYoutubeResult] = useState<{
@@ -3685,6 +3645,10 @@ export default function ChatPage() {
   const [ccImportJournalMode, setCcImportJournalMode] = useState(false);
   const [ccJournalText, setCcJournalText] = useState("");
   const [ccJournalTitle, setCcJournalTitle] = useState("");
+  const ccJournalTextRef = useRef("");
+  const [ccJournalTextRevision, setCcJournalTextRevision] = useState(0);
+  const ccJournalTitleRef = useRef("");
+  const [ccJournalTitleRevision, setCcJournalTitleRevision] = useState(0);
   const [ccJournalPersistLibrary, setCcJournalPersistLibrary] = useState(false);
   const [ccJournalTranscriptId, setCcJournalTranscriptId] = useState<string | null>(null);
   /** Saved YouTube transcript display title when re-extracting (journal title uses ccJournalTitle). */
@@ -3835,10 +3799,10 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const landingDaysScrollerMobileRef = useRef<HTMLDivElement>(null);
-  const landingDaysScrollerDesktopRef = useRef<HTMLDivElement>(null);
-  const landingDaysAutoScrolledRef = useRef(false);
   const inputRef = useRef<HTMLDivElement>(null);
+  const composerDraftRef = useRef("");
+  const composerInputSyncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [composerInputSyncRevision, setComposerInputSyncRevision] = useState(0);
   const justCreatedSessionRef = useRef<string | null>(null);
   const anonymousActiveRef = useRef(false);
   /** Synced after pendingCardContext / pendingCardFetch state so session hydration effect can read without stale closures */
@@ -4310,6 +4274,10 @@ export default function ChatPage() {
   const [calorieTrackerModalOpen, setCalorieTrackerModalOpen] = useState(false);
   const [calorieTrackerInput, setCalorieTrackerInput] = useState("");
   const [calorieTrackerCustomTag, setCalorieTrackerCustomTag] = useState("");
+  const calorieTrackerInputRef = useRef("");
+  const [calorieTrackerInputRevision, setCalorieTrackerInputRevision] = useState(0);
+  const calorieTrackerCustomTagRef = useRef("");
+  const [calorieTrackerCustomTagRevision, setCalorieTrackerCustomTagRevision] = useState(0);
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
   const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
   const calorieTrackerUploadInputRef = useRef<HTMLInputElement | null>(null);
@@ -4397,6 +4365,8 @@ export default function ChatPage() {
   const [journalEntryModalOpen, setJournalEntryModalOpen] = useState(false);
   const [journalEntryDate, setJournalEntryDate] = useState(() => getTodayDateInputValue());
   const [journalEntryText, setJournalEntryText] = useState("");
+  const journalEntryTextRef = useRef("");
+  const [journalEntryTextRevision, setJournalEntryTextRevision] = useState(0);
   const [journalEntrySaving, setJournalEntrySaving] = useState(false);
   const [journalEntrySaveError, setJournalEntrySaveError] = useState<string | null>(null);
   const [journalRefinePersona, setJournalRefinePersona] = useState<JournalRefinePersonaId>("critical");
@@ -4404,43 +4374,6 @@ export default function ChatPage() {
   const [journalRefineError, setJournalRefineError] = useState<string | null>(null);
   const [journalRefinedText, setJournalRefinedText] = useState("");
   const [journalTypeChooserOpen, setJournalTypeChooserOpen] = useState(false);
-  const [nutritionReportModalOpen, setNutritionReportModalOpen] = useState(false);
-  const [nutritionReportDayKey, setNutritionReportDayKey] = useState(() => toDayKey(new Date()));
-  const [nutritionReportLoading, setNutritionReportLoading] = useState(false);
-  const [nutritionReportError, setNutritionReportError] = useState<string | null>(null);
-  const [nutritionReportResult, setNutritionReportResult] = useState<{
-    dayKey: string;
-    dayLabel: string;
-    report: {
-      summary: string;
-      goalStatus: string;
-      highlights: string[];
-      tomorrowTips: string[];
-    };
-  } | null>(null);
-  const [dailyReportModalOpen, setDailyReportModalOpen] = useState(false);
-  const [dailyReportDayKey, setDailyReportDayKey] = useState(() => toDayKey(new Date()));
-  const [dailyReportLoading, setDailyReportLoading] = useState(false);
-  const [dailyReportError, setDailyReportError] = useState<string | null>(null);
-  const [dailyReportResult, setDailyReportResult] = useState<{
-    dayKey: string;
-    dayLabel: string;
-    mentorFigureName: string;
-    report: {
-      coachIntro: string;
-      summary: string;
-      wins: string[];
-      momentumSignals: string[];
-      tomorrowGamePlan: string[];
-      sectionCards: Array<{
-        key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
-        title: string;
-        body: string;
-        accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
-      }>;
-      closingNote: string;
-    };
-  } | null>(null);
   const [localMinuteTick, setLocalMinuteTick] = useState(() => Math.floor(Date.now() / 60000));
   const [weeklySummaryModalOpen, setWeeklySummaryModalOpen] = useState(false);
   const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
@@ -4574,6 +4507,76 @@ export default function ChatPage() {
   const pomodoroFinalSecondTimeoutRef = useRef<number | null>(null);
   const pomodoroPrevSecondsRef = useRef(pomodoroSecondsRemaining);
 
+  const replaceGoalsCoachIntentDraft = useCallback((nextValue: string) => {
+    goalsCoachIntentDraftRef.current = nextValue;
+    setGoalsCoachIntentDraft(nextValue);
+    setGoalsCoachIntentDraftRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceJournalEntryText = useCallback((nextValue: string) => {
+    journalEntryTextRef.current = nextValue;
+    setJournalEntryText(nextValue);
+    setJournalEntryTextRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceCalorieTrackerInput = useCallback((nextValue: string) => {
+    calorieTrackerInputRef.current = nextValue;
+    setCalorieTrackerInput(nextValue);
+    setCalorieTrackerInputRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceCalorieTrackerCustomTag = useCallback((nextValue: string) => {
+    calorieTrackerCustomTagRef.current = nextValue;
+    setCalorieTrackerCustomTag(nextValue);
+    setCalorieTrackerCustomTagRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceCcJournalText = useCallback((nextValue: string) => {
+    ccJournalTextRef.current = nextValue;
+    setCcJournalText(nextValue);
+    setCcJournalTextRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceCcJournalTitle = useCallback((nextValue: string) => {
+    ccJournalTitleRef.current = nextValue;
+    setCcJournalTitle(nextValue);
+    setCcJournalTitleRevision((prev) => prev + 1);
+  }, []);
+
+  const replaceCcYoutubeExtractPrompt = useCallback((nextValue: string) => {
+    ccYoutubeExtractPromptRef.current = nextValue;
+    setCcYoutubeExtractPrompt(nextValue);
+    setCcYoutubeExtractPromptRevision((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    goalsCoachIntentDraftRef.current = goalsCoachIntentDraft;
+  }, [goalsCoachIntentDraft]);
+
+  useEffect(() => {
+    journalEntryTextRef.current = journalEntryText;
+  }, [journalEntryText]);
+
+  useEffect(() => {
+    calorieTrackerInputRef.current = calorieTrackerInput;
+  }, [calorieTrackerInput]);
+
+  useEffect(() => {
+    calorieTrackerCustomTagRef.current = calorieTrackerCustomTag;
+  }, [calorieTrackerCustomTag]);
+
+  useEffect(() => {
+    ccJournalTextRef.current = ccJournalText;
+  }, [ccJournalText]);
+
+  useEffect(() => {
+    ccJournalTitleRef.current = ccJournalTitle;
+  }, [ccJournalTitle]);
+
+  useEffect(() => {
+    ccYoutubeExtractPromptRef.current = ccYoutubeExtractPrompt;
+  }, [ccYoutubeExtractPrompt]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const saved = window.localStorage.getItem(POMODORO_THEME_STORAGE_KEY);
@@ -4590,14 +4593,14 @@ export default function ChatPage() {
   const resetJournalEntryModal = useCallback(() => {
     setJournalEntryModalOpen(false);
     setJournalEntryDate(getTodayDateInputValue());
-    setJournalEntryText("");
+    replaceJournalEntryText("");
     setJournalEntrySaving(false);
     setJournalEntrySaveError(null);
     setJournalRefinePersona("critical");
     setJournalRefineLoading(false);
     setJournalRefineError(null);
     setJournalRefinedText("");
-  }, []);
+  }, [replaceJournalEntryText]);
 
   const openJournalTypeChooser = useCallback(() => {
     playSelectionChime();
@@ -4611,17 +4614,17 @@ export default function ChatPage() {
   const openJournalEntryFlow = useCallback((chip: LandingJournalChipKey = "gratitude") => {
     setSelectedLandingJournalChip(chip);
     setJournalEntryDate(getTodayDateInputValue());
-    setJournalEntryText("");
+    replaceJournalEntryText("");
     setJournalEntrySaveError(null);
     setJournalRefinePersona("critical");
     setJournalRefineLoading(false);
     setJournalRefineError(null);
     setJournalRefinedText("");
     setJournalEntryModalOpen(true);
-  }, []);
+  }, [replaceJournalEntryText]);
 
   const saveJournalEntryFromModal = useCallback(async () => {
-    const body = journalEntryText.trim();
+    const body = journalEntryTextRef.current.trim();
     if (!body) return;
     setJournalEntrySaving(true);
     setJournalEntrySaveError(null);
@@ -4654,10 +4657,10 @@ export default function ChatPage() {
     } finally {
       setJournalEntrySaving(false);
     }
-  }, [journalEntryDate, journalEntryText, language, refetchTranscripts, resetJournalEntryModal]);
+  }, [journalEntryDate, language, refetchTranscripts, resetJournalEntryModal]);
 
   const refineJournalEntryFromModal = useCallback(async () => {
-    const body = journalEntryText.trim();
+    const body = journalEntryTextRef.current.trim();
     const isRefinableType =
       selectedLandingJournalChip === "gratitude" || selectedLandingJournalChip === "reflection";
     if (!body || !isRefinableType) return;
@@ -4684,12 +4687,12 @@ export default function ChatPage() {
     } finally {
       setJournalRefineLoading(false);
     }
-  }, [journalEntryText, journalRefinePersona, selectedLandingJournalChip]);
+  }, [journalRefinePersona, selectedLandingJournalChip]);
 
   const resetCalorieTrackerModal = useCallback(() => {
     setCalorieTrackerModalOpen(false);
-    setCalorieTrackerInput("");
-    setCalorieTrackerCustomTag("");
+    replaceCalorieTrackerInput("");
+    replaceCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
     setCalorieTrackerImageAnalyses([]);
     setCalorieTrackerImageProcessing(false);
@@ -4705,7 +4708,7 @@ export default function ChatPage() {
     setCalorieTrackerResult(null);
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
-  }, []);
+  }, [replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput]);
 
   const openCalorieTrackerModal = useCallback((chip: LandingJournalChipKey = "nutrition") => {
     playSelectionChime();
@@ -4714,8 +4717,8 @@ export default function ChatPage() {
       return;
     }
     setSelectedLandingJournalChip(chip);
-    setCalorieTrackerInput("");
-    setCalorieTrackerCustomTag("");
+    replaceCalorieTrackerInput("");
+    replaceCalorieTrackerCustomTag("");
     setCalorieTrackerEntryDate(getTodayDateInputValue());
     setCalorieTrackerImageAnalyses([]);
     setCalorieTrackerImageProcessing(false);
@@ -4731,7 +4734,7 @@ export default function ChatPage() {
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
     setCalorieTrackerModalOpen(true);
-  }, [incognitoMode, isAnonymous, router]);
+  }, [incognitoMode, isAnonymous, replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput, router]);
 
   const openLandingJournalChip = useCallback(
     (chip: LandingJournalChipKey) => {
@@ -4826,7 +4829,7 @@ export default function ChatPage() {
             body: JSON.stringify({
               imageBase64: base64,
               mimeType,
-              hintText: calorieTrackerInput.trim().slice(0, 600),
+              hintText: calorieTrackerInputRef.current.trim().slice(0, 600),
               mode: selectedLandingJournalChip === "exercise" ? "exercise" : "nutrition",
             }),
           });
@@ -4858,7 +4861,7 @@ export default function ChatPage() {
         setCalorieTrackerImageProcessing(false);
       }
     },
-    [calorieTrackerInput, selectedLandingJournalChip]
+    [selectedLandingJournalChip]
   );
 
   const buildCalorieTrackerHydratedInput = useCallback(() => {
@@ -4866,12 +4869,12 @@ export default function ChatPage() {
       .map((item, idx) => `Photo ${idx + 1} analysis:\n${item.extractedText.trim()}`)
       .filter((chunk) => chunk.trim().length > 0)
       .join("\n\n");
-    const context = calorieTrackerInput.trim();
+    const context = calorieTrackerInputRef.current.trim();
     if (extracted && context) {
       return `${extracted}\n\nAdditional user context:\n${context}`;
     }
     return extracted || context;
-  }, [calorieTrackerImageAnalyses, calorieTrackerInput]);
+  }, [calorieTrackerImageAnalyses]);
 
   const finalizeCalorieTracker = useCallback(
     async (
@@ -5130,7 +5133,6 @@ export default function ChatPage() {
     }
   }, [
     buildCalorieTrackerHydratedInput,
-    calorieTrackerInput,
     finalizeCalorieTracker,
     selectedLandingJournalChip,
   ]);
@@ -5184,11 +5186,11 @@ export default function ChatPage() {
       await reuseNutritionSuggestionExact(suggestion);
       return;
     }
-    setCalorieTrackerInput(suggestion.sampleEntry ?? "");
-    setCalorieTrackerCustomTag(suggestion.displayName ?? "");
+    replaceCalorieTrackerInput(suggestion.sampleEntry ?? "");
+    replaceCalorieTrackerCustomTag(suggestion.displayName ?? "");
     setCalorieTrackerError(null);
     setCalorieTrackerStep("input");
-  }, [reuseNutritionSuggestionExact, selectedLandingJournalChip]);
+  }, [replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput, reuseNutritionSuggestionExact, selectedLandingJournalChip]);
 
   const calorieTrackerReviewGuidance = useMemo(() => {
     if (calorieTrackerStep !== "review" || !calorieTrackerReviewDraft) return null;
@@ -5524,14 +5526,6 @@ export default function ChatPage() {
     () => dateFromDayKey(selectedLandingDayKey) ?? new Date(),
     [selectedLandingDayKey]
   );
-  const nutritionReportSelectedDate = useMemo(
-    () => dateFromDayKey(nutritionReportDayKey) ?? new Date(),
-    [nutritionReportDayKey]
-  );
-  const dailyReportSelectedDate = useMemo(
-    () => dateFromDayKey(dailyReportDayKey) ?? new Date(),
-    [dailyReportDayKey]
-  );
   useEffect(() => {
     const timer = window.setInterval(() => {
       setLocalMinuteTick(Math.floor(Date.now() / 60000));
@@ -5588,6 +5582,49 @@ export default function ChatPage() {
     }
     return chips;
   }, [headerCalendarMonth]);
+  const openLandingHeaderCalendar = useCallback(() => {
+    setHeaderCalendarMonth(
+      new Date(selectedLandingDayDate.getFullYear(), selectedLandingDayDate.getMonth(), 1)
+    );
+    setHeaderCalendarOpen(true);
+  }, [selectedLandingDayDate]);
+  const landingDateStripItems = useMemo(
+    () =>
+      landingCalendarDays.map(({ key, date }) => {
+        const selected = key === selectedLandingDayKey;
+        const hasActivity = (landingDayActivityCountForTab.get(key) ?? 0) > 0;
+        return {
+          key,
+          weekdayLabel: new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date),
+          dateLabel: String(date.getDate()),
+          selected,
+          struck: hasActivity && !selected,
+          onSelect: () => setSelectedLandingDayKey(key),
+        };
+      }),
+    [landingCalendarDays, landingDayActivityCountForTab, selectedLandingDayKey]
+  );
+  const landingQuickCaptureItems = useMemo(
+    () =>
+      LANDING_JOURNAL_CHIPS.map((chip) => ({
+        key: chip.key,
+        label: chip.label,
+        description: LANDING_JOURNAL_CARD_DESCRIPTION[chip.key],
+        icon: renderLandingJournalIcon(chip.key),
+        onClick: () => openLandingJournalChip(chip.key),
+      })),
+    [openLandingJournalChip]
+  );
+  const landingShellTitle = useMemo(() => {
+    if (headerCalendarLabel === "Today") return "Today dashboard";
+    return `${headerCalendarLabel} dashboard`;
+  }, [headerCalendarLabel]);
+  const landingShellSubtitle = useMemo(() => {
+    const count = selectedLandingDayActivityItems.length;
+    const activityLabel = count === 1 ? "activity" : "activities";
+    if (count === 0) return "A calmer landing surface for focus, journaling, mentors, and review.";
+    return `${count} ${activityLabel} synced into one shared dashboard surface.`;
+  }, [selectedLandingDayActivityItems.length]);
   const selectedLandingDayNutrition = useMemo(
     () =>
       summarizeNutritionForDay(
@@ -5677,6 +5714,22 @@ export default function ChatPage() {
     }
     return events.sort((a, b) => a.startMinute - b.startMinute);
   }, [focusTrackerEntries, journalEntriesSorted, selectedLandingDayActivityItems]);
+  const selectedLandingDayFocusSummary = useMemo(() => {
+    let minutes = 0;
+    let sessions = 0;
+    const rows: FocusTrackerEntry[] = [];
+    for (const entry of focusTrackerEntries) {
+      const key = `${String(entry.year).padStart(4, "0")}-${String(entry.month).padStart(2, "0")}-${String(
+        entry.day
+      ).padStart(2, "0")}`;
+      if (key !== selectedLandingDayKey) continue;
+      minutes += Number.isFinite(entry.minutes) ? entry.minutes : 0;
+      sessions += 1;
+      rows.push(entry);
+    }
+    rows.sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime());
+    return { minutes, sessions, rows };
+  }, [focusTrackerEntries, localMinuteTick, selectedLandingDayKey]);
   const todayFocusSummary = useMemo(() => {
     const todayKey = toDayKey(new Date());
     let minutes = 0;
@@ -5720,16 +5773,6 @@ export default function ChatPage() {
       setNutritionDayViewExpandedContributors({});
     }
   }, [nutritionDayViewModalOpen, selectedLandingDayKey]);
-  const activeNutritionReportSnapshot = useMemo(
-    () =>
-      summarizeNutritionForDay(
-        journalEntriesSorted,
-        nutritionReportDayKey,
-        nutritionGoals.caloriesTarget
-      ),
-    [journalEntriesSorted, nutritionGoals.caloriesTarget, nutritionReportDayKey]
-  );
-  const canRunNutritionReport = hasMeaningfulNutritionData(activeNutritionReportSnapshot);
   const transcriptModalDayKey = useMemo(() => {
     if (!transcriptModalTranscript) return null;
     return journalEntryDayKey({
@@ -6045,23 +6088,6 @@ export default function ChatPage() {
   }, [transcriptModalTranscript]);
 
   useEffect(() => {
-    if (messages.length !== 0 || incognitoMode) {
-      landingDaysAutoScrolledRef.current = false;
-      return;
-    }
-    if (landingDaysAutoScrolledRef.current) return;
-    const mobileEl = landingDaysScrollerMobileRef.current;
-    const desktopEl = landingDaysScrollerDesktopRef.current;
-    if (!mobileEl && !desktopEl) return;
-    const rafId = window.requestAnimationFrame(() => {
-      if (mobileEl) mobileEl.scrollLeft = mobileEl.scrollWidth;
-      if (desktopEl) desktopEl.scrollLeft = desktopEl.scrollWidth;
-      landingDaysAutoScrolledRef.current = true;
-    });
-    return () => window.cancelAnimationFrame(rafId);
-  }, [messages.length, incognitoMode, landingCalendarDays.length]);
-
-  useEffect(() => {
     if (!isNew && !incognitoMode) return;
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -6129,8 +6155,8 @@ export default function ChatPage() {
         setCcJournalTranscriptId(ctx.transcriptId);
         setCcYoutubeTranscriptId(null);
         setCcYoutubeReextractTitle(null);
-        setCcJournalText("");
-        setCcJournalTitle(ctx.videoTitle ?? "");
+        replaceCcJournalText("");
+        replaceCcJournalTitle(ctx.videoTitle ?? "");
         setCcJournalPersistLibrary(false);
       } else {
         setCcImportJournalMode(false);
@@ -6142,10 +6168,10 @@ export default function ChatPage() {
       setCcYoutubeResult(null);
       setCcYoutubeError(null);
       setCcYoutubeExtractProgress(null);
-      setCcYoutubeExtractPrompt("");
+      replaceCcYoutubeExtractPrompt("");
       setCcYoutubeModal(true);
     },
-    []
+    [replaceCcJournalText, replaceCcJournalTitle, replaceCcYoutubeExtractPrompt]
   );
 
   useEffect(() => {
@@ -6888,14 +6914,43 @@ export default function ChatPage() {
     setOnboardingDismissed(true);
   }, []);
 
-  const handleMainInputChange = useCallback((nextValue: string) => {
+  const flushComposerInputSync = useCallback((nextValue: string) => {
+    if (composerInputSyncTimeoutRef.current) {
+      clearTimeout(composerInputSyncTimeoutRef.current);
+      composerInputSyncTimeoutRef.current = null;
+    }
     setInput(nextValue);
+  }, []);
+
+  const replaceComposerInput = useCallback((nextValue: string) => {
+    composerDraftRef.current = nextValue;
+    flushComposerInputSync(nextValue);
+    setComposerInputSyncRevision((prev) => prev + 1);
+  }, [flushComposerInputSync]);
+
+  const handleMainInputChange = useCallback((nextValue: string) => {
+    composerDraftRef.current = nextValue;
     if (chatInputLensRefinedText) setChatInputLensRefinedText("");
     if (chatInputLensError) setChatInputLensError(null);
+    if (composerInputSyncTimeoutRef.current) {
+      clearTimeout(composerInputSyncTimeoutRef.current);
+    }
+    composerInputSyncTimeoutRef.current = setTimeout(() => {
+      composerInputSyncTimeoutRef.current = null;
+      setInput(nextValue);
+    }, 120);
   }, [chatInputLensError, chatInputLensRefinedText]);
 
+  useEffect(() => {
+    return () => {
+      if (composerInputSyncTimeoutRef.current) {
+        clearTimeout(composerInputSyncTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const refineMainInputWithLens = useCallback(async () => {
-    const trimmed = input.trim();
+    const trimmed = composerDraftRef.current.trim();
     if (!trimmed || chatInputLens === "none" || chatInputLensLoading) return;
     setChatInputLensLoading(true);
     setChatInputLensError(null);
@@ -6922,7 +6977,7 @@ export default function ChatPage() {
     } finally {
       setChatInputLensLoading(false);
     }
-  }, [chatInputLens, chatInputLensLoading, input]);
+  }, [chatInputLens, chatInputLensLoading]);
 
   const chatLensSignalText = useMemo(() => {
     const trimmed = input.trim();
@@ -6966,8 +7021,8 @@ export default function ChatPage() {
     };
   }, [chatInputLensMenuOpen]);
 
-  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string; journalCheckpoint?: string }) => {
-    const rawText = (overrideText ?? input).trim();
+  const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string }) => {
+    const rawText = (overrideText ?? composerDraftRef.current).trim();
     if (!rawText || isLoading) return;
     setMentorJournalBridgePending(false);
     playSelectionChime();
@@ -7022,7 +7077,7 @@ export default function ChatPage() {
     if (messages.length === 0 && sessions.length === 0) {
       dismissOnboarding();
     }
-    setInput("");
+    replaceComposerInput("");
     setChatInputLensRefinedText("");
     setChatInputLensError(null);
     setIsLoading(true);
@@ -7032,7 +7087,6 @@ export default function ChatPage() {
     const userMessage: Message = {
       role: "user",
       content: rawText,
-      ...(options?.journalCheckpoint && { journalCheckpoint: options.journalCheckpoint }),
       ...(!cardCtx && options?.activeCardPrompt &&
         options?.activeCardName && {
           perspectiveCard: {
@@ -7111,9 +7165,6 @@ export default function ChatPage() {
     } else if (options?.activeCardPrompt) {
       chatBody.activeCardPrompt = options.activeCardPrompt;
       if (options?.activeCardName) chatBody.activeCardName = options.activeCardName;
-    }
-    if (options?.journalCheckpoint) {
-      chatBody.journalCheckpoint = options.journalCheckpoint;
     }
     if (
       multiMentorMode &&
@@ -7203,7 +7254,7 @@ export default function ChatPage() {
         : parseRelevantContextBlock(accumulated);
       const { contentWithoutBlock: afterMentor, mentorResponses } =
         parseMentorResponsesBlock(afterCtx);
-      const { contentWithoutBlock: contentWithoutJournal, journalCheckpoint } =
+      const { contentWithoutBlock: contentWithoutJournal } =
         parseJournalCheckpointBlock(afterMentor);
       const contentWithoutBlock = contentWithoutJournal;
       const resolvedContext =
@@ -7243,14 +7294,6 @@ export default function ChatPage() {
         didFireVisibleHaptic = true;
         void playLlmResponseVisibleHaptic();
       }
-      const journalCheckpointCount = baseMessages.filter((m) => m.journalCheckpoint).length;
-      if (journalCheckpoint && !isAnonymous && !incognitoMode && journalCheckpointCount < 2) {
-        setJournalCheckpointModal({
-          prompt: journalCheckpoint.prompt,
-          options: journalCheckpoint.options,
-          assistantMessageIndex: messages.length + 1, // user at messages.length, assistant at +1
-        });
-      }
     } catch (err) {
       setLastFailedUserMessage(rawText);
       setMessages((prev) => {
@@ -7273,7 +7316,7 @@ export default function ChatPage() {
       refetchSessions();
       refetchScore();
     }
-  }, [input, isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, pendingOneOnOneMentor, pendingSecondOrder, multiMentorMode, selectedMentorFigureIds]);
+  }, [isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, pendingOneOnOneMentor, pendingSecondOrder, multiMentorMode, selectedMentorFigureIds, replaceComposerInput]);
 
   useEffect(() => {
     if (journalBridgeAutoSendTrigger === 0) return;
@@ -7282,21 +7325,6 @@ export default function ChatPage() {
     journalBridgeAutoSendTextRef.current = null;
     void sendMessage(text);
   }, [journalBridgeAutoSendTrigger, sendMessage]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (
-      (e.key === "Enter" && !e.shiftKey) ||
-      (e.metaKey && e.key === "Enter") ||
-      (e.ctrlKey && e.key === "Enter")
-    ) {
-      e.preventDefault();
-      if (messages.length === 0 && !incognitoMode && (landingTab === "journaling" || landingTab === "pomodoro")) {
-        return;
-      } else {
-      sendMessage();
-      }
-    }
-  };
 
   useEffect(() => {
     const handleCopy = (e: ClipboardEvent) => {
@@ -7362,10 +7390,20 @@ export default function ChatPage() {
   const [mentorRecommendationsError, setMentorRecommendationsError] = useState<string | null>(null);
   const [askMentorsRecommendModalOpen, setAskMentorsRecommendModalOpen] = useState(false);
   const [askMentorsRecommendationInput, setAskMentorsRecommendationInput] = useState("");
+  const askMentorsRecommendationInputRef = useRef("");
+  const [askMentorsRecommendationInputRevision, setAskMentorsRecommendationInputRevision] = useState(0);
   const [askMentorsRecommendations, setAskMentorsRecommendations] = useState<MentorRecommendationSuggestion[]>([]);
   const [askMentorsRecommendationsLoading, setAskMentorsRecommendationsLoading] = useState(false);
   const [askMentorsRecommendationsError, setAskMentorsRecommendationsError] = useState<string | null>(null);
   const [askMentorsSelectedFigureIds, setAskMentorsSelectedFigureIds] = useState<string[]>([]);
+  const replaceAskMentorsRecommendationInput = useCallback((nextValue: string) => {
+    askMentorsRecommendationInputRef.current = nextValue;
+    setAskMentorsRecommendationInput(nextValue);
+    setAskMentorsRecommendationInputRevision((prev) => prev + 1);
+  }, []);
+  useEffect(() => {
+    askMentorsRecommendationInputRef.current = askMentorsRecommendationInput;
+  }, [askMentorsRecommendationInput]);
   const [newConversationChooserModalOpen, setNewConversationChooserModalOpen] = useState(false);
   const [newConversationResponseVerbosity, setNewConversationResponseVerbosity] =
     useState<ResponseVerbosity>("compact");
@@ -7395,15 +7433,6 @@ export default function ChatPage() {
   const [overachieverMessage, setOverachieverMessage] = useState<string | null>(
     null
   );
-  const [journalCheckpointModal, setJournalCheckpointModal] = useState<{
-    prompt: string;
-    options: string[];
-    assistantMessageIndex: number;
-  } | null>(null);
-  const [journalCheckpointLoading, setJournalCheckpointLoading] = useState(false);
-  const [journalCheckpointBlanks, setJournalCheckpointBlanks] = useState<string[]>([]);
-  const [journalCheckpointCustomByIndex, setJournalCheckpointCustomByIndex] = useState<Record<number, string>>({});
-  const [journalCheckpointPopoverIndex, setJournalCheckpointPopoverIndex] = useState<number | null>(null);
   const [figuresData, setFiguresData] = useState<{ categories: { id: string; name: string }[]; figures: { id: string; name: string; description: string; category: string }[] } | null>(null);
   const [figuresLoading, setFiguresLoading] = useState(false);
   const [figuresSearchQuery, setFiguresSearchQuery] = useState("");
@@ -7480,96 +7509,10 @@ export default function ChatPage() {
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
   const allExportSectionsSelected = selectedExportSections.length === EXPORT_DATA_SECTION_OPTIONS.length;
-  const openManualJournalCheckpoint = useCallback(
-    async (assistantContent: string, assistantMessageIndex: number) => {
-      playSelectionChime();
-      if (!currentSessionId || isAnonymous || incognitoMode || journalCheckpointLoading) return;
-
-      const fallback = (() => {
-        const parsed = parseAssistantMessage(assistantContent);
-        const assistantText = stripMarkdown(parsed.text).replace(/\s+/g, " ").trim();
-        const firstSentence = assistantText
-          .split(/[.!?]+/)
-          .map((s) => s.trim())
-          .find((s) => s.length > 0)
-          ?.slice(0, 90);
-        return {
-          prompt: firstSentence
-            ? `Reflecting on "${firstSentence}", I want to remember _____`
-            : "Reflecting on this conversation, I want to remember _____",
-          options: [
-            "what matters most to me",
-            "the next step I will take",
-            "the feeling underneath this",
-            "the insight I do not want to lose",
-          ],
-        };
-      })();
-      const ensurePromptHasBlank = (rawPrompt: string) => {
-        const trimmed = rawPrompt.trim();
-        if (!trimmed) return fallback.prompt;
-        // If model returns a fully-complete sentence without blanks, fall back to a clear
-        // fill-in template so user intent is obvious.
-        return /_{2,}/.test(trimmed) ? trimmed : fallback.prompt;
-      };
-
-      setJournalCheckpointLoading(true);
-      try {
-        const res = await fetch(`/api/sessions/${currentSessionId}/journal-checkpoint`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ language }),
-        });
-        if (!res.ok) {
-          setJournalCheckpointModal({
-            prompt: ensurePromptHasBlank(fallback.prompt),
-            options: fallback.options,
-            assistantMessageIndex,
-          });
-          return;
-        }
-        const data = (await res.json()) as { prompt?: string; options?: string[] };
-        const prompt =
-          typeof data.prompt === "string" && data.prompt.trim()
-            ? ensurePromptHasBlank(data.prompt)
-            : ensurePromptHasBlank(fallback.prompt);
-        const options = Array.isArray(data.options)
-          ? data.options.filter((opt): opt is string => typeof opt === "string" && opt.trim().length > 0).slice(0, 6)
-          : fallback.options;
-        setJournalCheckpointModal({
-          prompt,
-          options: options.length > 0 ? options : fallback.options,
-          assistantMessageIndex,
-        });
-      } catch {
-        setJournalCheckpointModal({
-          prompt: ensurePromptHasBlank(fallback.prompt),
-          options: fallback.options,
-          assistantMessageIndex,
-        });
-      } finally {
-        setJournalCheckpointLoading(false);
-      }
-    },
-    [currentSessionId, isAnonymous, incognitoMode, journalCheckpointLoading, language]
-  );
-
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
   }, []);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const stored = localStorage.getItem("fmllabs-weather-format");
-      if (stored === "condition-temp" || stored === "emoji-temp" || stored === "temp-only") {
-        setWeatherFormat(stored);
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
@@ -7577,17 +7520,10 @@ export default function ChatPage() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (cancelled) return;
-        if (data?.weatherFormat === "condition-temp" || data?.weatherFormat === "emoji-temp" || data?.weatherFormat === "temp-only") {
-          setWeatherFormat(data.weatherFormat);
-        }
         const nextReminderPreferences = normalizeReminderPreferences(data?.reminderPreferences);
         setReminderPreferences(nextReminderPreferences);
-        setNightlyNutritionReportNotificationEnabled(data?.nightlyNutritionReportNotificationEnabled === true);
         if (Capacitor.isNativePlatform()) {
-          void syncNativeReminders(nextReminderPreferences, {
-            nightlyNutritionReportNotificationEnabled:
-              data?.nightlyNutritionReportNotificationEnabled === true,
-          });
+          void syncNativeReminders(nextReminderPreferences);
         }
         const nextGoals = {
           caloriesTarget: normalizeGoalValue(
@@ -7639,32 +7575,13 @@ export default function ChatPage() {
         setNutritionFatLossMethods(normalizedMethods);
         setNutritionMethodConfig(nextNutritionMethodConfig);
         setNutritionGoalIntent(nextNutritionGoalIntent);
-        setGoalsCoachIntentDraft(nextNutritionGoalIntent);
+        replaceGoalsCoachIntentDraft(nextNutritionGoalIntent);
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [userId]);
-
-  const updateWeatherFormat = useCallback(
-    (next: WeatherFormat) => {
-      setWeatherFormat(next);
-      try {
-        localStorage.setItem("fmllabs-weather-format", next);
-      } catch {
-        /* ignore */
-      }
-      if (userId) {
-        fetch("/api/me/settings", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ weatherFormat: next }),
-        }).catch(() => {});
-      }
-    },
-    [userId]
-  );
+  }, [replaceGoalsCoachIntentDraft, userId]);
 
   const toggleReminderEnabled = useCallback((type: ReminderType) => {
     setReminderPreferences((prev) => ({
@@ -7717,7 +7634,6 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           reminderPreferences: payload,
-          nightlyNutritionReportNotificationEnabled,
         }),
       });
       if (!res.ok) {
@@ -7726,9 +7642,7 @@ export default function ChatPage() {
       }
       setReminderPreferences(payload);
 
-      const nativeSync = await syncNativeReminders(payload, {
-        nightlyNutritionReportNotificationEnabled,
-      });
+      const nativeSync = await syncNativeReminders(payload);
       if (!nativeSync.ok && nativeSync.reason === "permission-denied") {
         setReminderSaveState({
           saving: false,
@@ -7752,7 +7666,7 @@ export default function ChatPage() {
         error: err instanceof Error ? err.message : "Could not save reminder settings.",
       });
     }
-  }, [nightlyNutritionReportNotificationEnabled, reminderPreferences, userId]);
+  }, [reminderPreferences, userId]);
 
   const openGoalsModal = useCallback(() => {
     if (isAnonymous || incognitoMode) {
@@ -7780,12 +7694,12 @@ export default function ChatPage() {
     setGoalsCalculatorRationale("");
     setGoalsWizardError(null);
     setGoalsSaveError(null);
-    setGoalsCoachIntentDraft(nutritionGoalIntent);
+    replaceGoalsCoachIntentDraft(nutritionGoalIntent);
     setGoalsCoachError(null);
     setGoalsCoachResult(null);
     setGoalsCoachLoading(false);
     setGoalsModalOpen(true);
-  }, [incognitoMode, isAnonymous, nutritionGoalIntent, nutritionGoals, router]);
+  }, [incognitoMode, isAnonymous, nutritionGoalIntent, nutritionGoals, replaceGoalsCoachIntentDraft, router]);
 
   const saveNutritionGoals = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -7815,7 +7729,7 @@ export default function ChatPage() {
         GOAL_MACRO_MAX
       ),
     };
-    const nextNutritionGoalIntent = goalsCoachIntentDraft.trim().slice(0, 500);
+    const nextNutritionGoalIntent = goalsCoachIntentDraftRef.current.trim().slice(0, 500);
     setGoalsSaving(true);
     setGoalsSaveError(null);
     try {
@@ -7852,7 +7766,6 @@ export default function ChatPage() {
       setGoalsSaving(false);
     }
   }, [
-    goalsCoachIntentDraft,
     goalsDraft,
     incognitoMode,
     isAnonymous,
@@ -7866,7 +7779,7 @@ export default function ChatPage() {
 
   const runGoalsCoachHelp = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
-    const goalIntent = goalsCoachIntentDraft.trim().slice(0, 500);
+    const goalIntent = goalsCoachIntentDraftRef.current.trim().slice(0, 500);
     if (!goalIntent) {
       setGoalsCoachError("Please describe what you want to achieve first.");
       setGoalsCoachResult(null);
@@ -7914,7 +7827,7 @@ export default function ChatPage() {
     } finally {
       setGoalsCoachLoading(false);
     }
-  }, [goalsCoachIntentDraft, incognitoMode, isAnonymous, userId]);
+  }, [incognitoMode, isAnonymous, userId]);
 
   const goalsWizardStep = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
 
@@ -8233,384 +8146,6 @@ export default function ChatPage() {
     userId,
   ]);
 
-  const resetNutritionReportModal = useCallback(() => {
-    setNutritionReportModalOpen(false);
-    setNutritionReportDayKey(getTodayDateInputValue());
-    setNutritionReportLoading(false);
-    setNutritionReportError(null);
-    setNutritionReportResult(null);
-  }, []);
-
-  const openNutritionReportModal = useCallback(() => {
-    playSelectionChime();
-    if (isAnonymous || incognitoMode) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
-      return;
-    }
-    setNutritionReportDayKey(selectedLandingDayKey);
-    setNutritionReportLoading(false);
-    setNutritionReportError(null);
-    setNutritionReportResult(null);
-    setNutritionReportModalOpen(true);
-  }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
-
-  const openDailyReportModal = useCallback(() => {
-    playSelectionChime();
-    if (isAnonymous || incognitoMode) {
-      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
-      return;
-    }
-    setDailyReportDayKey(selectedLandingDayKey);
-    setDailyReportLoading(false);
-    setDailyReportError(null);
-    setDailyReportResult(null);
-    setDailyReportModalOpen(true);
-  }, [incognitoMode, isAnonymous, router, selectedLandingDayKey]);
-
-  const normalizeNutritionReportPayload = useCallback((data: {
-    dayKey?: string;
-    dayLabel?: string;
-    report?: {
-      summary?: string;
-      goalStatus?: string;
-      highlights?: string[];
-      tomorrowTips?: string[];
-    };
-  }) => {
-    if (!data.report || !data.dayKey || !data.dayLabel) return null;
-    return {
-      dayKey: data.dayKey,
-      dayLabel: data.dayLabel,
-      report: {
-        summary: data.report.summary ?? "",
-        goalStatus: data.report.goalStatus ?? "",
-        highlights: Array.isArray(data.report.highlights) ? data.report.highlights : [],
-        tomorrowTips: Array.isArray(data.report.tomorrowTips) ? data.report.tomorrowTips : [],
-      },
-    };
-  }, []);
-
-  const loadSavedNutritionReport = useCallback(async (
-    dayKey: string,
-    options?: { applyToState?: boolean }
-  ): Promise<boolean> => {
-    const res = await fetch(`/api/me/nutrition-report?dayKey=${encodeURIComponent(dayKey)}`, {
-      method: "GET",
-      cache: "no-store",
-    });
-    if (!res.ok) return false;
-    const data = (await res.json().catch(() => ({}))) as {
-      dayKey?: string;
-      dayLabel?: string;
-      report?: {
-        summary?: string;
-        goalStatus?: string;
-        highlights?: string[];
-        tomorrowTips?: string[];
-      };
-    };
-    const normalized = normalizeNutritionReportPayload(data);
-    if (!normalized) return false;
-    if (options?.applyToState !== false) {
-      setNutritionReportResult(normalized);
-    }
-    return true;
-  }, [normalizeNutritionReportPayload]);
-
-  const runNutritionReport = useCallback(async (options?: { dayKey?: string; focusPrompt?: string; bypassDataGuard?: boolean }) => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    const targetDayKey = options?.dayKey ?? nutritionReportDayKey;
-    const targetFocusPrompt = (options?.focusPrompt ?? "").trim().slice(0, 600);
-    if (!options?.bypassDataGuard && targetDayKey === nutritionReportDayKey && !canRunNutritionReport) {
-      setNutritionReportError(getLandingTranslations(language).nutritionAnalysisNoDataError);
-      return;
-    }
-    setNutritionReportLoading(true);
-    setNutritionReportError(null);
-    setNutritionReportResult(null);
-    try {
-      const res = await fetch("/api/me/nutrition-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          dayScope: "selected_day",
-          selectedDayKey: targetDayKey,
-          focusPrompt: targetFocusPrompt,
-        }),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        error?: string;
-        dayKey?: string;
-        dayLabel?: string;
-        report?: {
-          summary?: string;
-          goalStatus?: string;
-          highlights?: string[];
-          tomorrowTips?: string[];
-        };
-      };
-      const normalized = normalizeNutritionReportPayload(data);
-      if (!res.ok || !normalized) {
-        throw new Error(data.error || "Could not generate nutrition report.");
-      }
-      setNutritionReportResult(normalized);
-    } catch (err) {
-      const message =
-        err instanceof Error && err.message.includes("No nutrition or exercise activity")
-          ? getLandingTranslations(language).nutritionAnalysisNoDataError
-          : getLandingTranslations(language).nutritionAnalysisRequestError;
-      setNutritionReportError(message);
-    } finally {
-      setNutritionReportLoading(false);
-    }
-  }, [
-    canRunNutritionReport,
-    incognitoMode,
-    isAnonymous,
-    language,
-    nutritionReportDayKey,
-    normalizeNutritionReportPayload,
-    userId,
-  ]);
-
-  const resetDailyReportModal = useCallback(() => {
-    setDailyReportModalOpen(false);
-    setDailyReportDayKey(getTodayDateInputValue());
-    setDailyReportLoading(false);
-    setDailyReportError(null);
-    setDailyReportResult(null);
-  }, []);
-
-  const normalizeDailyReportPayload = useCallback((data: {
-    dayKey?: string;
-    dayLabel?: string;
-    mentorFigureName?: string;
-    report?: {
-      coachIntro?: string;
-      summary?: string;
-      wins?: string[];
-      momentumSignals?: string[];
-      tomorrowGamePlan?: string[];
-      sectionCards?: Array<{
-        key?: string;
-        title?: string;
-        body?: string;
-        accent?: string;
-      }>;
-      closingNote?: string;
-    };
-  }) => {
-    if (!data.dayKey || !data.dayLabel || !data.report) return null;
-    const cards = Array.isArray(data.report.sectionCards)
-      ? data.report.sectionCards
-          .map((card) => {
-            const key = card?.key;
-            if (
-              key !== "conversations" &&
-              key !== "memories" &&
-              key !== "focus" &&
-              key !== "nutrition_exercise" &&
-              key !== "journaling"
-            ) {
-              return null;
-            }
-            const accentRaw = card?.accent;
-            const accent =
-              accentRaw === "violet" ||
-              accentRaw === "teal" ||
-              accentRaw === "emerald" ||
-              accentRaw === "amber" ||
-              accentRaw === "rose" ||
-              accentRaw === "sky"
-                ? accentRaw
-                : "sky";
-            return {
-              key,
-              title: typeof card?.title === "string" ? card.title : "",
-              body: typeof card?.body === "string" ? card.body : "",
-              accent,
-            };
-          })
-          .filter((card): card is {
-            key: "conversations" | "memories" | "focus" | "nutrition_exercise" | "journaling";
-            title: string;
-            body: string;
-            accent: "violet" | "teal" | "emerald" | "amber" | "rose" | "sky";
-          } => card !== null)
-      : [];
-    return {
-      dayKey: data.dayKey,
-      dayLabel: data.dayLabel,
-      mentorFigureName: typeof data.mentorFigureName === "string" ? data.mentorFigureName : "",
-      report: {
-        coachIntro: typeof data.report.coachIntro === "string" ? data.report.coachIntro : "",
-        summary: typeof data.report.summary === "string" ? data.report.summary : "",
-        wins: Array.isArray(data.report.wins) ? data.report.wins.filter((v): v is string => typeof v === "string") : [],
-        momentumSignals: Array.isArray(data.report.momentumSignals)
-          ? data.report.momentumSignals.filter((v): v is string => typeof v === "string")
-          : [],
-        tomorrowGamePlan: Array.isArray(data.report.tomorrowGamePlan)
-          ? data.report.tomorrowGamePlan.filter((v): v is string => typeof v === "string")
-          : [],
-        sectionCards: cards,
-        closingNote: typeof data.report.closingNote === "string" ? data.report.closingNote : "",
-      },
-    };
-  }, []);
-
-  const loadSavedDailyReport = useCallback(async (
-    dayKey: string,
-    options?: { applyToState?: boolean }
-  ): Promise<boolean> => {
-    const res = await fetch(`/api/me/daily-report?dayKey=${encodeURIComponent(dayKey)}`, {
-      method: "GET",
-      cache: "no-store",
-    });
-    if (!res.ok) return false;
-    const data = (await res.json().catch(() => ({}))) as {
-      dayKey?: string;
-      dayLabel?: string;
-      mentorFigureName?: string;
-      report?: {
-        coachIntro?: string;
-        summary?: string;
-        wins?: string[];
-        momentumSignals?: string[];
-        tomorrowGamePlan?: string[];
-        sectionCards?: Array<{
-          key?: string;
-          title?: string;
-          body?: string;
-          accent?: string;
-        }>;
-        closingNote?: string;
-      };
-    };
-    const normalized = normalizeDailyReportPayload(data);
-    if (!normalized) return false;
-    if (options?.applyToState !== false) {
-      setDailyReportResult(normalized);
-    }
-    return true;
-  }, [normalizeDailyReportPayload]);
-
-  const runDailyReport = useCallback(async (options?: { dayKey?: string }) => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    const targetDayKey = options?.dayKey ?? dailyReportDayKey;
-    setDailyReportLoading(true);
-    setDailyReportError(null);
-    setDailyReportResult(null);
-    try {
-      const res = await fetch("/api/me/daily-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          dayScope: "selected_day",
-          selectedDayKey: targetDayKey,
-        }),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        error?: string;
-        dayKey?: string;
-        dayLabel?: string;
-        mentorFigureName?: string;
-        report?: {
-          coachIntro?: string;
-          summary?: string;
-          wins?: string[];
-          momentumSignals?: string[];
-          tomorrowGamePlan?: string[];
-          sectionCards?: Array<{
-            key?: string;
-            title?: string;
-            body?: string;
-            accent?: string;
-          }>;
-          closingNote?: string;
-        };
-      };
-      const normalized = normalizeDailyReportPayload(data);
-      if (!res.ok || !normalized) {
-        throw new Error(data.error || "Could not generate daily report.");
-      }
-      setDailyReportResult(normalized);
-    } catch (err) {
-      const message =
-        err instanceof Error && err.message.includes("No daily activity found")
-          ? getLandingTranslations(language).dailyReportNoDataError
-          : getLandingTranslations(language).dailyReportRequestError;
-      setDailyReportError(message);
-    } finally {
-      setDailyReportLoading(false);
-    }
-  }, [
-    dailyReportDayKey,
-    incognitoMode,
-    isAnonymous,
-    language,
-    normalizeDailyReportPayload,
-    userId,
-  ]);
-
-  const openDailyReportBanner = useCallback(async () => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    const todayDayKey = toDayKey(new Date());
-    setDailyReportDayKey(todayDayKey);
-    setDailyReportError(null);
-    setDailyReportResult(null);
-    setDailyReportModalOpen(true);
-    setDailyReportLoading(true);
-    try {
-      const loadedFromDb = await loadSavedDailyReport(todayDayKey);
-      if (!loadedFromDb) {
-        await runDailyReport({ dayKey: todayDayKey });
-      }
-    } catch {
-      await runDailyReport({ dayKey: todayDayKey });
-    } finally {
-      setDailyReportLoading(false);
-    }
-  }, [incognitoMode, isAnonymous, loadSavedDailyReport, runDailyReport, userId]);
-
-  const dailyReportAutogenDayRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (isAnonymous || incognitoMode || !userId || landingTab !== "journaling") return;
-    const now = new Date();
-    if (now.getHours() < 21) return;
-    const todayDayKey = toDayKey(now);
-    if (dailyReportAutogenDayRef.current === todayDayKey) return;
-    dailyReportAutogenDayRef.current = todayDayKey;
-    void (async () => {
-      try {
-        const hasSaved = await loadSavedDailyReport(todayDayKey, { applyToState: false });
-        if (hasSaved) return;
-        await fetch("/api/me/daily-report", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            dayScope: "selected_day",
-            selectedDayKey: todayDayKey,
-          }),
-        });
-      } catch {
-        // Silent background retry is not required; next minute tick/day entry can attempt again.
-      }
-    })();
-  }, [incognitoMode, isAnonymous, landingTab, loadSavedDailyReport, localMinuteTick, userId]);
-
-  const dailyReportQueryOpenedRef = useRef(false);
-  useEffect(() => {
-    if (dailyReportQueryOpenedRef.current) return;
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("openDailyReport") !== "1") return;
-    dailyReportQueryOpenedRef.current = true;
-    void openDailyReportBanner();
-    const clean = new URL(window.location.href);
-    clean.searchParams.delete("openDailyReport");
-    window.history.replaceState({}, "", clean.pathname + clean.search + clean.hash);
-  }, [openDailyReportBanner]);
-
   const handleLandingActivityClick = useCallback((item: LandingDayActivityItem) => {
     if (item.kind === "session") {
       router.push(`/chat/${item.entityId}`);
@@ -8724,6 +8259,32 @@ export default function ChatPage() {
     },
     []
   );
+  const landingActivitySummaries = useMemo(
+    () =>
+      selectedLandingDayActivityGroups.map((group) => ({
+        key: group.groupKey,
+        label: group.label,
+        count: group.items.length,
+        onClick: () => openLandingActivityGroupModal(group),
+      })),
+    [openLandingActivityGroupModal, selectedLandingDayActivityGroups]
+  );
+  const landingMentorSummaries = useMemo(() => {
+    const figureMap = new Map((figuresData?.figures ?? []).map((figure) => [figure.id, figure]));
+    return followedFigureIds.flatMap((id) => {
+      const figure = figureMap.get(id);
+      if (!figure) return [];
+      return [
+        {
+          id: figure.id,
+          name: figure.name,
+          description: figure.description,
+          initials: figureInitials(figure.name),
+          hue: hueFromFigureId(figure.id),
+        },
+      ];
+    });
+  }, [figuresData?.figures, followedFigureIds]);
 
   const resetWeeklySummaryModal = useCallback(() => {
     setWeeklySummaryModalOpen(false);
@@ -9782,11 +9343,10 @@ export default function ChatPage() {
   }, [weightTrackerFilteredChronological, weightTrackerRange, weightTrackerTargetKg]);
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionReportModalOpen && !dailyReportModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !journalCheckpointModal && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (journalCheckpointModal) setJournalCheckpointModal(null);
-        else if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
+        if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
         else if (askMentorsRecommendModalOpen) setAskMentorsRecommendModalOpen(false);
         else if (mentorOneOnOneModalOpen) setMentorOneOnOneModalOpen(false);
         else if (ideasModalOpen) setIdeasModalOpen(false);
@@ -9797,8 +9357,6 @@ export default function ChatPage() {
           setMentorReflectionsRegenerateLoading(false);
         }
         else if (nutritionDayViewModalOpen) setNutritionDayViewModalOpen(false);
-        else if (dailyReportModalOpen && !dailyReportLoading) resetDailyReportModal();
-        else if (nutritionReportModalOpen && !nutritionReportLoading) resetNutritionReportModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
         else if (weightTrackerModalOpen && !weightTrackerSaving) resetWeightTrackerModal();
         else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) setGoalsModalOpen(false);
@@ -9834,7 +9392,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionReportModalOpen, nutritionReportLoading, dailyReportModalOpen, dailyReportLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, journalCheckpointModal, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetDailyReportModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -9915,16 +9473,6 @@ export default function ChatPage() {
     return () => window.clearInterval(timer);
   }, [shouldAnimateLandingPlaceholder, landingPlaceholderTransitioning]);
 
-  // Reset journal checkpoint modal state when modal opens
-  useEffect(() => {
-    if (journalCheckpointModal) {
-      const blankCount = (journalCheckpointModal.prompt.match(/_{2,}/g) || []).length;
-      setJournalCheckpointBlanks(Array(blankCount).fill(""));
-      setJournalCheckpointCustomByIndex({});
-      setJournalCheckpointPopoverIndex(null);
-    }
-  }, [journalCheckpointModal]);
-
   // On mobile: blur input when perspective card modal opens so keyboard doesn't steal focus
   useEffect(() => {
     if (drawnPerspectiveCard && typeof document !== "undefined") {
@@ -9948,7 +9496,6 @@ export default function ChatPage() {
       .then((data) => {
         if (data?.leaderboardOptIn === true) setLeaderboardOptIn(true);
         else setLeaderboardOptIn(false);
-        setNightlyNutritionReportNotificationEnabled(data?.nightlyNutritionReportNotificationEnabled === true);
         if (typeof data?.preferredName === "string") {
           setPreferredNameInput(data.preferredName);
         } else {
@@ -10360,7 +9907,7 @@ export default function ChatPage() {
   }, [mentorRecommendationInput, mentorCatalogCategoryId]);
 
   const requestAskMentorRecommendations = useCallback(async () => {
-    const query = askMentorsRecommendationInput.trim();
+    const query = askMentorsRecommendationInputRef.current.trim();
     if (!query) return;
     setAskMentorsRecommendationsLoading(true);
     setAskMentorsRecommendationsError(null);
@@ -10406,7 +9953,7 @@ export default function ChatPage() {
     } finally {
       setAskMentorsRecommendationsLoading(false);
     }
-  }, [askMentorsRecommendationInput, mentorPickerCategoryId]);
+  }, [mentorPickerCategoryId]);
 
   useEffect(() => {
     if (!mentorOneOnOneModalOpen) {
@@ -10421,13 +9968,13 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!askMentorsRecommendModalOpen) {
-      setAskMentorsRecommendationInput("");
+      replaceAskMentorsRecommendationInput("");
       setAskMentorsRecommendations([]);
       setAskMentorsRecommendationsError(null);
       setAskMentorsRecommendationsLoading(false);
       setAskMentorsSelectedFigureIds([]);
     }
-  }, [askMentorsRecommendModalOpen]);
+  }, [askMentorsRecommendModalOpen, replaceAskMentorsRecommendationInput]);
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
     setHeaderCalendarOpen(false);
@@ -10452,8 +9999,6 @@ export default function ChatPage() {
     resetCalorieTrackerModal();
     resetWeightTrackerModal();
     setNutritionDayViewModalOpen(false);
-    resetDailyReportModal();
-    resetNutritionReportModal();
     resetWeeklySummaryModal();
     setNewConversationChooserModalOpen(false);
     setMentorOneOnOneModalOpen(false);
@@ -10465,7 +10010,7 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetDailyReportModal, resetNutritionReportModal, resetWeeklySummaryModal]);
+  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -10505,11 +10050,11 @@ export default function ChatPage() {
       setCurrentSessionId(null);
       setCurrentSession(null);
       setCollapsedSummary(null);
-      setInput("");
+      replaceComposerInput("");
       setLandingTab(isAnonymous ? "deepThinking" : "journaling");
       router.push("/chat/new");
     },
-    [closeAllModalsExceptLeftPanel, isAnonymous, router]
+    [closeAllModalsExceptLeftPanel, isAnonymous, replaceComposerInput, router]
   );
 
   useEffect(() => {
@@ -10883,28 +10428,6 @@ export default function ChatPage() {
     (!!currentSession?.isCollapsed && !!collapsedSummary);
   const isPomodoroFocusMode =
     !incognitoMode && !isAnonymous && landingTab === "pomodoro" && !!pomodoroSessionStartIso;
-  const isAndroidNativeApp = useMemo(
-    () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android",
-    []
-  );
-  const showAndroidLandingTabs =
-    isAndroidNativeApp &&
-    !incognitoMode &&
-    messages.length === 0 &&
-    !waysOfLookingAtModalOpen &&
-    !libraryPanelOpen &&
-    !selectedMentalModel &&
-    !drawnPerspectiveCard &&
-    !ideasModalOpen &&
-    !calorieTrackerModalOpen &&
-    !weightTrackerModalOpen &&
-    !journalEntryModalOpen &&
-    !journalTypeChooserOpen &&
-    !goalsModalOpen &&
-    !nutritionReportModalOpen &&
-    !dailyReportModalOpen &&
-    !nutritionDayViewModalOpen &&
-    !weeklySummaryModalOpen;
   const pomodoroConfettiOverlay = pomodoroConfettiVisible ? (
     <div className="pointer-events-none fixed inset-0 z-[95] overflow-hidden" aria-hidden>
       {pomodoroConfettiPieces.map((piece) => (
@@ -11085,7 +10608,7 @@ export default function ChatPage() {
                 className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
               />
             </span>
-            <span className="whitespace-nowrap">f*** my life → figure my life</span>
+            <span className="whitespace-nowrap">f*** my life → fix my life</span>
             <span
               aria-hidden
               className={`shrink-0 text-sm transition-all duration-300 ${
@@ -11267,6 +10790,7 @@ export default function ChatPage() {
                             const isSelected = dayKey === selectedLandingDayKey;
                             const isToday = dayKey === toDayKey(new Date());
                             const hasActivity = (landingDayActivityCountForTab.get(dayKey) ?? 0) > 0;
+                            const showStrike = hasActivity && !isSelected;
                             return (
                               <button
                                 key={dayKey}
@@ -11281,18 +10805,26 @@ export default function ChatPage() {
                                     : "border-transparent text-foreground hover:bg-accent/10 dark:hover:bg-accent/20"
                                 } ${isToday && !isSelected ? "border-neutral-200 dark:border-neutral-700" : ""}`}
                               >
-                                {cellDate.getDate()}
-                                {hasActivity && (
-                                  <>
-                                    <span
-                                      className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70"
-                                      aria-hidden
+                                <span className={showStrike ? "text-neutral-500 dark:text-neutral-400" : undefined}>
+                                  {cellDate.getDate()}
+                                </span>
+                                {showStrike && (
+                                  <svg
+                                    className="pointer-events-none absolute inset-[14%] z-10 overflow-visible"
+                                    viewBox="0 0 100 100"
+                                    aria-hidden
+                                  >
+                                    <line
+                                      x1="20"
+                                      y1="68"
+                                      x2="80"
+                                      y2="34"
+                                      stroke="currentColor"
+                                      strokeWidth="2.25"
+                                      strokeLinecap="round"
+                                      className="text-neutral-400/90 dark:text-neutral-500/85"
                                     />
-                                    <span
-                                      className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70"
-                                      aria-hidden
-                                    />
-                                  </>
+                                  </svg>
                                 )}
                 </button>
                             );
@@ -11360,7 +10892,7 @@ export default function ChatPage() {
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
             <div className="hidden md:flex shrink-0">
-            <Clock weatherFormat={weatherFormat} onMoonPhaseChange={setMoonPhase} />
+            <Clock onMoonPhaseChange={setMoonPhase} />
             </div>
             <ThemeToggle inverted={incognitoMode} moonPhase={moonPhase} />
             <button
@@ -11388,7 +10920,7 @@ export default function ChatPage() {
                   setCurrentSessionId(null);
                   setCurrentSession(null);
                   setCollapsedSummary(null);
-                  setInput("");
+                  replaceComposerInput("");
                 }}
                 className="p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors duration-300 ease-in-out"
                 title="Exit incognito"
@@ -11443,7 +10975,7 @@ export default function ChatPage() {
                   className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
                 />
               </span>
-              <span className="whitespace-nowrap">f*** my life → figure my life</span>
+              <span className="whitespace-nowrap">f*** my life → fix my life</span>
               <span
                 aria-hidden
                 className={`text-sm transition-all duration-300 ${
@@ -12868,8 +12400,8 @@ export default function ChatPage() {
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Frameworks created via AI. Use when you want the agent to think in terms of a topic (e.g. finance, health) with related concepts.</p>
                   <div className="flex items-center justify-end gap-1">
                     <button type="button" onClick={() => { setCgCreateDomain(""); setCgCreateStep(1); setCgCreateQuestions([]); setCgCreateAnswers({}); setCgCreateConcepts([]); setCgCreateModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors">+ Framework</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(false); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from a YouTube video's transcript">+ From a video</button>
-                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); setCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(true); setCcJournalText(""); setCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from text you paste">+ From your writing</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); replaceCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(false); replaceCcJournalText(""); replaceCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from a YouTube video's transcript">+ From a video</button>
+                    <button type="button" onClick={() => { setCcYoutubeUrl(""); setCcYoutubeTranscriptId(null); replaceCcYoutubeExtractPrompt(""); setCcYoutubeResult(null); setCcYoutubeError(null); setCcYoutubeExtractProgress(null); setCcImportJournalMode(true); replaceCcJournalText(""); replaceCcJournalTitle(""); setCcJournalPersistLibrary(false); setCcJournalTranscriptId(null); setCcYoutubeModal(true); }} className="px-4 py-2.5 text-sm font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-colors" title="Create concepts from text you paste">+ From your writing</button>
                   </div>
                   {conceptGroups.length > 0 ? (
                     <div className={LIBRARY_FRAMEWORK_TILE_GRID}>
@@ -13747,801 +13279,118 @@ export default function ChatPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="w-full max-w-2xl lg:max-w-4xl min-w-0 flex flex-col gap-3 sm:gap-4 animate-fade-in-up">
-                {!incognitoMode && (
-                        <div
-                          className="order-2 w-full animate-fade-in-down"
-                        >
-                          {!isAnonymous && landingTab === "journaling" ? (
-                            <div className="w-full space-y-2.5">
-                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setLandingJournalingExpandedCard((prev) => (prev === "insights" ? null : "insights"))
-                                  }
-                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
-                                  aria-expanded={landingJournalingExpandedCard === "insights"}
-                                >
-                                  <span className="text-sm font-semibold text-foreground">Insights &amp; tools</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
-                                      landingJournalingExpandedCard === "insights" ? "rotate-180" : ""
-                                    }`}
-                                  >
-                                    <path d="m6 9 6 6 6-6" />
-                                  </svg>
-                                </button>
-                                <div className={`${landingJournalingExpandedCard === "insights" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
-                                  <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Insights &amp; tools</p>
-                                  <div className="flex flex-wrap gap-2">
-                                    <button
-                                      type="button"
-                                      onClick={openGoalsModal}
-                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
-                                    >
-                                      {getLandingTranslations(language).nutritionGoalsButtonLabel}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={openNutritionReportModal}
-                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
-                                    >
-                                      {getLandingTranslations(language).nutritionAnalysisButtonLabel}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={openDailyReportModal}
-                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
-                                    >
-                                      {getLandingTranslations(language).dailyReportButtonLabel}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={openWeeklySummaryModal}
-                                      className="rounded-full border border-neutral-200 dark:border-neutral-800 bg-background px-3 py-1.5 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70 transition-colors"
-                                    >
-                                      {getLandingTranslations(language).weeklySummaryButtonLabel}
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setLandingJournalingExpandedCard((prev) => (prev === "snapshot" ? null : "snapshot"))
-                                  }
-                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
-                                  aria-expanded={landingJournalingExpandedCard === "snapshot"}
-                                >
-                                  <span className="text-sm font-semibold text-foreground">Today snapshot</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
-                                      landingJournalingExpandedCard === "snapshot" ? "rotate-180" : ""
-                                    }`}
-                                  >
-                                    <path d="m6 9 6 6 6-6" />
-                                  </svg>
-                                </button>
-                                <div className={`${landingJournalingExpandedCard === "snapshot" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3`}>
-                                  <p className="hidden sm:block mb-2 text-sm font-semibold text-foreground">Today snapshot</p>
-                            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-2">
-                                    <button
-                                      type="button"
-                                      onClick={() => setNutritionDayViewModalOpen(true)}
-                                      className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
-                                    >
-                            <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                  <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
-                                  <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
-                                </svg>
-                              </span>
-                              <p className="text-xs sm:text-base font-semibold text-foreground">Calories</p>
-                            </div>
-                            <div className="mt-1 grid grid-cols-3 gap-2 pr-2">
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesFood}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Food</p>
-                              </div>
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesExercise}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Exercise</p>
-                              </div>
-                              <div className="min-w-0 flex flex-col">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap min-h-[1.1rem] sm:min-h-[1.55rem]">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.caloriesRemaining}</span>
-                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.caloriesTarget}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Remaining</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getCaloriesRemainingMeterFillClass(
-                                      selectedLandingDayNutrition.caloriesRemaining,
-                                      nutritionGoals.caloriesTarget
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.caloriesRemaining,
-                                        nutritionGoals.caloriesTarget
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                                    </button>
-
-                                    <button
-                                      type="button"
-                                      onClick={() => setNutritionDayViewModalOpen(true)}
-                                      className="min-w-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:!bg-neutral-900 p-2 sm:p-1.5 text-left hover:bg-neutral-100 dark:hover:!bg-neutral-800/80 active:bg-neutral-100 dark:active:bg-neutral-800/90 focus-visible:bg-neutral-100 dark:focus-visible:bg-neutral-800/80 transition-colors [-webkit-tap-highlight-color:transparent]"
-                                    >
-                            <div className="flex items-center gap-2">
-                              <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                                  <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
-                                </svg>
-                              </span>
-                              <p className="text-xs sm:text-base font-semibold text-foreground">Macros (g)</p>
-                            </div>
-                            <div className="mt-1 grid grid-cols-3 gap-2 pr-1">
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.carbsGrams}</span>
-                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.carbsGrams}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Carbs</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "carbs",
-                                      selectedLandingDayNutrition.carbsGrams,
-                                      nutritionGoals.carbsGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.carbsGrams,
-                                        nutritionGoals.carbsGrams
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.proteinGrams}</span>
-                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.proteinGrams}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Protein</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "protein",
-                                      selectedLandingDayNutrition.proteinGrams,
-                                      nutritionGoals.proteinGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.proteinGrams,
-                                        nutritionGoals.proteinGrams
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                              <div className="min-w-0">
-                                <p className="inline-flex items-end gap-0.5 leading-none tracking-tight whitespace-nowrap">
-                                            <span className="text-base sm:text-xl font-semibold text-foreground">{selectedLandingDayNutrition.fatGrams}</span>
-                                            <span className="text-[10px] sm:text-[13px] font-normal text-neutral-500 dark:text-neutral-400">/{nutritionGoals.fatGrams}</span>
-                                </p>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-neutral-600 dark:text-neutral-400">Fat</p>
-                                <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full transition-colors ${getMacroMeterFillClass(
-                                      "fat",
-                                      selectedLandingDayNutrition.fatGrams,
-                                      nutritionGoals.fatGrams
-                                    )}`}
-                                    style={{
-                                      width: getMacroMeterWidth(
-                                        selectedLandingDayNutrition.fatGrams,
-                                        nutritionGoals.fatGrams
-                                      ),
-                                    }}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                                    </button>
-                          </div>
-
-                                  <div className="mt-2 rounded-xl border border-neutral-200 dark:border-neutral-800 p-2 bg-background">
-                                    <p className="text-[11px] sm:text-xs font-semibold text-foreground">
-                                      Daily timeline (12 AM - 12 AM)
-                                    </p>
-                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] text-neutral-600 dark:text-neutral-400">
-                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-sky-500" aria-hidden />Nutrition</span>
-                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />Weight</span>
-                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-orange-500" aria-hidden />Exercise</span>
-                                      <span className="inline-flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />Focus</span>
-                                    </div>
-                                    <div className="mt-1.5 relative h-9 rounded-md border border-orange-400/80 dark:border-orange-300/80 bg-white dark:bg-neutral-950 overflow-hidden">
-                                      <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent_0%,transparent_calc(25%-1px),rgba(148,163,184,0.35)_25%,transparent_calc(25%+1px),transparent_calc(50%-1px),rgba(148,163,184,0.35)_50%,transparent_calc(50%+1px),transparent_calc(75%-1px),rgba(148,163,184,0.35)_75%,transparent_calc(75%+1px),transparent_100%)]" />
-                                      {selectedLandingDayTimelineEvents.map((event, idx) => {
-                                        const leftPct = Math.max(
-                                          0,
-                                          Math.min(100, (event.startMinute / 1440) * 100)
-                                        );
-                                        const durationMinutes = Math.max(1, event.endMinute - event.startMinute);
-                                        const widthPct = Math.max(
-                                          0.35,
-                                          Math.min(100, (durationMinutes / 1440) * 100)
-                                        );
-                                        if (event.type === "focus" || event.type === "exercise") {
-                                          const topClass =
-                                            event.type === "exercise" ? "top-1 h-[12px]" : "top-[20px] h-[12px]";
-                                          return (
-                                            <div
-                                              key={`landing-timeline-band-${selectedLandingDayKey}-${idx}`}
-                                              className={`absolute rounded-sm ${topClass}`}
-                                              style={{
-                                                left: `${leftPct}%`,
-                                                width: `${widthPct}%`,
-                                                backgroundColor: event.color,
-                                              }}
-                                              title={`${event.label} - ${formatMinuteOfDay(event.startMinute)} to ${formatMinuteOfDay(event.endMinute)}`}
-                                            />
-                                          );
-                                        }
-                                        return (
-                                          <div
-                                            key={`landing-timeline-line-${selectedLandingDayKey}-${idx}`}
-                                            className="absolute top-0 bottom-0 w-[2px]"
-                                            style={{ left: `${leftPct}%`, backgroundColor: event.color }}
-                                            title={`${event.label} - ${formatMinuteOfDay(event.startMinute)}`}
-                                          />
-                                        );
-                                      })}
-                                    </div>
-                                    <div className="mt-0.5 sm:hidden flex items-center gap-1 overflow-x-auto whitespace-nowrap pb-0.5">
-                                      {selectedLandingDayTimelineEvents
-                                        .filter((event) => event.type === "nutrition" || event.type === "weight")
-                                        .map((event, idx) => (
-                                          <span
-                                            key={`landing-line-time-mobile-${selectedLandingDayKey}-${idx}`}
-                                            className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/85 dark:bg-neutral-900/75 px-1.5 py-0.5 text-[9px] text-neutral-600 dark:text-neutral-300"
-                                          >
-                                            <span
-                                              className="inline-block h-1.5 w-1.5 rounded-full"
-                                              style={{ backgroundColor: event.color }}
-                                              aria-hidden
-                                            />
-                                            {formatMinuteOfDay(event.startMinute)}
-                                          </span>
-                                        ))}
-                                    </div>
-                                    <div className="mt-0.5 relative h-4 hidden sm:block">
-                                      {selectedLandingDayTimelineEvents
-                                        .filter((event) => event.type === "nutrition" || event.type === "weight")
-                                        .map((event, idx) => {
-                                          const leftPct = Math.max(
-                                            0,
-                                            Math.min(100, (event.startMinute / 1440) * 100)
-                                          );
-                                          return (
-                                            <span
-                                              key={`landing-line-time-desktop-${selectedLandingDayKey}-${idx}`}
-                                              className={`absolute -translate-x-1/2 text-[9px] leading-none ${
-                                                idx % 2 === 0
-                                                  ? "top-0 text-neutral-600 dark:text-neutral-300"
-                                                  : "top-2 text-neutral-500 dark:text-neutral-400"
-                                              }`}
-                                              style={{ left: `${leftPct}%` }}
-                                            >
-                                              {formatMinuteOfDay(event.startMinute)}
-                                            </span>
-                                          );
-                                        })}
-                                    </div>
-                                    <div className="mt-0.5 flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400">
-                                      <span>12 AM</span>
-                                      <span>6 AM</span>
-                                      <span>12 PM</span>
-                                      <span>6 PM</span>
-                                      <span>12 AM</span>
-                                    </div>
-                                    {selectedLandingDayTimelineEvents.length > 0 && (
-                                      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[10px] text-neutral-600 dark:text-neutral-400">
-                                        {(() => {
-                                          const nutritionCount = selectedLandingDayTimelineEvents.filter(
-                                            (event) => event.type === "nutrition"
-                                          ).length;
-                                          const weightCount = selectedLandingDayTimelineEvents.filter(
-                                            (event) => event.type === "weight"
-                                          ).length;
-                                          const exerciseCount = selectedLandingDayTimelineEvents.filter(
-                                            (event) => event.type === "exercise"
-                                          ).length;
-                                          const focusCount = selectedLandingDayTimelineEvents.filter(
-                                            (event) => event.type === "focus"
-                                          ).length;
-                                          return (
-                                            <>
-                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-sky-500" aria-hidden />
-                                                Nutrition {nutritionCount}
-                                              </span>
-                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
-                                                Weight {weightCount}
-                                              </span>
-                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-orange-500" aria-hidden />
-                                                Exercise {exerciseCount}
-                                              </span>
-                                              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white/80 dark:bg-neutral-900/70 px-2 py-0.5">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-violet-500" aria-hidden />
-                                                Focus {focusCount}
-                                              </span>
-                                            </>
-                                          );
-                                        })()}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="w-full rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    setLandingJournalingExpandedCard((prev) => (prev === "entries" ? null : "entries"))
-                                  }
-                                  className="sm:hidden w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
-                                  aria-expanded={landingJournalingExpandedCard === "entries"}
-                                >
-                                  <span className="text-sm font-semibold text-foreground">Today&apos;s entries</span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className={`h-4 w-4 text-neutral-500 transition-transform ${
-                                      landingJournalingExpandedCard === "entries" ? "rotate-180" : ""
-                                    }`}
-                                  >
-                                    <path d="m6 9 6 6 6-6" />
-                                  </svg>
-                                </button>
-                                <div className={`${landingJournalingExpandedCard === "entries" ? "block" : "hidden"} sm:block px-3 pb-3 sm:pt-3 space-y-2`}>
-                                  <p className="hidden sm:block text-sm font-semibold text-foreground">Today&apos;s entries</p>
-                                  <div className="space-y-2">
-                                    {selectedLandingDayActivityItems.length === 0 ? (
-                                      <p className="rounded-lg border border-neutral-200 dark:border-neutral-800 px-2.5 py-2 text-sm text-neutral-600 dark:text-neutral-400 bg-background">
-                                        No activity yet for this day.
-                                      </p>
-                                    ) : (
-                                      selectedLandingDayActivityGroups.map((group) => (
-                                        <button
-                                          key={`summary-${group.groupKey}`}
-                                          type="button"
-                                          onClick={() => openLandingActivityGroupModal(group)}
-                                          className="w-full rounded-xl border border-neutral-200 dark:border-neutral-800 px-3 py-2.5 text-left bg-background hover:bg-neutral-50 dark:hover:bg-neutral-900/70 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-200 active:scale-[0.99]"
-                                          aria-label={`Open ${group.label}`}
-                                        >
-                                          <div className="flex items-center justify-between gap-2">
-                                            <div className="min-w-0">
-                                              <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-700 dark:text-neutral-200">
-                                                {group.label}
-                                              </p>
-                                              <p className="mt-0.5 text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">
-                                                Tap to view entries
-                                              </p>
-                                            </div>
-                                            <div className="flex items-center gap-2 shrink-0">
-                                              <span className="inline-flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900">
-                                                {group.items.length} item{group.items.length === 1 ? "" : "s"}
-                                              </span>
-                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-400 dark:text-neutral-500">
-                                                <path d="m9 18 6-6-6-6" />
-                                              </svg>
-                                            </div>
-                                          </div>
-                                        </button>
-                                      ))
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {LANDING_JOURNAL_CHIPS.map((chip) => (
-                                  <button
-                                    key={chip.key}
-                                    type="button"
-                                    onClick={() => openLandingJournalChip(chip.key)}
-                                    className="flex items-center gap-3 w-full px-3 py-3 rounded-2xl border border-neutral-200 dark:border-white/15 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/40 text-left transition-all duration-200 active:scale-[0.98]"
-                                  >
-                                    <span className="shrink-0 w-9 h-9 rounded-xl bg-accent/15 dark:bg-accent/25 flex items-center justify-center">
-                                      {renderLandingJournalIcon(chip.key)}
-                                    </span>
-                                    <span className="min-w-0">
-                                      <span className="block text-sm font-semibold text-foreground">{chip.label}</span>
-                                      <span className="block text-xs text-neutral-600 dark:text-neutral-400">
-                                        {LANDING_JOURNAL_CARD_DESCRIPTION[chip.key]}
-                                      </span>
-                                    </span>
-                                  </button>
-                                ))}
-                          </div>
-                            </div>
-                          ) : !isAnonymous && landingTab === "pomodoro" ? (
-                            <div className={`${pomodoroSessionStartIso ? "min-h-[62vh] flex items-center justify-center" : "space-y-3"} pomodoro-theme-${pomodoroTheme}`}>
-                              {pomodoroSessionStartIso ? (
-                                <div className="relative w-full max-w-xl rounded-3xl border border-neutral-200/70 dark:border-white/10 bg-background/90 p-6 sm:p-8 text-center overflow-hidden backdrop-blur-[1px]">
-                                  {pomodoroThemeBackdrop}
-                                  {pomodoroThemeMotionOverlay}
-                                  <div className="relative z-10 space-y-6 overflow-visible">
-                                  {pomodoroThemeSelector}
-                                  <p
-                                    className={`font-black tracking-[-0.04em] text-foreground leading-none ${
-                                      shouldAnimatePomodoroLastSecond ? "pomodoro-last-second-scroll" : ""
-                                    }`}
-                                    style={{ fontSize: "min(24vw, 240px)" }}
-                                  >
-                                    {pomodoroClockLabel}
-                                  </p>
-                                  <div className="flex flex-wrap items-center justify-center gap-2">
-                                    <button
-                                      type="button"
-                                      onClick={pomodoroRunning ? pausePomodoro : startPomodoro}
-                                      className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                    >
-                                      Pause
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => void endPomodoro()}
-                                      disabled={!pomodoroSessionStartIso || focusTrackerSaving}
-                                      className="rounded-xl bg-orange-500 text-white px-4 py-2 text-sm font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
-                                    >
-                                      End
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={resetPomodoro}
-                                      className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                                    >
-                                      Reset
-                                    </button>
-                                  </div>
-                                  {focusTrackerSaving && (
-                                    <p className="text-xs text-neutral-500 dark:text-neutral-400">Saving focus session...</p>
-                                  )}
-                                  {focusTrackerError && (
-                                    <p className="text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
-                                  )}
-                                  </div>
-                                </div>
-                              ) : (
-                              <>
-                              <div className="relative rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background/90 p-3 sm:p-4 overflow-hidden backdrop-blur-[1px]">
-                                {pomodoroThemeBackdrop}
-                                <div className="relative z-10">
-                                <div className="flex flex-wrap items-start justify-between gap-2">
-                                  <p className="text-sm sm:text-base font-semibold text-foreground">Focus timer</p>
-                                  <div className="sm:min-w-[320px]">
-                                    {pomodoroThemeSelector}
-                                  </div>
-                                </div>
-                                <div className="mt-2 flex items-center gap-2">
-                                  <input
-                                    type="number"
-                                    min={1}
-                                    max={600}
-                                    step={1}
-                                    value={pomodoroCustomMinutesInput}
-                                    onChange={(e) => setPomodoroCustomMinutesInput(e.target.value)}
-                                    disabled={pomodoroRunning || !!pomodoroSessionStartIso}
-                                    className="w-24 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-1.5 text-sm"
-                                    aria-label="Custom focus duration minutes"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={applyCustomPomodoroMinutes}
-                                    disabled={pomodoroRunning || !!pomodoroSessionStartIso}
-                                    className="rounded-xl border border-neutral-300 dark:border-neutral-600 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                                  >
-                                    Set minutes
-                                  </button>
-                                </div>
-                                <div className="mt-2">
-                                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Quick presets</p>
-                                  <div className="flex items-center gap-1">
-                                    {[30, 60, 90].map((minutes) => (
-                                      <button
-                                        key={`pomodoro-duration-${minutes}`}
-                                        type="button"
-                                        onClick={() => setPomodoroDurationMinutes(minutes)}
-                                        disabled={pomodoroRunning || !!pomodoroSessionStartIso}
-                                        className={`rounded-full px-2.5 py-1 text-xs font-medium border transition-colors ${
-                                          pomodoroDurationMinutes === minutes
-                                            ? "border-foreground text-foreground bg-neutral-100 dark:bg-neutral-800"
-                                            : "border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                        } disabled:opacity-50`}
-                                      >
-                                        {minutes}m
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-                                <p
-                                  className="pomodoro-setup-clock mt-3 font-black tracking-[-0.04em] text-foreground leading-none"
-                                >
-                                  {pomodoroClockLabel}
-                                </p>
-                                <input
-                                  type="text"
-                                  value={focusSessionTagInput}
-                                  onChange={(e) => {
-                                    setFocusSessionTagInput(e.target.value.slice(0, 60));
-                                    if (focusTrackerError) setFocusTrackerError(null);
-                                  }}
-                                  placeholder="Tag this focus session (required)"
-                                  disabled={focusTrackerSaving}
-                                  className="mt-4 w-full rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background px-3 py-2 text-sm"
-                                  aria-label="Focus session tag"
-                                />
-                                <div className="mt-3 flex flex-wrap items-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={startPomodoro}
-                                    disabled={pomodoroRunning}
-                                    className="rounded-xl bg-foreground text-background px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-                                  >
-                                    Start
-                                  </button>
-                                </div>
-                                {focusTrackerSaving && (
-                                  <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">Saving focus session...</p>
-                                )}
-                                {pomodoroJustLogged && (
-                                  <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">Focus session logged.</p>
-                                )}
-                                {focusTrackerError && (
-                                  <p className="mt-2 text-xs text-red-600 dark:text-red-400">{focusTrackerError}</p>
-                                )}
-                                </div>
-                              </div>
-                              <div className="rounded-2xl border border-neutral-200/70 dark:border-white/10 bg-background p-3 sm:p-4 space-y-2">
-                                <div className="flex items-center justify-between gap-2">
-                                  <p className="text-sm sm:text-base font-semibold text-foreground">Daily focus summary</p>
-                                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                                    {todayFocusSummary.sessions} session
-                                    {todayFocusSummary.sessions === 1 ? "" : "s"}
-                                  </p>
-                                </div>
-                                <p className="text-2xl sm:text-3xl font-semibold text-foreground">
-                                  {todayFocusSummary.minutes} min
-                                </p>
-                                <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/70 dark:bg-neutral-900/60 p-2.5 space-y-2">
-                                  <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
-                                    Add custom focus entry
-                                  </p>
-                                  <div className="flex flex-wrap items-end gap-2">
-                                    <div className="min-w-[180px] flex-1">
-                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
-                                        Tag
-                                      </label>
-                                      <input
-                                        type="text"
-                                        value={customFocusTagInput}
-                                        onChange={(e) => setCustomFocusTagInput(e.target.value.slice(0, 60))}
-                                        placeholder="e.g. Deep work, Reading"
-                                        disabled={focusTrackerSaving}
-                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
-                                      />
-                                    </div>
-                                    <div className="w-[110px]">
-                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
-                                        Minutes
-                                      </label>
-                                      <input
-                                        type="number"
-                                        min={1}
-                                        max={600}
-                                        step={1}
-                                        value={customFocusMinutesInput}
-                                        onChange={(e) => setCustomFocusMinutesInput(e.target.value)}
-                                        disabled={focusTrackerSaving}
-                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
-                                      />
-                                    </div>
-                                    <div className="w-[150px] sm:w-[158px]">
-                                      <label className="mb-1 block text-[11px] text-neutral-500 dark:text-neutral-400">
-                                        Time
-                                      </label>
-                                      <input
-                                        type="time"
-                                        value={customFocusTimeInput}
-                                        onChange={(e) => setCustomFocusTimeInput(e.target.value)}
-                                        disabled={focusTrackerSaving}
-                                        className="w-full rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background px-2.5 py-1.5 text-xs sm:text-sm"
-                                      />
-                                    </div>
-                                    <button
-                                      type="button"
-                                      onClick={() => void addCustomFocusEntry()}
-                                      disabled={focusTrackerSaving}
-                                      className="h-[34px] rounded-lg border border-neutral-300 dark:border-neutral-600 px-3 text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                                    >
-                                      Add entry
-                                    </button>
-                                  </div>
-                                </div>
-                                {focusTrackerLoading ? (
-                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading focus sessions...</p>
-                                ) : todayFocusSummary.rows.length > 0 ? (
-                                  <div className="space-y-1.5">
-                                    {todayFocusSummary.rows.slice(0, 6).map((entry) => (
-                                      <div
-                                        key={entry.id}
-                                        className="flex items-start justify-between rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-2"
-                                      >
-                                        <div className="min-w-0">
-                                          <p className="text-xs sm:text-sm text-foreground">
-                                            {new Date(entry.endedAt).toLocaleTimeString(undefined, {
-                                              hour: "numeric",
-                                              minute: "2-digit",
-                                            })}
-                                          </p>
-                                          {entry.tag && (
-                                            <p className="mt-0.5 inline-flex max-w-[180px] truncate rounded-md bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[10px] sm:text-xs text-neutral-700 dark:text-neutral-300">
-                                              {entry.tag}
-                                            </p>
-                                          )}
-                                        </div>
-                                        <div className="flex items-start gap-2 pt-0.5">
-                                          <p className="text-xs sm:text-sm font-medium leading-[1.2] text-neutral-600 dark:text-neutral-300">
-                                            {entry.minutes} min
-                                          </p>
-                                          <button
-                                            type="button"
-                                            onClick={() => void deleteFocusSession(entry.id)}
-                                            disabled={focusTrackerDeletingEntryId === entry.id}
-                                            className="inline-flex items-center justify-center rounded-md p-1 text-neutral-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors disabled:opacity-50"
-                                            aria-label="Delete focus session"
-                                          >
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                              <path d="M9 3.75A2.25 2.25 0 0 1 11.25 1.5h1.5A2.25 2.25 0 0 1 15 3.75V4.5h3a.75.75 0 0 1 0 1.5h-.56l-.68 12.06A2.25 2.25 0 0 1 14.5 20.25h-5a2.25 2.25 0 0 1-2.25-2.19L6.57 6H6a.75.75 0 0 1 0-1.5h3v-.75Zm1.5.75h3v-.75a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75v.75Zm-1.93 1.5.67 12a.75.75 0 0 0 .75.72h5a.75.75 0 0 0 .75-.72l.67-12H8.57Z" />
-                                            </svg>
-                                          </button>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                    No focus sessions logged for today yet.
-                                  </p>
-                                )}
-                              </div>
-                              </>
-                              )}
-                            </div>
-                          ) : (
-                            <div className="space-y-2">
-                              <div className="px-0.5 py-0">
-                                <p className="text-[11px] font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-                                  {getLandingTranslations(language).conversationResponseStyleLabel}
-                                </p>
-                                <div className="mt-1 inline-flex items-center gap-1 rounded-xl">
-                                  <button
-                                    type="button"
-                                    onClick={() => setNewConversationResponseVerbosity("compact")}
-                                    className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                                      newConversationResponseVerbosity === "compact"
-                                        ? "bg-accent text-white"
-                                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200/70 dark:hover:bg-neutral-800"
-                                    }`}
-                                  >
-                                    {getLandingTranslations(language).conversationResponseStyleCompact}
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => setNewConversationResponseVerbosity("detailed")}
-                                    className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                                      newConversationResponseVerbosity === "detailed"
-                                        ? "bg-accent text-white"
-                                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200/70 dark:hover:bg-neutral-800"
-                                    }`}
-                                  >
-                                    {getLandingTranslations(language).conversationResponseStyleDetailed}
-                                  </button>
-                                </div>
-                              </div>
-                              <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    playSelectionChime();
-                                    activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                                    startSecondOrderConversation(!secondOrderCitationsEnabled);
-                                  }}
-                                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors active:scale-[0.98]"
-                                >
-                                  <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
-                                      <path d="M5 19h2l2.2-12H7.2Z" fill="currentColor" />
-                                      <rect x="11" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
-                                      <rect x="15" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
-                                    </svg>
-                                  </span>
-                                  <div className="min-w-0">
-                                    <p className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</p>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</p>
-                                  </div>
-                                </button>
-                                <div
-                                  className="px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1.5"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <div className="flex items-center justify-between gap-2">
-                                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                                      {getLandingTranslations(language).secondOrderCitationsToggleLabel}
-                                    </span>
-                                    <button
-                                      type="button"
-                                      role="switch"
-                                      aria-checked={secondOrderCitationsEnabled}
-                                      aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSecondOrderCitationsEnabled((v) => !v);
-                                      }}
-                                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                                        secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
-                                      }`}
-                                    >
-                                      <span
-                                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                                          secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
-                                        }`}
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
+                    {!incognitoMode && (
+                      <LandingShell
+                        dashboardEyebrow={landingTranslations.landingDashboardEyebrow}
+                        title={landingShellTitle}
+                        subtitle={landingShellSubtitle}
+                        selectedDateLabel={headerCalendarLabel}
+                        tabs={[
+                          {
+                            id: "journaling",
+                            label: landingTranslations.journalingTabLabel,
+                            selected: landingTab === "journaling",
+                            disabled: isAnonymous,
+                            onSelect: () => {
+                              if (!isAnonymous) setLandingTab("journaling");
+                            },
+                          },
+                          {
+                            id: "pomodoro",
+                            label: "Pomodoro",
+                            selected: landingTab === "pomodoro",
+                            disabled: isAnonymous,
+                            onSelect: () => {
+                              if (!isAnonymous) setLandingTab("pomodoro");
+                            },
+                          },
+                          {
+                            id: "deepThinking",
+                            label: landingTranslations.deepThinkingTabLabel,
+                            selected: landingTab === "deepThinking",
+                            onSelect: () => setLandingTab("deepThinking"),
+                          },
+                        ]}
+                        dateItems={landingDateStripItems}
+                        dateStripLabel={landingTranslations.landingDateStripLabel}
+                        dateStripHint={landingTranslations.landingDateStripHint}
+                        onOpenCalendar={openLandingHeaderCalendar}
+                        mode={landingTab}
+                        focusCanvasEyebrow={landingTranslations.landingFocusCanvasEyebrow}
+                        focusCanvasTitle={landingTranslations.landingFocusCanvasTitle}
+                        focusCanvasSubtitle={landingTranslations.landingFocusCanvasSubtitle}
+                        focusCanvasModeJournaling={landingTranslations.landingFocusCanvasModeJournaling}
+                        focusCanvasModePomodoro={landingTranslations.landingFocusCanvasModePomodoro}
+                        focusCanvasModeDeepThinking={landingTranslations.landingFocusCanvasModeDeepThinking}
+                        nutritionLabel={landingTranslations.landingNutritionLabel}
+                        caloriesRemainingLabel={landingTranslations.landingCaloriesRemainingLabel}
+                        foodLoggedLabel={landingTranslations.landingFoodLoggedLabel}
+                        carbsLabel={landingTranslations.landingCarbsLabel}
+                        proteinLabel={landingTranslations.landingProteinLabel}
+                        focusSummaryLabel={landingTranslations.landingFocusSummaryLabel}
+                        noFocusLoggedLabel={landingTranslations.landingNoFocusLogged}
+                        liveFocusLabel={landingTranslations.landingLiveFocusLabel}
+                        quickCaptureTitle={landingTranslations.landingQuickCaptureTitle}
+                        manualFocusLogTitle={landingTranslations.landingManualFocusLogTitle}
+                        nutrition={selectedLandingDayNutrition}
+                        nutritionGoals={nutritionGoals}
+                        focusSummaryMinutes={selectedLandingDayFocusSummary.minutes}
+                        focusSummarySessions={selectedLandingDayFocusSummary.sessions}
+                        focusSummaryRows={selectedLandingDayFocusSummary.rows.map((entry) => ({
+                          id: entry.id,
+                          label: entry.tag?.trim()
+                            ? entry.tag
+                            : new Date(entry.endedAt).toLocaleTimeString(undefined, {
+                                hour: "numeric",
+                                minute: "2-digit",
+                              }),
+                          minutes: entry.minutes,
+                        }))}
+                        quickCaptures={landingQuickCaptureItems}
+                        pomodoroClockLabel={pomodoroClockLabel}
+                        pomodoroRunning={pomodoroRunning}
+                        pomodoroSessionActive={Boolean(pomodoroSessionStartIso)}
+                        pomodoroDurationMinutes={pomodoroDurationMinutes}
+                        pomodoroCustomMinutesInput={pomodoroCustomMinutesInput}
+                        focusSessionTagInput={focusSessionTagInput}
+                        focusTrackerSaving={focusTrackerSaving}
+                        focusTrackerError={focusTrackerError}
+                        pomodoroJustLogged={pomodoroJustLogged}
+                        customFocusTagInput={customFocusTagInput}
+                        customFocusMinutesInput={customFocusMinutesInput}
+                        customFocusTimeInput={customFocusTimeInput}
+                        onOpenNutrition={() => setNutritionDayViewModalOpen(true)}
+                        onPomodoroCustomMinutesInputChange={setPomodoroCustomMinutesInput}
+                        onApplyCustomPomodoroMinutes={applyCustomPomodoroMinutes}
+                        onSelectPomodoroDuration={setPomodoroDurationMinutes}
+                        onFocusSessionTagInputChange={(value) => {
+                          setFocusSessionTagInput(value.slice(0, 60));
+                          if (focusTrackerError) setFocusTrackerError(null);
+                        }}
+                        onStartPomodoro={startPomodoro}
+                        onPausePomodoro={pausePomodoro}
+                        onResetPomodoro={resetPomodoro}
+                        onEndPomodoro={() => void endPomodoro()}
+                        onCustomFocusTagInputChange={(value) =>
+                          setCustomFocusTagInput(value.slice(0, 60))
+                        }
+                        onCustomFocusMinutesInputChange={setCustomFocusMinutesInput}
+                        onCustomFocusTimeInputChange={setCustomFocusTimeInput}
+                        onAddCustomFocusEntry={() => void addCustomFocusEntry()}
+                        activityGroups={landingActivitySummaries}
+                        mentors={landingMentorSummaries}
+                        mentorCount={landingMentorSummaries.length}
+                        mentalModelCount={mentalModelsIndex.size}
+                        longTermMemoryCount={longTermMemories.length}
+                        conceptCount={customConcepts.length}
+                        frameworkCount={conceptGroups.length}
+                        perspectiveCardCount={savedPerspectiveCards.length}
+                        habitsCount={habits.length}
+                        conversationCount={sessions.length}
+                        weightCurrentKg={weightTrackerCurrentKg}
+                        weightTargetKg={weightTrackerTargetKg}
+                        weightEntryCount={weightTrackerEntries.length}
+                        onOpenOneOnOneMentor={() => {
                           playSelectionChime();
                           activeResponseVerbosityRef.current = newConversationResponseVerbosity;
                           if (sessionId !== "new" && sessionId !== "incognito") {
@@ -14561,251 +13410,95 @@ export default function ChatPage() {
                             setMentorOneOnOneModalOpen(true);
                           }
                         }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-                              >
-                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                  </svg>
-                                </span>
-                                <div className="min-w-0">
-                                  <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
-                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
-                                </div>
-                      </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            playSelectionChime();
-                                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                                  void handleTeachMeClick();
-                                }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-                              >
-                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                                    <path d="M12 3v18" />
-                                  </svg>
-                                </span>
-                                <div className="min-w-0">
-                                  <p className="font-medium text-foreground">Learn a New Mental Model</p>
-                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
-                                </div>
-                        </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  playSelectionChime();
-                                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                                  setLibraryPanelOpen(null);
-                                  setWaysOfLookingAtModalOpen(true);
-                                  setWaysOfLookingAtDrawMode(false);
-                                  setWaysOfLookingAtCategory(null);
-                                  setWaysOfLookingAtCity(null);
-                                  setWaysOfLookingAtCuisine(null);
-                                  setWaysOfLookingAtMicrocosm(null);
-                                  setWaysOfLookingAtHuman(null);
-                                  setWaysOfLookingAtDigital(null);
-                                }}
-                                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-                              >
-                                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                                    <rect width="18" height="14" x="3" y="3" rx="2" />
-                                    <path d="M3 9h18" />
-                                    <path d="M3 15h18" />
-                                  </svg>
-                                </span>
-                                <div className="min-w-0">
-                                  <p className="font-medium text-foreground">{getUiTranslations(language).promptGames}</p>
-                                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Use card-style lenses to rethink your situation.</p>
-                                </div>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                {!incognitoMode && (
-                        <div className="order-1 w-full rounded-2xl bg-background px-2.5 py-2">
-                          <div className="mb-1.5 px-0.5">
-                            <div className="sm:hidden mb-2">
-                              <p className="mb-1 text-[11px] font-semibold text-foreground">Last 7 days</p>
-                              <div ref={landingDaysScrollerMobileRef} className="overflow-x-auto">
-                                <div className="flex min-w-max gap-1.5">
-                                  {landingCalendarDays.map(({ key, date }) => {
-                                    const selected = key === selectedLandingDayKey;
-                                    const hasActivity = (landingDayActivityCountForTab.get(key) ?? 0) > 0;
-                                    return (
-                                      <button
-                                        key={`mobile-landing-day-${key}`}
-                                        type="button"
-                                        onClick={() => setSelectedLandingDayKey(key)}
-                                        className={`relative w-11 shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-1.5 transition-colors ${
-                                          selected
-                                            ? "border-foreground dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800"
-                                            : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
-                                        }`}
-                                        aria-pressed={selected}
-                                      >
-                                        <span className="text-[9px] text-neutral-500 dark:text-neutral-400">
-                                          {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
-                                        </span>
-                                        <span className="text-sm font-semibold text-foreground leading-none mt-0.5">
-                                          {date.getDate()}
-                                        </span>
-                                        {hasActivity && (
-                                          <>
-                                            <span className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
-                                            <span className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
-                                          </>
-                                        )}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            </div>
-                            <div className={`${isAndroidNativeApp ? "hidden" : "mb-2 grid grid-cols-3 gap-3"}`}>
-                          <button
-                            type="button"
-                                onClick={() => {
-                                  if (!isAnonymous) setLandingTab("journaling");
-                                }}
-                                disabled={isAnonymous}
-                                className={`w-full px-1 py-1.5 text-[11px] sm:text-[13px] leading-tight whitespace-nowrap text-center border-b-[3px] transition-colors ${
-                                  isAnonymous
-                                    ? "border-transparent text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                                    :
-                                  landingTab === "journaling"
-                                    ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
-                                    : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
-                                }`}
-                                aria-pressed={landingTab === "journaling"}
-                              >
-                                {getLandingTranslations(language).journalingTabLabel}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (!isAnonymous) setLandingTab("pomodoro");
-                                }}
-                                disabled={isAnonymous}
-                                className={`w-full px-1 py-1.5 text-[11px] sm:text-[13px] leading-tight whitespace-nowrap text-center border-b-[3px] transition-colors ${
-                                  isAnonymous
-                                    ? "border-transparent text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                                    : landingTab === "pomodoro"
-                                      ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
-                                      : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
-                                }`}
-                                aria-pressed={landingTab === "pomodoro"}
-                              >
-                                Pomodoro
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setLandingTab("deepThinking")}
-                                className={`w-full px-1 py-1.5 text-[11px] sm:text-[13px] leading-tight whitespace-nowrap text-center border-b-[3px] transition-colors ${
-                                  landingTab === "deepThinking"
-                                    ? "font-semibold text-foreground border-foreground dark:border-neutral-100"
-                                    : "font-medium text-neutral-600 dark:text-neutral-300 border-transparent hover:text-foreground"
-                                }`}
-                                aria-pressed={landingTab === "deepThinking"}
-                              >
-                                {getLandingTranslations(language).deepThinkingTabLabel}
-                          </button>
-                        </div>
-                            <div className="hidden sm:flex items-center gap-2">
-                              <p className="text-xs sm:text-sm whitespace-nowrap font-semibold text-foreground">
-                                Last 7 days
-                              </p>
-                            </div>
-                      </div>
-                          <div ref={landingDaysScrollerDesktopRef} className="hidden sm:block overflow-x-auto">
-                            <div className="flex min-w-max gap-1.5 sm:grid sm:grid-cols-7 sm:gap-1.5 sm:min-w-0">
-                              {landingCalendarDays.map(({ key, date }) => {
-                                const selected = key === selectedLandingDayKey;
-                                const hasActivity = (landingDayActivityCountForTab.get(key) ?? 0) > 0;
-                                return (
-                          <button
-                                    key={key}
-                            type="button"
-                                    onClick={() => setSelectedLandingDayKey(key)}
-                                    className={`relative w-14 sm:w-auto shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
-                                      selected
-                                        ? "border-foreground dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800"
-                                        : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
-                                    }`}
-                                    aria-pressed={selected}
-                                  >
-                                    <span className="text-[9px] sm:text-xs text-neutral-500 dark:text-neutral-400">
-                                      {new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(date)}
-                                    </span>
-                                    <span className="text-base sm:text-base lg:text-lg font-semibold text-foreground leading-none mt-0.5">{date.getDate()}</span>
-                                    {hasActivity && (
-                                      <>
-                                        <span className="pointer-events-none absolute left-1 right-1 top-1/2 rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
-                                        <span className="pointer-events-none absolute left-1 right-1 top-1/2 -rotate-45 border-t border-black/70 dark:border-white/70" aria-hidden />
-                                      </>
-                                    )}
-                          </button>
-                                );
-                              })}
-                        </div>
-                      </div>
-                          {!incognitoMode && landingTab === "deepThinking" && (
-                            <div className="mt-2 space-y-2">
-                              {selectedLandingDayActivityItems.length === 0 ? (
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center py-2">
-                                  No activity yet for this day.
-                                </p>
-                              ) : (
-                                selectedLandingDayActivityGroups.map((group) => (
-                                  <button
-                                    key={`summary-${group.groupKey}`}
-                                    type="button"
-                                    onClick={() => openLandingActivityGroupModal(group)}
-                                    className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2.5 text-left bg-background hover:bg-neutral-50 dark:hover:bg-neutral-900/70 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all duration-200 active:scale-[0.99]"
-                                    aria-label={`Open ${group.label}`}
-                                  >
-                                    <div className="flex items-center justify-between gap-2">
-                                      <div className="min-w-0">
-                                        <p className="text-[11px] sm:text-xs lg:text-sm font-semibold uppercase tracking-wide text-neutral-700 dark:text-neutral-200">
-                                          {group.label}
-                                        </p>
-                                        <p className="mt-0.5 text-[10px] sm:text-xs text-neutral-500 dark:text-neutral-400">
-                                          Tap to view entries
-                                        </p>
-                                      </div>
-                                      <div className="flex items-center gap-2 shrink-0">
-                                        <span className="inline-flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 text-[10px] sm:text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900">
-                                          {group.items.length} item{group.items.length === 1 ? "" : "s"}
-                                        </span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-400 dark:text-neutral-500">
-                                          <path d="m9 18 6-6-6-6" />
-                                        </svg>
-                                      </div>
-                                    </div>
-                                  </button>
-                                ))
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                        onOpenAskMentors={() => {
+                          playSelectionChime();
+                          if (multiMentorMode) {
+                            setMultiMentorMode(false);
+                            setSelectedMentorFigureIds([]);
+                            setMentorPickerCategoryId(null);
+                          } else {
+                            setSelectedMentorFigureIds([]);
+                            setMentorPickerCategoryId(null);
+                            setAskMentorsRecommendModalOpen(true);
+                            activeSecondOrderRef.current = false;
+                            activeSecondOrderPlainRef.current = false;
+                            setPendingSecondOrder(false);
+                          }
+                        }}
+                        onOpenMentalModels={() => {
+                          playSelectionChime();
+                          setWaysOfLookingAtModalOpen(false);
+                          setLibraryPanelOpen("concepts");
+                        }}
+                        onOpenLearnMentalModel={() => {
+                          playSelectionChime();
+                          activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                          void handleTeachMeClick();
+                        }}
+                        onOpenPromptGames={() => {
+                          playSelectionChime();
+                          activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                          setLibraryPanelOpen(null);
+                          setWaysOfLookingAtModalOpen(true);
+                          setWaysOfLookingAtDrawMode(false);
+                          setWaysOfLookingAtCategory(null);
+                          setWaysOfLookingAtCity(null);
+                          setWaysOfLookingAtCuisine(null);
+                          setWaysOfLookingAtMicrocosm(null);
+                          setWaysOfLookingAtHuman(null);
+                          setWaysOfLookingAtDigital(null);
+                        }}
+                        onOpenGoals={openGoalsModal}
+                        onOpenWeeklySummary={openWeeklySummaryModal}
+                        onOpenHabits={() => {
+                          playSelectionChime();
+                          setWaysOfLookingAtModalOpen(false);
+                          setLibraryPanelOpen("habits");
+                        }}
+                        onOpenPlaygrounds={() => {
+                          playSelectionChime();
+                          setWaysOfLookingAtModalOpen(false);
+                          setLibraryPanelOpen("cg");
+                        }}
+                        onOpenWeight={openWeightTrackerModal}
+                        mindLabTitle={landingTranslations.landingMindLabTitle}
+                        mindLabDescription={landingTranslations.landingMindLabDescription}
+                        mentalModelsLabel={landingTranslations.landingMentalModelsLabel}
+                        savedPerspectiveCardsLabel={landingTranslations.landingSavedPerspectiveCardsLabel}
+                        conceptsAndPlaygroundsLabel={landingTranslations.landingConceptsAndPlaygroundsLabel}
+                        savedMemoriesLabel={landingTranslations.landingSavedMemoriesLabel}
+                        learnMentalModelLabel={landingTranslations.landingLearnMentalModelLabel}
+                        promptGamesLabel={landingTranslations.landingPromptGamesLabel}
+                        mentorHubTitle={landingTranslations.landingMentorHubTitle}
+                        mentorHubDescription={landingTranslations.landingMentorHubDescription}
+                        followMentorsHint={landingTranslations.landingFollowMentorsHint}
+                        mentorChatLabel={landingTranslations.landingMentorChatLabel}
+                        askMentorsLabel={landingTranslations.landingAskMentorsLabel}
+                        growthStudioTitle={landingTranslations.landingGrowthStudioTitle}
+                        growthStudioDescription={landingTranslations.landingGrowthStudioDescription}
+                        experimentsLabel={landingTranslations.landingExperimentsLabel}
+                        savedConversationsLabel={landingTranslations.landingSavedConversationsLabel}
+                        setGoalsLabel={landingTranslations.landingSetGoalsLabel}
+                        weeklySummaryLabel={landingTranslations.landingWeeklySummaryLabel}
+                        weightTitle={landingTranslations.landingWeightTitle}
+                        weightDescription={landingTranslations.landingWeightDescription}
+                        currentWeightLabel={landingTranslations.landingCurrentWeightLabel}
+                        targetWeightLabel={landingTranslations.landingTargetWeightLabel}
+                        noTargetYetLabel={landingTranslations.landingNoTargetYet}
+                        openLabel={landingTranslations.landingOpenLabel}
+                        activityTitle={landingTranslations.landingActivityTitle}
+                        activityDescription={landingTranslations.landingActivityDescription}
+                        tapToInspectLabel={landingTranslations.landingTapToInspectLabel}
+                        timelineEyebrow={landingTranslations.landingTimelineEyebrow}
+                        timelineLabel={headerCalendarLabel}
+                        timelineEvents={selectedLandingDayTimelineEvents}
+                      />
+                    )}
                     {journalEntryJustSaved && (
-                        <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
-                        {getLandingTranslations(language).journalEntrySavedHint}
+                      <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
+                        {landingTranslations.journalEntrySavedHint}
                       </p>
                     )}
-                    </div>
                   </>
                 )}
                 </div>
@@ -14917,21 +13610,6 @@ export default function ChatPage() {
                         }
                       }
                     : undefined
-                }
-                onManualJournalCheckpoint={
-                  !suppressJournalAndAskMentors &&
-                  !isAnonymous &&
-                  !incognitoMode &&
-                  m.role === "assistant" &&
-                  i === messages.length - 1
-                    ? () => openManualJournalCheckpoint(m.content, i)
-                    : undefined
-                }
-                manualJournalLoading={
-                  !suppressJournalAndAskMentors &&
-                  journalCheckpointLoading &&
-                  m.role === "assistant" &&
-                  i === messages.length - 1
                 }
                 isFindingGuide={
                   !!pendingCardFetch &&
@@ -15091,9 +13769,6 @@ export default function ChatPage() {
               />
               </div>
             ))}
-            {messages.length === 0 && showAndroidLandingTabs && (
-              <div className="h-[calc(env(safe-area-inset-bottom)+96px)] shrink-0" aria-hidden />
-            )}
             <div ref={messagesEndRef} />
           </div>
           )}
@@ -15126,250 +13801,205 @@ export default function ChatPage() {
         )}
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
         {!shouldHideBottomBar && (
-        <div className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
-          isLandingUtilityTab
-            ? "border-t-0"
-            : "border-t border-neutral-200 dark:border-neutral-800"
-        } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}>
-          <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
-            <>
-            {!isLandingUtilityTab && (
-            <div
-              className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-visible items-stretch min-h-[92px] py-2"
-              data-tour="input-area"
-            >
-              <div className="flex-1 min-w-0 flex items-stretch px-3">
-                <MentionInput
-                  inputRef={inputRef}
-                  value={input}
-                  onChange={handleMainInputChange}
-                  onKeyDown={handleKeyDown}
-                  mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
-                    id,
-                    name,
-                  }))}
-                  longTermMemories={longTermMemories.map((ltm) => ({
-                    _id: ltm._id,
-                    title: translatedTitles[ltm._id] ?? ltm.title,
-                    enrichmentPrompt: ltm.enrichmentPrompt,
-                  }))}
-                  customConcepts={customConcepts.map((cc) => ({
-                    _id: cc._id,
-                    title: translatedTitles[cc._id] ?? cc.title,
-                    enrichmentPrompt: cc.enrichmentPrompt,
-                  }))}
-                  conceptGroups={conceptGroups.map((cg) => ({
-                    _id: cg._id,
-                    title: translatedTitles[cg._id] ?? cg.title,
-                  }))}
-                  mentionTranslations={getMentionTranslations(language)}
-                  placeholder={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "What do you want to ask your mentors?"
-                      : landingAnimatedPlaceholder
-                  }
-                  placeholderMobile={
-                    multiMentorMode && selectedMentorFigureIds.length >= 2
-                      ? "What do you want to ask your mentors?"
-                      : landingAnimatedPlaceholder
-                  }
-                  disabled={
-                    sessionLoading ||
-                    !!currentSession?.isCollapsed ||
-                    isLoading
-                  }
-                  placeholderTopAligned
-                  className={`w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground ${
-                    "min-h-[2.5rem] max-h-36 py-2 leading-6 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto"
-                  }`}
-                  onMentalModelClick={handleMentalModelClick}
-                  onLtmClick={(id) => {
-                    const ltm = longTermMemories.find((l) => l._id === id);
-                    if (ltm) setLtmDetailModal(ltm);
-                  }}
-                  onCustomConceptClick={(id) => {
-                    const cc = customConcepts.find((c) => c._id === id);
-                    if (cc) openConceptDetail(cc);
-                  }}
-                  onConceptGroupClick={(id) => {
-                    const cg = conceptGroups.find((g) => g._id === id);
-                    if (cg) {
-                      fetch(`/api/me/concept-groups/${id}`)
-                        .then((r) => r.ok ? r.json() : Promise.reject())
-                        .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
-                        .catch(() => setCgDetailModal(cg));
-                    }
-                  }}
-                  previewMap={previewMap}
-                />
-              </div>
-              <div className="relative w-[108px] sm:w-[120px] shrink-0 px-2 flex flex-col">
-                <div className="flex items-center gap-1">
-                  <div className="flex-1">
-                    <VoiceInputButton
-                      onTranscription={(text) => {
-                        if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-                        if (chatInputLensError) setChatInputLensError(null);
-                        setInput((prev) => (prev ? prev + " " + text : text));
-                      }}
-                      language={language}
+          <div
+            className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col ${
+              isLandingUtilityTab
+                ? "border-t-0"
+                : "border-t border-neutral-200 dark:border-neutral-800"
+            } shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}
+          >
+            <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
+                {!isLandingUtilityTab && (
+                  <div className="w-full flex flex-col items-center">
+                    <ChatComposer
+                      value={input}
+                      syncRevision={composerInputSyncRevision}
+                      inputRef={inputRef}
+                      onDraftChange={handleMainInputChange}
+                      onSend={sendMessage}
+                      mentalModels={Array.from(mentalModelsIndex.entries()).map(([id, name]) => ({
+                        id,
+                        name,
+                      }))}
+                      longTermMemories={longTermMemories.map((ltm) => ({
+                        _id: ltm._id,
+                        title: translatedTitles[ltm._id] ?? ltm.title,
+                        enrichmentPrompt: ltm.enrichmentPrompt,
+                      }))}
+                      customConcepts={customConcepts.map((cc) => ({
+                        _id: cc._id,
+                        title: translatedTitles[cc._id] ?? cc.title,
+                        enrichmentPrompt: cc.enrichmentPrompt,
+                      }))}
+                      conceptGroups={conceptGroups.map((cg) => ({
+                        _id: cg._id,
+                        title: translatedTitles[cg._id] ?? cg.title,
+                      }))}
+                      mentionTranslations={getMentionTranslations(language)}
+                      placeholder={
+                        multiMentorMode && selectedMentorFigureIds.length >= 2
+                          ? "What do you want to ask your mentors?"
+                          : landingAnimatedPlaceholder
+                      }
+                      placeholderMobile={
+                        multiMentorMode && selectedMentorFigureIds.length >= 2
+                          ? "What do you want to ask your mentors?"
+                          : landingAnimatedPlaceholder
+                      }
                       disabled={
                         sessionLoading ||
                         !!currentSession?.isCollapsed ||
                         isLoading
                       }
-                      ariaLabel="Voice input"
-                      compactStopWhileListening
-                      className="!w-full !min-h-10 !min-w-0 !rounded-xl !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-accent/70 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20"
-                    />
-                  </div>
-                  <button
-                    onClick={() => {
-                      sendMessage();
-                    }}
-                    disabled={
-                      !input.trim() ||
-                      sessionLoading ||
-                      !!currentSession?.isCollapsed ||
-                      isLoading
-                    }
-                    aria-label="Send message"
-                    className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
-                  >
-                    {isLoading ? (
-                      <LoadingDots aria-label="Sending" />
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                        <path d="m22 2-7 20-4-9-9-4Z" />
-                        <path d="M22 2 11 13" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                <button
-                  ref={chatInputLensMenuButtonRef}
-                  type="button"
-                  onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
-                  className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-expanded={chatInputLensMenuOpen}
-                  aria-haspopup="menu"
-                  aria-label="Refine options"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
-                    <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
-                    <path d="M19 16v5" />
-                    <path d="M16.5 18.5h5" />
-                  </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-                {chatInputLensMenuOpen && (
-                  <div
-                    ref={chatInputLensMenuRef}
-                    role="menu"
-                    aria-label="Lens options"
-                    className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
-                  >
-                    <div className="inline-grid grid-cols-1 gap-1">
-                      {CHAT_INPUT_LENSES.map((lens) => {
-                        const selected = chatInputLens === lens.id;
-                        const isSuggested =
-                          lens.id !== "none" &&
-                          autoSuggestedChatLensMeta.suggested != null &&
-                          autoSuggestedChatLensMeta.suggested === lens.id;
-                        return (
-                          <button
-                            key={`chat-lens-menu-${lens.id}`}
-                            type="button"
-                            onClick={() => {
-                              setChatInputLens(lens.id);
-                              if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-                              if (chatInputLensError) setChatInputLensError(null);
-                            }}
-                            className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
-                              selected
-                                ? "border-accent text-accent bg-accent/10"
-                                : isSuggested
-                                  ? "border-accent/60 text-accent bg-accent/5"
-                                  : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                            }`}
-                            aria-pressed={selected}
-                          >
-                            <span className="inline-flex items-center gap-1.5">
-                              {lens.label}
-                              {isSuggested && (
-                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                              )}
-                            </span>
-                          </button>
-                        );
-                      })}
-                      <button
-                        type="button"
-                        onClick={() => void refineMainInputWithLens()}
-                        disabled={
-                          chatInputLensLoading ||
-                          !input.trim() ||
-                          chatInputLens === "none" ||
-                          sessionLoading ||
-                          !!currentSession?.isCollapsed ||
-                          isLoading
+                      isLoading={isLoading}
+                      canSubmit={
+                        !(messages.length === 0 && !incognitoMode && (landingTab === "journaling" || landingTab === "pomodoro"))
+                      }
+                      language={language}
+                      onMentalModelClick={handleMentalModelClick}
+                      onLtmClick={(id) => {
+                        const ltm = longTermMemories.find((l) => l._id === id);
+                        if (ltm) setLtmDetailModal(ltm);
+                      }}
+                      onCustomConceptClick={(id) => {
+                        const cc = customConcepts.find((c) => c._id === id);
+                        if (cc) openConceptDetail(cc);
+                      }}
+                      onConceptGroupClick={(id) => {
+                        const cg = conceptGroups.find((g) => g._id === id);
+                        if (cg) {
+                          fetch(`/api/me/concept-groups/${id}`)
+                            .then((r) => (r.ok ? r.json() : Promise.reject()))
+                            .then((data) => setCgDetailModal({ ...cg, concepts: data.concepts ?? [] }))
+                            .catch(() => setCgDetailModal(cg));
                         }
-                        className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                      }}
+                      previewMap={previewMap}
+                    />
+                    <div className="relative w-full max-w-2xl lg:max-w-4xl">
+                      <button
+                        ref={chatInputLensMenuButtonRef}
+                        type="button"
+                        onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
+                        className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                        aria-expanded={chatInputLensMenuOpen}
+                        aria-haspopup="menu"
+                        aria-label="Refine options"
                       >
-                        {chatInputLensLoading ? "Refining..." : "Refine message"}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
+                          <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
+                          <path d="M19 16v5" />
+                          <path d="M16.5 18.5h5" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
                       </button>
-                    </div>
-                    {chatInputLensError && (
-                      <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
-                    )}
-                    {chatInputLensRefinedText && (
-                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
-                        <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                          Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
-                        </p>
-                        <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
-                          {chatInputLensRefinedText}
-                        </p>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setInput(chatInputLensRefinedText);
-                              setChatInputLensRefinedText("");
-                              setChatInputLensError(null);
-                              setChatInputLensMenuOpen(false);
-                            }}
-                            className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
-                          >
-                            Use refined
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setChatInputLensRefinedText("")}
-                            className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                          >
-                            Keep original
-                          </button>
+                      {chatInputLensMenuOpen && (
+                        <div
+                          ref={chatInputLensMenuRef}
+                          role="menu"
+                          aria-label="Lens options"
+                          className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
+                        >
+                          <div className="inline-grid grid-cols-1 gap-1">
+                            {CHAT_INPUT_LENSES.map((lens) => {
+                              const selected = chatInputLens === lens.id;
+                              const isSuggested =
+                                lens.id !== "none" &&
+                                autoSuggestedChatLensMeta.suggested != null &&
+                                autoSuggestedChatLensMeta.suggested === lens.id;
+                              return (
+                                <button
+                                  key={`chat-lens-menu-${lens.id}`}
+                                  type="button"
+                                  onClick={() => {
+                                    setChatInputLens(lens.id);
+                                    if (chatInputLensRefinedText) setChatInputLensRefinedText("");
+                                    if (chatInputLensError) setChatInputLensError(null);
+                                  }}
+                                  className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
+                                    selected
+                                      ? "border-accent text-accent bg-accent/10"
+                                      : isSuggested
+                                        ? "border-accent/60 text-accent bg-accent/5"
+                                        : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                  }`}
+                                  aria-pressed={selected}
+                                >
+                                  <span className="inline-flex items-center gap-1.5">
+                                    {lens.label}
+                                    {isSuggested && (
+                                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                                    )}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                            <button
+                              type="button"
+                              onClick={() => void refineMainInputWithLens()}
+                              disabled={
+                                chatInputLensLoading ||
+                                !input.trim() ||
+                                chatInputLens === "none" ||
+                                sessionLoading ||
+                                !!currentSession?.isCollapsed ||
+                                isLoading
+                              }
+                              className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                            >
+                              {chatInputLensLoading ? "Refining..." : "Refine message"}
+                            </button>
+                          </div>
+                          {chatInputLensError && (
+                            <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
+                          )}
+                          {chatInputLensRefinedText && (
+                            <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
+                              <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
+                                Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
+                              </p>
+                              <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
+                                {chatInputLensRefinedText}
+                              </p>
+                              <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    replaceComposerInput(chatInputLensRefinedText);
+                                    setChatInputLensRefinedText("");
+                                    setChatInputLensError(null);
+                                    setChatInputLensMenuOpen(false);
+                                  }}
+                                  className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
+                                >
+                                  Use refined
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setChatInputLensRefinedText("")}
+                                  className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                >
+                                  Keep original
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 )}
-              </div>
-                </div>
-              )}
-              <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
-                FML Labs is AI and can make mistakes.
-              </p>
-              </>
-        </div>
-        </div>
-        )}
-        </>
+                <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
+                  FixMyLife Labs is AI and can make mistakes.
+                </p>
+            </div>
+          </div>
         )}
 
+        </>
+      )}
       </main>
       </div>
 
@@ -15613,197 +14243,6 @@ export default function ChatPage() {
         </div>
         </>
       )}
-
-      {journalCheckpointModal && (() => {
-        const { prompt, options } = journalCheckpointModal;
-        const segments = prompt.split(/(_{2,})/);
-        const blankCount = (prompt.match(/_{2,}/g) || []).length;
-        const getFillForBlank = (i: number) => {
-          const v = journalCheckpointBlanks[i] ?? "";
-          return v === "__custom__" ? (journalCheckpointCustomByIndex[i] ?? "").trim() : v;
-        };
-        const isReady = blankCount === 0 || Array.from({ length: blankCount }, (_, i) => getFillForBlank(i)).every((f) => f.length > 0);
-        const buildFullText = () => {
-          let blankIdx = 0;
-          return segments.map((s) => (/_{2,}/.test(s) ? getFillForBlank(blankIdx++) || "…" : s)).join("").trim();
-        };
-        const closeModal = () => {
-          setJournalCheckpointModal(null);
-          setJournalCheckpointBlanks([]);
-          setJournalCheckpointCustomByIndex({});
-          setJournalCheckpointPopoverIndex(null);
-        };
-        return (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-            onClick={closeModal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="journal-checkpoint-title"
-          >
-            <div
-              className="relative w-full max-w-lg rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background shadow-xl p-4 animate-fade-in-up"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h2 id="journal-checkpoint-title" className="font-semibold text-lg text-foreground">
-                  Journal Checkpoint
-                </h2>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-label="Close journal checkpoint modal"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4" aria-hidden>
-                    <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                </button>
-              </div>
-              <p className="mb-2 text-xs text-neutral-500 dark:text-neutral-400">
-                Fill in the blank(s) to create your journal note. Tap a highlighted blank to choose an option or enter your own.
-              </p>
-              <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-3 leading-relaxed flex flex-wrap items-baseline gap-1" dir={isRtlLanguage(language) ? "rtl" : undefined}>
-                {segments.map((segment, idx) => {
-                  if (/_{2,}/.test(segment)) {
-                    const blankIdx = segments.slice(0, idx).filter((s) => /_{2,}/.test(s)).length;
-                    const value = journalCheckpointBlanks[blankIdx] ?? "";
-                    const displayText = value === "__custom__"
-                      ? (journalCheckpointCustomByIndex[blankIdx] || "").trim() || "Type your own…"
-                      : value || "Select…";
-                    const isCustom = value === "__custom__";
-                    const popoverOpen = journalCheckpointPopoverIndex === blankIdx;
-                    return (
-                      <span key={idx} className="inline-flex align-baseline">
-                        {isCustom ? (
-                          <span className="inline-flex items-center gap-1">
-                            <input
-                              type="text"
-                              value={journalCheckpointCustomByIndex[blankIdx] ?? ""}
-                              onChange={(e) => setJournalCheckpointCustomByIndex((prev) => ({ ...prev, [blankIdx]: e.target.value }))}
-                              placeholder="Type your own…"
-                              className="min-w-[120px] max-w-[200px] px-2 py-1 rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50/50 dark:bg-amber-900/20 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setJournalCheckpointBlanks((prev) => {
-                                  const next = [...prev];
-                                  next[blankIdx] = "";
-                                  return next;
-                                });
-                                setJournalCheckpointCustomByIndex((prev) => {
-                                  const next = { ...prev };
-                                  delete next[blankIdx];
-                                  return next;
-                                });
-                              }}
-                              className="text-[10px] text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
-                            >
-                              change
-                            </button>
-                          </span>
-                        ) : (
-                          <div className="relative">
-                            <button
-                              type="button"
-                              onClick={() => setJournalCheckpointPopoverIndex((prev) => (prev === blankIdx ? null : blankIdx))}
-                              className="min-w-[110px] px-2.5 py-1 rounded-md border border-dashed border-amber-400 dark:border-amber-500 bg-amber-50/60 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 text-sm hover:bg-amber-100 dark:hover:bg-amber-900/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                            >
-                              {displayText}
-                            </button>
-                            {popoverOpen && (
-                              <>
-                                <div className="fixed inset-0 z-40" onClick={() => setJournalCheckpointPopoverIndex(null)} aria-hidden />
-                                <div className="absolute left-0 top-full mt-1 z-50 w-[min(280px,calc(100vw-3rem))] py-1 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-background shadow-xl max-h-56 overflow-y-auto">
-                                  {options.map((opt, i) => (
-                                    <button
-                                      key={i}
-                                      type="button"
-                                      onClick={() => {
-                                        setJournalCheckpointBlanks((prev) => {
-                                          const next = [...prev];
-                                          next[blankIdx] = opt;
-                                          return next;
-                                        });
-                                        setJournalCheckpointPopoverIndex(null);
-                                      }}
-                                      className="w-full px-3 py-2 text-left text-sm leading-snug hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                    >
-                                      {opt}
-                                    </button>
-                                  ))}
-                                  <button
-                                      type="button"
-                                      onClick={() => {
-                                        setJournalCheckpointBlanks((prev) => {
-                                          const next = [...prev];
-                                          next[blankIdx] = "__custom__";
-                                          return next;
-                                        });
-                                        setJournalCheckpointPopoverIndex(null);
-                                      }}
-                                      className="w-full px-3 py-2 text-left text-sm text-amber-600 dark:text-amber-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 border-t border-neutral-100 dark:border-neutral-700"
-                                    >
-                                      Enter my own
-                                    </button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        )}
-                      </span>
-                    );
-                  }
-                  return <span key={idx}>{segment}</span>;
-                })}
-              </div>
-              <div className="mb-4 px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300">
-                Preview: <span className="text-neutral-700 dark:text-neutral-200">{buildFullText()}</span>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    if (!isReady) return;
-                    const fullText = buildFullText();
-                    playSelectionChime();
-                    closeModal();
-                    await sendMessage(fullText, { journalCheckpoint: fullText });
-                  }}
-                  disabled={!isReady}
-                  className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                >
-                  Send
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    closeModal();
-                    setTimeout(() => inputRef.current?.focus(), 50);
-                  }}
-                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 whitespace-nowrap"
-                >
-                  Custom message
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    closeModal();
-                    setSummarizeLanguageModal({ selectedLanguage: language });
-                  }}
-                  disabled={!currentSessionId || incognitoMode}
-                  className="px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 whitespace-nowrap"
-                >
-                  Summarize
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
 
       {transcriptModalTranscript && (
         <div
@@ -17288,37 +15727,6 @@ export default function ChatPage() {
                   </div>
                 </section>
 
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
-                  <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Time and weather</h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose how weather appears next to your local time in the header.</p>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Weather format</label>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { id: "condition-temp" as const, label: "Condition + temp", preview: "Cloudy 22°C" },
-                        { id: "emoji-temp" as const, label: "Emoji + temp", preview: "☁️ 22°C" },
-                        { id: "temp-only" as const, label: "Temp only", preview: "22°C" },
-                      ].map(({ id, label, preview }) => (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => updateWeatherFormat(id)}
-                          className={`px-3 py-2 rounded-xl text-sm font-medium transition-colors border ${
-                            weatherFormat === id
-                              ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
-                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
-                          }`}
-                        >
-                          {label}
-                          <span className={`ml-2 text-xs ${weatherFormat === id ? "text-white/80 dark:text-background/80" : "text-neutral-500 dark:text-neutral-400"}`}>
-                            {preview}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
                 {!isAnonymous && (
                   <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
                     <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
@@ -17327,35 +15735,6 @@ export default function ChatPage() {
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">
                       Set days and times for nutrition, exercise, gratitude, weight, and mental model reminders.
                     </p>
-                    <div className="mb-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50/70 dark:bg-neutral-900/60 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground">Nightly daily-report notification</p>
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Send a 9:00 PM reminder when your daily nutrition report is ready.
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          role="switch"
-                          aria-checked={nightlyNutritionReportNotificationEnabled}
-                          onClick={() =>
-                            setNightlyNutritionReportNotificationEnabled((prev) => !prev)
-                          }
-                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
-                            nightlyNutritionReportNotificationEnabled
-                              ? "bg-emerald-500 dark:bg-emerald-500"
-                              : "bg-neutral-200 dark:bg-neutral-700"
-                          }`}
-                        >
-                          <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
-                              nightlyNutritionReportNotificationEnabled ? "translate-x-5" : "translate-x-1"
-                            }`}
-                          />
-                        </button>
-                      </div>
-                    </div>
                     <div className="space-y-3">
                       {REMINDER_TYPES.map((type) => {
                         const schedule = reminderPreferences[type];
@@ -17648,64 +16027,6 @@ export default function ChatPage() {
       {feedbackModalOpen && (
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
-      {showAndroidLandingTabs && (
-        <div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none sm:hidden flex justify-center pb-[calc(env(safe-area-inset-bottom)+8px)]">
-          <div
-            className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-neutral-200/80 dark:border-neutral-500/70 bg-white/55 dark:bg-black/90 backdrop-blur-md px-2.5 py-1.5 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
-            aria-label="Landing tabs"
-          >
-            <button
-              type="button"
-              onClick={() => {
-                if (!isAnonymous) setLandingTab("journaling");
-              }}
-              disabled={isAnonymous}
-              className={`px-2 py-1 rounded-full transition-colors ${
-                isAnonymous
-                  ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                  : landingTab === "journaling"
-                    ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                    : "font-medium text-neutral-600 dark:text-neutral-300"
-              }`}
-              aria-pressed={landingTab === "journaling"}
-            >
-              {getLandingTranslations(language).journalingTabLabel}
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-600">|</span>
-            <button
-              type="button"
-              onClick={() => {
-                if (!isAnonymous) setLandingTab("pomodoro");
-              }}
-              disabled={isAnonymous}
-              className={`px-2 py-1 rounded-full transition-colors ${
-                isAnonymous
-                  ? "text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-80"
-                  : landingTab === "pomodoro"
-                    ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                    : "font-medium text-neutral-600 dark:text-neutral-300"
-              }`}
-              aria-pressed={landingTab === "pomodoro"}
-            >
-              Pomodoro
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-600">|</span>
-            <button
-              type="button"
-              onClick={() => setLandingTab("deepThinking")}
-              className={`px-2 py-1 rounded-full transition-colors ${
-                landingTab === "deepThinking"
-                  ? "font-semibold text-[#B87B51] bg-[#B87B51]/12 dark:bg-[#B87B51]/20"
-                  : "font-medium text-neutral-600 dark:text-neutral-300"
-              }`}
-              aria-pressed={landingTab === "deepThinking"}
-            >
-              {getLandingTranslations(language).deepThinkingTabLabel}
-            </button>
-          </div>
-        </div>
-      )}
-
       {goalsModalOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -18194,11 +16515,16 @@ export default function ChatPage() {
                     <label className="block text-xs text-neutral-500 dark:text-neutral-400">
                       What do you want to achieve?
                     </label>
-                    <textarea
+                    <BufferedTextarea
                       value={goalsCoachIntentDraft}
-                      onChange={(e) => setGoalsCoachIntentDraft(e.target.value.slice(0, 500))}
+                      syncRevision={goalsCoachIntentDraftRevision}
+                      onValueChange={setGoalsCoachIntentDraft}
+                      onImmediateValueChange={(nextValue) => {
+                        goalsCoachIntentDraftRef.current = nextValue;
+                      }}
                       disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                       rows={3}
+                      maxLength={500}
                       placeholder="Example: I want steady fat loss while preserving muscle and reducing late-night snacking."
                       className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
                     />
@@ -18314,329 +16640,6 @@ export default function ChatPage() {
                   </button>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {dailyReportModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
-            if (!dailyReportLoading) resetDailyReportModal();
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).dailyReportModalTitle}
-        >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,760px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between gap-2 px-3 py-2.5 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <div>
-                <h2 className="text-lg font-semibold text-foreground pr-2">
-                  {getLandingTranslations(language).dailyReportModalTitle}
-                </h2>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  {getLandingTranslations(language).dailyReportModalSubtitle}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={resetDailyReportModal}
-                disabled={dailyReportLoading}
-                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                aria-label={getUiTranslations(language).close}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-4 space-y-4 overflow-y-auto">
-              <div className="flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
-                  </p>
-                  <p className="text-sm text-foreground">
-                    {dailyReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
-                  </p>
-                </div>
-                <div className="flex items-end gap-2">
-                  <div>
-                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      {getLandingTranslations(language).dailyReportChooseDateLabel}
-                    </label>
-                    <input
-                      type="date"
-                      value={dailyReportDayKey}
-                      onChange={(e) => {
-                        const nextDayKey = e.target.value.trim();
-                        if (!nextDayKey) return;
-                        setDailyReportDayKey(nextDayKey);
-                      }}
-                      disabled={dailyReportLoading}
-                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => void runDailyReport()}
-                    disabled={dailyReportLoading}
-                    className="px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
-                  >
-                    {dailyReportLoading
-                      ? getLandingTranslations(language).dailyReportGenerating
-                      : getLandingTranslations(language).dailyReportGenerate}
-                  </button>
-                </div>
-              </div>
-
-              {dailyReportError && (
-                <p className="text-sm text-red-600 dark:text-red-400">{dailyReportError}</p>
-              )}
-
-              {dailyReportResult && (
-                <div className="space-y-4">
-                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-br from-amber-50 via-background to-rose-50 dark:from-amber-900/20 dark:via-neutral-950 dark:to-rose-900/20 p-4 space-y-2">
-                    <p className="text-xs uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-                      {dailyReportResult.dayLabel}
-                    </p>
-                    {dailyReportResult.mentorFigureName && (
-                      <p className="text-xs text-neutral-600 dark:text-neutral-300">
-                        {getLandingTranslations(language).dailyReportCoachStyleLabel}: {dailyReportResult.mentorFigureName}
-                      </p>
-                    )}
-                    <p className="text-base font-semibold text-foreground">
-                      {dailyReportResult.report.coachIntro}
-                    </p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
-                      {dailyReportResult.report.summary}
-                    </p>
-                  </div>
-
-                  {dailyReportResult.report.wins.length > 0 && (
-                    <div className="rounded-2xl border border-emerald-200/70 dark:border-emerald-700/40 bg-emerald-50/70 dark:bg-emerald-900/20 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200 mb-2">
-                        {getLandingTranslations(language).dailyReportWinsHeading}
-                      </p>
-                      <ul className="space-y-1">
-                        {dailyReportResult.report.wins.map((item, idx) => (
-                          <li key={`daily-win-${idx}`} className="text-sm text-emerald-900/90 dark:text-emerald-100">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {dailyReportResult.report.momentumSignals.length > 0 && (
-                    <div className="rounded-2xl border border-sky-200/70 dark:border-sky-700/40 bg-sky-50/70 dark:bg-sky-900/20 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-sky-800 dark:text-sky-200 mb-2">
-                        {getLandingTranslations(language).dailyReportMomentumHeading}
-                      </p>
-                      <ul className="space-y-1">
-                        {dailyReportResult.report.momentumSignals.map((item, idx) => (
-                          <li key={`daily-momentum-${idx}`} className="text-sm text-sky-900/90 dark:text-sky-100">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {dailyReportResult.report.sectionCards.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {dailyReportResult.report.sectionCards.map((card) => (
-                        <div
-                          key={`daily-card-${card.key}`}
-                          className={`rounded-2xl border p-3 ${
-                            card.accent === "violet"
-                              ? "border-violet-200/80 dark:border-violet-700/40 bg-violet-50/60 dark:bg-violet-900/20"
-                              : card.accent === "teal"
-                                ? "border-teal-200/80 dark:border-teal-700/40 bg-teal-50/60 dark:bg-teal-900/20"
-                                : card.accent === "emerald"
-                                  ? "border-emerald-200/80 dark:border-emerald-700/40 bg-emerald-50/60 dark:bg-emerald-900/20"
-                                  : card.accent === "amber"
-                                    ? "border-amber-200/80 dark:border-amber-700/40 bg-amber-50/60 dark:bg-amber-900/20"
-                                    : card.accent === "rose"
-                                      ? "border-rose-200/80 dark:border-rose-700/40 bg-rose-50/60 dark:bg-rose-900/20"
-                                      : "border-sky-200/80 dark:border-sky-700/40 bg-sky-50/60 dark:bg-sky-900/20"
-                          }`}
-                        >
-                          <p className="text-xs font-semibold uppercase tracking-wide text-foreground/90 mb-1">
-                            {card.title}
-                          </p>
-                          <p className="text-sm text-neutral-700 dark:text-neutral-200">
-                            {card.body}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {dailyReportResult.report.tomorrowGamePlan.length > 0 && (
-                    <div className="rounded-2xl border border-amber-200/80 dark:border-amber-700/40 bg-amber-50/70 dark:bg-amber-900/20 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200 mb-2">
-                        {getLandingTranslations(language).dailyReportTomorrowHeading}
-                      </p>
-                      <ul className="space-y-1">
-                        {dailyReportResult.report.tomorrowGamePlan.map((item, idx) => (
-                          <li key={`daily-plan-${idx}`} className="text-sm text-amber-900/90 dark:text-amber-100">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {dailyReportResult.report.closingNote && (
-                    <p className="text-sm font-medium text-foreground text-center py-1">
-                      {dailyReportResult.report.closingNote}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {nutritionReportModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
-            if (!nutritionReportLoading) resetNutritionReportModal();
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).nutritionAnalysisModalTitle}
-        >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <h2 className="text-lg font-semibold text-foreground pr-2">
-                {getLandingTranslations(language).nutritionAnalysisModalTitle}
-              </h2>
-              <button
-                type="button"
-                onClick={resetNutritionReportModal}
-                disabled={nutritionReportLoading}
-                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                aria-label={getUiTranslations(language).close}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-3 space-y-2.5 overflow-y-auto">
-              <p className="text-[13px] leading-snug text-neutral-600 dark:text-neutral-400">
-                {getLandingTranslations(language).nutritionAnalysisModalSubtitle}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2 items-end">
-                <div>
-                  <p className="block text-xs text-neutral-500 dark:text-neutral-400 mb-0.5">
-                    {getLandingTranslations(language).nutritionAnalysisScopeSelectedDay}
-                  </p>
-                  <p className="text-sm text-foreground">
-                    {nutritionReportSelectedDate.toLocaleDateString(undefined, { dateStyle: "medium" })}
-                  </p>
-                  <label className="mt-1.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                    Choose another date
-                  </label>
-                  <input
-                    type="date"
-                    value={nutritionReportDayKey}
-                    onChange={(e) => {
-                      const nextDayKey = e.target.value.trim();
-                      if (!nextDayKey) return;
-                      setNutritionReportDayKey(nextDayKey);
-                    }}
-                    disabled={nutritionReportLoading}
-                    className="mt-1 w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void runNutritionReport()}
-                  disabled={nutritionReportLoading || !canRunNutritionReport}
-                  className="w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                  {nutritionReportLoading
-                    ? getLandingTranslations(language).nutritionAnalysisGenerating
-                    : getLandingTranslations(language).nutritionAnalysisGenerate}
-                </button>
-              </div>
-
-              {!canRunNutritionReport && (
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  {getLandingTranslations(language).nutritionAnalysisNoDataError}
-                </p>
-              )}
-
-              {nutritionReportError && (
-                <p className="text-sm text-red-600 dark:text-red-400">{nutritionReportError}</p>
-              )}
-
-              {nutritionReportResult && (
-                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-3 bg-neutral-50/60 dark:bg-neutral-900/40">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    {nutritionReportResult.dayLabel}
-                  </p>
-                  <div>
-                    <p className="text-xs font-semibold text-foreground mb-1">
-                      {getLandingTranslations(language).nutritionAnalysisSummaryHeading}
-                    </p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
-                      {nutritionReportResult.report.summary}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-foreground mb-1">
-                      {getLandingTranslations(language).nutritionAnalysisGoalStatusHeading}
-                    </p>
-                    <p className="text-sm text-neutral-700 dark:text-neutral-200">
-                      {nutritionReportResult.report.goalStatus}
-                    </p>
-                  </div>
-                  {nutritionReportResult.report.highlights.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-foreground mb-1">
-                        {getLandingTranslations(language).nutritionAnalysisHighlightsHeading}
-                      </p>
-                      <ul className="space-y-1">
-                        {nutritionReportResult.report.highlights.map((item, idx) => (
-                          <li key={`${item}-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {nutritionReportResult.report.tomorrowTips.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-foreground mb-1">
-                        {getLandingTranslations(language).nutritionAnalysisTipsHeading}
-                      </p>
-                      <ul className="space-y-1">
-                        {nutritionReportResult.report.tomorrowTips.map((item, idx) => (
-                          <li key={`${item}-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -19341,7 +17344,7 @@ export default function ChatPage() {
                       <button
                         key={`journal-example-${idx}`}
                         type="button"
-                        onClick={() => setJournalEntryText(example)}
+                        onClick={() => replaceJournalEntryText(example)}
                         disabled={journalEntrySaving}
                         className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
                       >
@@ -19364,12 +17367,16 @@ export default function ChatPage() {
                 />
               </div>
               <div className="flex items-end gap-2">
-                <textarea
+                <BufferedTextarea
                   value={journalEntryText}
-                  onChange={(e) => {
-                    setJournalEntryText(e.target.value);
+                  syncRevision={journalEntryTextRevision}
+                  onValueChange={(nextValue) => {
+                    setJournalEntryText(nextValue);
                     if (journalRefinedText) setJournalRefinedText("");
                     if (journalRefineError) setJournalRefineError(null);
+                  }}
+                  onImmediateValueChange={(nextValue) => {
+                    journalEntryTextRef.current = nextValue;
                   }}
                   placeholder={getLandingTranslations(language).journalEntryBodyPlaceholder}
                   disabled={journalEntrySaving}
@@ -19383,9 +17390,9 @@ export default function ChatPage() {
                   compactStopWhileListening
                   className="!border-neutral-200/60 dark:!border-neutral-800/90 !bg-neutral-50/60 dark:!bg-neutral-900/35"
                   onTranscription={(text) =>
-                    setJournalEntryText((prev) =>
-                      prev.trim()
-                        ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
+                    replaceJournalEntryText(
+                      journalEntryTextRef.current.trim()
+                        ? `${journalEntryTextRef.current}${/\s$/.test(journalEntryTextRef.current) ? "" : " "}${text}`
                         : text
                     )
                   }
@@ -19442,7 +17449,7 @@ export default function ChatPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            setJournalEntryText(journalRefinedText);
+                            replaceJournalEntryText(journalRefinedText);
                             setJournalRefinedText("");
                             setJournalRefineError(null);
                           }}
@@ -19604,8 +17611,8 @@ export default function ChatPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setCalorieTrackerInput("");
-                        setCalorieTrackerCustomTag("");
+                        replaceCalorieTrackerInput("");
+                        replaceCalorieTrackerCustomTag("");
                         setCalorieTrackerImageAnalyses([]);
                         setCalorieTrackerError(null);
                         setCalorieTrackerStep("input");
@@ -19633,7 +17640,7 @@ export default function ChatPage() {
                           <button
                             key={`calorie-example-${idx}`}
                             type="button"
-                            onClick={() => setCalorieTrackerInput(example)}
+                            onClick={() => replaceCalorieTrackerInput(example)}
                             disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                             className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
                           >
@@ -19659,10 +17666,14 @@ export default function ChatPage() {
                     <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                       Custom tag (optional)
                     </label>
-                    <input
+                    <BufferedInput
                       type="text"
                       value={calorieTrackerCustomTag}
-                      onChange={(e) => setCalorieTrackerCustomTag(e.target.value)}
+                      syncRevision={calorieTrackerCustomTagRevision}
+                      onValueChange={setCalorieTrackerCustomTag}
+                      onImmediateValueChange={(nextValue) => {
+                        calorieTrackerCustomTagRef.current = nextValue;
+                      }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       placeholder="e.g. post-workout, quick-lunch, high-protein"
                       className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
@@ -19726,9 +17737,9 @@ export default function ChatPage() {
                       compactStopWhileListening
                       className="!h-[34px] !min-h-[34px] !w-[34px] !min-w-[34px] !rounded-xl !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
                       onTranscription={(text) =>
-                        setCalorieTrackerInput((prev) =>
-                          prev.trim()
-                            ? `${prev}${/\s$/.test(prev) ? "" : " "}${text}`
+                        replaceCalorieTrackerInput(
+                          calorieTrackerInputRef.current.trim()
+                            ? `${calorieTrackerInputRef.current}${/\s$/.test(calorieTrackerInputRef.current) ? "" : " "}${text}`
                             : text
                         )
                       }
@@ -19738,9 +17749,13 @@ export default function ChatPage() {
                     </p>
                   </div>
                   <div className="flex items-end gap-2">
-                    <textarea
+                    <BufferedTextarea
                       value={calorieTrackerInput}
-                      onChange={(e) => setCalorieTrackerInput(e.target.value)}
+                      syncRevision={calorieTrackerInputRevision}
+                      onValueChange={setCalorieTrackerInput}
+                      onImmediateValueChange={(nextValue) => {
+                        calorieTrackerInputRef.current = nextValue;
+                      }}
                       rows={6}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       placeholder={
@@ -20494,9 +18509,13 @@ export default function ChatPage() {
                 <p className="text-xs text-neutral-500 dark:text-neutral-400">
                   We will suggest 5 mentors with short reasoning, then you can pick multiple.
                 </p>
-                <textarea
+                <BufferedTextarea
                   value={askMentorsRecommendationInput}
-                  onChange={(e) => setAskMentorsRecommendationInput(e.target.value)}
+                  syncRevision={askMentorsRecommendationInputRevision}
+                  onValueChange={setAskMentorsRecommendationInput}
+                  onImmediateValueChange={(nextValue) => {
+                    askMentorsRecommendationInputRef.current = nextValue;
+                  }}
                   placeholder="Example: I need strategic + execution advice for a startup pivot."
                   rows={2}
                   className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 resize-none"
@@ -20985,7 +19004,7 @@ export default function ChatPage() {
             <div className="mb-5 flex items-center justify-center gap-3">
               <Image
                 src="/icon.svg"
-                alt="FigureMyLife Labs logo"
+                alt="FixMyLife Labs logo"
                 width={72}
                 height={72}
                 className="rounded-full border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
@@ -21739,14 +19758,14 @@ export default function ChatPage() {
             !ccYoutubeLoading &&
             (setCcYoutubeModal(false),
             setCcYoutubeUrl(""),
-            setCcYoutubeExtractPrompt(""),
+            replaceCcYoutubeExtractPrompt(""),
             setCcYoutubeTranscriptId(null),
             setCcYoutubeResult(null),
             setCcYoutubeError(null),
             setCcYoutubeExtractProgress(null),
             setCcImportJournalMode(false),
-            setCcJournalText(""),
-            setCcJournalTitle(""),
+            replaceCcJournalText(""),
+            replaceCcJournalTitle(""),
             setCcJournalPersistLibrary(false),
             setCcJournalTranscriptId(null))
           }
@@ -21767,14 +19786,14 @@ export default function ChatPage() {
                       !ccYoutubeLoading &&
                       (setCcYoutubeModal(false),
                       setCcYoutubeUrl(""),
-                      setCcYoutubeExtractPrompt(""),
+                      replaceCcYoutubeExtractPrompt(""),
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
                       setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
-                      setCcJournalText(""),
-                      setCcJournalTitle(""),
+                      replaceCcJournalText(""),
+                      replaceCcJournalTitle(""),
                       setCcJournalPersistLibrary(false),
                       setCcJournalTranscriptId(null))
                     }
@@ -21814,9 +19833,13 @@ export default function ChatPage() {
                     </p>
                   )}
                   {!ccJournalTranscriptId && (
-                    <textarea
+                    <BufferedTextarea
                       value={ccJournalText}
-                      onChange={(e) => setCcJournalText(e.target.value)}
+                      syncRevision={ccJournalTextRevision}
+                      onValueChange={setCcJournalText}
+                      onImmediateValueChange={(nextValue) => {
+                        ccJournalTextRef.current = nextValue;
+                      }}
                       placeholder="Paste your journal entry here…"
                       rows={14}
                       className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y min-h-[200px]"
@@ -21828,10 +19851,14 @@ export default function ChatPage() {
                     <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                       Entry title (optional)
                     </label>
-                    <input
+                    <BufferedInput
                       type="text"
                       value={ccJournalTitle}
-                      onChange={(e) => setCcJournalTitle(e.target.value)}
+                      syncRevision={ccJournalTitleRevision}
+                      onValueChange={setCcJournalTitle}
+                      onImmediateValueChange={(nextValue) => {
+                        ccJournalTitleRef.current = nextValue;
+                      }}
                       placeholder="e.g. Morning pages — March 2025"
                       className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
                       disabled={ccYoutubeLoading || !!ccJournalTranscriptId}
@@ -21841,9 +19868,13 @@ export default function ChatPage() {
                     <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                       What to extract (optional)
                     </label>
-                    <textarea
+                    <BufferedTextarea
                       value={ccYoutubeExtractPrompt}
-                      onChange={(e) => setCcYoutubeExtractPrompt(e.target.value)}
+                      syncRevision={ccYoutubeExtractPromptRevision}
+                      onValueChange={setCcYoutubeExtractPrompt}
+                      onImmediateValueChange={(nextValue) => {
+                        ccYoutubeExtractPromptRef.current = nextValue;
+                      }}
                       placeholder="e.g. Focus on career, relationships, or habits…"
                       rows={2}
                       className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
@@ -21865,7 +19896,7 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={async () => {
-                      if ((!ccJournalText.trim() && !ccJournalTranscriptId) || ccYoutubeLoading) return;
+                      if ((!ccJournalTextRef.current.trim() && !ccJournalTranscriptId) || ccYoutubeLoading) return;
                       setCcYoutubeLoading(true);
                       setCcYoutubeResult(null);
                       setCcYoutubeError(null);
@@ -21873,14 +19904,14 @@ export default function ChatPage() {
                       try {
                         const body: Record<string, unknown> = {
                           language,
-                          extractPrompt: ccYoutubeExtractPrompt.trim() || undefined,
+                          extractPrompt: ccYoutubeExtractPromptRef.current.trim() || undefined,
                         };
                         if (ccJournalTranscriptId) {
                           body.transcriptId = ccJournalTranscriptId;
-                          if (ccJournalTitle.trim()) body.title = ccJournalTitle.trim();
+                          if (ccJournalTitleRef.current.trim()) body.title = ccJournalTitleRef.current.trim();
                         } else {
-                          body.text = ccJournalText.trim();
-                          if (ccJournalTitle.trim()) body.title = ccJournalTitle.trim();
+                          body.text = ccJournalTextRef.current.trim();
+                          if (ccJournalTitleRef.current.trim()) body.title = ccJournalTitleRef.current.trim();
                           if (ccJournalPersistLibrary) body.persist = true;
                         }
                         const res = await fetch("/api/me/custom-concepts/from-journal", {
@@ -21941,14 +19972,14 @@ export default function ChatPage() {
                       !ccYoutubeLoading &&
                       (setCcYoutubeModal(false),
                       setCcYoutubeUrl(""),
-                      setCcYoutubeExtractPrompt(""),
+                      replaceCcYoutubeExtractPrompt(""),
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
                       setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
-                      setCcJournalText(""),
-                      setCcJournalTitle(""),
+                      replaceCcJournalText(""),
+                      replaceCcJournalTitle(""),
                       setCcJournalPersistLibrary(false),
                       setCcJournalTranscriptId(null))
                     }
@@ -22006,9 +20037,13 @@ export default function ChatPage() {
                     <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1">
                       What to extract (optional)
                     </label>
-                    <textarea
+                    <BufferedTextarea
                       value={ccYoutubeExtractPrompt}
-                      onChange={(e) => setCcYoutubeExtractPrompt(e.target.value)}
+                      syncRevision={ccYoutubeExtractPromptRevision}
+                      onValueChange={setCcYoutubeExtractPrompt}
+                      onImmediateValueChange={(nextValue) => {
+                        ccYoutubeExtractPromptRef.current = nextValue;
+                      }}
                       placeholder="e.g. Focus on productivity tips, career advice, or psychological insights..."
                       rows={2}
                       className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
@@ -22028,7 +20063,7 @@ export default function ChatPage() {
                       try {
                         const body: Record<string, unknown> = {
                           language,
-                          extractPrompt: ccYoutubeExtractPrompt.trim() || undefined,
+                          extractPrompt: ccYoutubeExtractPromptRef.current.trim() || undefined,
                         };
                         if (ccYoutubeTranscriptId) {
                           body.transcriptId = ccYoutubeTranscriptId;
@@ -22094,14 +20129,14 @@ export default function ChatPage() {
                       !ccYoutubeLoading &&
                       (setCcYoutubeModal(false),
                       setCcYoutubeUrl(""),
-                      setCcYoutubeExtractPrompt(""),
+                      replaceCcYoutubeExtractPrompt(""),
                       setCcYoutubeTranscriptId(null),
                       setCcYoutubeResult(null),
                       setCcYoutubeError(null),
                       setCcYoutubeExtractProgress(null),
                       setCcImportJournalMode(false),
-                      setCcJournalText(""),
-                      setCcJournalTitle(""),
+                      replaceCcJournalText(""),
+                      replaceCcJournalTitle(""),
                       setCcJournalPersistLibrary(false),
                       setCcJournalTranscriptId(null))
                     }
@@ -22276,12 +20311,12 @@ export default function ChatPage() {
                         setCcYoutubeModal(false);
                         setCcYoutubeUrl("");
                         setCcYoutubeTranscriptId(null);
-                        setCcYoutubeExtractPrompt("");
+                        replaceCcYoutubeExtractPrompt("");
                         setCcYoutubeResult(null);
                         setCcYoutubeExtractProgress(null);
                         setCcImportJournalMode(false);
-                        setCcJournalText("");
-                        setCcJournalTitle("");
+                        replaceCcJournalText("");
+                        replaceCcJournalTitle("");
                         setCcJournalPersistLibrary(false);
                         setCcJournalTranscriptId(null);
                         refetchCustomConcepts();

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "FigureMyLife Labs",
+  title: "FixMyLife Labs",
   description: PRODUCT_TAGLINE,
 };
 

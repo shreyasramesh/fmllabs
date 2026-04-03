@@ -105,7 +105,7 @@ export function DashboardHome() {
             You&apos;ve been reflecting. Here&apos;s your snapshot.
           </h2>
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 max-w-md mx-auto">
-            A quick look at your learning and conversations on FigureMyLife Labs.
+            A quick look at your learning and conversations on FixMyLife Labs.
           </p>
           <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link

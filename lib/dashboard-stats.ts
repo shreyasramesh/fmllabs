@@ -104,7 +104,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const rawMessages = await database
     .collection<Message>("messages")
     .find({ sessionId: { $in: sessionIds }, role: "user" })
-    .project({ content: 1, createdAt: 1, sessionId: 1, role: 1, journalCheckpoint: 1 })
+    .project({ content: 1, createdAt: 1, sessionId: 1, role: 1 })
     .toArray();
 
   const activeDays = new Set<string>();
