@@ -28,6 +28,7 @@ import {
 import { ChatComposer } from "@/components/ChatComposer";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
+import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
 import { UserMessageContent } from "@/components/UserMessageContent";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -13829,14 +13830,18 @@ export default function ChatPage() {
                         thoughtReviewing={thoughtReviewing}
                         onReviewThought={reviewThoughtOfTheDay}
                         onOpenThoughtConcept={openThoughtConcept}
+                      />
+                      )}
+                    {!incognitoMode && (
+                      <LandingBrainDump
                         language={language}
-                        onBrainDumpSaved={(category) => {
+                        onSaved={(category) => {
                           if (category === "reflection") refetchTranscripts();
                           else if (category === "concept") refetchCustomConcepts();
                           else if (category === "experiment") refetchHabits();
                         }}
                       />
-                      )}
+                    )}
                     {journalEntryJustSaved && (
                         <p className="text-sm text-emerald-600 dark:text-emerald-400" role="status">
                         {landingTranslations.journalEntrySavedHint}

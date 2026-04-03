@@ -8,8 +8,6 @@ import { LandingFocusCanvas } from "@/components/landing/LandingFocusCanvas";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
-import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
-import type { BrainDumpCategory } from "@/lib/gemini";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
@@ -329,8 +327,6 @@ interface LandingShellProps {
   thoughtReviewing: boolean;
   onReviewThought: () => void;
   onOpenThoughtConcept: () => void;
-  language?: import("@/lib/languages").LanguageCode;
-  onBrainDumpSaved?: (category: BrainDumpCategory) => void;
 }
 
 export function LandingShell({
@@ -460,8 +456,6 @@ export function LandingShell({
   thoughtReviewing,
   onReviewThought,
   onOpenThoughtConcept,
-  language,
-  onBrainDumpSaved,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -1097,7 +1091,6 @@ export function LandingShell({
         <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
       </div>
 
-      <LandingBrainDump language={language} onSaved={onBrainDumpSaved} />
     </div>
   );
 }
