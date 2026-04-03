@@ -4344,6 +4344,8 @@ export default function ChatPage() {
   const [calorieTrackerSuggestions, setCalorieTrackerSuggestions] = useState<ReusableJournalSuggestion[]>([]);
   const [calorieTrackerSuggestionsLoading, setCalorieTrackerSuggestionsLoading] = useState(false);
   const [calorieTrackerSuggestionQuery, setCalorieTrackerSuggestionQuery] = useState("");
+  const [calorieTrackerFrequentMeals, setCalorieTrackerFrequentMeals] = useState<ReusableJournalSuggestion[]>([]);
+  const [calorieTrackerMoreOptionsOpen, setCalorieTrackerMoreOptionsOpen] = useState(false);
   const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
     intent: "nutrition" | "exercise" | "mixed";
     confidence: "low" | "medium" | "high";
@@ -4779,7 +4781,22 @@ export default function ChatPage() {
     setCalorieTrackerResult(null);
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
+    setCalorieTrackerFrequentMeals([]);
+    setCalorieTrackerMoreOptionsOpen(false);
   }, [replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput]);
+
+  const fetchCalorieTrackerFrequentMeals = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({ kind: "nutrition", limit: "8", minUsage: "2" });
+      const res = await fetch(`/api/me/journal/calorie?${params.toString()}`);
+      const data = (await res.json().catch(() => ({}))) as { items?: ReusableJournalSuggestion[] };
+      if (res.ok && Array.isArray(data.items)) {
+        setCalorieTrackerFrequentMeals(data.items);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const openCalorieTrackerModal = useCallback((chip: LandingJournalChipKey = "nutrition") => {
     playSelectionChime();
@@ -4796,7 +4813,8 @@ export default function ChatPage() {
     setCalorieTrackerImageError(null);
     setCalorieTrackerQuestions([]);
     setCalorieTrackerAnswers([]);
-    setCalorieTrackerStep("choose");
+    const isNutrition = chip === "nutrition";
+    setCalorieTrackerStep(isNutrition ? "input" : "choose");
     setCalorieTrackerError(null);
     setCalorieTrackerSuggestions([]);
     setCalorieTrackerSuggestionsLoading(false);
@@ -4804,8 +4822,13 @@ export default function ChatPage() {
     setCalorieTrackerResult(null);
     setCalorieTrackerReviewDraft(null);
     setCalorieTrackerReviewAnswers([]);
+    setCalorieTrackerFrequentMeals([]);
+    setCalorieTrackerMoreOptionsOpen(false);
     setCalorieTrackerModalOpen(true);
-  }, [incognitoMode, isAnonymous, replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput, router]);
+    if (isNutrition) {
+      void fetchCalorieTrackerFrequentMeals();
+    }
+  }, [fetchCalorieTrackerFrequentMeals, incognitoMode, isAnonymous, replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput, router]);
 
   const openLandingJournalChip = useCallback(
     (chip: LandingJournalChipKey) => {
@@ -5235,7 +5258,20 @@ export default function ChatPage() {
       if (typeof window !== "undefined") {
         window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
       }
-      resetCalorieTrackerModal();
+      const snap = suggestion.nutritionSnapshot;
+      setCalorieTrackerResult({
+        intent: "nutrition",
+        confidence: "high",
+        assumptions: [],
+        nutrition: snap ? {
+          calories: snap.calories ?? null,
+          proteinGrams: snap.proteinGrams ?? null,
+          carbsGrams: snap.carbsGrams ?? null,
+          fatGrams: snap.fatGrams ?? null,
+          notes: "",
+        } : undefined,
+      });
+      setCalorieTrackerStep("result");
     } catch (err) {
       setCalorieTrackerError(
         err instanceof Error ? err.message : "Could not reuse this nutrition entry."
@@ -5248,9 +5284,26 @@ export default function ChatPage() {
     calorieTrackerImageProcessing,
     calorieTrackerLoading,
     refetchTranscripts,
-    resetCalorieTrackerModal,
     selectedLandingJournalChip,
   ]);
+
+  const handleCalorieTrackerLogAnother = useCallback(() => {
+    replaceCalorieTrackerInput("");
+    replaceCalorieTrackerCustomTag("");
+    setCalorieTrackerEntryDate(getTodayDateInputValue());
+    setCalorieTrackerImageAnalyses([]);
+    setCalorieTrackerImageProcessing(false);
+    setCalorieTrackerImageError(null);
+    setCalorieTrackerQuestions([]);
+    setCalorieTrackerAnswers([]);
+    setCalorieTrackerError(null);
+    setCalorieTrackerResult(null);
+    setCalorieTrackerReviewDraft(null);
+    setCalorieTrackerReviewAnswers([]);
+    setCalorieTrackerMoreOptionsOpen(false);
+    setCalorieTrackerStep("input");
+    void fetchCalorieTrackerFrequentMeals();
+  }, [fetchCalorieTrackerFrequentMeals, replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput]);
 
   const handleCalorieTrackerSuggestionSelect = useCallback(async (suggestion: ReusableJournalSuggestion) => {
     if (selectedLandingJournalChip === "nutrition") {
@@ -13506,12 +13559,12 @@ export default function ChatPage() {
           ) : (
           <div
             ref={messagesContainerRef}
-            className={`max-w-2xl lg:max-w-4xl mx-auto w-full min-w-0 no-touch-callout overflow-x-hidden ${
+            className={`max-w-2xl lg:max-w-4xl mx-auto w-full min-w-0 no-touch-callout ${
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
-                  : `flex-1 min-h-0 flex flex-col items-center justify-start ${
-                      !incognitoMode ? "pb-4 md:pb-6" : "pb-36 sm:pb-40 md:pb-8"
+                  : `flex flex-col items-center justify-start ${
+                      !incognitoMode ? "pb-4 md:pb-6" : "flex-1 min-h-0 pb-36 sm:pb-40 md:pb-8"
                     } px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
@@ -13850,9 +13903,10 @@ export default function ChatPage() {
                       <LandingBrainDump
                         language={language}
                         onSaved={(category) => {
-                          if (category === "reflection") refetchTranscripts();
+                          if (category === "reflection" || category === "nutrition" || category === "exercise") refetchTranscripts();
                           else if (category === "concept") refetchCustomConcepts();
                           else if (category === "experiment") refetchHabits();
+                          else if (category === "weight") void fetchWeightTracker();
                         }}
                       />
                     )}
@@ -17868,11 +17922,11 @@ export default function ChatPage() {
               </button>
             </div>
             <div className="p-4 space-y-3 overflow-y-auto">
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                {selectedLandingJournalChip === "nutrition"
-                  ? "Log meals or snacks with as much detail as you know."
-                  : "Log your workout details so calories and macro impact can be estimated."}
-              </p>
+              {selectedLandingJournalChip !== "nutrition" && (
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  Log your workout details so calories and macro impact can be estimated.
+                </p>
+              )}
 
               {calorieTrackerStep === "choose" && (
                 <>
@@ -17978,58 +18032,87 @@ export default function ChatPage() {
 
               {calorieTrackerStep === "input" && (
                 <>
-                  <div className="space-y-2">
-                    <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                      Example entries
-                    </p>
-                    <div className="overflow-x-auto pb-1.5">
-                      <div className="flex min-w-max gap-2.5">
-                      {LANDING_JOURNAL_EXAMPLES[selectedLandingJournalChip]
-                        .slice(0, 2)
-                        .map((example, idx) => (
-                          <button
-                            key={`calorie-example-${idx}`}
-                            type="button"
-                            onClick={() => replaceCalorieTrackerInput(example)}
-                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                            className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
-                          >
-                            {example}
-                          </button>
-                        ))}
+                  {/* Frequent meals — 1-tap reuse pills (nutrition only) */}
+                  {selectedLandingJournalChip === "nutrition" && calorieTrackerFrequentMeals.length > 0 && (
+                    <div className="space-y-1.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                        Quick re-log
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {calorieTrackerFrequentMeals.map((meal) => {
+                          const label = meal.displayName?.trim() || meal.sampleEntry.split("\n").map((s) => s.trim()).find(Boolean)?.slice(0, 40) || "Meal";
+                          const kcal = meal.nutritionSnapshot?.calories;
+                          return (
+                            <button
+                              key={meal.id}
+                              type="button"
+                              onClick={() => void handleCalorieTrackerSuggestionSelect(meal)}
+                              disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                              className="flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 text-[13px] font-medium text-foreground hover:border-amber-400 hover:bg-amber-50 dark:hover:border-amber-600 dark:hover:bg-amber-950/40 transition-colors disabled:opacity-50"
+                            >
+                              <span className="truncate max-w-[140px]">{label}</span>
+                              {kcal != null && (
+                                <span className="shrink-0 rounded-md bg-amber-100 dark:bg-amber-900/50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
+                                  {kcal} kcal
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      {getLandingTranslations(language).journalEntryDateHint}
-                    </label>
-                    <input
-                      type="date"
-                      value={calorieTrackerEntryDate}
-                      onChange={(e) => setCalorieTrackerEntryDate(e.target.value)}
-                      disabled={calorieTrackerLoading}
-                      className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      Custom tag (optional)
-                    </label>
-                    <BufferedInput
-                      type="text"
-                      value={calorieTrackerCustomTag}
-                      syncRevision={calorieTrackerCustomTagRevision}
-                      onValueChange={setCalorieTrackerCustomTag}
+                  )}
+
+                  {/* Textarea — hero input */}
+                  <div className="relative">
+                    <BufferedTextarea
+                      value={calorieTrackerInput}
+                      syncRevision={calorieTrackerInputRevision}
+                      onValueChange={setCalorieTrackerInput}
                       onImmediateValueChange={(nextValue) => {
-                        calorieTrackerCustomTagRef.current = nextValue;
+                        calorieTrackerInputRef.current = nextValue;
                       }}
+                      rows={selectedLandingJournalChip === "nutrition" ? 4 : 6}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      placeholder="e.g. post-workout, quick-lunch, high-protein"
-                      className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      placeholder={
+                        calorieTrackerImageAnalyses.length > 0
+                          ? "Optional: add edits, missing details, portions, brands, or context for the uploaded image(s)"
+                          : selectedLandingJournalChip === "nutrition"
+                            ? "What did you eat? e.g. 2 eggs + toast, chicken bowl, protein bar..."
+                            : "e.g. 30 min run, upper body session, yoga"
+                      }
+                      className="w-full px-3 py-2.5 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
                     />
+
+                    {/* Inline typeahead dropdown — nutrition only, when user has typed something */}
+                    {selectedLandingJournalChip === "nutrition" && calorieTrackerInput.trim().length > 0 && calorieTrackerSuggestions.length > 0 && (
+                      <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-40 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-lg">
+                        {calorieTrackerSuggestions.slice(0, 3).map((suggestion) => {
+                          const title = suggestion.displayName?.trim() || suggestion.sampleEntry.split("\n").map((s) => s.trim()).find(Boolean)?.slice(0, 60) || "Saved entry";
+                          const kcal = suggestion.nutritionSnapshot?.calories;
+                          return (
+                            <button
+                              key={suggestion.id}
+                              type="button"
+                              onClick={() => void handleCalorieTrackerSuggestionSelect(suggestion)}
+                              disabled={calorieTrackerLoading}
+                              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50 border-b last:border-b-0 border-neutral-100 dark:border-neutral-800"
+                            >
+                              <span className="text-sm text-foreground truncate">{title}</span>
+                              {kcal != null && (
+                                <span className="shrink-0 text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                                  {kcal} kcal
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex flex-wrap items-center gap-2">
+
+                  {/* Compact toolbar: camera, upload, voice, clear */}
+                  <div className="flex flex-wrap items-center gap-1.5">
                     <input
                       ref={calorieTrackerImageInputRef}
                       type="file"
@@ -18055,9 +18138,13 @@ export default function ChatPage() {
                         calorieTrackerImageInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                      title={calorieTrackerImageProcessing ? "Analyzing..." : "Camera"}
                     >
-                      {calorieTrackerImageProcessing ? "Analyzing image..." : "Use camera photo"}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-neutral-600 dark:text-neutral-300">
+                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
+                        <circle cx="12" cy="13" r="3"/>
+                      </svg>
                     </button>
                     <button
                       type="button"
@@ -18066,26 +18153,21 @@ export default function ChatPage() {
                         calorieTrackerUploadInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                      title="Upload photo"
                     >
-                      Upload photo
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-neutral-600 dark:text-neutral-300">
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                        <circle cx="9" cy="9" r="2"/>
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                      </svg>
                     </button>
-                    {calorieTrackerImageAnalyses.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setCalorieTrackerImageAnalyses([])}
-                        disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                        className="h-[34px] px-3 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
-                      >
-                        Clear photos
-                      </button>
-                    )}
                     <VoiceInputButton
                       language={language}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       ariaLabel="Calorie tracker voice input"
                       compactStopWhileListening
-                      className="!h-[34px] !min-h-[34px] !w-[34px] !min-w-[34px] !rounded-xl !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
+                      className="!h-8 !min-h-[32px] !w-8 !min-w-[32px] !rounded-lg !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
                       onTranscription={(text) =>
                         replaceCalorieTrackerInput(
                           calorieTrackerInputRef.current.trim()
@@ -18094,28 +18176,22 @@ export default function ChatPage() {
                         )
                       }
                     />
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Add one or more photos. Each photo is analyzed independently and included in the final nutrition estimate.
-                    </p>
+                    {calorieTrackerImageAnalyses.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setCalorieTrackerImageAnalyses([])}
+                        disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                        className="h-8 px-2 rounded-lg text-[11px] font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors text-neutral-600 dark:text-neutral-300"
+                      >
+                        Clear photos
+                      </button>
+                    )}
+                    {calorieTrackerImageProcessing && (
+                      <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">Analyzing image...</span>
+                    )}
                   </div>
-                  <div className="flex items-end gap-2">
-                    <BufferedTextarea
-                      value={calorieTrackerInput}
-                      syncRevision={calorieTrackerInputRevision}
-                      onValueChange={setCalorieTrackerInput}
-                      onImmediateValueChange={(nextValue) => {
-                        calorieTrackerInputRef.current = nextValue;
-                      }}
-                      rows={6}
-                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      placeholder={
-                        calorieTrackerImageAnalyses.length > 0
-                          ? "Optional: add edits, missing details, portions, brands, or context for the uploaded image(s)"
-                          : "e.g. Breakfast: 2 eggs + toast, lunch: chicken bowl; workout: 30 min run"
-                      }
-                      className="flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-                    />
-                  </div>
+
+                  {/* Image analysis previews */}
                   {calorieTrackerImageAnalyses.length > 0 && (
                     <div className="space-y-2">
                       {calorieTrackerImageAnalyses.map((analysis, idx) => (
@@ -18141,6 +18217,101 @@ export default function ChatPage() {
                   {calorieTrackerImageError && (
                     <p className="text-xs text-red-600 dark:text-red-400">{calorieTrackerImageError}</p>
                   )}
+
+                  {/* Example entries (shown only when textarea is empty, nutrition only) */}
+                  {selectedLandingJournalChip === "nutrition" && !calorieTrackerInput.trim() && calorieTrackerImageAnalyses.length === 0 && (
+                    <div className="space-y-1.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                        Try an example
+                      </p>
+                      <div className="flex flex-col gap-1.5">
+                        {LANDING_JOURNAL_EXAMPLES[selectedLandingJournalChip].slice(0, 2).map((example, idx) => (
+                          <button
+                            key={`calorie-example-${idx}`}
+                            type="button"
+                            onClick={() => replaceCalorieTrackerInput(example)}
+                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                            className="w-full rounded-xl border border-neutral-200/80 dark:border-neutral-700 bg-neutral-50/60 dark:bg-neutral-900/50 px-3 py-2 text-left text-[13px] leading-snug text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                          >
+                            {example}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Exercise example entries */}
+                  {selectedLandingJournalChip !== "nutrition" && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        Example entries
+                      </p>
+                      <div className="overflow-x-auto pb-1.5">
+                        <div className="flex min-w-max gap-2.5">
+                          {LANDING_JOURNAL_EXAMPLES[selectedLandingJournalChip].slice(0, 2).map((example, idx) => (
+                            <button
+                              key={`calorie-example-${idx}`}
+                              type="button"
+                              onClick={() => replaceCalorieTrackerInput(example)}
+                              disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                              className="w-[min(82vw,420px)] sm:w-[min(72vw,460px)] shrink-0 rounded-3xl border border-neutral-200/90 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/70 px-4 py-3 text-left text-[15px] leading-snug text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                            >
+                              {example}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* More options — collapsed date/tag */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setCalorieTrackerMoreOptionsOpen((v) => !v)}
+                      className="flex items-center gap-1 text-[12px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-foreground transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-3.5 h-3.5 transition-transform ${calorieTrackerMoreOptionsOpen ? "rotate-90" : ""}`}>
+                        <path d="m9 18 6-6-6-6"/>
+                      </svg>
+                      More options
+                    </button>
+                    {calorieTrackerMoreOptionsOpen && (
+                      <div className="mt-2 space-y-2 pl-1">
+                        <div>
+                          <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                            {getLandingTranslations(language).journalEntryDateHint}
+                          </label>
+                          <input
+                            type="date"
+                            value={calorieTrackerEntryDate}
+                            onChange={(e) => setCalorieTrackerEntryDate(e.target.value)}
+                            disabled={calorieTrackerLoading}
+                            className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                            Custom tag (optional)
+                          </label>
+                          <BufferedInput
+                            type="text"
+                            value={calorieTrackerCustomTag}
+                            syncRevision={calorieTrackerCustomTagRevision}
+                            onValueChange={setCalorieTrackerCustomTag}
+                            onImmediateValueChange={(nextValue) => {
+                              calorieTrackerCustomTagRef.current = nextValue;
+                            }}
+                            disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                            placeholder="e.g. post-workout, quick-lunch, high-protein"
+                            className="w-full max-w-xs px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Primary CTA */}
                   <button
                     type="button"
                     onClick={() => void runCalorieTrackerAnalyze()}
@@ -18149,12 +18320,12 @@ export default function ChatPage() {
                       calorieTrackerImageProcessing ||
                       (!calorieTrackerInput.trim() && calorieTrackerImageAnalyses.length === 0)
                     }
-                    className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-50"
+                    className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold bg-foreground text-background hover:opacity-90 disabled:opacity-50 transition-opacity"
                   >
                     {calorieTrackerLoading
                       ? "Saving..."
                       : selectedLandingJournalChip === "nutrition"
-                        ? getLandingTranslations(language).journalEntrySave
+                        ? "Log it"
                         : getLandingTranslations(language).calorieTrackerContinue}
                   </button>
                 </>
@@ -18338,9 +18509,13 @@ export default function ChatPage() {
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      onClick={() =>
-                        setCalorieTrackerStep(calorieTrackerQuestions.length > 0 ? "questions" : "input")
-                      }
+                      onClick={() => {
+                        if (selectedLandingJournalChip === "nutrition" && calorieTrackerResult) {
+                          setCalorieTrackerStep("result");
+                        } else {
+                          setCalorieTrackerStep(calorieTrackerQuestions.length > 0 ? "questions" : "input");
+                        }
+                      }}
                       disabled={calorieTrackerLoading}
                       className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
                     >
@@ -18404,51 +18579,80 @@ export default function ChatPage() {
 
               {calorieTrackerStep === "result" && calorieTrackerResult && (
                 <>
-                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Confidence: {calorieTrackerResult.confidence}
-                    </p>
+                  {/* Compact success card */}
+                  <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/30 p-4 text-center space-y-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emerald-600 dark:text-emerald-400">
+                        <path d="M20 6 9 17l-5-5"/>
+                      </svg>
+                      <span className="text-base font-semibold text-emerald-700 dark:text-emerald-300">
+                        {calorieTrackerResult.nutrition
+                          ? `Logged! ~${calorieTrackerResult.nutrition.calories ?? "?"} kcal`
+                          : calorieTrackerResult.exercise
+                            ? `Logged! ~${calorieTrackerResult.exercise.caloriesBurned ?? "?"} kcal burned`
+                            : "Logged!"}
+                      </span>
+                    </div>
                     {calorieTrackerResult.nutrition && (
-                      <div className="text-sm text-foreground">
-                        <p className="font-medium">Nutrition</p>
-                        <p>Calories: {calorieTrackerResult.nutrition.calories ?? "unknown"} kcal</p>
-                        <p>Protein: {calorieTrackerResult.nutrition.proteinGrams ?? "unknown"} g</p>
-                        <p>Carbs: {calorieTrackerResult.nutrition.carbsGrams ?? "unknown"} g</p>
-                        <p>Fat: {calorieTrackerResult.nutrition.fatGrams ?? "unknown"} g</p>
+                      <div className="flex items-center justify-center gap-3 text-[13px] text-neutral-600 dark:text-neutral-400">
+                        <span>P {calorieTrackerResult.nutrition.proteinGrams ?? "?"}g</span>
+                        <span className="text-neutral-300 dark:text-neutral-600">|</span>
+                        <span>C {calorieTrackerResult.nutrition.carbsGrams ?? "?"}g</span>
+                        <span className="text-neutral-300 dark:text-neutral-600">|</span>
+                        <span>F {calorieTrackerResult.nutrition.fatGrams ?? "?"}g</span>
                       </div>
                     )}
                     {calorieTrackerResult.exercise && (
-                      <div className="text-sm text-foreground">
-                        <p className="font-medium">Exercise</p>
-                        <p>Calories burned: {calorieTrackerResult.exercise.caloriesBurned ?? "unknown"} kcal</p>
-                        <p>Carbs used: {calorieTrackerResult.exercise.carbsUsedGrams ?? "unknown"} g</p>
-                        <p>Fat used: {calorieTrackerResult.exercise.fatUsedGrams ?? "unknown"} g</p>
-                        <p>Protein delta: {calorieTrackerResult.exercise.proteinDeltaGrams ?? "unknown"} g</p>
+                      <div className="flex items-center justify-center gap-3 text-[13px] text-neutral-600 dark:text-neutral-400">
+                        {calorieTrackerResult.exercise.carbsUsedGrams != null && <span>Carbs {calorieTrackerResult.exercise.carbsUsedGrams}g</span>}
+                        {calorieTrackerResult.exercise.fatUsedGrams != null && <span>Fat {calorieTrackerResult.exercise.fatUsedGrams}g</span>}
+                        {calorieTrackerResult.exercise.proteinDeltaGrams != null && <span>Protein {calorieTrackerResult.exercise.proteinDeltaGrams}g</span>}
                       </div>
                     )}
-                    {calorieTrackerResult.assumptions.length > 0 && (
-                      <div>
-                        <p className="text-xs font-medium text-neutral-600 dark:text-neutral-400">Assumptions</p>
-                        <ul className="mt-1 space-y-1">
-                          {calorieTrackerResult.assumptions.map((a, i) => (
-                            <li key={i} className="text-xs text-neutral-600 dark:text-neutral-400">- {a}</li>
-                          ))}
-                        </ul>
-                      </div>
+                    {selectedLandingJournalChip === "nutrition" && calorieTrackerResult.nutrition && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (calorieTrackerResult?.nutrition) {
+                            setCalorieTrackerReviewDraft(buildCalorieTrackerReviewDraftFromNutrition(calorieTrackerResult.nutrition));
+                            setCalorieTrackerReviewAnswers([]);
+                            setCalorieTrackerStep("review");
+                          }
+                        }}
+                        className="text-[12px] font-medium text-amber-600 dark:text-amber-400 hover:underline"
+                      >
+                        Review &amp; Edit macros
+                      </button>
                     )}
                   </div>
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                    {calorieTrackerResult.savedEntries && calorieTrackerResult.savedEntries.length > 1
-                      ? getLandingTranslations(language).calorieTrackerSavedEntries
-                      : getLandingTranslations(language).calorieTrackerSavedEntry}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={resetCalorieTrackerModal}
-                    className="w-full px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90"
-                  >
-                    {getLandingTranslations(language).calorieTrackerDone}
-                  </button>
+                  {calorieTrackerResult.assumptions.length > 0 && (
+                    <details className="text-xs text-neutral-500 dark:text-neutral-400">
+                      <summary className="cursor-pointer font-medium hover:text-foreground transition-colors">Assumptions made</summary>
+                      <ul className="mt-1 space-y-0.5 pl-3">
+                        {calorieTrackerResult.assumptions.map((a, i) => (
+                          <li key={i}>- {a}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  <div className="flex gap-2">
+                    {selectedLandingJournalChip === "nutrition" && (
+                      <button
+                        type="button"
+                        onClick={handleCalorieTrackerLogAnother}
+                        className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      >
+                        Log another
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={resetCalorieTrackerModal}
+                      className={`${selectedLandingJournalChip === "nutrition" ? "flex-1" : "w-full"} px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity`}
+                    >
+                      Done
+                    </button>
+                  </div>
                 </>
               )}
 

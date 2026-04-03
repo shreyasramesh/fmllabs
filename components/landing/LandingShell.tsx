@@ -210,7 +210,7 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
+    <section className="overflow-hidden rounded-2xl border border-white/60 bg-white/50 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
       <h3 className="truncate text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
         <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
@@ -581,7 +581,7 @@ export function LandingShell({
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
-      <section className="sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border border-neutral-200/70 bg-white/95 p-4 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/95 sm:p-5">
+      <section className="sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/55 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.05] sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -645,7 +645,7 @@ export function LandingShell({
         {/* Right column: Focus Timer + Quick Capture stacked */}
         <div className="flex flex-col gap-4">
         {/* Focus Timer Module */}
-        <section className="flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
+        <section className="flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
             Focus Timer
           </p>
@@ -799,7 +799,7 @@ export function LandingShell({
         </section>
 
         {/* Quick Capture — below Focus Timer */}
-        <section className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
+        <section className="overflow-hidden rounded-2xl border border-white/60 bg-white/50 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
           <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
           <div className="mt-2 grid grid-cols-3 gap-1.5">
             {quickCaptures.map((item) => (
