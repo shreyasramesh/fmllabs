@@ -226,7 +226,7 @@ export function LandingFocusCanvas({
   }, []);
 
   return (
-    <section className="w-full rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
+    <section className="w-full overflow-hidden rounded-[2.2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_28px_80px_rgba(15,23,42,0.09)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
@@ -244,7 +244,7 @@ export function LandingFocusCanvas({
           <div className="mx-auto flex max-w-[64rem] items-center justify-center">
             <div className="min-w-0 flex-1">
               <div className="mx-auto flex max-w-[30rem] flex-col items-center">
-                <div className="relative flex h-[20rem] w-[20rem] items-center justify-center overflow-visible sm:h-[24rem] sm:w-[24rem]">
+                <div className="relative flex h-[18rem] w-[18rem] items-center justify-center overflow-hidden sm:h-[24rem] sm:w-[24rem]">
                   <svg
                     viewBox="0 0 320 320"
                     className="absolute inset-0 h-full w-full"
@@ -352,7 +352,7 @@ export function LandingFocusCanvas({
                     })}
                   </svg>
 
-                  <div className="absolute inset-[7rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-neutral-700/50 dark:bg-none dark:bg-neutral-800 dark:shadow-none sm:inset-[8.5rem]" />
+                  <div className="absolute inset-[5.5rem] rounded-full border border-[#EADFD3]/60 bg-[radial-gradient(circle,rgba(255,250,240,0.97),rgba(255,245,228,0.94)_70%,rgba(255,240,218,0.88)_100%)] shadow-[inset_0_0_30px_rgba(255,230,190,0.3)] dark:border-neutral-700/50 dark:bg-none dark:bg-neutral-800 dark:shadow-none sm:inset-[8.5rem]" />
 
 
                   <button
@@ -418,7 +418,7 @@ export function LandingFocusCanvas({
                       onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
                       placeholder="Tag this focus session..."
                       disabled={focusTrackerSaving}
-                      className="min-w-[15rem] flex-1 rounded-full border border-neutral-300 bg-white/88 px-5 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+                      className="min-w-0 flex-1 basis-[12rem] rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
                     />
 
                     <button
@@ -431,7 +431,7 @@ export function LandingFocusCanvas({
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-5 overflow-hidden rounded-[1.35rem] border border-[#E4D8CB] bg-white/86 text-center dark:border-white/10 dark:bg-neutral-900">
+                  <div className="grid grid-cols-5 overflow-x-auto rounded-[1.35rem] border border-[#E4D8CB] bg-white/86 text-center dark:border-white/10 dark:bg-neutral-900">
                     <div className="border-r border-[#EDE2D7] px-3 py-2 dark:border-white/10">
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{carbsLabel}</p>
                       <div className="mt-1 flex items-center justify-center gap-1">

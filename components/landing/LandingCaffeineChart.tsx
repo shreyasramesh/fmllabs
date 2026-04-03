@@ -171,8 +171,8 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
   if (intakes.length === 0) return null;
 
   return (
-    <section className="w-full rounded-[2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
-      <div className="flex items-end justify-between gap-2">
+    <section className="w-full overflow-hidden rounded-[2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-2">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#92400e] dark:text-[#D6A67E]">
             Caffeine
@@ -181,7 +181,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
             Caffeine Decay Curve
           </h2>
         </div>
-        <div className="flex items-center gap-3 text-[11px] text-neutral-500 dark:text-neutral-400">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400">
           {intakes.map((intake, i) => (
             <span key={i} className="flex items-center gap-1">
               <span className="text-sm">☕</span>

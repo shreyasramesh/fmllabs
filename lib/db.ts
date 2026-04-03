@@ -351,6 +351,17 @@ interface SleepEntryDoc extends Omit<SleepEntry, "_id"> {
   _id?: ObjectId;
 }
 
+export interface ConceptReview {
+  _id?: string;
+  userId: string;
+  conceptId: string;
+  reviewedAt: Date;
+}
+
+interface ConceptReviewDoc extends Omit<ConceptReview, "_id"> {
+  _id?: ObjectId;
+}
+
 export interface DailyLifeReportSnapshot {
   _id?: string;
   userId: string;
@@ -2274,6 +2285,44 @@ export async function deleteSleepEntry(id: string, userId: string): Promise<bool
   return result.deletedCount > 0;
 }
 
+export async function addConceptReview(
+  userId: string,
+  conceptId: string
+): Promise<ConceptReview & { _id: string }> {
+  const database = await getDb();
+  const now = new Date();
+  const doc: Omit<ConceptReviewDoc, "_id"> = {
+    userId,
+    conceptId,
+    reviewedAt: now,
+  };
+  const collection = database.collection<ConceptReviewDoc>("user_concept_reviews");
+  await collection.createIndex({ userId: 1, reviewedAt: -1 });
+  const result = await collection.insertOne(doc);
+  return { ...doc, _id: result.insertedId.toString() };
+}
+
+export async function getConceptReviews(
+  userId: string,
+  options?: { limit?: number; sinceDaysAgo?: number }
+): Promise<Array<ConceptReview & { _id: string }>> {
+  const database = await getDb();
+  const safeLimit = Math.max(1, Math.min(1000, Math.floor(options?.limit ?? 500)));
+  const filter: Record<string, unknown> = { userId };
+  if (options?.sinceDaysAgo != null && options.sinceDaysAgo > 0) {
+    const since = new Date();
+    since.setDate(since.getDate() - options.sinceDaysAgo);
+    filter.reviewedAt = { $gte: since };
+  }
+  const docs = await database
+    .collection<ConceptReviewDoc>("user_concept_reviews")
+    .find(filter)
+    .sort({ reviewedAt: -1 })
+    .limit(safeLimit)
+    .toArray();
+  return docs.map((d) => ({ ...d, _id: d._id.toString() }));
+}
+
 function parseDayKeyParts(dayKey: string): { year: number; month: number; day: number } | null {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayKey);
   if (!match) return null;
@@ -2653,6 +2702,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection<WeightEntryDoc>("user_weight_entries").deleteMany({ userId });
   await database.collection<FocusEntryDoc>("user_focus_entries").deleteMany({ userId });
   await database.collection<SleepEntryDoc>("user_sleep_entries").deleteMany({ userId });
+  await database.collection<ConceptReviewDoc>("user_concept_reviews").deleteMany({ userId });
   await database.collection<DailyLifeReportSnapshotDoc>("user_daily_life_reports").deleteMany({ userId });
   await database.collection<ReusableNutritionEntryUsageDoc>("user_reusable_nutrition_entry_usage").deleteMany({ userId });
   await database.collection("user_progress").deleteMany({ userId });

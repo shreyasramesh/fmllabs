@@ -9266,6 +9266,78 @@ export default function ChatPage() {
     return computeSuggestedFocusMinutes(latest.sleepHours, latest.hrvMs);
   }, [sleepEntries]);
 
+  const [thoughtOfTheDay, setThoughtOfTheDay] = useState<{
+    conceptId: string;
+    title: string;
+    summary: string;
+    enrichmentPrompt: string;
+    reviewedToday: boolean;
+    daysSinceLastReview: number | null;
+    totalReviews: number;
+    streak: number;
+  } | null>(null);
+  const [thoughtReviewing, setThoughtReviewing] = useState(false);
+
+  useEffect(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    let cancelled = false;
+    fetch("/api/me/thought-of-the-day")
+      .then(async (res) => {
+        if (cancelled) return;
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        if (!res.ok || !data.conceptId) return;
+        setThoughtOfTheDay({
+          conceptId: typeof data.conceptId === "string" ? data.conceptId : "",
+          title: typeof data.title === "string" ? data.title : "",
+          summary: typeof data.summary === "string" ? data.summary : "",
+          enrichmentPrompt: typeof data.enrichmentPrompt === "string" ? data.enrichmentPrompt : "",
+          reviewedToday: Boolean(data.reviewedToday),
+          daysSinceLastReview: typeof data.daysSinceLastReview === "number" ? data.daysSinceLastReview : null,
+          totalReviews: typeof data.totalReviews === "number" ? data.totalReviews : 0,
+          streak: typeof data.streak === "number" ? data.streak : 0,
+        });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isAnonymous, incognitoMode, userId]);
+
+  const reviewThoughtOfTheDay = useCallback(async () => {
+    if (!thoughtOfTheDay) return;
+    setThoughtReviewing(true);
+    try {
+      const res = await fetch("/api/me/thought-of-the-day", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ conceptId: thoughtOfTheDay.conceptId }),
+      });
+      const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+      if (res.ok && data.conceptId) {
+        setThoughtOfTheDay({
+          conceptId: typeof data.conceptId === "string" ? data.conceptId : "",
+          title: typeof data.title === "string" ? data.title : "",
+          summary: typeof data.summary === "string" ? data.summary : "",
+          enrichmentPrompt: typeof data.enrichmentPrompt === "string" ? data.enrichmentPrompt : "",
+          reviewedToday: Boolean(data.reviewedToday),
+          daysSinceLastReview: typeof data.daysSinceLastReview === "number" ? data.daysSinceLastReview : null,
+          totalReviews: typeof data.totalReviews === "number" ? data.totalReviews : 0,
+          streak: typeof data.streak === "number" ? data.streak : 0,
+        });
+      }
+    } catch {
+      // silently ignore
+    } finally {
+      setThoughtReviewing(false);
+    }
+  }, [thoughtOfTheDay]);
+
+  const openThoughtConcept = useCallback(() => {
+    if (!thoughtOfTheDay) return;
+    const cc = customConcepts.find((c) => c._id === thoughtOfTheDay.conceptId);
+    if (cc) {
+      openConceptDetail(cc);
+    }
+  }, [thoughtOfTheDay, customConcepts, openConceptDetail]);
+
   const weeklyCaloriesChartOptions = useMemo<Highcharts.Options>(() => {
     if (!weeklySummaryResult) return { ...chartBaseOptions() };
     const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
@@ -13648,6 +13720,10 @@ export default function ChatPage() {
                         sleepFocusSuggestion={sleepFocusSuggestion}
                         sleepSaving={sleepSaving}
                         onSaveSleepEntry={saveSleepEntry}
+                        thoughtOfTheDay={thoughtOfTheDay}
+                        thoughtReviewing={thoughtReviewing}
+                        onReviewThought={reviewThoughtOfTheDay}
+                        onOpenThoughtConcept={openThoughtConcept}
                       />
                       )}
                     {journalEntryJustSaved && (

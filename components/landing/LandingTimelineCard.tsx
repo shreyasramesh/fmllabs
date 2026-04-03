@@ -89,7 +89,7 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
   const toPercent = (minute: number) => (Math.max(0, Math.min(1440, minute)) / 1440) * 100;
 
   return (
-    <section className="w-full rounded-[2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
+    <section className="w-full overflow-hidden rounded-[2rem] border border-neutral-200/70 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900 sm:p-5">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B87B51] dark:text-[#D6A67E]">

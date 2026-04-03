@@ -104,3 +104,14 @@ export interface FocusDurationSuggestion {
   minutes: number;
   reason: string;
 }
+
+export interface LandingThoughtOfTheDay {
+  conceptId: string;
+  title: string;
+  summary: string;
+  enrichmentPrompt: string;
+  reviewedToday: boolean;
+  daysSinceLastReview: number | null;
+  totalReviews: number;
+  streak: number;
+}

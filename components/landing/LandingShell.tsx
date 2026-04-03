@@ -6,6 +6,7 @@ import { LandingCaffeineChart } from "@/components/landing/LandingCaffeineChart"
 import { LandingDateStrip } from "@/components/landing/LandingDateStrip";
 import { LandingFocusCanvas } from "@/components/landing/LandingFocusCanvas";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
+import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingTopBar } from "@/components/landing/LandingTopBar";
 import type {
@@ -20,6 +21,7 @@ import type {
   LandingNutritionSummary,
   LandingQuickCaptureItem,
   LandingSleepEntry,
+  LandingThoughtOfTheDay,
   LandingTimelineEvent,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
@@ -36,8 +38,8 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
-      <h3 className="text-[13px] font-semibold text-foreground">{eyebrow}</h3>
+    <section className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/90 px-3 py-3 shadow-[0_12px_32px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
+      <h3 className="truncate text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
         <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
       )}
@@ -255,6 +257,10 @@ interface LandingShellProps {
   sleepFocusSuggestion: FocusDurationSuggestion | null;
   sleepSaving: boolean;
   onSaveSleepEntry: (sleepHours: number, hrvMs: number | null) => void;
+  thoughtOfTheDay: LandingThoughtOfTheDay | null;
+  thoughtReviewing: boolean;
+  onReviewThought: () => void;
+  onOpenThoughtConcept: () => void;
 }
 
 export function LandingShell({
@@ -378,6 +384,10 @@ export function LandingShell({
   sleepFocusSuggestion,
   sleepSaving,
   onSaveSleepEntry,
+  thoughtOfTheDay,
+  thoughtReviewing,
+  onReviewThought,
+  onOpenThoughtConcept,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -398,7 +408,7 @@ export function LandingShell({
   }
 
   return (
-    <div className="w-full max-w-[88rem] min-w-0 space-y-4 animate-fade-in-up">
+    <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
       <LandingTopBar
         eyebrow={dashboardEyebrow}
         title={title}
@@ -455,6 +465,16 @@ export function LandingShell({
         onCustomFocusTimeInputChange={onCustomFocusTimeInputChange}
         onAddCustomFocusEntry={onAddCustomFocusEntry}
       />
+
+      {/* Thought of the Day banner */}
+      {thoughtOfTheDay && (
+        <LandingThoughtOfTheDayBanner
+          thought={thoughtOfTheDay}
+          onReview={onReviewThought}
+          onOpenConcept={onOpenThoughtConcept}
+          reviewing={thoughtReviewing}
+        />
+      )}
 
       {/* Row 1: Quick Capture · Mind Lab · Mentor Hub */}
       <div className="grid gap-4 xl:grid-cols-3">

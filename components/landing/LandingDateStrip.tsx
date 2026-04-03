@@ -12,7 +12,7 @@ interface LandingDateStripProps {
 
 export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) {
   return (
-    <section className="w-full rounded-[1.75rem] border border-neutral-200/70 bg-white/85 p-4 shadow-[0_14px_36px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
+    <section className="w-full overflow-hidden rounded-[1.75rem] border border-neutral-200/70 bg-white/85 p-4 shadow-[0_14px_36px_rgba(15,23,42,0.05)] backdrop-blur dark:border-neutral-800 dark:bg-neutral-900">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-500 dark:text-neutral-400">
