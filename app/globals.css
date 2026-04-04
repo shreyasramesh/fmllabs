@@ -465,6 +465,11 @@ html {
   animation-play-state: paused;
 }
 
+.voice-fab {
+  background: var(--accent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
 /* Claude.ai-inspired light mode: warm cream, soft contrast */
 :root {
   --background: #FBF8F4;
