@@ -2895,7 +2895,7 @@ function summarizeNutritionForDay(
   return {
     caloriesFood: Math.round(caloriesFood),
     caloriesExercise: Math.round(caloriesExercise),
-    caloriesRemaining: Math.max(0, Math.round(caloriesTarget - caloriesFood + caloriesExercise)),
+    caloriesRemaining: Math.round(caloriesTarget - caloriesFood + caloriesExercise),
     carbsGrams: Math.max(0, Math.round(carbsGrams)),
     proteinGrams: Math.max(0, Math.round(proteinGrams)),
     fatGrams: Math.round(fatGrams),
@@ -6216,10 +6216,7 @@ export default function ChatPage() {
       mode: isExerciseEntry ? ("exercise" as const) : ("nutrition" as const),
       caloriesFood: Math.round(caloriesFood),
       caloriesExercise: Math.round(caloriesExercise),
-      caloriesRemaining: Math.max(
-        0,
-        Math.round(nutritionGoals.caloriesTarget - caloriesFood + caloriesExercise)
-      ),
+      caloriesRemaining: Math.round(nutritionGoals.caloriesTarget - caloriesFood + caloriesExercise),
       carbsGrams: Math.round(carbsGrams),
       proteinGrams: Math.round(proteinGrams),
       fatGrams: Math.round(fatGrams),

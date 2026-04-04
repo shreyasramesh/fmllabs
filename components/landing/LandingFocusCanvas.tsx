@@ -1,41 +1,20 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React from "react";
 
 import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
 } from "@/components/landing/types";
 
-function clampRatio(current: number, target: number): number {
+function clampPct(current: number, target: number): number {
   if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) return 0;
-  return Math.max(0, Math.min(1, current / target));
+  return Math.min(100, Math.max(0, (current / target) * 100));
 }
 
-function rawRatio(current: number, target: number): number {
+function rawPct(current: number, target: number): number {
   if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) return 0;
-  return Math.max(0, current / target);
-}
-
-function darkenHex(hex: string, factor: number): string {
-  const h = hex.replace("#", "");
-  const r = Math.round(parseInt(h.slice(0, 2), 16) * factor);
-  const g = Math.round(parseInt(h.slice(2, 4), 16) * factor);
-  const b = Math.round(parseInt(h.slice(4, 6), 16) * factor);
-  return `#${Math.min(255, r).toString(16).padStart(2, "0")}${Math.min(255, g).toString(16).padStart(2, "0")}${Math.min(255, b).toString(16).padStart(2, "0")}`;
-}
-
-function circleCircumference(radius: number): number {
-  return 2 * Math.PI * radius;
-}
-
-function degToRad(deg: number): number {
-  return (deg - 90) * (Math.PI / 180);
-}
-
-function pointOnCircle(cx: number, cy: number, r: number, deg: number) {
-  const rad = degToRad(deg);
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  return Math.max(0, (current / target) * 100);
 }
 
 interface LandingFocusCanvasProps {
@@ -51,124 +30,109 @@ interface LandingFocusCanvasProps {
   onOpenNutrition: () => void;
 }
 
+const MACROS = [
+  { key: "calories", color: "#9A8872", overColor: "#6B5A46", trackColor: "rgba(154,136,114,0.15)" },
+  { key: "protein", color: "#5A9E8A", overColor: "#3B6E5E", trackColor: "rgba(90,158,138,0.15)" },
+  { key: "carbs", color: "#D49A42", overColor: "#A0712A", trackColor: "rgba(212,154,66,0.15)" },
+  { key: "fat", color: "#C4705E", overColor: "#8E4438", trackColor: "rgba(196,112,94,0.15)" },
+] as const;
+
+function MacroIcon({ macroKey, color }: { macroKey: string; color: string }) {
+  switch (macroKey) {
+    case "calories":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={color} className="w-4 h-4 shrink-0">
+          <path d="M12 23c-3.866 0-7-3.358-7-7.5 0-3.072 2.456-6.727 4.535-9.067A1.5 1.5 0 0 1 12 6.5c0 1-.5 2-1.5 3 2-1.5 3.5-4 4-6.5a1 1 0 0 1 1.735-.5C18.538 5.262 19 8.986 19 11.5c0 2.073-.493 4.14-1.692 5.69C15.87 19.195 14.085 21 12 23Zm0-5a2.5 2.5 0 0 0 2.5-2.5c0-1.5-1-3-2.5-4-1.5 1-2.5 2.5-2.5 4A2.5 2.5 0 0 0 12 18Z" />
+        </svg>
+      );
+    case "protein":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+          <path d="M12 2c-3 0-5.5 4.5-5.5 9.5S8.5 22 12 22s5.5-5.5 5.5-10.5S15 2 12 2Z" />
+        </svg>
+      );
+    case "carbs":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+          <path d="M2 22 16 8" />
+          <path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z" />
+          <path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z" />
+          <path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z" />
+          <path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z" />
+          <path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z" />
+          <path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z" />
+          <path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z" />
+        </svg>
+      );
+    case "fat":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+          <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+          <path d="M8.5 8.5v.01" />
+          <path d="M16 15.5v.01" />
+          <path d="M12 12v.01" />
+          <path d="M11 17v.01" />
+          <path d="M7 14v.01" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export function LandingFocusCanvas({
   eyebrow,
   title,
   subtitle,
-  nutritionLabel,
+  nutritionLabel: _nutritionLabel,
   carbsLabel,
   proteinLabel,
-  foodLoggedLabel,
+  foodLoggedLabel: _foodLoggedLabel,
   nutrition,
   nutritionGoals,
   onOpenNutrition,
 }: LandingFocusCanvasProps) {
-  const caloriesRatio = clampRatio(
-    nutritionGoals.caloriesTarget - nutrition.caloriesRemaining,
-    nutritionGoals.caloriesTarget
-  );
-  const carbsRatio = rawRatio(nutrition.carbsGrams, nutritionGoals.carbsGrams);
-  const proteinRatio = rawRatio(nutrition.proteinGrams, nutritionGoals.proteinGrams);
-  const fatRatio = rawRatio(nutrition.fatGrams, nutritionGoals.fatGrams);
-  const caloriesConsumed = Math.max(0, nutritionGoals.caloriesTarget - nutrition.caloriesRemaining);
+  const caloriesConsumed = nutrition.caloriesFood;
 
-  const carbsCalories = nutrition.carbsGrams * 4;
-  const proteinCalories = nutrition.proteinGrams * 4;
-  const fatCalories = nutrition.fatGrams * 9;
-  const calTarget = Math.max(1, nutritionGoals.caloriesTarget);
-  const rawSegments = [
-    { key: "cal-carbs", cal: carbsCalories, gradientStart: "#D49A42", gradientEnd: "#F2D28A", glow: "rgba(212,154,66,0.35)" },
-    { key: "cal-protein", cal: proteinCalories, gradientStart: "#5A9E8A", gradientEnd: "#A6D4C4", glow: "rgba(90,158,138,0.35)" },
-    { key: "cal-fat", cal: fatCalories, gradientStart: "#C4705E", gradientEnd: "#E8AFA0", glow: "rgba(196,112,94,0.30)" },
+  function makebar(
+    key: string, label: string, current: number, target: number, unit: string,
+    macro: { color: string; overColor: string; trackColor: string },
+  ) {
+    const raw = rawPct(current, target);
+    const over = raw > 100;
+    const cappedRaw = Math.min(raw, 200);
+    return {
+      key, label, current, target, unit,
+      color: macro.color,
+      overColor: macro.overColor,
+      trackColor: macro.trackColor,
+      fillPct: over ? 100 : Math.min(raw, 100),
+      targetMarkerPct: over ? (100 / cappedRaw) * 100 : 0,
+      overflow: over,
+    };
+  }
+
+  const bars: {
+    key: string;
+    label: string;
+    current: number;
+    target: number;
+    unit: string;
+    color: string;
+    overColor: string;
+    trackColor: string;
+    fillPct: number;
+    targetMarkerPct: number;
+    overflow: boolean;
+  }[] = [
+    makebar("calories", "Calories", caloriesConsumed, nutritionGoals.caloriesTarget, "kcal", MACROS[0]),
+    makebar("protein", proteinLabel, nutrition.proteinGrams, nutritionGoals.proteinGrams, "g", MACROS[1]),
+    makebar("carbs", carbsLabel, nutrition.carbsGrams, nutritionGoals.carbsGrams, "g", MACROS[2]),
+    makebar("fat", "Fat", nutrition.fatGrams, nutritionGoals.fatGrams, "g", MACROS[3]),
   ];
-  const rawTotal = rawSegments.reduce((s, seg) => s + seg.cal, 0);
-  const rawCalorieRatio = rawTotal / calTarget;
-  const scaleFactor = rawTotal > calTarget ? calTarget / rawTotal : 1;
-  const calorieSegments = rawSegments.map((seg) => ({
-    ...seg,
-    ratio: Math.max(0, Math.min(1, (seg.cal / calTarget) * scaleFactor)),
-  }));
-  const overflowCalorieRatio = rawCalorieRatio > 1 ? Math.min(rawCalorieRatio - 1, 1) : 0;
-  const overflowSegments = overflowCalorieRatio > 0
-    ? rawSegments.map((seg) => ({
-        ...seg,
-        ratio: Math.max(0, Math.min(overflowCalorieRatio, (seg.cal / rawTotal) * overflowCalorieRatio)),
-      }))
-    : [];
-
-  const CAL_RING_RADIUS = 140;
-  const CAL_RING_STROKE = 20;
-  const CAL_RING_TRACK = "rgba(220, 210, 198, 0.5)";
-
-  const DARKEN = 0.65;
-  const ringMetrics = [
-    {
-      key: "protein",
-      radius: 112,
-      strokeWidth: 16,
-      ratio: proteinRatio,
-      gradientStart: "#5A9E8A",
-      gradientEnd: "#A6D4C4",
-      darkStart: darkenHex("#5A9E8A", DARKEN),
-      darkEnd: darkenHex("#A6D4C4", DARKEN),
-      glow: "rgba(90,158,138,0.35)",
-      track: "rgba(228, 218, 206, 0.4)",
-      rotation: -90,
-      label: proteinLabel,
-      displayValue: `${nutrition.proteinGrams}`,
-      displayUnit: `/ ${nutritionGoals.proteinGrams}g`,
-      labelAngle: 135,
-      fontSize: 10,
-    },
-    {
-      key: "carbs",
-      radius: 86,
-      strokeWidth: 14,
-      ratio: carbsRatio,
-      gradientStart: "#D49A42",
-      gradientEnd: "#F2D28A",
-      darkStart: darkenHex("#D49A42", DARKEN),
-      darkEnd: darkenHex("#F2D28A", DARKEN),
-      glow: "rgba(212,154,66,0.35)",
-      track: "rgba(230, 220, 208, 0.38)",
-      rotation: -90,
-      label: carbsLabel,
-      displayValue: `${nutrition.carbsGrams}`,
-      displayUnit: `/ ${nutritionGoals.carbsGrams}g`,
-      labelAngle: 225,
-      fontSize: 9.5,
-    },
-    {
-      key: "fat",
-      radius: 62,
-      strokeWidth: 12,
-      ratio: fatRatio,
-      gradientStart: "#C4705E",
-      gradientEnd: "#E8AFA0",
-      darkStart: darkenHex("#C4705E", DARKEN),
-      darkEnd: darkenHex("#E8AFA0", DARKEN),
-      glow: "rgba(196,112,94,0.30)",
-      track: "rgba(232, 222, 210, 0.35)",
-      rotation: -90,
-      label: "Fat",
-      displayValue: `${nutrition.fatGrams}`,
-      displayUnit: `/ ${nutritionGoals.fatGrams}g`,
-      labelAngle: 315,
-      fontSize: 9,
-    },
-  ];
-
-  const [activeRing, setActiveRing] = useState<string | null>(null);
-  const handleRingClick = useCallback((key: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setActiveRing((prev) => (prev === key ? null : key));
-  }, []);
-  const handleBackgroundClick = useCallback(() => {
-    setActiveRing(null);
-  }, []);
 
   return (
-    <section onClick={handleBackgroundClick} className="w-full overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
+    <section className="w-full overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
@@ -184,241 +148,79 @@ export function LandingFocusCanvas({
           )}
         </div>
 
-        <div className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-6 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6">
-          <div className="mx-auto max-w-[64rem]">
-              <div className="mx-auto flex max-w-[30rem] flex-col items-center">
-                <div className="mx-auto w-full max-w-[18rem] sm:max-w-[24rem]">
-                  <svg
-                    viewBox="0 0 320 320"
-                    className="block w-full"
-                    aria-hidden
-                    onClick={handleBackgroundClick}
-                  >
-                    <rect x="0" y="0" width="320" height="320" fill="transparent" />
-                    <defs>
-                      {calorieSegments.map((seg) => (
-                        <React.Fragment key={`defs-${seg.key}`}>
-                          <linearGradient id={`grad-${seg.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={seg.gradientStart} />
-                            <stop offset="100%" stopColor={seg.gradientEnd} />
-                          </linearGradient>
-                          <linearGradient id={`grad-dark-${seg.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={darkenHex(seg.gradientStart, DARKEN)} />
-                            <stop offset="100%" stopColor={darkenHex(seg.gradientEnd, DARKEN)} />
-                          </linearGradient>
-                          <filter id={`glow-${seg.key}`} x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                            <feFlood floodColor={seg.glow} result="color" />
-                            <feComposite in="color" in2="blur" operator="in" result="shadow" />
-                            <feMerge>
-                              <feMergeNode in="shadow" />
-                              <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                          </filter>
-                        </React.Fragment>
-                      ))}
-                      {ringMetrics.map((ring) => (
-                        <React.Fragment key={`defs-${ring.key}`}>
-                          <linearGradient id={`grad-${ring.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={ring.gradientStart} />
-                            <stop offset="100%" stopColor={ring.gradientEnd} />
-                          </linearGradient>
-                          <linearGradient id={`grad-dark-${ring.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={ring.darkStart} />
-                            <stop offset="100%" stopColor={ring.darkEnd} />
-                          </linearGradient>
-                          <filter id={`glow-${ring.key}`} x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                            <feFlood floodColor={ring.glow} result="color" />
-                            <feComposite in="color" in2="blur" operator="in" result="shadow" />
-                            <feMerge>
-                              <feMergeNode in="shadow" />
-                              <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                          </filter>
-                        </React.Fragment>
-                      ))}
-                    </defs>
-
-                    {/* Outer calories ring — stacked macro segments */}
-                    <g style={{ cursor: "pointer" }} onClick={(e) => handleRingClick("calories", e)}>
-                      <circle cx="160" cy="160" r={CAL_RING_RADIUS} fill="none" stroke="transparent" strokeWidth={CAL_RING_STROKE + 10} />
-                      <circle
-                        cx="160" cy="160" r={CAL_RING_RADIUS} fill="none"
-                        stroke={CAL_RING_TRACK} strokeWidth={CAL_RING_STROKE}
-                        opacity={activeRing && activeRing !== "calories" ? 0.35 : 1}
-                      />
-                      {(() => {
-                        const circumference = circleCircumference(CAL_RING_RADIUS);
-                        const isActive = activeRing === "calories";
-                        let cumulativeAngle = -90;
-                        const arcs = calorieSegments.map((seg) => {
-                          const startAngle = cumulativeAngle;
-                          cumulativeAngle += seg.ratio * 360;
-                          if (seg.ratio <= 0) return null;
-                          return (
-                            <circle
-                              key={seg.key}
-                              cx="160" cy="160" r={CAL_RING_RADIUS} fill="none"
-                              stroke={`url(#grad-${seg.key})`}
-                              strokeWidth={isActive ? CAL_RING_STROKE + 4 : CAL_RING_STROKE}
-                              strokeLinecap="butt"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={circumference * (1 - seg.ratio)}
-                              transform={`rotate(${startAngle} 160 160)`}
-                              filter={`url(#glow-${seg.key})`}
-                              opacity={activeRing && !isActive ? 0.4 : 1}
-                              style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
-                            />
-                          );
-                        });
-                        let overCumulativeAngle = -90;
-                        const overflowArcs = overflowSegments.map((seg) => {
-                          const startAngle = overCumulativeAngle;
-                          overCumulativeAngle += seg.ratio * 360;
-                          if (seg.ratio <= 0) return null;
-                          return (
-                            <circle
-                              key={`${seg.key}-overflow`}
-                              cx="160" cy="160" r={CAL_RING_RADIUS} fill="none"
-                              stroke={`url(#grad-dark-${seg.key})`}
-                              strokeWidth={isActive ? CAL_RING_STROKE + 4 : CAL_RING_STROKE}
-                              strokeLinecap="butt"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={circumference * (1 - seg.ratio)}
-                              transform={`rotate(${startAngle} 160 160)`}
-                              filter={`url(#glow-${seg.key})`}
-                              opacity={activeRing && !isActive ? 0.4 : 1}
-                              style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
-                            />
-                          );
-                        });
-                        return [...arcs, ...overflowArcs];
-                      })()}
-                      {activeRing === "calories" && (() => {
-                        const labelPos = pointOnCircle(160, 160, CAL_RING_RADIUS, 45);
-                        return (
-                          <g>
-                            <rect x={labelPos.x - 42} y={labelPos.y - 22} width="84" height="44" rx="12" fill="white" fillOpacity="0.96" stroke="#C4A882" strokeWidth="1.2" strokeOpacity="0.5" />
-                            <text x={labelPos.x} y={labelPos.y - 4} textAnchor="middle" dominantBaseline="auto" fill="#6B5640" fontSize="16" fontWeight="700" fontFamily="system-ui, sans-serif">
-                              {caloriesConsumed}
-                            </text>
-                            <text x={labelPos.x} y={labelPos.y + 14} textAnchor="middle" dominantBaseline="auto" fill="rgba(120,100,80,0.7)" fontSize="10" fontWeight="500" fontFamily="system-ui, sans-serif">
-                              / {nutritionGoals.caloriesTarget} kcal
-                            </text>
-                          </g>
-                        );
-                      })()}
-                    </g>
-
-                    {/* Inner rings — protein, carbs, fat grams */}
-                    {ringMetrics.map((ring) => {
-                      const circumference = circleCircumference(ring.radius);
-                      const isActive = activeRing === ring.key;
-                      const labelPos = pointOnCircle(160, 160, ring.radius, ring.labelAngle);
-                      const firstLap = Math.min(ring.ratio, 1);
-                      const overflowLap = ring.ratio > 1 ? Math.min(ring.ratio - 1, 1) : 0;
-                      return (
-                        <g key={ring.key} style={{ cursor: "pointer" }} onClick={(e) => handleRingClick(ring.key, e)}>
-                          <circle cx="160" cy="160" r={ring.radius} fill="none" stroke="transparent" strokeWidth={ring.strokeWidth + 10} />
-                          <circle
-                            cx="160" cy="160" r={ring.radius} fill="none"
-                            stroke={ring.track} strokeWidth={ring.strokeWidth}
-                            opacity={activeRing && !isActive ? 0.35 : 1}
-                          />
-                          <circle
-                            cx="160" cy="160" r={ring.radius} fill="none"
-                            stroke={`url(#grad-${ring.key})`}
-                            strokeWidth={isActive ? ring.strokeWidth + 4 : ring.strokeWidth}
-                            strokeLinecap="round"
-                            strokeDasharray={circumference}
-                            strokeDashoffset={circumference * (1 - firstLap)}
-                            transform={`rotate(${ring.rotation} 160 160)`}
-                            filter={`url(#glow-${ring.key})`}
-                            opacity={activeRing && !isActive ? 0.4 : 1}
-                            style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
-                          />
-                          {overflowLap > 0 && (
-                            <circle
-                              cx="160" cy="160" r={ring.radius} fill="none"
-                              stroke={`url(#grad-dark-${ring.key})`}
-                              strokeWidth={isActive ? ring.strokeWidth + 4 : ring.strokeWidth}
-                              strokeLinecap="round"
-                              strokeDasharray={circumference}
-                              strokeDashoffset={circumference * (1 - overflowLap)}
-                              transform={`rotate(${ring.rotation} 160 160)`}
-                              filter={`url(#glow-${ring.key})`}
-                              opacity={activeRing && !isActive ? 0.4 : 1}
-                              style={{ transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
-                            />
-                          )}
-                          {isActive && (
-                            <g>
-                              <rect x={labelPos.x - 42} y={labelPos.y - 22} width="84" height="44" rx="12" fill="white" fillOpacity="0.96" stroke={ring.gradientStart} strokeWidth="1.2" strokeOpacity="0.5" />
-                              <text x={labelPos.x} y={labelPos.y - 4} textAnchor="middle" dominantBaseline="auto" fill={ring.gradientStart} fontSize="15" fontWeight="700" fontFamily="system-ui, sans-serif">
-                                {ring.displayValue}
-                              </text>
-                              <text x={labelPos.x} y={labelPos.y + 13} textAnchor="middle" dominantBaseline="auto" fill="rgba(120,100,80,0.7)" fontSize="10" fontWeight="500" fontFamily="system-ui, sans-serif">
-                                {ring.label} {ring.displayUnit}
-                              </text>
-                            </g>
-                          )}
-                        </g>
-                      );
-                    })}
-
-                    {/* Center legend inside innermost ring */}
-                    {[
-                      { label: "Calories", color: "#9A8872" },
-                      { label: proteinLabel, color: "#5A9E8A" },
-                      { label: carbsLabel, color: "#D49A42" },
-                      { label: "Fat", color: "#C4705E" },
-                    ].map((item, i) => {
-                      const rowY = 138 + i * 15;
-                      return (
-                        <g key={item.label}>
-                          <circle cx="139" cy={rowY} r="3.5" fill={item.color} />
-                          <text x="147" y={rowY} dominantBaseline="central" fill={item.color} fontSize="9.5" fontWeight="600" fontFamily="system-ui, sans-serif" opacity="0.85">
-                            {item.label}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </svg>
+        <button
+          type="button"
+          onClick={onOpenNutrition}
+          className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6"
+        >
+          <div className="mx-auto max-w-[32rem] space-y-4">
+            {bars.map((bar) => (
+              <div key={bar.key} className="space-y-1.5">
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <MacroIcon macroKey={bar.key} color={bar.color} />
+                    <span className="text-xs font-semibold text-foreground">
+                      {bar.label}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span
+                      className="text-sm font-bold tabular-nums"
+                      style={{ color: bar.overflow ? bar.overColor : bar.color }}
+                    >
+                      {bar.current}
+                    </span>
+                    <span className="text-[11px] text-neutral-400 dark:text-neutral-500">
+                      / {bar.target} {bar.unit}
+                    </span>
+                  </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={onOpenNutrition}
-                  className="mt-4 flex flex-col items-center gap-1.5 text-center transition-opacity hover:opacity-80"
+                <div
+                  className="relative h-3 w-full overflow-hidden rounded-full"
+                  style={{ backgroundColor: bar.trackColor }}
                 >
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{caloriesConsumed}</span>
-                    <span className="text-sm text-neutral-400 dark:text-neutral-500">/ {nutritionGoals.caloriesTarget}</span>
-                  </div>
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">kcal</span>
-
-                  <div className="mt-1 flex items-center gap-3">
-                    <div className="flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#5A9E8A" }} />
-                      <span className="text-[11px] font-semibold text-foreground">{nutrition.proteinGrams}g</span>
-                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500">P</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#D49A42" }} />
-                      <span className="text-[11px] font-semibold text-foreground">{nutrition.carbsGrams}g</span>
-                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500">C</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: "#C4705E" }} />
-                      <span className="text-[11px] font-semibold text-foreground">{nutrition.fatGrams}g</span>
-                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500">F</span>
-                    </div>
-                  </div>
-                </button>
+                  {!bar.overflow ? (
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-500 ease-out"
+                      style={{
+                        width: `${bar.fillPct}%`,
+                        backgroundColor: bar.color,
+                        boxShadow: bar.fillPct > 0 ? `0 0 8px ${bar.color}40` : undefined,
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-l-full transition-[width] duration-500 ease-out"
+                        style={{
+                          width: `${bar.targetMarkerPct}%`,
+                          backgroundColor: bar.color,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-y-0 rounded-r-full transition-[width] duration-500 ease-out"
+                        style={{
+                          left: `${bar.targetMarkerPct}%`,
+                          width: `${100 - bar.targetMarkerPct}%`,
+                          backgroundColor: bar.overColor,
+                          boxShadow: `0 0 8px ${bar.overColor}40`,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-y-0 w-[2px] -translate-x-[1px]"
+                        style={{
+                          left: `${bar.targetMarkerPct}%`,
+                          backgroundColor: "rgba(255,255,255,0.7)",
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
+            ))}
           </div>
-        </div>
+        </button>
       </div>
     </section>
   );
