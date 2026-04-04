@@ -56,7 +56,6 @@ import { VoiceInputButton } from "@/components/VoiceInputButton";
 import { useBackground } from "@/components/BackgroundProvider";
 import Image from "next/image";
 import { DefaultIcon } from "@/components/ElementIcons";
-import { Clock } from "@/components/Clock";
 import { RankModal } from "@/components/RankModal";
 import { StatsOverviewModal } from "@/components/StatsOverviewModal";
 import type { UserScore } from "@/lib/score-types";
@@ -3646,7 +3645,6 @@ export default function ChatPage() {
     };
   } | null>(null);
   const skipGoalsMacroRecalculateRef = useRef(false);
-  const [moonPhase, setMoonPhase] = useState<number | null>(null);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
@@ -11513,10 +11511,25 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 overflow-visible">
-            <div className="hidden md:flex shrink-0">
-            <Clock onMoonPhaseChange={setMoonPhase} />
-            </div>
-            <ThemeToggle inverted={incognitoMode} moonPhase={moonPhase} />
+            <ThemeToggle inverted={incognitoMode} />
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") window.location.reload();
+              }}
+              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
+                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              }`}
+              aria-label="Refresh app"
+              title="Refresh app"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M23 4v6h-6" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                <path d="M1 20v-6h6" />
+                <path d="M3.51 9a9 9 0 0 0 2.12 9.36L1 14" />
+              </svg>
+            </button>
             {showImportCta && (
               <button
                 type="button"

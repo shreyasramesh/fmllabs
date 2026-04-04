@@ -2,7 +2,7 @@
 
 import { useTheme } from "./ThemeProvider";
 
-export function ThemeToggle({ inverted }: { inverted?: boolean; moonPhase?: number | null }) {
+export function ThemeToggle({ inverted }: { inverted?: boolean }) {
   const { theme, toggleTheme } = useTheme();
 
   return (
