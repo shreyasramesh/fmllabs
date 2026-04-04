@@ -81,17 +81,35 @@ export interface LandingWeeklySummaryPreview {
   weekEndLabel: string;
   trackedDays: number;
   caloriesUnderBudget: number;
+  caloriesTargetPerDay: number;
   foodEntries: number;
   exerciseEntries: number;
   focusMinutes: number;
   rows: Array<{
     dayKey: string;
     weekdayLabel: string;
+    monthDayLabel: string;
     tracked: boolean;
+    caloriesFood: number;
+    caloriesExercise: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+    focusMinutes: number;
+    focusSessions: number;
     foodEntries: number;
     exerciseEntries: number;
-    focusMinutes: number;
   }>;
+  totals: {
+    caloriesFood: number;
+    caloriesExercise: number;
+    caloriesRemaining: number;
+    carbsGrams: number;
+    proteinGrams: number;
+    fatGrams: number;
+    focusMinutes: number;
+    focusSessions: number;
+  };
 }
 
 export interface LandingSleepEntry {

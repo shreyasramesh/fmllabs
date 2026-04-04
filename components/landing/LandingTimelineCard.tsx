@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useLayoutEffect, useState } from "react";
 import type { LandingTimelineEvent } from "@/components/landing/types";
 
 function formatMinuteShort(minuteOfDay: number): string {
@@ -68,9 +68,38 @@ interface LandingTimelineCardProps {
   events: LandingTimelineEvent[];
 }
 
-const TIME_TICKS = [0, 180, 360, 540, 720, 900, 1080, 1260, 1440];
+/** Every 3 hours — desktop / tablet */
+const TIME_TICKS_WIDE = [0, 180, 360, 540, 720, 900, 1080, 1260, 1440];
+/** Every 6 hours — fits narrow phones without overlapping labels */
+const TIME_TICKS_NARROW = [0, 360, 720, 1080];
+/** Every 12 hours — very small viewports */
+const TIME_TICKS_COMPACT = [0, 720];
+
 const LANE_HEIGHT = 30;
 const GUTTER_WIDTH = 106;
+
+function useTimelineTickMinutes(): number[] {
+  const [tier, setTier] = useState<"wide" | "narrow" | "compact">("narrow");
+  useLayoutEffect(() => {
+    const wideMql = window.matchMedia("(min-width: 640px)");
+    const compactMql = window.matchMedia("(max-width: 380px)");
+    const sync = () => {
+      if (wideMql.matches) setTier("wide");
+      else if (compactMql.matches) setTier("compact");
+      else setTier("narrow");
+    };
+    sync();
+    wideMql.addEventListener("change", sync);
+    compactMql.addEventListener("change", sync);
+    return () => {
+      wideMql.removeEventListener("change", sync);
+      compactMql.removeEventListener("change", sync);
+    };
+  }, []);
+  if (tier === "wide") return TIME_TICKS_WIDE;
+  if (tier === "compact") return TIME_TICKS_COMPACT;
+  return TIME_TICKS_NARROW;
+}
 
 function getPstMinuteOfDay(): number {
   const now = new Date();
@@ -79,6 +108,7 @@ function getPstMinuteOfDay(): number {
 }
 
 export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimelineCardProps) {
+  const timeTicks = useTimelineTickMinutes();
   const nowMinute = useMemo(getPstMinuteOfDay, []);
 
   const eventsByType = useMemo(() => {
@@ -143,7 +173,7 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
             {/* Track area */}
             <div className="relative min-w-0 flex-1">
               {/* Tick grid lines spanning all lanes */}
-              {TIME_TICKS.map((minute) => (
+              {timeTicks.map((minute) => (
                 <div
                   key={`grid-${minute}`}
                   className="absolute top-0 w-px bg-neutral-200/60 dark:bg-neutral-600/40"
@@ -229,11 +259,11 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
               })}
 
               {/* Time axis labels */}
-              <div className="relative mt-2" style={{ height: 16 }}>
-                {TIME_TICKS.map((minute) => (
+              <div className="relative mt-2 min-h-[18px] sm:min-h-[16px]">
+                {timeTicks.map((minute) => (
                   <span
                     key={`label-${minute}`}
-                    className="absolute -translate-x-1/2 text-[11px] font-medium text-neutral-500 dark:text-neutral-400 select-none"
+                    className="absolute -translate-x-1/2 whitespace-nowrap text-[10px] font-medium text-neutral-500 dark:text-neutral-400 select-none sm:text-[11px]"
                     style={{ left: `${toPercent(minute)}%` }}
                   >
                     {formatMinuteShort(minute % 1440)}

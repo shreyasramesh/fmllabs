@@ -4661,17 +4661,35 @@ export default function ChatPage() {
     weekEndLabel: string;
     trackedDays: number;
     caloriesUnderBudget: number;
+    caloriesTargetPerDay: number;
     foodEntries: number;
     exerciseEntries: number;
     focusMinutes: number;
     rows: Array<{
       dayKey: string;
       weekdayLabel: string;
+      monthDayLabel: string;
       tracked: boolean;
+      caloriesFood: number;
+      caloriesExercise: number;
+      carbsGrams: number;
+      proteinGrams: number;
+      fatGrams: number;
+      focusMinutes: number;
+      focusSessions: number;
       foodEntries: number;
       exerciseEntries: number;
-      focusMinutes: number;
     }>;
+    totals: {
+      caloriesFood: number;
+      caloriesExercise: number;
+      caloriesRemaining: number;
+      carbsGrams: number;
+      proteinGrams: number;
+      fatGrams: number;
+      focusMinutes: number;
+      focusSessions: number;
+    };
   } | null>(null);
   const [sleepEntries, setSleepEntries] = useState<
     Array<{ sleepHours: number; hrvMs: number | null; dayKey: string }>
@@ -9495,20 +9513,39 @@ export default function ChatPage() {
         const rows = (data.rows as Array<Record<string, unknown>>).map((r) => ({
           dayKey: typeof r.dayKey === "string" ? r.dayKey : "",
           weekdayLabel: typeof r.weekdayLabel === "string" ? r.weekdayLabel : "",
+          monthDayLabel: typeof r.monthDayLabel === "string" ? r.monthDayLabel : "",
           tracked: Boolean(r.tracked),
+          caloriesFood: Number(r.caloriesFood ?? 0),
+          caloriesExercise: Number(r.caloriesExercise ?? 0),
+          carbsGrams: Number(r.carbsGrams ?? 0),
+          proteinGrams: Number(r.proteinGrams ?? 0),
+          fatGrams: Number(r.fatGrams ?? 0),
+          focusMinutes: Number(r.focusMinutes ?? 0),
+          focusSessions: Number(r.focusSessions ?? 0),
           foodEntries: Number(r.foodEntries ?? 0),
           exerciseEntries: Number(r.exerciseEntries ?? 0),
-          focusMinutes: Number(r.focusMinutes ?? 0),
         }));
+        const totalsRaw = (data.totals as Record<string, unknown> | undefined) ?? {};
         setLandingWeeklySummary({
           weekStartLabel: typeof data.weekStartLabel === "string" ? data.weekStartLabel : "",
           weekEndLabel: typeof data.weekEndLabel === "string" ? data.weekEndLabel : "",
           trackedDays: typeof data.trackedDays === "number" ? data.trackedDays : 0,
           caloriesUnderBudget: typeof data.caloriesUnderBudget === "number" ? data.caloriesUnderBudget : 0,
+          caloriesTargetPerDay: typeof data.caloriesTargetPerDay === "number" ? data.caloriesTargetPerDay : nutritionGoals.caloriesTarget,
           foodEntries: typeof data.foodEntries === "number" ? data.foodEntries : 0,
           exerciseEntries: typeof data.exerciseEntries === "number" ? data.exerciseEntries : 0,
-          focusMinutes: Number((data.totals as Record<string, unknown> | undefined)?.focusMinutes ?? 0),
+          focusMinutes: Number(totalsRaw.focusMinutes ?? 0),
           rows,
+          totals: {
+            caloriesFood: Number(totalsRaw.caloriesFood ?? 0),
+            caloriesExercise: Number(totalsRaw.caloriesExercise ?? 0),
+            caloriesRemaining: Number(totalsRaw.caloriesRemaining ?? 0),
+            carbsGrams: Number(totalsRaw.carbsGrams ?? 0),
+            proteinGrams: Number(totalsRaw.proteinGrams ?? 0),
+            fatGrams: Number(totalsRaw.fatGrams ?? 0),
+            focusMinutes: Number(totalsRaw.focusMinutes ?? 0),
+            focusSessions: Number(totalsRaw.focusSessions ?? 0),
+          },
         });
       })
       .catch(() => {});
@@ -14558,7 +14595,7 @@ export default function ChatPage() {
           <div
             className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}
           >
-            <div className="flex flex-col items-center justify-center px-4 py-2 sm:py-2.5 min-w-0">
+            <div className="flex flex-col items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 min-w-0">
               <div className="w-full flex flex-col items-center">
                 <ChatComposer
                   value={input}
@@ -14619,25 +14656,26 @@ export default function ChatPage() {
                   }}
                   previewMap={previewMap}
                 />
-                <div className="relative w-full max-w-2xl lg:max-w-4xl">
+                <div className="relative w-full max-w-2xl lg:max-w-4xl flex items-center justify-center gap-2 mt-1">
                 <button
                   ref={chatInputLensMenuButtonRef}
                   type="button"
                   onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
-                  className="mt-1 w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 px-2 py-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                   aria-expanded={chatInputLensMenuOpen}
                   aria-haspopup="menu"
                   aria-label="Refine options"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
                     <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
                     <path d="M19 16v5" />
                     <path d="M16.5 18.5h5" />
                   </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-2.5 w-2.5 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 </button>
+                <span className="text-[10px] text-neutral-400 dark:text-neutral-500">AI can make mistakes.</span>
                 {chatInputLensMenuOpen && (
                   <div
                     ref={chatInputLensMenuRef}
@@ -14732,9 +14770,6 @@ export default function ChatPage() {
                   </div>
                 )}
               </div>
-              <p className="mt-1.5 text-center text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 max-w-2xl w-full px-2">
-                  FixMyLife Labs is AI and can make mistakes.
-              </p>
               </div>
         </div>
         </div>

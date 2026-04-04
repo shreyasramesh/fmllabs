@@ -109,7 +109,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div
-      className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-visible items-stretch min-h-[92px] py-2"
+      className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-visible items-stretch min-h-[52px] sm:min-h-[60px] py-1.5 sm:py-2"
       data-tour="input-area"
     >
       <div className="flex-1 min-w-0 flex items-stretch px-3">
@@ -127,7 +127,7 @@ export const ChatComposer = memo(function ChatComposer({
           placeholderMobile={placeholderMobile}
           disabled={disabled}
           placeholderTopAligned
-          className="w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground min-h-[2.5rem] max-h-36 py-2 leading-6 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto"
+          className="w-full pl-0 pr-0 border-0 rounded-none bg-transparent shadow-none resize-none focus:outline-none focus:ring-0 focus:border-0 text-sm sm:text-base transition-all duration-200 placeholder:text-neutral-500 dark:placeholder:text-neutral-500 text-foreground min-h-[1.75rem] max-h-36 py-1 sm:py-1.5 leading-5 sm:leading-6 whitespace-pre-wrap break-words overflow-x-hidden overflow-y-auto"
           onMentalModelClick={onMentalModelClick}
           onLtmClick={onLtmClick}
           onCustomConceptClick={onCustomConceptClick}

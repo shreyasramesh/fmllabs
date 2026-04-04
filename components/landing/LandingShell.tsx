@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -591,6 +591,89 @@ export function LandingShell({
     onSaveSleepEntry(Math.round(hours * 10) / 10, hrv != null ? Math.round(hrv) : null);
   }
 
+  const inlineChartBase: Highcharts.Options = useMemo(() => ({
+    chart: { backgroundColor: "transparent", style: { fontFamily: "Inter, system-ui, sans-serif" } },
+    credits: { enabled: false },
+    title: { text: undefined },
+    legend: { layout: "horizontal", align: "left", verticalAlign: "bottom", margin: 8, symbolRadius: 0, symbolWidth: 12, symbolHeight: 10, itemDistance: 10, itemStyle: { color: "#737373", fontSize: "10px" } },
+    xAxis: { labels: { style: { color: "#737373", fontSize: "10px" } }, lineColor: "#e5e5e5", tickColor: "#e5e5e5" },
+    yAxis: { title: { text: undefined }, gridLineColor: "#e5e5e5", labels: { style: { color: "#737373", fontSize: "10px" } } },
+    tooltip: { backgroundColor: "#111827", borderColor: "#1f2937", style: { color: "#f9fafb" }, shared: true },
+  }), []);
+
+  const weeklyDayLetters = useMemo(
+    () => weeklySummary?.rows.map((r) => r.weekdayLabel.slice(0, 1)) ?? [],
+    [weeklySummary],
+  );
+
+  const weeklyCaloriesOpts = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummary) return inlineChartBase;
+    return {
+      ...inlineChartBase,
+      chart: { ...inlineChartBase.chart, type: "column", height: 240 },
+      title: { text: "Calories", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
+      yAxis: { ...inlineChartBase.yAxis, allowDecimals: false },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      series: [
+        { type: "column" as const, name: "Food", data: weeklySummary.rows.map((r) => r.tracked ? r.caloriesFood : null), color: "#f59e0b" },
+        { type: "column" as const, name: "Exercise", data: weeklySummary.rows.map((r) => r.tracked ? r.caloriesExercise : null), color: "#60a5fa" },
+        {
+          type: "line" as const, name: "Target", data: weeklySummary.rows.map(() => weeklySummary.caloriesTargetPerDay),
+          color: "#ef4444", dashStyle: "ShortDash" as Highcharts.DashStyleValue, lineWidth: 1.5, marker: { enabled: false },
+          showInLegend: false, enableMouseTracking: false,
+        },
+      ],
+    };
+  }, [inlineChartBase, weeklyDayLetters, weeklySummary]);
+
+  const weeklyMacrosOpts = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummary) return inlineChartBase;
+    return {
+      ...inlineChartBase,
+      chart: { ...inlineChartBase.chart, type: "column", height: 240 },
+      title: { text: "Macronutrients", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
+      yAxis: { ...inlineChartBase.yAxis, allowDecimals: false },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      series: [
+        { type: "column" as const, name: "Carbs", data: weeklySummary.rows.map((r) => r.tracked ? r.carbsGrams : null), color: "#a78bfa" },
+        { type: "column" as const, name: "Protein", data: weeklySummary.rows.map((r) => r.tracked ? r.proteinGrams : null), color: "#f472b6" },
+        { type: "column" as const, name: "Fat", data: weeklySummary.rows.map((r) => r.tracked ? r.fatGrams : null), color: "#f97316" },
+        ...(nutritionGoals.carbsGrams > 0 ? [{
+          type: "line" as const, name: "Carbs target", data: weeklySummary.rows.map(() => nutritionGoals.carbsGrams),
+          color: "#6366f1", dashStyle: "ShortDash" as Highcharts.DashStyleValue, lineWidth: 1.5, marker: { enabled: false },
+          showInLegend: false, enableMouseTracking: false,
+        }] : []),
+        ...(nutritionGoals.proteinGrams > 0 ? [{
+          type: "line" as const, name: "Protein target", data: weeklySummary.rows.map(() => nutritionGoals.proteinGrams),
+          color: "#db2777", dashStyle: "ShortDash" as Highcharts.DashStyleValue, lineWidth: 1.5, marker: { enabled: false },
+          showInLegend: false, enableMouseTracking: false,
+        }] : []),
+        ...(nutritionGoals.fatGrams > 0 ? [{
+          type: "line" as const, name: "Fat target", data: weeklySummary.rows.map(() => nutritionGoals.fatGrams),
+          color: "#ea580c", dashStyle: "ShortDash" as Highcharts.DashStyleValue, lineWidth: 1.5, marker: { enabled: false },
+          showInLegend: false, enableMouseTracking: false,
+        }] : []),
+      ],
+    };
+  }, [inlineChartBase, nutritionGoals, weeklyDayLetters, weeklySummary]);
+
+  const weeklyFocusOpts = useMemo<Highcharts.Options>(() => {
+    if (!weeklySummary) return inlineChartBase;
+    return {
+      ...inlineChartBase,
+      chart: { ...inlineChartBase.chart, type: "column", height: 240 },
+      title: { text: "Focus Time", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
+      yAxis: { ...inlineChartBase.yAxis, allowDecimals: false, labels: { ...((inlineChartBase.yAxis as Highcharts.YAxisOptions)?.labels ?? {}), format: "{value} min" } },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      series: [
+        { type: "column" as const, name: "Focus (min)", data: weeklySummary.rows.map((r) => r.tracked ? r.focusMinutes : null), color: "#14b8a6" },
+      ],
+    };
+  }, [inlineChartBase, weeklyDayLetters, weeklySummary]);
+
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
       <section className="sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/55 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.05] sm:p-5">
@@ -899,63 +982,75 @@ export function LandingShell({
         />
       )}
 
-      {/* 5. Weekly Summary · Weight · Activity — periodic review */}
-      <div id="sec-summary" className="grid gap-4 xl:grid-cols-3">
+      {/* 5. Weekly Summary — full-width with inline charts */}
+      <div id="sec-summary">
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
           {weeklySummary ? (
             <>
-              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                {weeklySummary.weekStartLabel} – {weeklySummary.weekEndLabel}
-              </p>
-
-              <div className="mt-2 grid grid-cols-7 gap-1 text-center">
-                {weeklySummary.rows.map((row) => {
-                  const hasActivity = row.foodEntries > 0 || row.exerciseEntries > 0 || row.focusMinutes > 0;
-                  return (
-                    <div key={row.dayKey} className="flex flex-col items-center gap-0.5">
-                      <span className="text-[9px] font-medium text-neutral-400 dark:text-neutral-500">
-                        {row.weekdayLabel.slice(0, 1)}
-                      </span>
-                      <span
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-semibold ${
-                          hasActivity
-                            ? "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-300"
-                            : "bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
-                        }`}
-                      >
-                        {row.foodEntries + row.exerciseEntries || "·"}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="mt-2.5 grid grid-cols-3 gap-1.5">
-                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
-                  <p className="text-lg font-semibold text-foreground">{weeklySummary.trackedDays}<span className="text-[11px] font-normal text-neutral-400">/7</span></p>
-                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">Days tracked</p>
-                </div>
-                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
-                  <p className={`text-lg font-semibold ${weeklySummary.caloriesUnderBudget >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-                    {Math.abs(weeklySummary.caloriesUnderBudget).toLocaleString()}
-                  </p>
-                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">
-                    {weeklySummary.caloriesUnderBudget >= 0 ? "Under budget" : "Over budget"}
-                  </p>
-                </div>
-                <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
-                  <p className="text-lg font-semibold text-foreground">{weeklySummary.foodEntries}</p>
-                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400">Meals logged</p>
-                </div>
-              </div>
-
-              <div className="mt-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  {weeklySummary.weekStartLabel} – {weeklySummary.weekEndLabel}
+                </p>
                 <button
                   type="button"
                   onClick={onOpenWeeklySummary}
-                  className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  className="rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
                 >
-                  View full report
+                  Past weeks
+                </button>
+              </div>
+
+              <div className="mt-2 flex items-center gap-4">
+                <div className="flex gap-1">
+                  {weeklySummary.rows.map((row) => {
+                    const hasActivity = row.foodEntries > 0 || row.exerciseEntries > 0 || row.focusMinutes > 0;
+                    return (
+                      <div key={row.dayKey} className="flex flex-col items-center gap-0.5">
+                        <span className="text-[9px] font-medium text-neutral-400 dark:text-neutral-500">
+                          {row.weekdayLabel.slice(0, 1)}
+                        </span>
+                        <span
+                          className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold ${
+                            hasActivity
+                              ? "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-300"
+                              : "bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
+                          }`}
+                        >
+                          {row.foodEntries + row.exerciseEntries || "·"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-1 gap-1.5 min-w-0">
+                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                    <p className="text-base font-semibold text-foreground">{weeklySummary.trackedDays}<span className="text-[10px] font-normal text-neutral-400">/7</span></p>
+                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Days</p>
+                  </div>
+                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                    <p className={`text-base font-semibold ${weeklySummary.caloriesUnderBudget >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                      {Math.abs(weeklySummary.caloriesUnderBudget).toLocaleString()}
+                    </p>
+                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">
+                      {weeklySummary.caloriesUnderBudget >= 0 ? "Under" : "Over"}
+                    </p>
+                  </div>
+                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                    <p className="text-base font-semibold text-foreground">{weeklySummary.foodEntries}</p>
+                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Meals</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer">
+                  <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesOpts} />
+                </button>
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer">
+                  <HighchartsReact highcharts={Highcharts} options={weeklyMacrosOpts} />
+                </button>
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
+                  <HighchartsReact highcharts={Highcharts} options={weeklyFocusOpts} />
                 </button>
               </div>
             </>
@@ -966,7 +1061,10 @@ export function LandingShell({
             </div>
           )}
         </ModuleCard>
+      </div>
 
+      {/* Weight · Activity — side by side */}
+      <div className="grid gap-4 md:grid-cols-2">
         <ModuleCard
           eyebrow="Weight"
           title={weightTitle}
@@ -1045,6 +1143,7 @@ export function LandingShell({
         </ModuleCard>
         </div>
       </div>
+
 
       {/* 6. Caffeine Decay Curve — reference chart */}
       <div id="sec-caffeine">
