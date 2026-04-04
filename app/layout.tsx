@@ -76,7 +76,7 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body className="antialiased min-h-screen bg-background">
+        <body className="antialiased min-h-screen">
           <NativeAppUrlHandler />
           <NativeHaptics />
           <Script

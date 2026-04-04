@@ -11223,14 +11223,14 @@ export default function ChatPage() {
   }
 
   return (
-    <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area bg-background border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
+    <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {pomodoroConfettiOverlay}
       {/* Shared top bar - fixed on mobile so it stays visible when scrolling */}
       <header
         className={`h-[calc(56px+env(safe-area-inset-top))] min-h-[44px] pt-[env(safe-area-inset-top)] flex items-center border-b shrink-0 fixed top-0 left-0 right-0 z-20 md:relative md:top-auto md:left-auto md:right-auto ${
           incognitoMode
             ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-700 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900"
-            : "bg-background border-neutral-200 dark:border-neutral-800"
+            : "glass-chrome bg-background border-neutral-200 dark:border-neutral-800"
         }`}
       >
         {/* Left (lg+): expanded sidebar title bar, or collapsed strip (w-14) with centered hamburger — aligns with collapsed aside */}
@@ -11629,7 +11629,7 @@ export default function ChatPage() {
       <div className="flex flex-1 min-h-0 overflow-hidden">
       {/* Sidebar - fixed overlay on mobile; in-flow on desktop. Collapsed = icon-only strip (Browser Use style). */}
       <aside
-        className={`z-40 bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity,width] duration-300 ease-out
+        className={`z-40 glass-chrome bg-background border-r border-neutral-200/80 dark:border-neutral-800 flex flex-col min-h-0 transition-[transform,opacity,width] duration-300 ease-out
           fixed inset-y-0 left-0 lg:static lg:inset-auto lg:translate-x-0
           ${sidebarOpen
             ? "w-72 translate-x-0 opacity-100 lg:w-72"
@@ -14593,7 +14593,7 @@ export default function ChatPage() {
         {/* Bottom bar - fixed on mobile when scrolling. Also shown on new conversations for a faster first message. */}
         {!shouldHideBottomBar && (
           <div
-            className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 bg-background`}
+            className={`${sidebarOpen ? "hidden lg:flex" : "flex"} fixed inset-x-0 bottom-0 z-30 flex-col border-t border-neutral-200 dark:border-neutral-800 shrink-0 pb-[env(safe-area-inset-bottom)] md:relative md:inset-x-auto md:bottom-auto md:pb-0 glass-chrome bg-background`}
           >
             <div className="flex flex-col items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 min-w-0">
               <div className="w-full flex flex-col items-center">
@@ -14770,7 +14770,7 @@ export default function ChatPage() {
                   </div>
                 )}
               </div>
-              </div>
+                </div>
         </div>
         </div>
         )}
@@ -16859,8 +16859,8 @@ export default function ChatPage() {
                 <h2 id="import-modal-title" className="text-lg font-semibold text-foreground">
                   Import data
                 </h2>
-                <button
-                  type="button"
+            <button
+              type="button"
                   onClick={() => setImportModalOpen(false)}
                   className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors"
                   aria-label="Close"
@@ -16869,11 +16869,11 @@ export default function ChatPage() {
                     <path d="M18 6 6 18" />
                     <path d="m6 6 12 12" />
                   </svg>
-                </button>
-              </div>
+            </button>
+          </div>
               <div className="flex-1 overflow-y-auto p-4">
                 <ImportWizard onClose={() => setImportModalOpen(false)} />
-              </div>
+        </div>
             </div>
           </div>
         </>
