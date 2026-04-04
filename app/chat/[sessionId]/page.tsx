@@ -77,6 +77,7 @@ import {
   type ReminderType,
 } from "@/lib/reminder-settings";
 import { notifyPomodoroCompleted, scheduleCaffeineFocusNotification, syncNativeReminders } from "@/lib/native-reminders";
+import { ImportWizard } from "@/components/ImportWizard";
 import {
   playLlmResponseStartHaptic,
   playLlmResponseVisibleHaptic,
@@ -3586,6 +3587,8 @@ export default function ChatPage() {
   const [exportSectionOpen, setExportSectionOpen] = useState(false);
   const [exportMarkdownLoading, setExportMarkdownLoading] = useState(false);
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
+  const [importSectionOpen, setImportSectionOpen] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
   const { background, setBackground } = useBackground();
   const [reminderPreferences, setReminderPreferences] = useState<ReminderPreferences>(
     DEFAULT_REMINDER_PREFERENCES
@@ -7906,6 +7909,7 @@ export default function ChatPage() {
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
   const allExportSectionsSelected = selectedExportSections.length === EXPORT_DATA_SECTION_OPTIONS.length;
+  const showImportCta = !isAnonymous && !incognitoMode && sessions.length === 0 && savedTranscripts.length === 0 && sleepEntries.length === 0;
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
@@ -10119,6 +10123,15 @@ export default function ChatPage() {
   }, [settingsOpen]);
 
   useEffect(() => {
+    if (!importModalOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setImportModalOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [importModalOpen]);
+
+  useEffect(() => {
     if (!settingsOpen || !userId) return;
     fetch("/api/me/settings")
       .then((r) => (r.ok ? r.json() : null))
@@ -11507,6 +11520,21 @@ export default function ChatPage() {
             <Clock onMoonPhaseChange={setMoonPhase} />
             </div>
             <ThemeToggle inverted={incognitoMode} moonPhase={moonPhase} />
+            {showImportCta && (
+              <button
+                type="button"
+                onClick={() => setImportModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors"
+                aria-label="Import data"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Import data
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
@@ -16700,6 +16728,42 @@ export default function ChatPage() {
                 )}
 
                 {!isAnonymous && (
+                <section className="pt-6 border-t border-neutral-200 dark:border-neutral-700/30">
+                    <button
+                      type="button"
+                      onClick={() => setImportSectionOpen((prev) => !prev)}
+                      aria-expanded={importSectionOpen}
+                      aria-controls="settings-data-import-panel"
+                      className="w-full flex items-center justify-between gap-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors"
+                    >
+                      <span className="min-w-0 text-left">
+                        <span className="block text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Data import</span>
+                        <span className="block text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                          Import nutrition, exercise, weight, sleep, and more from other apps.
+                        </span>
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`w-4 h-4 shrink-0 text-neutral-500 dark:text-neutral-400 transition-transform ${importSectionOpen ? "rotate-180" : ""}`}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                    {importSectionOpen && (
+                      <div id="settings-data-import-panel" className="mt-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 p-3">
+                        <ImportWizard onClose={() => setImportSectionOpen(false)} />
+                      </div>
+                    )}
+                </section>
+                )}
+
+                {!isAnonymous && (
                   <section className="pt-6 border-t border-neutral-200 dark:border-neutral-700/30">
                     <h3 className="text-xs font-medium uppercase tracking-wider text-red-500 dark:text-red-400 mb-2">Danger zone</h3>
                     <div className="rounded-xl border border-red-200/50 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/30 p-4">
@@ -16722,6 +16786,48 @@ export default function ChatPage() {
                     </div>
                   </section>
                 )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {importModalOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-[52] bg-black/30 backdrop-blur-sm animate-fade-in"
+            onClick={() => setImportModalOpen(false)}
+            aria-hidden
+          />
+          <div
+            className="fixed inset-0 z-[53] flex items-center justify-center p-4 pointer-events-none"
+            aria-hidden
+          >
+            <div
+              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
+              role="dialog"
+              aria-modal
+              aria-labelledby="import-modal-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
+                <h2 id="import-modal-title" className="text-lg font-semibold text-foreground">
+                  Import data
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setImportModalOpen(false)}
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors"
+                  aria-label="Close"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4">
+                <ImportWizard onClose={() => setImportModalOpen(false)} />
               </div>
             </div>
           </div>
