@@ -22,6 +22,7 @@ import {
 } from "@/lib/gemini";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 function normalizeDatePartsFromBody(body: Record<string, unknown>): {
   day: number;
@@ -383,6 +384,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
 
   try {
@@ -900,6 +903,8 @@ export async function GET(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   try {
     const { searchParams } = new URL(request.url);
     const kindParam = searchParams.get("kind");

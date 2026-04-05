@@ -6,6 +6,7 @@ import {
   updateConceptGroup,
   deleteConceptGroup,
 } from "@/lib/db";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function GET(
   _request: Request,
@@ -15,6 +16,8 @@ export async function GET(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
@@ -52,6 +55,8 @@ export async function PATCH(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlPatch = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlPatch.allowed) return tooManyRequestsResponse(rlPatch.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
@@ -95,6 +100,8 @@ export async function DELETE(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlDel = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlDel.allowed) return tooManyRequestsResponse(rlDel.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(

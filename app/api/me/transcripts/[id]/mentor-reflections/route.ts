@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getSavedTranscript, updateJournalMentorReflections } from "@/lib/db";
 import { runJournalMentorReflections } from "@/lib/journal-mentor-reflections";
 import { recordMongoUsageRequest } from "@/lib/usage";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(
   _request: Request,
@@ -12,6 +13,8 @@ export async function POST(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
 
   const { id } = await params;

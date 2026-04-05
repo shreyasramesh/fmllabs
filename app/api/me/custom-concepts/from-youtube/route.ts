@@ -9,6 +9,7 @@ import {
 } from "@/lib/db";
 import { recordUsageEvent, computeTranscribrCost, recordMongoUsageRequest } from "@/lib/usage";
 import { CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE } from "@/lib/concept-extraction-ndjson";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 function extractVideoId(urlOrId: string): string | null {
   const trimmed = urlOrId.trim();
@@ -29,6 +30,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   const apiKey = process.env.TRANSCRIBR_API_KEY?.trim();
   recordMongoUsageRequest(userId).catch(() => {});
   try {

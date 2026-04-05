@@ -11,6 +11,7 @@ import {
   isValidIntendedMonth,
   isValidIntendedYear,
 } from "@/lib/habit-intended";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function GET(
   _request: Request,
@@ -20,6 +21,8 @@ export async function GET(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
@@ -53,6 +56,8 @@ export async function PATCH(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlPatch = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlPatch.allowed) return tooManyRequestsResponse(rlPatch.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
@@ -71,12 +76,26 @@ export async function PATCH(
       intendedMonth?: number | null;
       intendedYear?: number | null;
       isHeroHabit?: boolean;
+      reminder?: { enabled: boolean; hour: number; minute: number; days: number[] } | null;
     } = {};
     if (typeof body.name === "string") updates.name = body.name;
     if (typeof body.description === "string") updates.description = body.description;
     if (typeof body.howToFollowThrough === "string") updates.howToFollowThrough = body.howToFollowThrough;
     if (typeof body.tips === "string") updates.tips = body.tips;
     if (typeof body.isHeroHabit === "boolean") updates.isHeroHabit = body.isHeroHabit;
+    if (body.reminder !== undefined) {
+      if (body.reminder === null) {
+        updates.reminder = null;
+      } else if (
+        typeof body.reminder === "object" &&
+        typeof body.reminder.enabled === "boolean" &&
+        typeof body.reminder.hour === "number" &&
+        typeof body.reminder.minute === "number" &&
+        Array.isArray(body.reminder.days)
+      ) {
+        updates.reminder = body.reminder;
+      }
+    }
     if (body.bucket !== undefined) {
       if (!isHabitBucket(body.bucket)) {
         return NextResponse.json({ error: "Invalid bucket" }, { status: 400 });
@@ -136,6 +155,8 @@ export async function DELETE(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlDel = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlDel.allowed) return tooManyRequestsResponse(rlDel.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(

@@ -28,6 +28,7 @@ import {
   decryptUserSettingsFields,
 } from "@/lib/crypto-fields";
 import { getOneLiner, loadMentalModelContent } from "@/lib/mental-models";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 type ExportSection =
   | "settings"
@@ -72,6 +73,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
     const body = await request.json().catch(() => ({}));

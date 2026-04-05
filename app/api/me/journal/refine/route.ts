@@ -5,6 +5,7 @@ import {
   type JournalPersonaLens,
 } from "@/lib/gemini";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const VALID_ENTRY_TYPES = new Set(["gratitude", "reflection"]);
 const VALID_PERSONAS = new Set<JournalPersonaLens>([
@@ -19,6 +20,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
     const body = await request.json().catch(() => ({}));

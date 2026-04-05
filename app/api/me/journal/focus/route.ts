@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { addFocusEntry, deleteFocusEntry, getFocusEntries } from "@/lib/db";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { recordMongoUsageRequest } from "@/lib/usage";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 function parseFiniteNumber(value: unknown): number | null {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -82,6 +83,8 @@ export async function GET(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const { searchParams } = new URL(request.url);
@@ -121,6 +124,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlPost = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlPost.allowed) return tooManyRequestsResponse(rlPost.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
@@ -178,6 +183,8 @@ export async function DELETE(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlDel = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlDel.allowed) return tooManyRequestsResponse(rlDel.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const { searchParams } = new URL(request.url);

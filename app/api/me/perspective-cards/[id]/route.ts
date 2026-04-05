@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { deleteSavedPerspectiveCard } from "@/lib/db";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function DELETE(
   _request: Request,
@@ -10,6 +11,8 @@ export async function DELETE(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const { id } = await params;
     if (!id) {

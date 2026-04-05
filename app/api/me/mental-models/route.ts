@@ -5,12 +5,15 @@ import {
   createUserMentalModel,
 } from "@/lib/db";
 import { ObjectId } from "mongodb";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function GET() {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const items = await getUserMentalModels(userId);
     return NextResponse.json(items);

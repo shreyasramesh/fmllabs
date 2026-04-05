@@ -5,6 +5,7 @@ import {
   recalculateNutritionGoalsFromPercentages,
 } from "@/lib/gemini";
 import { recordMongoUsageRequest } from "@/lib/usage";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const GOAL_CALORIES_MIN = 800;
 const GOAL_CALORIES_MAX = 6000;
@@ -201,6 +202,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
 
   try {

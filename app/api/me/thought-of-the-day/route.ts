@@ -6,6 +6,7 @@ import {
   getCustomConcepts,
 } from "@/lib/db";
 import { recordMongoUsageRequest } from "@/lib/usage";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 function hashString(s: string): number {
   let hash = 0;
@@ -127,6 +128,8 @@ export async function GET() {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const data = await buildResponse(userId);
@@ -142,6 +145,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;

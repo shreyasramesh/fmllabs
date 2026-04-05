@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserSettings, upsertUserSettings } from "@/lib/db";
 import { isValidLanguageCode } from "@/lib/languages";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 /**
  * Voice cloning: audio files are streamed to ElevenLabs and never persisted.
@@ -17,6 +18,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {

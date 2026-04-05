@@ -12,6 +12,7 @@ import {
   getDb,
 } from "@/lib/db";
 import { ObjectId } from "mongodb";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 import type {
   NutritionImportRow,
   ExerciseImportRow,
@@ -94,6 +95,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   let body: { sections: ImportSections };
   try {

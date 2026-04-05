@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { categorizeBrainDump } from "@/lib/gemini";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const MAX_TRANSCRIPT_LENGTH = 20_000;
 
@@ -9,6 +10,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
     const body = await request.json().catch(() => ({}));

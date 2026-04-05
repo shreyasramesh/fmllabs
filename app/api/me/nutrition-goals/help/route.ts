@@ -4,6 +4,7 @@ import { getSavedTranscripts, getUserSettings } from "@/lib/db";
 import { generateNutritionGoalGuidance } from "@/lib/gemini";
 import { buildWeeklySummary } from "@/lib/nutrition-weekly-summary";
 import { recordMongoUsageRequest } from "@/lib/usage";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const DEFAULT_NUTRITION_GOALS = {
   caloriesTarget: 2000,
@@ -49,6 +50,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
 
   try {

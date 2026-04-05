@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getHabit, updateHabit } from "@/lib/db";
 import { estimateHabitCalorieImpact } from "@/lib/gemini";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(
   _request: Request,
@@ -11,6 +12,8 @@ export async function POST(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const { id: habitId } = await params;
     if (!habitId?.trim()) {

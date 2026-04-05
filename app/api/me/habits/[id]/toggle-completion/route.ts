@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getHabit, toggleHabitCompletion } from "@/lib/db";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const DATE_KEY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -12,6 +13,8 @@ export async function POST(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const { id: habitId } = await params;
     if (!habitId || typeof habitId !== "string" || !habitId.trim()) {
@@ -26,7 +29,10 @@ export async function POST(
       );
     }
     const habit = await getHabit(habitId.trim(), userId);
-    const calorieImpact = habit?.calorieImpact ?? null;
+    if (!habit) {
+      return NextResponse.json({ error: "Habit not found" }, { status: 404 });
+    }
+    const calorieImpact = habit.calorieImpact ?? null;
     const result = await toggleHabitCompletion(userId, habitId.trim(), dateKey, calorieImpact);
     return NextResponse.json(result);
   } catch (err) {

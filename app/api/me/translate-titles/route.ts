@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { translateTitlesBatch } from "@/lib/gemini";
 import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const body = await request.json().catch(() => ({}));
     const items = body.items as { id: string; title: string }[] | undefined;

@@ -689,7 +689,9 @@ export async function getSession(sessionId: string, userId: string): Promise<(Se
   } as Session & { _id: string });
 }
 
-export async function getMessages(sessionId: string): Promise<Message[]> {
+export async function getMessages(sessionId: string, userId: string): Promise<Message[]> {
+  const session = await getSession(sessionId, userId);
+  if (!session) return [];
   const database = await getDb();
   const messages = await database
     .collection<Message>("messages")
@@ -737,12 +739,13 @@ export async function truncateMessagesAfter(
     .deleteMany({ _id: { $in: toDelete } });
   await database
     .collection<SessionDoc>("sessions")
-    .updateOne({ _id: id }, { $set: { updatedAt: new Date() } });
+    .updateOne({ _id: id, userId }, { $set: { updatedAt: new Date() } });
   return true;
 }
 
 export async function appendMessage(
   sessionId: string,
+  userId: string,
   role: "user" | "assistant",
   content: string
 ): Promise<void> {
@@ -761,7 +764,7 @@ export async function appendMessage(
   }) as Message;
   await database.collection<Message>("messages").insertOne(doc);
   await database.collection<SessionDoc>("sessions").updateOne(
-    { _id: id },
+    { _id: id, userId },
     { $set: { updatedAt: new Date() } }
   );
 }
@@ -1995,11 +1998,12 @@ export async function deleteSession(
   } catch {
     return false;
   }
-  await database.collection<Message>("messages").deleteMany({ sessionId });
   const result = await database
     .collection<SessionDoc>("sessions")
     .deleteOne({ _id: id, userId });
-  return result.deletedCount > 0;
+  if (result.deletedCount === 0) return false;
+  await database.collection<Message>("messages").deleteMany({ sessionId });
+  return true;
 }
 
 export async function getSavedTranscripts(

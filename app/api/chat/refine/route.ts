@@ -5,6 +5,7 @@ import {
 } from "@/lib/gemini";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
 import { auth } from "@clerk/nextjs/server";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const VALID_LENSES = new Set<ChatInputLens>([
   "contrarian",
@@ -16,6 +17,10 @@ const VALID_LENSES = new Set<ChatInputLens>([
 
 export async function POST(request: Request) {
   const { userId } = await auth();
+  if (userId) {
+    const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+    if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
+  }
   try {
     const body = await request.json().catch(() => ({}));
     const text = typeof body.text === "string" ? body.text.trim() : "";

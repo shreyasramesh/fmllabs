@@ -11,6 +11,7 @@ import {
 import { generateSummaryAndEnrichment } from "@/lib/gemini";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { getLanguageName, isValidLanguageCode } from "@/lib/languages";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(
   request: Request,
@@ -20,6 +21,8 @@ export async function POST(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   const { id: sessionId } = await params;
   if (!sessionId) {
     return NextResponse.json({ error: "Session ID required" }, { status: 400 });
@@ -31,7 +34,7 @@ export async function POST(
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
-    const messages = await getMessages(sessionId);
+    const messages = await getMessages(sessionId, userId);
     if (messages.length < 2) {
       return NextResponse.json(
         { error: "Need at least 2 messages to summarize" },

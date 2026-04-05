@@ -7,12 +7,15 @@ import { inferJournalTitleFromContent } from "@/lib/journal-title";
 import { runJournalMentorReflections } from "@/lib/journal-mentor-reflections";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
 
   try {

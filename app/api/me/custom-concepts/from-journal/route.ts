@@ -10,12 +10,15 @@ import {
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { EXTRACT_CONCEPTS_MAX_TOTAL_CHARS } from "@/lib/extract-concepts-constants";
 import { CONCEPT_EXTRACTION_NDJSON_CONTENT_TYPE } from "@/lib/concept-extraction-ndjson";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   recordMongoUsageRequest(userId).catch(() => {});
   try {
     const body = await request.json().catch(() => ({}));

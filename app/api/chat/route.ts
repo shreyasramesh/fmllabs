@@ -43,6 +43,7 @@ import {
   buildUserPreferredNamePromptSuffix,
   resolveUserDisplayNameForPrompt,
 } from "@/lib/user-display-name";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 type ResponseVerbosity = "compact" | "detailed";
 
@@ -303,6 +304,10 @@ function formatDevLogBlock(title: string, content: string): string {
 
 export async function POST(request: Request) {
   const { userId } = await auth();
+  if (userId) {
+    const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+    if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
+  }
   let isAnonymous = !userId;
   let incognito = false;
 
@@ -620,7 +625,7 @@ export async function POST(request: Request) {
       conceptGroupEnrichmentRes,
       userMentalModelsRes,
     ] = await Promise.all([
-      getMessages(sessionId!),
+      getMessages(sessionId!, userId!),
       getEnrichmentPromptsWithIds(userId!),
       getCustomConceptEnrichmentPromptsWithIds(userId!),
       getConceptGroupEnrichmentWithIds(userId!),
@@ -637,7 +642,7 @@ export async function POST(request: Request) {
       }));
     if (prepended.length > 0 && sessionId) {
       for (const m of prepended) {
-        await appendMessage(sessionId, m.role as "user" | "assistant", m.content);
+        await appendMessage(sessionId, userId!, m.role as "user" | "assistant", m.content);
       }
     }
     messagesForModel = [
@@ -759,8 +764,8 @@ export async function POST(request: Request) {
           ? ` Respond in ${getLanguageName(language as LanguageCode)}.`
           : "";
 
-      if (sessionId) {
-        await appendMessage(sessionId, "user", rawMessage ?? message);
+      if (sessionId && userId) {
+        await appendMessage(sessionId, userId, "user", rawMessage ?? message);
       }
 
       const mentorResponses: MentorResponse[] = [];
@@ -838,7 +843,7 @@ ${userNamePromptSuffix}${langInstr}`;
       ).trim();
 
       if (sessionId && userId) {
-        await appendMessage(sessionId, "assistant", fullResponse);
+        await appendMessage(sessionId, userId, "assistant", fullResponse);
         const allMessages = [
           ...messagesForModel,
           { role: "assistant", content: fullResponse },
@@ -1366,8 +1371,8 @@ ${userNamePromptSuffix}${langInstr}`;
   }
 
   try {
-    if (!isAnonymous && !incognito && sessionId) {
-      await appendMessage(sessionId, "user", rawMessage ?? message);
+    if (!isAnonymous && !incognito && sessionId && userId) {
+      await appendMessage(sessionId, userId, "user", rawMessage ?? message);
     }
 
     const encoder = new TextEncoder();
@@ -1451,7 +1456,7 @@ ${userNamePromptSuffix}${langInstr}`;
             contextEnvelopeForPersist
           )}`;
           if (!isAnonymous && !incognito && sessionId && userId) {
-            await appendMessage(sessionId, "assistant", fullResponse + contextBlock);
+            await appendMessage(sessionId, userId, "assistant", fullResponse + contextBlock);
             const allMessages = [
               ...messagesForModel,
               { role: "assistant", content: fullResponse },

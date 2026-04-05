@@ -9,6 +9,7 @@ import {
 } from "@/lib/db";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const VALID_CATEGORIES: BrainDumpCategory[] = [
   "reflection", "concept", "experiment", "nutrition", "exercise", "weight", "sleep",
@@ -19,6 +20,8 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 15, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
     const body = await request.json().catch(() => ({}));

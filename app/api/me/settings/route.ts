@@ -4,6 +4,7 @@ import { getUserSettings, upsertUserSettings } from "@/lib/db";
 import { isValidLanguageCode } from "@/lib/languages";
 import { isValidUserTypeId } from "@/lib/user-types";
 import { normalizeReminderPreferences } from "@/lib/reminder-settings";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const TTS_MIN = 0.5;
 const TTS_MAX = 2;
@@ -83,6 +84,8 @@ export async function GET() {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlGet = rateLimitByUser(userId, { max: 120, windowMs: 60_000 });
+  if (!rlGet.allowed) return tooManyRequestsResponse(rlGet.resetMs);
   try {
     const settings = await getUserSettings(userId);
     return NextResponse.json(settings ?? {});
@@ -97,6 +100,8 @@ export async function PATCH(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
   try {
     const body = await request.json().catch(() => ({}));
     const updates: Parameters<typeof upsertUserSettings>[1] = {};

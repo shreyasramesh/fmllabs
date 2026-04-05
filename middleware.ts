@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { rateLimitByIp, rateLimitAuthByIp, getClientIp, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -28,7 +29,22 @@ const isPublicRoute = createRouteMatcher([
   "/icons(.*)",
 ]);
 
+const isAuthRoute = createRouteMatcher([
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+]);
+
 export default clerkMiddleware(async (auth, request) => {
+  const ip = getClientIp(request);
+
+  if (isAuthRoute(request)) {
+    const rl = rateLimitAuthByIp(ip);
+    if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
+  }
+
+  const globalRl = rateLimitByIp(ip);
+  if (!globalRl.allowed) return tooManyRequestsResponse(globalRl.resetMs);
+
   if (!isPublicRoute(request)) {
     await auth().protect();
   }

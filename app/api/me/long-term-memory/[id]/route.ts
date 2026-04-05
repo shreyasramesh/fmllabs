@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getLongTermMemory, updateLongTermMemory, deleteLongTermMemory } from "@/lib/db";
+import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 export async function PATCH(
   request: Request,
@@ -10,6 +11,8 @@ export async function PATCH(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlPatch = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlPatch.allowed) return tooManyRequestsResponse(rlPatch.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
@@ -55,6 +58,8 @@ export async function DELETE(
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const rlDel = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlDel.allowed) return tooManyRequestsResponse(rlDel.resetMs);
   const { id } = await params;
   if (!id) {
     return NextResponse.json(
