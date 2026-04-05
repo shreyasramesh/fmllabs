@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
+import { ScoreRing } from "@/components/landing/ScoreRing";
+import { computeNutritionScore } from "@/lib/nutrition-score";
 import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
+  LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
-
-function clampPct(current: number, target: number): number {
-  if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) return 0;
-  return Math.min(100, Math.max(0, (current / target) * 100));
-}
 
 function rawPct(current: number, target: number): number {
   if (!Number.isFinite(current) || !Number.isFinite(target) || target <= 0) return 0;
@@ -27,7 +27,11 @@ interface LandingFocusCanvasProps {
   foodLoggedLabel: string;
   nutrition: LandingNutritionSummary;
   nutritionGoals: LandingNutritionGoals;
+  weeklySummary: LandingWeeklySummaryPreview | null;
   onOpenNutrition: () => void;
+  onSearchFood: () => void;
+  onCaptureFood: () => void;
+  onDescribeFood: () => void;
 }
 
 const MACROS = [
@@ -80,6 +84,32 @@ function MacroIcon({ macroKey, color }: { macroKey: string; color: string }) {
   }
 }
 
+function ScorePill({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: number; color: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold"
+      style={{ backgroundColor: `${color}14`, color }}
+    >
+      {icon}
+      {label}
+      <span className="ml-0.5 tabular-nums">{value}</span>
+    </span>
+  );
+}
+
+function ActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex flex-1 flex-col items-center gap-1.5 rounded-2xl border border-neutral-200/80 bg-white/80 px-3 py-3 text-center transition-all hover:bg-neutral-50 hover:shadow-sm active:scale-[0.97] dark:border-neutral-600 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+    >
+      <span className="text-neutral-600 dark:text-neutral-300">{icon}</span>
+      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300">{label}</span>
+    </button>
+  );
+}
+
 export function LandingFocusCanvas({
   eyebrow,
   title,
@@ -90,9 +120,14 @@ export function LandingFocusCanvas({
   foodLoggedLabel: _foodLoggedLabel,
   nutrition,
   nutritionGoals,
+  weeklySummary,
   onOpenNutrition,
+  onSearchFood,
+  onCaptureFood,
+  onDescribeFood,
 }: LandingFocusCanvasProps) {
   const caloriesConsumed = nutrition.caloriesFood;
+  const score = useMemo(() => computeNutritionScore(nutrition, nutritionGoals), [nutrition, nutritionGoals]);
 
   function makebar(
     key: string, label: string, current: number, target: number, unit: string,
@@ -101,8 +136,9 @@ export function LandingFocusCanvas({
     const raw = rawPct(current, target);
     const over = raw > 100;
     const cappedRaw = Math.min(raw, 200);
+    const diff = target - current;
     return {
-      key, label, current, target, unit,
+      key, label, current, target, unit, diff,
       color: macro.color,
       overColor: macro.overColor,
       trackColor: macro.trackColor,
@@ -112,28 +148,84 @@ export function LandingFocusCanvas({
     };
   }
 
-  const bars: {
-    key: string;
-    label: string;
-    current: number;
-    target: number;
-    unit: string;
-    color: string;
-    overColor: string;
-    trackColor: string;
-    fillPct: number;
-    targetMarkerPct: number;
-    overflow: boolean;
-  }[] = [
+  const bars = [
     makebar("calories", "Calories", caloriesConsumed, nutritionGoals.caloriesTarget, "kcal", MACROS[0]),
     makebar("protein", proteinLabel, nutrition.proteinGrams, nutritionGoals.proteinGrams, "g", MACROS[1]),
     makebar("carbs", carbsLabel, nutrition.carbsGrams, nutritionGoals.carbsGrams, "g", MACROS[2]),
     makebar("fat", "Fat", nutrition.fatGrams, nutritionGoals.fatGrams, "g", MACROS[3]),
   ];
 
+  const trendOptions = useMemo<Highcharts.Options | null>(() => {
+    if (!weeklySummary || weeklySummary.rows.length === 0) return null;
+    const rows = weeklySummary.rows;
+    const categories = rows.map((r) => r.weekdayLabel);
+    const data = rows.map((r) => r.caloriesFood);
+    const target = nutritionGoals.caloriesTarget;
+
+    return {
+      chart: {
+        backgroundColor: "transparent",
+        height: 100,
+        style: { fontFamily: "Inter, system-ui, sans-serif" },
+        spacing: [4, 0, 4, 0],
+      },
+      credits: { enabled: false },
+      title: { text: undefined },
+      legend: { enabled: false },
+      xAxis: {
+        categories,
+        lineColor: "transparent",
+        tickColor: "transparent",
+        labels: { style: { color: "#a3a3a3", fontSize: "9px" } },
+      },
+      yAxis: {
+        title: { text: undefined },
+        labels: { enabled: false },
+        gridLineWidth: 0,
+        min: 0,
+        plotLines: [
+          {
+            value: target,
+            color: "#B87B5180",
+            width: 1.5,
+            dashStyle: "Dash",
+            zIndex: 3,
+          },
+        ],
+      },
+      tooltip: {
+        backgroundColor: "#1c1917",
+        borderColor: "#44403c",
+        style: { color: "#fafaf9", fontSize: "11px" },
+        pointFormat: "{point.y} kcal",
+        headerFormat: "<b>{point.key}</b><br/>",
+      },
+      plotOptions: {
+        column: {
+          groupPadding: 0.08,
+          pointPadding: 0.04,
+          borderRadius: 3,
+          borderWidth: 0,
+        },
+      },
+      series: [
+        {
+          type: "column",
+          data: data.map((val) => ({
+            y: val,
+            color: val > target
+              ? { linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 }, stops: [[0, "rgba(196,112,94,0.8)"], [1, "rgba(196,112,94,0.35)"]] }
+              : { linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 }, stops: [[0, "rgba(154,136,114,0.8)"], [1, "rgba(154,136,114,0.3)"]] },
+          })),
+        },
+      ],
+    };
+  }, [weeklySummary, nutritionGoals.caloriesTarget]);
+
   return (
-    <section className="w-full overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
-      <div className="flex flex-col gap-4">
+    <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
+      <div className="flex flex-col gap-5">
+        {/* header */}
         <div className="flex flex-col items-center gap-2 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
             {eyebrow}
@@ -148,12 +240,101 @@ export function LandingFocusCanvas({
           )}
         </div>
 
+        {/* score ring or empty prompt */}
+        {score.empty ? (
+          <button
+            type="button"
+            onClick={onDescribeFood}
+            className="flex flex-col items-center gap-2 py-4"
+          >
+            <div className="flex h-[148px] w-[148px] items-center justify-center rounded-full border-[11px] border-neutral-200/40 dark:border-neutral-700/40">
+              <div className="flex flex-col items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-400 dark:text-neutral-500">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">Log food</span>
+              </div>
+            </div>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              Log your first meal to see your score
+            </p>
+          </button>
+        ) : (
+          <>
+            <div className="flex justify-center">
+              <ScoreRing score={score.overall} label={score.label} size={148} strokeWidth={11} />
+            </div>
+
+            {/* sub-score pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <ScorePill
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                    <path d="M10 1a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 1zM5.05 3.05a.75.75 0 011.06 0l1.062 1.06a.75.75 0 11-1.06 1.06L5.05 4.11a.75.75 0 010-1.06zm9.9 0a.75.75 0 010 1.06l-1.06 1.06a.75.75 0 01-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM10 7a3 3 0 100 6 3 3 0 000-6zm-6.25 3a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H4.5a.75.75 0 01-.75-.75zm12 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zM5.05 16.95a.75.75 0 011.06 0l1.06-1.06a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06 0l-1.06-1.06zm9.9 0l-1.06-1.06a.75.75 0 011.06-1.06l1.06 1.06a.75.75 0 01-1.06 1.06z" />
+                  </svg>
+                }
+                label="Macro Balance"
+                value={score.macroBalance}
+                color="#5A9E8A"
+              />
+              <ScorePill
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                  </svg>
+                }
+                label="Goal Adherence"
+                value={score.calorieAdherence}
+                color="#D49A42"
+              />
+            </div>
+          </>
+        )}
+
+        {/* action buttons */}
+        <div className="flex gap-2">
+          <ActionButton
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            }
+            label="Search"
+            onClick={onSearchFood}
+          />
+          <ActionButton
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+            }
+            label="Capture"
+            onClick={onCaptureFood}
+          />
+          <ActionButton
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" />
+              </svg>
+            }
+            label="Describe"
+            onClick={onDescribeFood}
+          />
+        </div>
+
+        {/* macro bars */}
         <button
           type="button"
           onClick={onOpenNutrition}
-          className="relative rounded-[2.2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6"
+          className="relative rounded-[2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6"
         >
           <div className="mx-auto max-w-[32rem] space-y-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+              Goals
+            </p>
             {bars.map((bar) => (
               <div key={bar.key} className="space-y-1.5">
                 <div className="flex items-baseline justify-between">
@@ -177,7 +358,7 @@ export function LandingFocusCanvas({
                 </div>
 
                 <div
-                  className="relative h-3 w-full overflow-hidden rounded-full"
+                  className="relative h-2.5 w-full overflow-hidden rounded-full"
                   style={{ backgroundColor: bar.trackColor }}
                 >
                   {!bar.overflow ? (
@@ -217,10 +398,33 @@ export function LandingFocusCanvas({
                     </>
                   )}
                 </div>
+
+                {/* left / over indicator */}
+                <p className="text-[11px] font-medium tabular-nums">
+                  {bar.overflow ? (
+                    <span style={{ color: bar.overColor }}>
+                      {Math.abs(Math.round(bar.diff))}{bar.unit === "kcal" ? " kcal" : bar.unit} over
+                    </span>
+                  ) : bar.diff > 0 ? (
+                    <span style={{ color: bar.color }}>
+                      {Math.round(bar.diff)}{bar.unit === "kcal" ? " kcal" : bar.unit} left
+                    </span>
+                  ) : null}
+                </p>
               </div>
             ))}
           </div>
         </button>
+
+        {/* 7-day calorie trend mini-chart */}
+        {trendOptions && (
+          <div className="rounded-2xl border border-[#ECD9C8]/50 bg-white/60 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-800/60">
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+              Calories — 7 Day Trend
+            </p>
+            <HighchartsReact highcharts={Highcharts} options={trendOptions} />
+          </div>
+        )}
       </div>
     </section>
   );

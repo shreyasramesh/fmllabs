@@ -11,6 +11,7 @@ import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepReco
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
+import { useTheme } from "@/components/ThemeProvider";
 import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
   CaffeineFocusWindow,
@@ -103,6 +104,9 @@ const WeightSparkline = React.memo(function WeightSparkline({
   points: LandingWeightPoint[];
   targetKg: number | null;
 }) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const options = React.useMemo<Highcharts.Options>(() => {
     if (points.length < 2) return {};
     const weights = points.map((p) => p.weightKg);
@@ -114,6 +118,12 @@ const WeightSparkline = React.memo(function WeightSparkline({
     const yMin = Math.min(...weights, ...(targetKg != null ? [targetKg] : []));
     const yMax = Math.max(...weights, ...(targetKg != null ? [targetKg] : []));
     const padding = Math.max(0.5, (yMax - yMin) * 0.15);
+
+    const muted = isDark ? "#9ca3af" : "#a3a3a3";
+    const grid = isDark ? "rgba(255,255,255,0.12)" : "#f0f0f0";
+    const axisLine = isDark ? "#4b5563" : "#e5e5e5";
+    const dataLabelOutline = isDark ? "1px rgba(0,0,0,0.75)" : "none";
+    const markerRing = isDark ? "rgba(255,255,255,0.92)" : "#fff";
 
     const plotLines: Highcharts.YAxisPlotLinesOptions[] =
       targetKg != null
@@ -128,7 +138,7 @@ const WeightSparkline = React.memo(function WeightSparkline({
                 text: `Target: ${targetKg} kg`,
                 align: "left",
                 verticalAlign: "bottom",
-                style: { color: "#16a34a", fontSize: "9px", fontWeight: "600" },
+                style: { color: "#4ade80", fontSize: "9px", fontWeight: "600" },
                 x: 2,
                 y: -3,
               },
@@ -148,16 +158,16 @@ const WeightSparkline = React.memo(function WeightSparkline({
       legend: { enabled: false },
       xAxis: {
         categories,
-        lineColor: "#e5e5e5",
+        lineColor: axisLine,
         tickColor: "transparent",
         labels: { enabled: false },
       },
       yAxis: {
-        title: { text: "kg", style: { color: "#a3a3a3", fontSize: "10px" } },
-        labels: { style: { color: "#a3a3a3", fontSize: "10px" } },
+        title: { text: "kg", style: { color: muted, fontSize: "10px" } },
+        labels: { style: { color: muted, fontSize: "10px" } },
         min: yMin - padding,
         max: yMax + padding,
-        gridLineColor: "#f0f0f0",
+        gridLineColor: grid,
         plotLines,
       },
       tooltip: { enabled: false },
@@ -178,19 +188,24 @@ const WeightSparkline = React.memo(function WeightSparkline({
             symbol: "circle",
             radius: 4.5,
             fillColor: lineColor,
-            lineColor: "#fff",
-            lineWidth: 2,
+            lineColor: markerRing,
+            lineWidth: isDark ? 1.5 : 2,
           },
           dataLabels: {
             enabled: true,
             format: "{y:.1f}",
-            style: { color: lineColor, fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            style: {
+              color: isDark ? "#e5e7eb" : lineColor,
+              fontSize: "9px",
+              fontWeight: "600",
+              textOutline: dataLabelOutline,
+            },
             y: -8,
           },
         },
       ],
     };
-  }, [points, targetKg]);
+  }, [points, targetKg, isDark]);
 
   if (points.length < 2) return null;
 
@@ -213,7 +228,7 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="landing-module-glass overflow-hidden rounded-2xl border px-3 py-3">
+    <section className="landing-module-glass overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <h3 className="truncate text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
         <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
@@ -364,6 +379,9 @@ interface LandingShellProps {
   customFocusMinutesInput: string;
   customFocusTimeInput: string;
   onOpenNutrition: () => void;
+  onSearchFood: () => void;
+  onCaptureFood: () => void;
+  onDescribeFood: () => void;
   onPomodoroCustomMinutesInputChange: (value: string) => void;
   onApplyCustomPomodoroMinutes: () => void;
   onSelectPomodoroDuration: (minutes: number) => void;
@@ -497,6 +515,9 @@ export function LandingShell({
   customFocusMinutesInput,
   customFocusTimeInput,
   onOpenNutrition,
+  onSearchFood,
+  onCaptureFood,
+  onDescribeFood,
   onPomodoroCustomMinutesInputChange,
   onApplyCustomPomodoroMinutes,
   onSelectPomodoroDuration,
@@ -588,6 +609,9 @@ export function LandingShell({
   onOpenHabitDetail,
   onFindNewHabit,
 }: LandingShellProps) {
+  const { theme } = useTheme();
+  const chartDark = theme === "dark";
+
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
       ? Math.abs(weightCurrentKg - weightTargetKg).toFixed(1)
@@ -609,19 +633,49 @@ export function LandingShell({
     onSaveSleepEntry(Math.round(hours * 10) / 10, hrv != null ? Math.round(hrv) : null);
   }
 
-  const inlineChartBase: Highcharts.Options = useMemo(() => ({
-    chart: { backgroundColor: "transparent", style: { fontFamily: "Inter, system-ui, sans-serif" } },
-    credits: { enabled: false },
-    title: { text: undefined },
-    legend: { layout: "horizontal", align: "left", verticalAlign: "bottom", margin: 8, symbolRadius: 0, symbolWidth: 12, symbolHeight: 10, itemDistance: 10, itemStyle: { color: "#737373", fontSize: "10px" } },
-    xAxis: { labels: { style: { color: "#737373", fontSize: "10px" } }, lineColor: "#e5e5e5", tickColor: "#e5e5e5" },
-    yAxis: { title: { text: undefined }, gridLineColor: "#e5e5e5", labels: { style: { color: "#737373", fontSize: "10px" } } },
-    tooltip: { backgroundColor: "#111827", borderColor: "#1f2937", style: { color: "#f9fafb" }, shared: true },
-  }), []);
+  const inlineChartBase: Highcharts.Options = useMemo(() => {
+    const label = chartDark ? "#d1d5db" : "#525252";
+    const line = chartDark ? "#4b5563" : "#e5e5e5";
+    const grid = chartDark ? "rgba(255,255,255,0.14)" : "#e5e5e5";
+    const legend = chartDark ? "#e5e7eb" : "#525252";
+    const chartBackground = chartDark ? "rgba(10, 10, 10, 0.94)" : "transparent";
+    return {
+      chart: {
+        backgroundColor: chartBackground,
+        plotBackgroundColor: chartBackground,
+        style: { fontFamily: "Inter, system-ui, sans-serif" },
+      },
+      credits: { enabled: false },
+      title: { text: undefined },
+      legend: {
+        layout: "horizontal",
+        align: "left",
+        verticalAlign: "bottom",
+        margin: 8,
+        symbolRadius: 0,
+        symbolWidth: 12,
+        symbolHeight: 10,
+        itemDistance: 10,
+        itemStyle: { color: legend, fontSize: "10px" },
+      },
+      xAxis: { labels: { style: { color: label, fontSize: "10px" } }, lineColor: line, tickColor: line },
+      yAxis: {
+        title: { text: undefined },
+        gridLineColor: grid,
+        labels: { style: { color: label, fontSize: "10px" } },
+      },
+      tooltip: { backgroundColor: "#111827", borderColor: "#1f2937", style: { color: "#f9fafb" }, shared: true },
+    };
+  }, [chartDark]);
 
   const weeklyDayLetters = useMemo(
     () => weeklySummary?.rows.map((r) => r.weekdayLabel.slice(0, 1)) ?? [],
     [weeklySummary],
+  );
+
+  const weeklyChartTitleStyle = useMemo(
+    () => ({ color: chartDark ? "#f3f4f6" : "#111827", fontSize: "13px", fontWeight: "600" as const }),
+    [chartDark],
   );
 
   const weeklyCaloriesOpts = useMemo<Highcharts.Options>(() => {
@@ -629,10 +683,10 @@ export function LandingShell({
     return {
       ...inlineChartBase,
       chart: { ...inlineChartBase.chart, type: "column", height: 240 },
-      title: { text: "Calories", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      title: { text: "Calories", align: "left", style: weeklyChartTitleStyle },
       xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
       yAxis: { ...inlineChartBase.yAxis, allowDecimals: false },
-      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12, borderWidth: 0 } },
       series: [
         { type: "column" as const, name: "Food", data: weeklySummary.rows.map((r) => r.tracked ? r.caloriesFood : null), color: "#f59e0b" },
         { type: "column" as const, name: "Exercise", data: weeklySummary.rows.map((r) => r.tracked ? r.caloriesExercise : null), color: "#60a5fa" },
@@ -643,17 +697,17 @@ export function LandingShell({
         },
       ],
     };
-  }, [inlineChartBase, weeklyDayLetters, weeklySummary]);
+  }, [inlineChartBase, weeklyChartTitleStyle, weeklyDayLetters, weeklySummary]);
 
   const weeklyMacrosOpts = useMemo<Highcharts.Options>(() => {
     if (!weeklySummary) return inlineChartBase;
     return {
       ...inlineChartBase,
       chart: { ...inlineChartBase.chart, type: "column", height: 240 },
-      title: { text: "Macronutrients", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      title: { text: "Macronutrients", align: "left", style: weeklyChartTitleStyle },
       xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
       yAxis: { ...inlineChartBase.yAxis, allowDecimals: false },
-      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12, borderWidth: 0 } },
       series: [
         { type: "column" as const, name: "Carbs", data: weeklySummary.rows.map((r) => r.tracked ? r.carbsGrams : null), color: "#a78bfa" },
         { type: "column" as const, name: "Protein", data: weeklySummary.rows.map((r) => r.tracked ? r.proteinGrams : null), color: "#f472b6" },
@@ -675,22 +729,22 @@ export function LandingShell({
         }] : []),
       ],
     };
-  }, [inlineChartBase, nutritionGoals, weeklyDayLetters, weeklySummary]);
+  }, [inlineChartBase, nutritionGoals, weeklyChartTitleStyle, weeklyDayLetters, weeklySummary]);
 
   const weeklyFocusOpts = useMemo<Highcharts.Options>(() => {
     if (!weeklySummary) return inlineChartBase;
     return {
       ...inlineChartBase,
       chart: { ...inlineChartBase.chart, type: "column", height: 240 },
-      title: { text: "Focus Time", align: "left", style: { color: "#111827", fontSize: "13px", fontWeight: "600" } },
+      title: { text: "Focus Time", align: "left", style: weeklyChartTitleStyle },
       xAxis: { ...inlineChartBase.xAxis, categories: weeklyDayLetters },
       yAxis: { ...inlineChartBase.yAxis, allowDecimals: false, labels: { ...((inlineChartBase.yAxis as Highcharts.YAxisOptions)?.labels ?? {}), format: "{value} min" } },
-      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12 } },
+      plotOptions: { column: { borderRadius: 3, pointPadding: 0.08, groupPadding: 0.12, borderWidth: 0 } },
       series: [
         { type: "column" as const, name: "Focus (min)", data: weeklySummary.rows.map((r) => r.tracked ? r.focusMinutes : null), color: "#14b8a6" },
       ],
     };
-  }, [inlineChartBase, weeklyDayLetters, weeklySummary]);
+  }, [inlineChartBase, weeklyChartTitleStyle, weeklyDayLetters, weeklySummary]);
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
@@ -741,296 +795,304 @@ export function LandingShell({
 
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
-      {/* 1. Focus Canvas + Hero Habits — most-used daily modules */}
-      <div id="sec-focus" className="grid gap-4 xl:grid-cols-2">
-        <LandingFocusCanvas
-          eyebrow={focusCanvasEyebrow}
-          title={focusCanvasTitle}
-          subtitle={focusCanvasSubtitle}
-          nutritionLabel={nutritionLabel}
-          carbsLabel={carbsLabel}
-          proteinLabel={proteinLabel}
-          foodLoggedLabel={foodLoggedLabel}
-          nutrition={nutrition}
-          nutritionGoals={nutritionGoals}
-          onOpenNutrition={onOpenNutrition}
-        />
-
-        {heroHabits.length > 0 ? (
-          <ModuleCard eyebrow={heroHabitsLabel} title={heroHabitsLabel}>
-            <LandingHeroHabits
-              habits={heroHabits}
-              completions={heroHabitCompletions}
-              onToggle={onToggleHabitCompletion}
-              onOpenHabit={onOpenHabitDetail}
-            />
-          </ModuleCard>
-        ) : (
-          <div />
-        )}
-
-        <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
-          <LandingHeroHabits
-            habits={experimentalHabits}
-            completions={heroHabitCompletions}
-            onToggle={onToggleHabitCompletion}
-            onOpenHabit={onOpenHabitDetail}
-            emptyStateText="No experiments slated for this month yet. Find a new one below."
+      {/* 1. Focus Canvas + Hero Habits + Quick Capture */}
+      <div id="sec-focus" className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
+        {/* Left column: Nutrition */}
+        <div className="min-w-0 xl:flex-1">
+          <LandingFocusCanvas
+            eyebrow={focusCanvasEyebrow}
+            title={focusCanvasTitle}
+            subtitle={focusCanvasSubtitle}
+            nutritionLabel={nutritionLabel}
+            carbsLabel={carbsLabel}
+            proteinLabel={proteinLabel}
+            foodLoggedLabel={foodLoggedLabel}
+            nutrition={nutrition}
+            nutritionGoals={nutritionGoals}
+            weeklySummary={weeklySummary}
+            onOpenNutrition={onOpenNutrition}
+            onSearchFood={onSearchFood}
+            onCaptureFood={onCaptureFood}
+            onDescribeFood={onDescribeFood}
           />
-          <div className="mt-3 rounded-xl border border-white/55 bg-white/45 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] dark:border-white/10 dark:bg-white/[0.03]">
-            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
-              Find a new habit
-            </p>
-            <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
-              {HABIT_DISCOVERY_BUCKETS.map((option) => {
-                const isSelected = option.bucket === selectedHabitDiscoveryBucket;
-                return (
-                  <button
-                    key={option.bucket}
-                    type="button"
-                    title={option.examples}
-                    onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
-                    className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
-                      isSelected
-                        ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                        : "border-neutral-200/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700/70 dark:bg-neutral-900/30 dark:text-neutral-300 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
-                    }`}
-                  >
-                    <span className="whitespace-nowrap">{option.label}</span>
-                  </button>
-                );
-              })}
+        </div>
+
+        {/* Right column: Hero Habits + Quick Capture (match left height) */}
+        <div className="flex min-w-0 flex-col gap-4 xl:flex-1">
+          {heroHabits.length > 0 && (
+            <ModuleCard eyebrow={heroHabitsLabel} title={heroHabitsLabel}>
+              <LandingHeroHabits
+                habits={heroHabits}
+                completions={heroHabitCompletions}
+                onToggle={onToggleHabitCompletion}
+                onOpenHabit={onOpenHabitDetail}
+              />
+            </ModuleCard>
+          )}
+
+          {/* Quick Capture */}
+          <section className="landing-module-glass flex-1 overflow-hidden rounded-[2rem] border p-4 sm:p-5">
+            <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              {quickCaptures.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={item.onClick}
+                  className="flex flex-col items-center gap-1 rounded-lg border border-neutral-200 px-1.5 py-2 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                    {item.icon}
+                  </span>
+                  <span className="text-[11px] font-medium text-foreground">{item.label}</span>
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setSleepFormOpen((prev) => !prev)}
+                className={`flex flex-col items-center gap-1 rounded-lg border px-1.5 py-2 transition-colors ${
+                  sleepFormOpen
+                    ? "border-[#DDB691] bg-[#FBF4EC] dark:border-[#6A4A33] dark:bg-[#241a14]"
+                    : "border-neutral-200 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                }`}
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                    <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
+                  </svg>
+                </span>
+                <span className="text-[11px] font-medium text-foreground">Sleep</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
-              className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-            >
-              Find me a new habit
-            </button>
-          </div>
-        </ModuleCard>
+
+            {sleepFormOpen && (
+              <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-900">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                  Log last night
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                      Sleep (hours)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.5"
+                      min="0.5"
+                      max="24"
+                      value={sleepHoursInput}
+                      onChange={(e) => setSleepHoursInput(e.target.value)}
+                      className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                      HRV (ms, optional)
+                    </label>
+                    <input
+                      type="number"
+                      step="1"
+                      min="1"
+                      max="300"
+                      placeholder="—"
+                      value={hrvInput}
+                      onChange={(e) => setHrvInput(e.target.value)}
+                      className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={sleepSaving}
+                  onClick={handleSaveSleep}
+                  className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                >
+                  {sleepSaving ? "Saving…" : "Log last night"}
+                </button>
+                {lastSleep && (
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    Last: {lastSleep.sleepHours}h sleep
+                    {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
+                    {" · "}
+                    {lastSleep.dayKey}
+                  </p>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
+
+      {/* Experiments — separate row below focus */}
+      <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
+        <LandingHeroHabits
+          habits={experimentalHabits}
+          completions={heroHabitCompletions}
+          onToggle={onToggleHabitCompletion}
+          onOpenHabit={onOpenHabitDetail}
+          emptyStateText="No experiments slated for this month yet. Find a new one below."
+        />
+        <div className="mt-3 rounded-xl border border-white/55 bg-white/45 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] dark:border-neutral-600/90 dark:bg-neutral-950/65 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+          <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
+            Find a new habit
+          </p>
+          <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
+            {HABIT_DISCOVERY_BUCKETS.map((option) => {
+              const isSelected = option.bucket === selectedHabitDiscoveryBucket;
+              return (
+                <button
+                  key={option.bucket}
+                  type="button"
+                  title={option.examples}
+                  onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
+                  className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
+                    isSelected
+                      ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                      : "border-neutral-200/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                  }`}
+                >
+                  <span className="whitespace-nowrap">{option.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
+            className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+          >
+            Find me a new habit
+          </button>
+        </div>
+      </ModuleCard>
 
       {/* 2. Timeline swim lanes — daily activity overview */}
       <div id="sec-timeline">
         <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
       </div>
 
-      {/* 3. Focus Timer + Quick Capture — daily action tools */}
-      <div className="grid gap-4 xl:grid-cols-2">
-        <section className="landing-module-glass flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border p-4 sm:p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
-            Focus Timer
-          </p>
-          <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
-            {pomodoroClockLabel}
-          </p>
+      {/* 3. Focus Timer */}
+      <section className="landing-module-glass flex w-full flex-col overflow-hidden rounded-[2rem] border p-4 sm:p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+          Focus Timer
+        </p>
+        <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
+          {pomodoroClockLabel}
+        </p>
 
-          <div className="mt-4 flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              {[30, 60, 90].map((minutes) => (
-                <button
-                  key={`focus-timer-dur-${minutes}`}
-                  type="button"
-                  onClick={() => onSelectPomodoroDuration(minutes)}
-                  disabled={focusTrackerSaving || pomodoroSessionActive}
-                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                    pomodoroDurationMinutes === minutes
-                      ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                      : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                  } disabled:opacity-50`}
-                >
-                  {minutes}m
-                </button>
-              ))}
-            </div>
+        <div className="mt-4 flex flex-col gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {[30, 60, 90].map((minutes) => (
+              <button
+                key={`focus-timer-dur-${minutes}`}
+                type="button"
+                onClick={() => onSelectPomodoroDuration(minutes)}
+                disabled={focusTrackerSaving || pomodoroSessionActive}
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  pomodoroDurationMinutes === minutes
+                    ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                    : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                } disabled:opacity-50`}
+              >
+                {minutes}m
+              </button>
+            ))}
+          </div>
 
+          <input
+            type="text"
+            value={focusSessionTagInput}
+            onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
+            placeholder="Tag this focus session..."
+            disabled={focusTrackerSaving}
+            className="w-full rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+          />
+
+          <button
+            type="button"
+            onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
+            disabled={focusTrackerSaving}
+            className="w-full rounded-full border border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+          >
+            {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
+          </button>
+
+          <div className="flex flex-wrap items-center gap-2">
             <input
-              type="text"
-              value={focusSessionTagInput}
-              onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
-              placeholder="Tag this focus session..."
-              disabled={focusTrackerSaving}
-              className="w-full rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+              type="number"
+              min={1}
+              max={600}
+              step={1}
+              value={pomodoroCustomMinutesInput}
+              onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
+              disabled={focusTrackerSaving || pomodoroSessionActive}
+              className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800"
             />
-
             <button
               type="button"
-              onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
-              disabled={focusTrackerSaving}
-              className="w-full rounded-full border border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              onClick={onApplyCustomPomodoroMinutes}
+              disabled={focusTrackerSaving || pomodoroSessionActive}
+              className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
             >
-              {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
+              Set minutes
             </button>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                type="number"
-                min={1}
-                max={600}
-                step={1}
-                value={pomodoroCustomMinutesInput}
-                onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
-                disabled={focusTrackerSaving || pomodoroSessionActive}
-                className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800"
-              />
+            <button
+              type="button"
+              onClick={onResetPomodoro}
+              disabled={focusTrackerSaving}
+              className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+            >
+              Reset
+            </button>
+            {pomodoroSessionActive && (
               <button
                 type="button"
-                onClick={onApplyCustomPomodoroMinutes}
-                disabled={focusTrackerSaving || pomodoroSessionActive}
-                className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
-              >
-                Set minutes
-              </button>
-              <button
-                type="button"
-                onClick={onResetPomodoro}
+                onClick={onEndPomodoro}
                 disabled={focusTrackerSaving}
-                className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+                className="rounded-full border border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#6A4A33] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
               >
-                Reset
+                End
               </button>
-              {pomodoroSessionActive && (
-                <button
-                  type="button"
-                  onClick={onEndPomodoro}
-                  disabled={focusTrackerSaving}
-                  className="rounded-full border border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#6A4A33] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
-                >
-                  End
-                </button>
-              )}
-            </div>
-
-            {(focusTrackerError || pomodoroJustLogged) && (
-              <p
-                className={`text-center text-sm ${
-                  focusTrackerError
-                    ? "text-red-600 dark:text-red-400"
-                    : "text-emerald-600 dark:text-emerald-400"
-                }`}
-              >
-                {focusTrackerError ?? "Focus session logged."}
-              </p>
             )}
           </div>
 
-          <div className="hidden">
-            <input
-              type="text"
-              value={customFocusTagInput}
-              onChange={(event) => onCustomFocusTagInputChange(event.target.value)}
-            />
-            <input
-              type="number"
-              value={customFocusMinutesInput}
-              onChange={(event) => onCustomFocusMinutesInputChange(event.target.value)}
-            />
-            <input
-              type="time"
-              value={customFocusTimeInput}
-              onChange={(event) => onCustomFocusTimeInputChange(event.target.value)}
-            />
-            <button type="button" onClick={onAddCustomFocusEntry}>
-              {manualFocusLogTitle}
-            </button>
-            <span>{quickCaptureTitle}</span>
-            <span>{liveFocusLabel}</span>
-            <span>{caloriesRemainingLabel}</span>
-          </div>
-        </section>
-
-        <section className="landing-module-glass overflow-hidden rounded-2xl border px-3 py-3">
-          <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
-          <div className="mt-2 grid grid-cols-3 gap-1.5">
-            {quickCaptures.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={item.onClick}
-                className="flex flex-col items-center gap-1 rounded-lg border border-neutral-200 px-1.5 py-2 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
-              >
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
-                  {item.icon}
-                </span>
-                <span className="text-[11px] font-medium text-foreground">{item.label}</span>
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => setSleepFormOpen((prev) => !prev)}
-              className={`flex flex-col items-center gap-1 rounded-lg border px-1.5 py-2 transition-colors ${
-                sleepFormOpen
-                  ? "border-[#DDB691] bg-[#FBF4EC] dark:border-[#6A4A33] dark:bg-[#241a14]"
-                  : "border-neutral-200 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+          {(focusTrackerError || pomodoroJustLogged) && (
+            <p
+              className={`text-center text-sm ${
+                focusTrackerError
+                  ? "text-red-600 dark:text-red-400"
+                  : "text-emerald-600 dark:text-emerald-400"
               }`}
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-                  <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
-                </svg>
-              </span>
-              <span className="text-[11px] font-medium text-foreground">Sleep</span>
-            </button>
-          </div>
-
-          {sleepFormOpen && (
-            <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-900">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                Log last night
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                    Sleep (hours)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.5"
-                    min="0.5"
-                    max="24"
-                    value={sleepHoursInput}
-                    onChange={(e) => setSleepHoursInput(e.target.value)}
-                    className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                    HRV (ms, optional)
-                  </label>
-                  <input
-                    type="number"
-                    step="1"
-                    min="1"
-                    max="300"
-                    placeholder="—"
-                    value={hrvInput}
-                    onChange={(e) => setHrvInput(e.target.value)}
-                    className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
-                  />
-                </div>
-              </div>
-              <button
-                type="button"
-                disabled={sleepSaving}
-                onClick={handleSaveSleep}
-                className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-              >
-                {sleepSaving ? "Saving…" : "Log last night"}
-              </button>
-              {lastSleep && (
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                  Last: {lastSleep.sleepHours}h sleep
-                  {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
-                  {" · "}
-                  {lastSleep.dayKey}
-                </p>
-              )}
-            </div>
+              {focusTrackerError ?? "Focus session logged."}
+            </p>
           )}
-        </section>
-      </div>
+        </div>
+
+        <div className="hidden">
+          <input
+            type="text"
+            value={customFocusTagInput}
+            onChange={(event) => onCustomFocusTagInputChange(event.target.value)}
+          />
+          <input
+            type="number"
+            value={customFocusMinutesInput}
+            onChange={(event) => onCustomFocusMinutesInputChange(event.target.value)}
+          />
+          <input
+            type="time"
+            value={customFocusTimeInput}
+            onChange={(event) => onCustomFocusTimeInputChange(event.target.value)}
+          />
+          <button type="button" onClick={onAddCustomFocusEntry}>
+            {manualFocusLogTitle}
+          </button>
+          <span>{quickCaptureTitle}</span>
+          <span>{liveFocusLabel}</span>
+          <span>{caloriesRemainingLabel}</span>
+        </div>
+      </section>
 
       {/* 4. Thought of the Day banner */}
       {thoughtOfTheDay && (
@@ -1103,13 +1165,13 @@ export function LandingShell({
               </div>
 
               <div className="mt-3 grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyMacrosOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 bg-white/70 dark:bg-neutral-900/70 text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
                   <HighchartsReact highcharts={Highcharts} options={weeklyFocusOpts} />
                 </button>
               </div>

@@ -470,6 +470,59 @@ html {
   box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
+@keyframes voice-wave {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.22;
+  }
+  52% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.voice-button-wave {
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  opacity: 0;
+  pointer-events: none;
+  animation: voice-wave 3s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-button-wave {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.voice-fab-wave {
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, white 78%, var(--accent) 22%);
+  box-shadow: 0 0 0 0 color-mix(in srgb, white 16%, var(--accent) 84%);
+  opacity: 0;
+  pointer-events: none;
+  animation: voice-wave 3s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-fab-wave {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* Claude.ai-inspired light mode: warm cream, soft contrast */
 :root {
   --background: #FBF8F4;
@@ -912,7 +965,7 @@ html::before {
   background: transparent;
 }
 [data-background="default"]:not(.dark) .glass-chrome {
-  background: rgba(251, 248, 244, 0.55);
+  background: rgba(251, 248, 244, 0.78);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -920,7 +973,7 @@ html::before {
   background: transparent;
 }
 [data-background="default"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.5);
+  background: rgba(10, 10, 10, 0.62);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -928,7 +981,7 @@ html::before {
   background: transparent;
 }
 [data-background="air"]:not(.dark) .glass-chrome {
-  background: rgba(254, 253, 244, 0.55);
+  background: rgba(254, 253, 244, 0.78);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -936,7 +989,7 @@ html::before {
   background: transparent;
 }
 [data-background="air"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.5);
+  background: rgba(10, 10, 10, 0.62);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -967,7 +1020,7 @@ html::before {
   background: transparent;
 }
 [data-background="water"]:not(.dark) .glass-chrome {
-  background: rgba(240, 246, 250, 0.55);
+  background: rgba(240, 246, 250, 0.78);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -975,7 +1028,7 @@ html::before {
   background: transparent;
 }
 [data-background="water"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.5);
+  background: rgba(10, 10, 10, 0.62);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -1006,7 +1059,7 @@ html::before {
   background: transparent;
 }
 [data-background="earth"]:not(.dark) .glass-chrome {
-  background: rgba(242, 247, 242, 0.55);
+  background: rgba(242, 247, 242, 0.78);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -1014,7 +1067,7 @@ html::before {
   background: transparent;
 }
 [data-background="earth"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.5);
+  background: rgba(10, 10, 10, 0.62);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -1045,7 +1098,7 @@ html::before {
   background: transparent;
 }
 [data-background="fire"]:not(.dark) .glass-chrome {
-  background: rgba(250, 245, 240, 0.55);
+  background: rgba(250, 245, 240, 0.78);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
@@ -1053,30 +1106,50 @@ html::before {
   background: transparent;
 }
 [data-background="fire"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.5);
+  background: rgba(10, 10, 10, 0.62);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
 
-/* Landing modules: stronger frosted glass so wallpapers stay visible but content remains legible. */
+/*
+ * Main chat / landing surface: busier wallpapers need clearer edges and secondary text
+ * that reads closer to body copy (Tailwind neutral-* map to theme CSS variables).
+ */
+.chat-bg-area .glass-chrome {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+.dark .chat-bg-area .glass-chrome {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+.chat-bg-area .text-neutral-400 {
+  color: var(--neutral-600);
+}
+.chat-bg-area .text-neutral-500 {
+  color: var(--neutral-700);
+}
+.dark .chat-bg-area .text-neutral-400 {
+  color: var(--neutral-400);
+}
+.dark .chat-bg-area .text-neutral-500 {
+  color: var(--neutral-300);
+}
+
+/* Landing modules: translucent frosted glass matching Focus Canvas / Caffeine cards. */
 .landing-module-glass {
-  background: rgba(255, 255, 255, 0.64);
-  border-color: rgba(255, 255, 255, 0.72);
-  box-shadow:
-    0 10px 36px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.32);
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  background: rgba(255, 255, 255, 0.50);
+  border-color: rgba(255, 255, 255, 0.60);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
 }
 
 :root.dark .landing-module-glass {
-  background: rgba(12, 12, 12, 0.34);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(24px) saturate(1.45);
-  -webkit-backdrop-filter: blur(24px) saturate(1.45);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
 }
 
 /* Dark mode: star shimmer */
@@ -1131,22 +1204,58 @@ html::before {
   height: 0;
 }
 
+/* ── Score Ring ── */
+.score-ring-arc {
+  animation: score-ring-fill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes score-ring-fill {
+  from {
+    stroke-dashoffset: var(--ring-circumference, 440);
+  }
+}
+
+/* ── Sleep section dark theme ── */
+.sleep-section-dark {
+  background: linear-gradient(
+    170deg,
+    #0d0a1a 0%,
+    #151028 35%,
+    #1a1035 70%,
+    #120e22 100%
+  );
+  border: 1px solid rgba(124, 92, 191, 0.12);
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(167, 139, 250, 0.06);
+}
+
+.sleep-section-dark * {
+  --foreground: #f0ecf7;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Global interactive hover tint: keep it subtle and warm (app-wide). */
+  /* Global interactive hover tint: translucent warm glass (app-wide). */
   .hover\:bg-neutral-50:hover,
   .hover\:bg-neutral-100:hover,
-  .hover\:bg-neutral-200:hover {
-    background-color: rgb(255 247 237) !important; /* orange-50 */
+  .hover\:bg-neutral-200:hover,
+  .hover\:bg-white:hover {
+    background-color: rgba(255, 247, 237, 0.45) !important;
+    backdrop-filter: blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
   }
 
   .dark .dark\:hover\:bg-neutral-700:hover,
   .dark .dark\:hover\:bg-neutral-700\/70:hover,
+  .dark .dark\:hover\:bg-neutral-700\/80:hover,
   .dark .dark\:hover\:bg-neutral-800:hover,
   .dark .dark\:hover\:bg-neutral-800\/70:hover {
-    background-color: rgb(124 45 18 / 0.2) !important; /* subtle orange tint */
+    background-color: rgba(124, 45, 18, 0.15) !important;
+    backdrop-filter: blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
   }
 }

@@ -30,7 +30,9 @@ import { ChatComposer } from "@/components/ChatComposer";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
+import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
 import { UserMessageContent } from "@/components/UserMessageContent";
+import { useTheme } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useUserType } from "@/components/UserTypeProvider";
@@ -58,6 +60,7 @@ const HABIT_BUCKET_SHORT_LABELS: Record<HabitBucket, string> = {
   connection: "Connection",
 };
 import { formatHabitIntendedPeriod, getHabitIntendedYearOptions } from "@/lib/habit-intended";
+import { HabitContributionGrid } from "@/components/HabitContributionGrid";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
@@ -393,6 +396,7 @@ interface HabitItem {
   researchUpdatedAt?: string;
   isHeroHabit?: boolean;
   calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
+  reminder?: { enabled: boolean; hour: number; minute: number; days: number[] } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -2296,10 +2300,16 @@ const DEFAULT_NUTRITION_FAT_LOSS_METHOD = "calorie_counting" as const;
 const DEFAULT_FASTING_EATING_WINDOW_HOURS = 8;
 const DEFAULT_DIET_BASED_TEMPLATE = "balanced" as const;
 
-function chartBaseOptions(): Highcharts.Options {
+function chartBaseOptions(isDark = false): Highcharts.Options {
+  const labelColor = isDark ? "#d1d5db" : "#737373";
+  const legendColor = isDark ? "#e5e7eb" : "#737373";
+  const axisColor = isDark ? "#4b5563" : "#e5e5e5";
+  const gridColor = isDark ? "rgba(255,255,255,0.14)" : "#e5e5e5";
+  const chartBackground = isDark ? "rgba(10, 10, 10, 0.94)" : "transparent";
   return {
     chart: {
-      backgroundColor: "transparent",
+      backgroundColor: chartBackground,
+      plotBackgroundColor: chartBackground,
       style: { fontFamily: "Inter, system-ui, sans-serif" },
     },
     credits: { enabled: false },
@@ -2313,17 +2323,17 @@ function chartBaseOptions(): Highcharts.Options {
       symbolWidth: 12,
       symbolHeight: 10,
       itemDistance: 10,
-      itemStyle: { color: "#737373", fontSize: "11px" },
+      itemStyle: { color: legendColor, fontSize: "11px" },
     },
     xAxis: {
-      labels: { style: { color: "#737373", fontSize: "11px" } },
-      lineColor: "#e5e5e5",
-      tickColor: "#e5e5e5",
+      labels: { style: { color: labelColor, fontSize: "11px" } },
+      lineColor: axisColor,
+      tickColor: axisColor,
     },
     yAxis: {
       title: { text: undefined },
-      gridLineColor: "#e5e5e5",
-      labels: { style: { color: "#737373", fontSize: "11px" } },
+      gridLineColor: gridColor,
+      labels: { style: { color: labelColor, fontSize: "11px" } },
     },
     tooltip: {
       backgroundColor: "#111827",
@@ -3486,6 +3496,8 @@ export default function ChatPage() {
   const router = useRouter();
   const { userId } = useAuth();
   const { user } = useUser();
+  const { theme } = useTheme();
+  const chartDark = theme === "dark";
   const { language, setLanguage, showLanguageChangeBanner, dismissLanguageChangeBanner } = useLanguage();
   const { userType, setUserType, showUserTypeChangeBanner, dismissUserTypeChangeBanner } = useUserType();
   const landingTranslations = getLandingTranslations(language);
@@ -4469,6 +4481,7 @@ export default function ChatPage() {
   const [calorieTrackerEntryDate, setCalorieTrackerEntryDate] = useState(() => getTodayDateInputValue());
   const calorieTrackerImageInputRef = useRef<HTMLInputElement | null>(null);
   const calorieTrackerUploadInputRef = useRef<HTMLInputElement | null>(null);
+  const pendingCalorieTrackerFocusRef = useRef(false);
   const [calorieTrackerImageAnalyses, setCalorieTrackerImageAnalyses] = useState<
     Array<{ id: string; previewUrl: string; extractedText: string }>
   >([]);
@@ -5059,6 +5072,18 @@ export default function ChatPage() {
     calorieTrackerStep,
     fetchCalorieTrackerSuggestions,
   ]);
+
+  useEffect(() => {
+    if (!calorieTrackerModalOpen || calorieTrackerStep !== "input") return;
+    if (!pendingCalorieTrackerFocusRef.current) return;
+    pendingCalorieTrackerFocusRef.current = false;
+    const timer = setTimeout(() => {
+      const modal = document.querySelector("[data-calorie-tracker-modal]");
+      const textarea = modal?.querySelector("textarea");
+      textarea?.focus();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [calorieTrackerModalOpen, calorieTrackerStep]);
 
   const handleCalorieTrackerImageSelected = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -7920,6 +7945,8 @@ export default function ChatPage() {
   const [habitResearchLoading, setHabitResearchLoading] = useState(false);
   const [habitCalorieEstimating, setHabitCalorieEstimating] = useState(false);
   const [habitResearchError, setHabitResearchError] = useState<string | null>(null);
+  const [habitDetailCompletionDates, setHabitDetailCompletionDates] = useState<string[]>([]);
+  const [habitReminderSaving, setHabitReminderSaving] = useState(false);
   const [habitDetailEdit, setHabitDetailEdit] = useState<{
     name: string;
     description: string;
@@ -9720,26 +9747,26 @@ export default function ChatPage() {
   }, [thoughtOfTheDay, customConcepts, openConceptDetail]);
 
   const weeklyCaloriesChartOptions = useMemo<Highcharts.Options>(() => {
-    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    if (!weeklySummaryResult) return { ...chartBaseOptions(chartDark) };
     const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
     return {
-      ...chartBaseOptions(),
-      chart: { ...chartBaseOptions().chart, type: "column", height: 320 },
+      ...chartBaseOptions(chartDark),
+      chart: { ...chartBaseOptions(chartDark).chart, type: "column", height: 320 },
       title: {
         text: getLandingTranslations(language).weeklySummaryCaloriesHeading,
         align: "left",
-        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+        style: { color: chartDark ? "#f3f4f6" : "#111827", fontSize: "14px", fontWeight: "600" },
       },
       xAxis: {
-        ...chartBaseOptions().xAxis,
+        ...chartBaseOptions(chartDark).xAxis,
         categories,
       },
       yAxis: {
-        ...chartBaseOptions().yAxis,
+        ...chartBaseOptions(chartDark).yAxis,
         allowDecimals: false,
       },
       plotOptions: {
-        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12 },
+        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12, borderWidth: 0 },
       },
       series: [
         {
@@ -9768,7 +9795,7 @@ export default function ChatPage() {
             enabled: true,
             align: "left",
             format: `Target: ${weeklySummaryResult.caloriesTargetPerDay.toLocaleString()} cal`,
-            style: { color: "#ef4444", fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            style: { color: "#ef4444", fontSize: "9px", fontWeight: "600", textOutline: chartDark ? "1px rgba(0,0,0,0.75)" : "2px white" },
             y: -6,
             x: 0,
             crop: false,
@@ -9778,29 +9805,29 @@ export default function ChatPage() {
         },
       ],
     };
-  }, [language, weeklySummaryResult]);
+  }, [chartDark, language, weeklySummaryResult]);
 
   const weeklyMacrosChartOptions = useMemo<Highcharts.Options>(() => {
-    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    if (!weeklySummaryResult) return { ...chartBaseOptions(chartDark) };
     const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
     return {
-      ...chartBaseOptions(),
-      chart: { ...chartBaseOptions().chart, type: "column", height: 320 },
+      ...chartBaseOptions(chartDark),
+      chart: { ...chartBaseOptions(chartDark).chart, type: "column", height: 320 },
       title: {
         text: getLandingTranslations(language).weeklySummaryMacrosHeading,
         align: "left",
-        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+        style: { color: chartDark ? "#f3f4f6" : "#111827", fontSize: "14px", fontWeight: "600" },
       },
       xAxis: {
-        ...chartBaseOptions().xAxis,
+        ...chartBaseOptions(chartDark).xAxis,
         categories,
       },
       yAxis: {
-        ...chartBaseOptions().yAxis,
+        ...chartBaseOptions(chartDark).yAxis,
         allowDecimals: false,
       },
       plotOptions: {
-        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12 },
+        column: { borderRadius: 4, pointPadding: 0.08, groupPadding: 0.12, borderWidth: 0 },
       },
       series: [
         {
@@ -9835,7 +9862,7 @@ export default function ChatPage() {
             enabled: true,
             align: "left",
             format: `Carbs: ${nutritionGoals.carbsGrams}g`,
-            style: { color: "#6366f1", fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            style: { color: "#6366f1", fontSize: "9px", fontWeight: "600", textOutline: chartDark ? "1px rgba(0,0,0,0.75)" : "2px white" },
             y: -6,
             x: 0,
             crop: false,
@@ -9857,7 +9884,7 @@ export default function ChatPage() {
             enabled: true,
             align: "left",
             format: `Protein: ${nutritionGoals.proteinGrams}g`,
-            style: { color: "#db2777", fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            style: { color: "#db2777", fontSize: "9px", fontWeight: "600", textOutline: chartDark ? "1px rgba(0,0,0,0.75)" : "2px white" },
             y: -6,
             x: 0,
             crop: false,
@@ -9879,7 +9906,7 @@ export default function ChatPage() {
             enabled: true,
             align: "left",
             format: `Fat: ${nutritionGoals.fatGrams}g`,
-            style: { color: "#ea580c", fontSize: "9px", fontWeight: "600", textOutline: "2px white" },
+            style: { color: "#ea580c", fontSize: "9px", fontWeight: "600", textOutline: chartDark ? "1px rgba(0,0,0,0.75)" : "2px white" },
             y: -6,
             x: 0,
             crop: false,
@@ -9889,26 +9916,26 @@ export default function ChatPage() {
         },
       ],
     };
-  }, [language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
+  }, [chartDark, language, nutritionGoals.carbsGrams, nutritionGoals.fatGrams, nutritionGoals.proteinGrams, weeklySummaryResult]);
 
   const weeklyFocusChartOptions = useMemo<Highcharts.Options>(() => {
-    if (!weeklySummaryResult) return { ...chartBaseOptions() };
+    if (!weeklySummaryResult) return { ...chartBaseOptions(chartDark) };
     const categories = weeklySummaryResult.rows.map((row) => `${row.weekdayLabel} ${row.monthDayLabel}`);
     return {
-      ...chartBaseOptions(),
-      chart: { ...chartBaseOptions().chart, type: "line", height: 300 },
+      ...chartBaseOptions(chartDark),
+      chart: { ...chartBaseOptions(chartDark).chart, type: "line", height: 300 },
       title: {
         text: "Focus Time",
         align: "left",
-        style: { color: "#111827", fontSize: "14px", fontWeight: "600" },
+        style: { color: chartDark ? "#f3f4f6" : "#111827", fontSize: "14px", fontWeight: "600" },
       },
       xAxis: {
         categories,
-        labels: { style: { color: "#6B7280", fontSize: "11px" } },
+        labels: { style: { color: chartDark ? "#d1d5db" : "#6B7280", fontSize: "11px" } },
       },
       yAxis: {
-        title: { text: "Minutes", style: { color: "#6B7280", fontSize: "11px" } },
-        labels: { style: { color: "#6B7280", fontSize: "11px" } },
+        title: { text: "Minutes", style: { color: chartDark ? "#d1d5db" : "#6B7280", fontSize: "11px" } },
+        labels: { style: { color: chartDark ? "#d1d5db" : "#6B7280", fontSize: "11px" } },
         min: 0,
       },
       tooltip: {
@@ -9927,7 +9954,7 @@ export default function ChatPage() {
       ],
       legend: { enabled: false },
     };
-  }, [weeklySummaryResult]);
+  }, [chartDark, weeklySummaryResult]);
 
   const weightTrackerCurrentKg = useMemo(
     () => (weightTrackerEntries.length > 0 ? weightTrackerEntries[0]!.weightKg : null),
@@ -10349,6 +10376,26 @@ export default function ChatPage() {
     setHabitResearchError(null);
     setHabitResearchLoading(false);
   }, [habitDetailModal?._id]);
+
+  useEffect(() => {
+    if (!habitDetailModal?._id || isAnonymous) {
+      setHabitDetailCompletionDates([]);
+      return;
+    }
+    const hid = habitDetailModal._id;
+    const today = new Date();
+    const from = new Date(today);
+    from.setDate(today.getDate() - 182);
+    const fmt = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    fetch(`/api/me/habits/completions?from=${fmt(from)}&to=${fmt(today)}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: Array<{ habitId: string; dateKey: string }>) => {
+        if (!Array.isArray(data)) { setHabitDetailCompletionDates([]); return; }
+        setHabitDetailCompletionDates(data.filter((c) => c.habitId === hid).map((c) => c.dateKey));
+      })
+      .catch(() => setHabitDetailCompletionDates([]));
+  }, [habitDetailModal?._id, isAnonymous]);
 
   const habitsFiltered = useMemo(() => {
     if (habitListFilterMonth === null && habitListFilterYear === null) return habits;
@@ -11306,7 +11353,7 @@ export default function ChatPage() {
                 className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
               />
             </span>
-            <span className="whitespace-nowrap">f*** my life → fix my life</span>
+            <BrandTaglineTypewriter className="whitespace-nowrap" />
             <span
               aria-hidden
               className={`shrink-0 text-sm transition-all duration-300 ${
@@ -11703,7 +11750,7 @@ export default function ChatPage() {
                   className={`hidden rounded-sm dark:block ${brandLogoParty ? "animate-bounce" : ""}`}
                 />
               </span>
-              <span className="whitespace-nowrap">f*** my life → fix my life</span>
+              <BrandTaglineTypewriter className="whitespace-nowrap" />
               <span
                 aria-hidden
                 className={`text-sm transition-all duration-300 ${
@@ -14065,6 +14112,29 @@ export default function ChatPage() {
                         customFocusMinutesInput={customFocusMinutesInput}
                         customFocusTimeInput={customFocusTimeInput}
                         onOpenNutrition={() => setNutritionDayViewModalOpen(true)}
+                        onSearchFood={() => {
+                          setSelectedLandingJournalChip("nutrition");
+                          setCalorieTrackerStep("choose");
+                          setCalorieTrackerModalOpen(true);
+                        }}
+                        onCaptureFood={() => {
+                          setSelectedLandingJournalChip("nutrition");
+                          setCalorieTrackerStep("input");
+                          setCalorieTrackerModalOpen(true);
+                          void fetchCalorieTrackerFrequentMeals();
+                          requestAnimationFrame(() => {
+                            setTimeout(() => {
+                              calorieTrackerImageInputRef.current?.click();
+                            }, 120);
+                          });
+                        }}
+                        onDescribeFood={() => {
+                          setSelectedLandingJournalChip("nutrition");
+                          setCalorieTrackerStep("input");
+                          setCalorieTrackerModalOpen(true);
+                          void fetchCalorieTrackerFrequentMeals();
+                          pendingCalorieTrackerFocusRef.current = true;
+                        }}
                         onPomodoroCustomMinutesInputChange={setPomodoroCustomMinutesInput}
                         onApplyCustomPomodoroMinutes={applyCustomPomodoroMinutes}
                         onSelectPomodoroDuration={setPomodoroDurationMinutes}
@@ -17662,7 +17732,7 @@ export default function ChatPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 p-3 bg-white/70 dark:bg-[#0f0f10]">
                     <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesChartOptions} />
                     <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
                       <p className="text-neutral-600 dark:text-neutral-400">
@@ -17685,7 +17755,7 @@ export default function ChatPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 p-3 bg-white/70 dark:bg-[#0f0f10]">
                     <HighchartsReact highcharts={Highcharts} options={weeklyMacrosChartOptions} />
                     <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                       Dashed lines indicate daily macro targets.
@@ -17706,7 +17776,7 @@ export default function ChatPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 bg-white/70 dark:bg-neutral-900/70">
+                  <div className="rounded-2xl border border-neutral-200 dark:border-neutral-600 p-3 bg-white/70 dark:bg-[#0f0f10]">
                     <HighchartsReact highcharts={Highcharts} options={weeklyFocusChartOptions} />
                     <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                       <p className="text-neutral-600 dark:text-neutral-400">
@@ -18403,6 +18473,7 @@ export default function ChatPage() {
           aria-label="Calorie tracker"
         >
           <div
+            data-calorie-tracker-modal
             className="relative mt-3 sm:mt-0 rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[92dvh] sm:max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
@@ -22270,8 +22341,8 @@ export default function ChatPage() {
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  <div className="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-700 dark:bg-neutral-800/40">
-                    <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+                  <div className="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-600 dark:bg-neutral-950/70">
+                    <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
                       Find a new habit
                     </p>
                     <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
@@ -22286,8 +22357,8 @@ export default function ChatPage() {
                           }
                           className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
                             habitCreateDraft.bucket === b
-                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-900/40 dark:text-neutral-300 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
                           }`}
                         >
                           <span className="whitespace-nowrap">{HABIT_BUCKET_SHORT_LABELS[b]}</span>
@@ -22687,8 +22758,127 @@ export default function ChatPage() {
                         : getUiTranslations(language).habitBucketOther}
                     </span>
                   </div>
-                  <div>
+                  <div className="rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+                      Consistency
+                    </p>
+                    <HabitContributionGrid completionDates={habitDetailCompletionDates} />
+                  </div>
+                    <div>
                     <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
+                  </div>
+                  {/* Reminder */}
+                  <div className="rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+                        Reminder
+                      </p>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={habitDetailModal.reminder?.enabled ?? false}
+                        onClick={async () => {
+                          if (habitReminderSaving) return;
+                          setHabitReminderSaving(true);
+                          const prev = habitDetailModal.reminder ?? { enabled: false, hour: 9, minute: 0, days: [1, 2, 3, 4, 5] };
+                          const next = { ...prev, enabled: !prev.enabled };
+                          try {
+                            const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ reminder: next }),
+                            });
+                            if (res.ok) {
+                              const updated = await res.json();
+                              setHabits((p) => p.map((h) => (h._id === habitDetailModal._id ? updated : h)));
+                              setHabitDetailModal(updated);
+                            }
+                          } catch { /* ignore */ } finally { setHabitReminderSaving(false); }
+                        }}
+                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
+                          habitDetailModal.reminder?.enabled ? "bg-[#5A9E8A]" : "bg-neutral-300 dark:bg-neutral-600"
+                        }`}
+                      >
+                        <span className={`pointer-events-none inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition ${
+                          habitDetailModal.reminder?.enabled ? "translate-x-[1.1rem]" : "translate-x-0.5"
+                        }`} />
+                      </button>
+                    </div>
+                    {habitDetailModal.reminder?.enabled && (
+                      <div className="mt-3 space-y-3">
+                        <div className="flex items-center gap-3">
+                          <label className="text-xs font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
+                            Time
+                          </label>
+                          <input
+                            type="time"
+                            value={`${String(habitDetailModal.reminder.hour).padStart(2, "0")}:${String(habitDetailModal.reminder.minute).padStart(2, "0")}`}
+                            onChange={async (e) => {
+                              const [h, m] = e.target.value.split(":").map(Number);
+                              if (isNaN(h) || isNaN(m)) return;
+                              setHabitReminderSaving(true);
+                              const next = { ...habitDetailModal.reminder!, hour: h, minute: m };
+                              try {
+                                const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                                  method: "PATCH",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ reminder: next }),
+                                });
+                                if (res.ok) {
+                                  const updated = await res.json();
+                                  setHabits((p) => p.map((hb) => (hb._id === habitDetailModal._id ? updated : hb)));
+                                  setHabitDetailModal(updated);
+                                }
+                              } catch { /* ignore */ } finally { setHabitReminderSaving(false); }
+                            }}
+                            className="rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs dark:border-neutral-700 dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                          />
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <label className="text-xs font-medium text-neutral-600 dark:text-neutral-300 shrink-0">
+                            Days
+                          </label>
+                          <div className="flex gap-1">
+                            {WEEKDAY_SHORT.map((wd) => {
+                              const active = (habitDetailModal.reminder?.days ?? []).includes(wd.day);
+                              return (
+                                <button
+                                  key={wd.day}
+                                  type="button"
+                                  onClick={async () => {
+                                    setHabitReminderSaving(true);
+                                    const prev = habitDetailModal.reminder!;
+                                    const days = active
+                                      ? prev.days.filter((d) => d !== wd.day)
+                                      : [...prev.days, wd.day].sort((a, b) => a - b);
+                                    const next = { ...prev, days };
+                                    try {
+                                      const res = await fetch(`/api/me/habits/${habitDetailModal._id}`, {
+                                        method: "PATCH",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ reminder: next }),
+                                      });
+                                      if (res.ok) {
+                                        const updated = await res.json();
+                                        setHabits((p) => p.map((hb) => (hb._id === habitDetailModal._id ? updated : hb)));
+                                        setHabitDetailModal(updated);
+                                      }
+                                    } catch { /* ignore */ } finally { setHabitReminderSaving(false); }
+                                  }}
+                                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-medium transition-colors ${
+                                    active
+                                      ? "bg-[#5A9E8A] text-white"
+                                      : "bg-neutral-200/60 text-neutral-500 hover:bg-neutral-300 dark:bg-neutral-700/40 dark:text-neutral-400 dark:hover:bg-neutral-600"
+                                  }`}
+                                >
+                                  {wd.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   {habitDetailModal.calorieImpact && habitDetailModal.calorieImpact.calories > 0 ? (
                     <div className="flex items-center gap-2 rounded-lg border border-neutral-200/60 bg-neutral-50/50 px-3 py-2 dark:border-neutral-700/50 dark:bg-neutral-800/30">

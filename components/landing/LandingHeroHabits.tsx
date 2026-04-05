@@ -32,7 +32,7 @@ function buildWeekGrid(): string[] {
   const monday = new Date(today);
   monday.setDate(today.getDate() - dayOfWeek);
   const keys: string[] = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i <= dayOfWeek; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
     keys.push(formatDateKey(d));
@@ -77,7 +77,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
   const summaryStats = useMemo(() => {
     const total = habitStats.length;
     const doneToday = habitStats.filter((s) => s.doneToday).length;
-    const totalCells = total * 7;
+    const totalCells = total * dateGrid.length;
     const completedCells = habitStats.reduce((sum, s) => sum + s.doneThisWeek, 0);
     const weeklyRate = totalCells > 0 ? Math.round((completedCells / totalCells) * 100) : 0;
     return { doneToday, total, weeklyRate };
@@ -159,16 +159,16 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
         ))}
       </div>
 
-      {/* Desktop: full 7-day grid */}
-      <div className="hidden sm:block w-full">
-        <div className="mx-auto grid w-fit items-center gap-y-2.5" style={{ gridTemplateColumns: "max-content repeat(7, 36px)" }}>
+      {/* Desktop: week grid up to today */}
+      <div className="hidden sm:block w-full overflow-hidden">
+        <div className="grid w-full items-center gap-y-2.5" style={{ gridTemplateColumns: `minmax(0, 1fr) repeat(${dateGrid.length}, 36px)` }}>
           <div />
-          {DAY_LABELS.map((label, i) => (
+          {dateGrid.map((_dk, i) => (
             <div
               key={`dow-${i}`}
               className="text-center text-[10px] font-medium text-neutral-400 dark:text-neutral-500 select-none"
             >
-              {label}
+              {DAY_LABELS[i]}
             </div>
           ))}
 
@@ -177,7 +177,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
               <button
                 type="button"
                 onClick={() => onOpenHabit(habit._id)}
-                className="flex items-center gap-1.5 min-w-0 max-w-[14rem] pr-3 text-left group"
+                className="flex items-center gap-1.5 min-w-0 pr-3 text-left group"
               >
                 <span className="text-[13px] font-semibold text-neutral-800 dark:text-neutral-100 truncate group-hover:text-[#5A9E8A] transition-colors">
                   {habit.name}
