@@ -29,6 +29,7 @@ import {
 import { ChatComposer } from "@/components/ChatComposer";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
+import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJumpFab";
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
 import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
 import { UserMessageContent } from "@/components/UserMessageContent";
@@ -5938,12 +5939,6 @@ export default function ChatPage() {
     }
     return chips;
   }, [headerCalendarMonth]);
-  const openLandingHeaderCalendar = useCallback(() => {
-    setHeaderCalendarMonth(
-      new Date(selectedLandingDayDate.getFullYear(), selectedLandingDayDate.getMonth(), 1)
-    );
-    setHeaderCalendarOpen(true);
-  }, [selectedLandingDayDate]);
   const landingDateStripItems = useMemo(
     () =>
       landingCalendarDays.map(({ key, date }) => {
@@ -5971,16 +5966,6 @@ export default function ChatPage() {
       })),
     [openLandingJournalChip]
   );
-  const landingShellTitle = useMemo(() => {
-    if (headerCalendarLabel === "Today") return "Today dashboard";
-    return `${headerCalendarLabel} dashboard`;
-  }, [headerCalendarLabel]);
-  const landingShellSubtitle = useMemo(() => {
-    const count = selectedLandingDayActivityItems.length;
-    const activityLabel = count === 1 ? "activity" : "activities";
-    if (count === 0) return "A calmer landing surface for focus, journaling, mentors, and review.";
-    return `${count} ${activityLabel} synced into one shared dashboard surface.`;
-  }, [selectedLandingDayActivityItems.length]);
   const selectedLandingDayNutrition = useMemo(
     () =>
       summarizeNutritionForDay(
@@ -14311,14 +14296,11 @@ export default function ChatPage() {
                   <>
                 {!incognitoMode && (
                       <LandingShell
-                        dashboardEyebrow={landingTranslations.landingDashboardEyebrow}
-                        title={landingShellTitle}
-                        subtitle={landingShellSubtitle}
-                        selectedDateLabel={headerCalendarLabel}
+                        dashboardScrollRootRef={messagesScrollRef}
                         dateItems={landingDateStripItems}
                         dateStripLabel={landingTranslations.landingDateStripLabel}
                         dateStripHint={landingTranslations.landingDateStripHint}
-                        onOpenCalendar={openLandingHeaderCalendar}
+                        selectedDayLabel={headerCalendarLabel}
                         focusCanvasEyebrow={landingTranslations.landingFocusCanvasEyebrow}
                         focusCanvasTitle={landingTranslations.landingFocusCanvasTitle}
                         focusCanvasSubtitle={landingTranslations.landingFocusCanvasSubtitle}
@@ -14951,6 +14933,14 @@ export default function ChatPage() {
             </svg>
           </button>
         )}
+
+        {messages.length === 0 &&
+          !sessionLoading &&
+          !incognitoMode &&
+          !mentorJournalBridgePending &&
+          onboardingStep === null && (
+            <LandingDashboardJumpFab />
+          )}
 
         {/* Incognito disclaimer - shown when in incognito mode */}
         {incognitoMode && (

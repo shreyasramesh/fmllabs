@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -32,70 +32,9 @@ import type {
   LandingWeightPoint,
 } from "@/components/landing/types";
 
-const SCROLLSPY_SECTIONS = [
-  { id: "sec-focus", label: "Focus" },
-  { id: "sec-timeline", label: "Timeline" },
-  { id: "sec-summary", label: "Summary" },
-  { id: "sec-activity", label: "Activity" },
-  { id: "sec-caffeine", label: "Caffeine" },
-  { id: "sec-sleep", label: "Sleep" },
-  { id: "sec-mentor", label: "Mentor Hub" },
-] as const;
-
-function SectionPicker() {
-  const [activeId, setActiveId] = useState<string>(SCROLLSPY_SECTIONS[0].id);
-
-  useEffect(() => {
-    const els = SCROLLSPY_SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[];
-    if (els.length === 0) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let topmost: { id: string; top: number } | null = null;
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const rect = entry.boundingClientRect;
-            if (!topmost || rect.top < topmost.top) {
-              topmost = { id: entry.target.id, top: rect.top };
-            }
-          }
-        }
-        if (topmost) setActiveId(topmost.id);
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
-    );
-    for (const el of els) observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollTo = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
-
-  return (
-    <nav
-      className="flex items-center gap-1 overflow-x-auto scrollbar-none"
-      aria-label="Page sections"
-    >
-      {SCROLLSPY_SECTIONS.map((s) => {
-        const isActive = activeId === s.id;
-        return (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => scrollTo(s.id)}
-            className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
-              isActive
-                ? "bg-[#FBF4EC] text-[#7C522D] dark:bg-[#241a14] dark:text-[#D6A67E]"
-                : "text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:text-neutral-500 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
-            }`}
-          >
-            {s.label}
-          </button>
-        );
-      })}
-    </nav>
-  );
-}
+/** Scroll offset when jumping to #sec-* (sticky in-app chrome + safe area). */
+const SECTION_SCROLL_MARGIN =
+  "scroll-mt-[calc(6.5rem+env(safe-area-inset-top,0px))] sm:scroll-mt-[calc(5.5rem+env(safe-area-inset-top,0px))]";
 
 const WeightSparkline = React.memo(function WeightSparkline({
   points,
@@ -339,14 +278,11 @@ function ChevronRow({
 }
 
 interface LandingShellProps {
-  dashboardEyebrow: string;
-  title: string;
-  subtitle: string;
-  selectedDateLabel: string;
   dateItems: LandingDateItem[];
   dateStripLabel: string;
   dateStripHint: string;
-  onOpenCalendar: () => void;
+  /** Short label for the selected dashboard day (e.g. "Today", "Jan 4"). */
+  selectedDayLabel: string;
   focusCanvasEyebrow: string;
   focusCanvasTitle: string;
   focusCanvasSubtitle: string;
@@ -476,17 +412,15 @@ interface LandingShellProps {
   onToggleHabitCompletion: (habitId: string, dateKey: string) => void;
   onOpenHabitDetail: (habitId: string) => void;
   onFindNewHabit: (bucket: HabitBucket) => void;
+  /** Scroll container for the dashboard (e.g. chat messages column) — powers section scroll-spy. */
+  dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
 }
 
 export function LandingShell({
-  dashboardEyebrow,
-  title,
-  subtitle,
-  selectedDateLabel,
   dateItems,
   dateStripLabel,
   dateStripHint,
-  onOpenCalendar,
+  selectedDayLabel,
   focusCanvasEyebrow,
   focusCanvasTitle,
   focusCanvasSubtitle,
@@ -615,6 +549,7 @@ export function LandingShell({
   onToggleHabitCompletion,
   onOpenHabitDetail,
   onFindNewHabit,
+  dashboardScrollRootRef,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
@@ -636,6 +571,13 @@ export function LandingShell({
     if (rows.length === 0) return null;
     return rows.slice().sort((a, b) => b.id.localeCompare(a.id))[0]!;
   }, [sleepEntries, sleepEntryDayKey]);
+
+  const heroHabitsCompletedToday = useMemo(() => {
+    return heroHabits.filter((h) => {
+      const dates = heroHabitCompletions[h._id];
+      return dates != null && dates.includes(sleepEntryDayKey);
+    }).length;
+  }, [heroHabits, heroHabitCompletions, sleepEntryDayKey]);
 
   useEffect(() => {
     if (sleepForSelectedDay) {
@@ -784,55 +726,13 @@ export function LandingShell({
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
-      <section className="landing-module-glass sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
-                {dashboardEyebrow}
-              </p>
-              <SectionPicker />
-            </div>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
-              {title}
-            </h1>
-            <p className="mt-1 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
-              {subtitle}
-            </p>
-          </div>
-
-          <div className="flex flex-col items-stretch gap-3 sm:items-end">
-            <button
-              type="button"
-              onClick={onOpenCalendar}
-              className="inline-flex items-center justify-between gap-3 rounded-full border border-[#E9D5C2] bg-[#FBF4EC] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#F8EBDD] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#E8C3A0] dark:hover:bg-[#2B2019]"
-            >
-              <span>{selectedDateLabel}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-4 w-4"
-                aria-hidden
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <path d="M16 2v4" />
-                <path d="M8 2v4" />
-                <path d="M3 10h18" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
       {/* 1. Focus Canvas + Hero Habits + Quick Capture */}
-      <div id="sec-focus" className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
+      <div
+        id="sec-focus"
+        className={`${SECTION_SCROLL_MARGIN} flex flex-col gap-4 xl:flex-row xl:items-stretch`}
+      >
         {/* Left column: Nutrition */}
         <div className="min-w-0 xl:flex-1">
           <LandingFocusCanvas
@@ -846,6 +746,12 @@ export function LandingShell({
             nutrition={nutrition}
             nutritionGoals={nutritionGoals}
             weeklySummary={weeklySummary}
+            focusMinutes={focusSummaryMinutes}
+            focusSessions={focusSummarySessions}
+            heroHabitCount={heroHabits.length}
+            heroHabitsCompletedToday={heroHabitsCompletedToday}
+            sleepHours={sleepForSelectedDay?.sleepHours ?? null}
+            sleepScore={sleepForSelectedDay?.sleepScore ?? null}
             onOpenNutrition={onOpenNutrition}
             onSearchFood={onSearchFood}
             onCaptureFood={onCaptureFood}
@@ -904,7 +810,7 @@ export function LandingShell({
             {sleepFormOpen && (
               <div className="module-nested-muted mt-2 space-y-2 p-2.5">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  Sleep · {selectedDateLabel}
+                  Sleep · {selectedDayLabel}
                 </p>
                 <div className="grid grid-cols-3 gap-2">
                   <div>
@@ -1021,7 +927,7 @@ export function LandingShell({
       </ModuleCard>
 
       {/* 2. Timeline swim lanes — daily activity overview */}
-      <div id="sec-timeline">
+      <div id="sec-timeline" className={SECTION_SCROLL_MARGIN}>
         <LandingTimelineCard
           eyebrow={timelineEyebrow}
           dayLabel={timelineLabel}
@@ -1164,7 +1070,7 @@ export function LandingShell({
       )}
 
       {/* 5. Weekly Summary — full-width with inline charts */}
-      <div id="sec-summary">
+      <div id="sec-summary" className={SECTION_SCROLL_MARGIN}>
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
           {weeklySummary ? (
             <>
@@ -1289,7 +1195,7 @@ export function LandingShell({
           </div>
         </ModuleCard>
 
-        <div id="sec-activity">
+        <div id="sec-activity" className={SECTION_SCROLL_MARGIN}>
         <ModuleCard
           eyebrow="Activity"
           title={activityTitle}
@@ -1327,12 +1233,12 @@ export function LandingShell({
 
 
       {/* 6. Caffeine Decay Curve — reference chart */}
-      <div id="sec-caffeine">
+      <div id="sec-caffeine" className={SECTION_SCROLL_MARGIN}>
         <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
       </div>
 
       {/* 7. Sleep & Recovery — reference chart */}
-      <div id="sec-sleep">
+      <div id="sec-sleep" className={SECTION_SCROLL_MARGIN}>
         <LandingSleepRecoveryChart
           entries={sleepEntries}
           focusSuggestion={sleepFocusSuggestion}
@@ -1341,7 +1247,7 @@ export function LandingShell({
       </div>
 
       {/* 8. Mentor Hub — on-demand, lowest daily frequency */}
-      <div id="sec-mentor">
+      <div id="sec-mentor" className={SECTION_SCROLL_MARGIN}>
       <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
         <div className="grid gap-4 xl:grid-cols-2">
           {/* Left column: structured action groups */}
@@ -1500,6 +1406,18 @@ export function LandingShell({
           </div>
         </div>
       </ModuleCard>
+      </div>
+
+      <div className="border-t border-neutral-300/60 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4 dark:border-neutral-600/45 lg:hidden">
+        <button
+          type="button"
+          onClick={() => {
+            dashboardScrollRootRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="module-nested w-full py-2.5 text-center text-[12px] font-semibold text-neutral-800 dark:text-neutral-200"
+        >
+          Back to top
+        </button>
       </div>
 
     </div>

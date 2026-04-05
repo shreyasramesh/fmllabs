@@ -5,7 +5,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import { ScoreRing } from "@/components/landing/ScoreRing";
-import { computeNutritionScore } from "@/lib/nutrition-score";
+import { computeDayScore } from "@/lib/day-score";
 import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
@@ -28,6 +28,12 @@ interface LandingFocusCanvasProps {
   nutrition: LandingNutritionSummary;
   nutritionGoals: LandingNutritionGoals;
   weeklySummary: LandingWeeklySummaryPreview | null;
+  focusMinutes: number;
+  focusSessions: number;
+  heroHabitCount: number;
+  heroHabitsCompletedToday: number;
+  sleepHours: number | null;
+  sleepScore: number | null;
   onOpenNutrition: () => void;
   onSearchFood: () => void;
   onCaptureFood: () => void;
@@ -121,13 +127,32 @@ export function LandingFocusCanvas({
   nutrition,
   nutritionGoals,
   weeklySummary,
+  focusMinutes,
+  focusSessions,
+  heroHabitCount,
+  heroHabitsCompletedToday,
+  sleepHours,
+  sleepScore: sleepScoreProp,
   onOpenNutrition,
   onSearchFood,
   onCaptureFood,
   onDescribeFood,
 }: LandingFocusCanvasProps) {
   const caloriesConsumed = nutrition.caloriesFood;
-  const score = useMemo(() => computeNutritionScore(nutrition, nutritionGoals), [nutrition, nutritionGoals]);
+  const score = useMemo(
+    () =>
+      computeDayScore({
+        nutrition,
+        nutritionGoals,
+        focusMinutes,
+        focusSessions,
+        heroHabitCount,
+        heroHabitsCompletedToday,
+        sleepHours,
+        sleepScore: sleepScoreProp,
+      }),
+    [nutrition, nutritionGoals, focusMinutes, focusSessions, heroHabitCount, heroHabitsCompletedToday, sleepHours, sleepScoreProp],
+  );
 
   function makebar(
     key: string, label: string, current: number, target: number, unit: string,
@@ -252,11 +277,11 @@ export function LandingFocusCanvas({
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-400 dark:text-neutral-500">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
-                <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">Log food</span>
+                <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">Start logging</span>
               </div>
             </div>
             <p className="text-sm text-neutral-500 dark:text-neutral-400">
-              Log your first meal to see your score
+              Log food, focus, habits, or sleep to see your day score
             </p>
           </button>
         ) : (
@@ -269,13 +294,36 @@ export function LandingFocusCanvas({
             <div className="flex flex-wrap items-center justify-center gap-2">
               <ScorePill
                 icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                    <path d="M10 1a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 1zM5.05 3.05a.75.75 0 011.06 0l1.062 1.06a.75.75 0 11-1.06 1.06L5.05 4.11a.75.75 0 010-1.06zm9.9 0a.75.75 0 010 1.06l-1.06 1.06a.75.75 0 01-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM10 7a3 3 0 100 6 3 3 0 000-6zm-6.25 3a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H4.5a.75.75 0 01-.75-.75zm12 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5a.75.75 0 01-.75-.75zM5.05 16.95a.75.75 0 011.06 0l1.06-1.06a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06 0l-1.06-1.06zm9.9 0l-1.06-1.06a.75.75 0 011.06-1.06l1.06 1.06a.75.75 0 01-1.06 1.06z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+                    <path d="M12 23c-3.866 0-7-3.358-7-7.5 0-3.072 2.456-6.727 4.535-9.067A1.5 1.5 0 0 1 12 6.5c0 1-.5 2-1.5 3 2-1.5 3.5-4 4-6.5a1 1 0 0 1 1.735-.5C18.538 5.262 19 8.986 19 11.5c0 2.073-.493 4.14-1.692 5.69C15.87 19.195 14.085 21 12 23Z" />
                   </svg>
                 }
-                label="Macro Balance"
-                value={score.macroBalance}
-                color="#5A9E8A"
+                label="Nutrition"
+                value={score.nutritionScore}
+                color="#9A8872"
+              />
+              <ScorePill
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                    <path d="M18 20V6.5a2.5 2.5 0 0 0-5 0V20" />
+                    <path d="M2 20h20" />
+                    <path d="M6 20V9a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v11" />
+                  </svg>
+                }
+                label="Exercise"
+                value={score.exerciseScore}
+                color="#f97316"
+              />
+              <ScorePill
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                }
+                label="Focus"
+                value={score.focusScore}
+                color="#14b8a6"
               />
               <ScorePill
                 icon={
@@ -283,9 +331,19 @@ export function LandingFocusCanvas({
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
                   </svg>
                 }
-                label="Goal Adherence"
-                value={score.calorieAdherence}
-                color="#D49A42"
+                label="Habits"
+                value={score.habitsScore}
+                color="#5A9E8A"
+              />
+              <ScorePill
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                    <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
+                  </svg>
+                }
+                label="Sleep"
+                value={score.sleepScore}
+                color="#6366f1"
               />
             </div>
           </>

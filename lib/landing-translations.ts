@@ -149,7 +149,6 @@ export interface LandingTranslations {
   journalingTabLabel: string;
   deepThinkingTabLabel: string;
   landingSelectedDateLabel: string;
-  landingDashboardEyebrow: string;
   landingDateStripLabel: string;
   landingDateStripHint: string;
   landingFocusCanvasEyebrow: string;
@@ -347,7 +346,6 @@ const EN: LandingTranslations = {
   journalingTabLabel: "Journaling",
   deepThinkingTabLabel: "Deep Thinking",
   landingSelectedDateLabel: "Selected date",
-  landingDashboardEyebrow: "Dashboard",
   landingDateStripLabel: "Date strip",
   landingDateStripHint: "Tap a day to pivot the dashboard.",
   landingFocusCanvasEyebrow: "Focus Canvas",
