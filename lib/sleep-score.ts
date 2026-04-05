@@ -17,10 +17,13 @@ function scoreLabel(score: number): string {
 }
 
 /**
- * Compute a 0-100 sleep score from hours slept and optional HRV.
- * Optimal zone: 7-9 hours. Penalty for under- and over-sleeping.
+ * Compute a 0-100 sleep score. If a user-provided sleepScore exists, use it
+ * directly. Otherwise derive from hours slept and optional HRV.
  */
-export function computeSleepScore(sleepHours: number, hrvMs: number | null): SleepScoreResult {
+export function computeSleepScore(sleepHours: number, hrvMs: number | null, sleepScore?: number | null): SleepScoreResult {
+  if (sleepScore != null && sleepScore >= 1 && sleepScore <= 100) {
+    return { score: Math.round(sleepScore), label: scoreLabel(Math.round(sleepScore)) };
+  }
   let hoursScore: number;
   if (sleepHours >= 7 && sleepHours <= 9) {
     hoursScore = 100;

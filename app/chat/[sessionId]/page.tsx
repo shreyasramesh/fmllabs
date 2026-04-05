@@ -87,6 +87,7 @@ import {
   type ReminderType,
 } from "@/lib/reminder-settings";
 import { notifyPomodoroCompleted, scheduleCaffeineFocusNotification, syncNativeReminders } from "@/lib/native-reminders";
+import type { ReminderNotificationContext } from "@/lib/reminder-notification-context";
 import { ImportWizard } from "@/components/ImportWizard";
 import {
   playLlmResponseStartHaptic,
@@ -1087,7 +1088,7 @@ function MessageBubble({
                             }
                           }}
                         >
-                          <div className="px-3.5 py-2.5 flex flex-col items-start gap-2 border-b border-neutral-200/60 dark:border-white/10">
+                          <div className="flex flex-col items-start gap-2 border-b border-neutral-300/90 px-3.5 py-2.5 dark:border-neutral-600/60">
                             <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 shrink-0">
                               Context used
                             </span>
@@ -4373,7 +4374,7 @@ export default function ChatPage() {
       setSavedTranscripts([]);
       return;
     }
-    fetch("/api/me/transcripts", { cache: "no-store" })
+    fetch(`/api/me/transcripts?_t=${Date.now()}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
       .catch(() => setSavedTranscripts([]));
@@ -4584,6 +4585,10 @@ export default function ChatPage() {
   const [weeklySummaryWeekOffset, setWeeklySummaryWeekOffset] = useState(0);
   const [weeklySummaryLoading, setWeeklySummaryLoading] = useState(false);
   const [weeklySummaryError, setWeeklySummaryError] = useState<string | null>(null);
+  const [sleepInsightsModalOpen, setSleepInsightsModalOpen] = useState(false);
+  const [sleepInsightsLoading, setSleepInsightsLoading] = useState(false);
+  const [sleepInsightsMarkdown, setSleepInsightsMarkdown] = useState("");
+  const [sleepInsightsError, setSleepInsightsError] = useState<string | null>(null);
   const [nutritionDayViewModalOpen, setNutritionDayViewModalOpen] = useState(false);
   const [nutritionDayViewExpandedContributors, setNutritionDayViewExpandedContributors] = useState<
     Partial<Record<keyof NutritionFactsDaySummary, boolean>>
@@ -4713,9 +4718,26 @@ export default function ChatPage() {
     };
   } | null>(null);
   const [sleepEntries, setSleepEntries] = useState<
-    Array<{ sleepHours: number; hrvMs: number | null; dayKey: string }>
+    Array<{
+      id: string;
+      sleepHours: number;
+      hrvMs: number | null;
+      sleepScore: number | null;
+      dayKey: string;
+    }>
   >([]);
   const [sleepSaving, setSleepSaving] = useState(false);
+  const [sleepEntryEditModal, setSleepEntryEditModal] = useState<null | {
+    id: string;
+    dayKey: string;
+    sleepHours: number;
+    hrvMs: number | null;
+    sleepScore: number | null;
+  }>(null);
+  const [sleepEditSaving, setSleepEditSaving] = useState(false);
+  const [sleepEditHoursInput, setSleepEditHoursInput] = useState("7.5");
+  const [sleepEditHrvInput, setSleepEditHrvInput] = useState("");
+  const [sleepEditScoreInput, setSleepEditScoreInput] = useState("");
   const [weightTrackerModalOpen, setWeightTrackerModalOpen] = useState(false);
   const [weightTrackerLoading, setWeightTrackerLoading] = useState(false);
   const [weightTrackerSaving, setWeightTrackerSaving] = useState(false);
@@ -5752,13 +5774,13 @@ export default function ChatPage() {
         const hoursText = Number.isFinite(entry.sleepHours) ? `${entry.sleepHours}h` : "--";
         const hrvPart = entry.hrvMs != null && Number.isFinite(entry.hrvMs) ? `, HRV ${entry.hrvMs}ms` : "";
         return {
-          id: `sleep-${entry.dayKey}`,
+          id: entry.id ? `sleep-${entry.id}` : `sleep-${entry.dayKey}`,
           kind: "sleepEntry" as const,
           dayKey: entry.dayKey,
           title: `Sleep: ${hoursText}${hrvPart}`,
           sublabel: "Sleep",
           timestamp: date.getTime(),
-          entityId: entry.dayKey,
+          entityId: entry.id || entry.dayKey,
         };
       })
       .filter(isNonNull);
@@ -5990,6 +6012,7 @@ export default function ChatPage() {
       endMinute: number;
       label: string;
       color: string;
+      sleepEntryId?: string;
     }> = [];
     for (const item of selectedLandingDayActivityItems) {
       const date = new Date(item.timestamp);
@@ -6071,6 +6094,7 @@ export default function ChatPage() {
         endMinute: endMin,
         label: `Sleep (${entry.sleepHours}h${hrvPart})`,
         color: "#6366f1",
+        sleepEntryId: entry.id || undefined,
       });
     }
     return events.sort((a, b) => a.startMinute - b.startMinute);
@@ -8004,9 +8028,6 @@ export default function ChatPage() {
         if (cancelled) return;
         const nextReminderPreferences = normalizeReminderPreferences(data?.reminderPreferences);
         setReminderPreferences(nextReminderPreferences);
-        if (Capacitor.isNativePlatform()) {
-          void syncNativeReminders(nextReminderPreferences);
-        }
         const nextGoals = {
           caloriesTarget: normalizeGoalValue(
             data?.goalCaloriesTarget,
@@ -8099,6 +8120,64 @@ export default function ChatPage() {
     });
   }, []);
 
+  const reminderNotificationContext = useMemo((): ReminderNotificationContext | undefined => {
+    if (!userId || isAnonymous || incognitoMode) return undefined;
+    const todayKey = toDayKey(new Date());
+    const todayWeekday = new Date().getDay();
+    const hasWeightEntryToday = weightTrackerEntries.some((e) => {
+      const dk = dayKeyFromIso(e.recordedAt || e.createdAt);
+      return dk === todayKey;
+    });
+    let loggedNutritionToday = false;
+    let loggedExerciseToday = false;
+    let loggedGratitudeToday = false;
+    for (const t of journalEntriesSorted) {
+      const dk = journalEntryDayKey(t);
+      if (dk !== todayKey) continue;
+      if (t.journalCategory === "nutrition") loggedNutritionToday = true;
+      if (t.journalCategory === "exercise") loggedExerciseToday = true;
+      if (t.videoTitle === LANDING_JOURNAL_MODAL_TITLE.gratitude) loggedGratitudeToday = true;
+    }
+    const habitDoneToday: Record<string, boolean> = {};
+    for (const h of habits) {
+      const dates = habitCompletions[h._id] ?? [];
+      habitDoneToday[h._id] = dates.includes(todayKey);
+    }
+    const habitsWithReminders = habits
+      .filter((h) => h.reminder?.enabled)
+      .map((h) => ({
+        id: h._id,
+        name: h.name,
+        reminder: h.reminder!,
+      }));
+    return {
+      todayWeekday,
+      hasWeightEntryToday,
+      loggedNutritionToday,
+      loggedExerciseToday,
+      loggedGratitudeToday,
+      habits: habitsWithReminders.length > 0 ? habitsWithReminders : undefined,
+      habitDoneToday,
+    };
+  }, [
+    userId,
+    isAnonymous,
+    incognitoMode,
+    weightTrackerEntries,
+    journalEntriesSorted,
+    habits,
+    habitCompletions,
+  ]);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    if (!userId || isAnonymous || incognitoMode) return;
+    const timer = window.setTimeout(() => {
+      void syncNativeReminders(reminderPreferences, reminderNotificationContext);
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [reminderPreferences, reminderNotificationContext, userId, isAnonymous, incognitoMode]);
+
   const saveReminderPreferences = useCallback(async () => {
     if (!userId) {
       setReminderSaveState({
@@ -8124,7 +8203,7 @@ export default function ChatPage() {
       }
       setReminderPreferences(payload);
 
-      const nativeSync = await syncNativeReminders(payload);
+      const nativeSync = await syncNativeReminders(payload, reminderNotificationContext);
       if (!nativeSync.ok && nativeSync.reason === "permission-denied") {
         setReminderSaveState({
           saving: false,
@@ -8148,7 +8227,7 @@ export default function ChatPage() {
         error: err instanceof Error ? err.message : "Could not save reminder settings.",
       });
     }
-  }, [reminderPreferences, userId]);
+  }, [reminderPreferences, reminderNotificationContext, userId]);
 
   const openGoalsModal = useCallback(() => {
     if (isAnonymous || incognitoMode) {
@@ -8718,6 +8797,21 @@ export default function ChatPage() {
         deckName: card.sourceDeckName ?? "Saved",
         savedId: card._id,
       });
+      return;
+    }
+    if (item.kind === "sleepEntry") {
+      playSelectionChime();
+      const entry =
+        sleepEntries.find((e) => e.id === item.entityId) ??
+        sleepEntries.find((e) => e.dayKey === item.entityId);
+      if (!entry?.id) return;
+      setSleepEntryEditModal({
+        id: entry.id,
+        dayKey: entry.dayKey,
+        sleepHours: entry.sleepHours,
+        hrvMs: entry.hrvMs,
+        sleepScore: entry.sleepScore,
+      });
     }
   }, [
     conceptGroups,
@@ -8729,6 +8823,7 @@ export default function ChatPage() {
     router,
     savedPerspectiveCards,
     savedTranscripts,
+    sleepEntries,
   ]);
 
   const openLandingActivityGroupModal = useCallback(
@@ -8794,6 +8889,39 @@ export default function ChatPage() {
     setWeeklySummaryError(null);
     setWeeklySummaryResult(null);
     setWeeklySummaryModalOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
+  const resetSleepInsightsModal = useCallback(() => {
+    setSleepInsightsModalOpen(false);
+    setSleepInsightsLoading(false);
+    setSleepInsightsMarkdown("");
+    setSleepInsightsError(null);
+  }, []);
+
+  const openSleepInsightsModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setSleepInsightsModalOpen(true);
+    setSleepInsightsLoading(true);
+    setSleepInsightsMarkdown("");
+    setSleepInsightsError(null);
+    void fetch("/api/me/sleep-insights", { method: "POST" })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as { markdown?: string; error?: string };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not load sleep insights.");
+        }
+        setSleepInsightsMarkdown(typeof data.markdown === "string" ? data.markdown : "");
+      })
+      .catch((err) => {
+        setSleepInsightsError(err instanceof Error ? err.message : "Could not load sleep insights.");
+      })
+      .finally(() => {
+        setSleepInsightsLoading(false);
+      });
   }, [incognitoMode, isAnonymous, router]);
 
   const resetWeightTrackerModal = useCallback(() => {
@@ -9618,7 +9746,20 @@ export default function ChatPage() {
       })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [isAnonymous, incognitoMode, userId, journalEntryJustSaved]);
+  }, [isAnonymous, incognitoMode, userId, journalEntryJustSaved, savedTranscripts.length]);
+
+  const applySleepEntriesFromApi = useCallback((data: Record<string, unknown>) => {
+    if (!Array.isArray(data.entries)) return;
+    setSleepEntries(
+      (data.entries as Array<Record<string, unknown>>).map((e) => ({
+        id: typeof e.id === "string" ? e.id : "",
+        sleepHours: Number(e.sleepHours ?? 0),
+        hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
+        sleepScore: e.sleepScore != null ? Number(e.sleepScore) : null,
+        dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -9628,36 +9769,47 @@ export default function ChatPage() {
         if (cancelled) return;
         const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
         if (!res.ok || !Array.isArray(data.entries)) return;
-        setSleepEntries(
-          (data.entries as Array<Record<string, unknown>>).map((e) => ({
-            sleepHours: Number(e.sleepHours ?? 0),
-            hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
-            dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
-          }))
-        );
+        applySleepEntriesFromApi(data);
       })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [isAnonymous, incognitoMode, userId]);
+  }, [isAnonymous, incognitoMode, userId, applySleepEntriesFromApi]);
 
   const saveSleepEntry = useCallback(
-    async (sleepHours: number, hrvMs: number | null) => {
+    async (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => {
+      const entryDate = selectedLandingDayKey;
+      const rowsForDay = sleepEntries.filter((e) => e.dayKey === entryDate);
+      const existing =
+        rowsForDay.length > 0
+          ? rowsForDay.slice().sort((a, b) => b.id.localeCompare(a.id))[0]!
+          : null;
+
       setSleepSaving(true);
       try {
-        const res = await fetch("/api/me/sleep", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sleepHours, hrvMs }),
-        });
+        const res = existing
+          ? await fetch("/api/me/sleep", {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: existing.id,
+                sleepHours: Math.round(sleepHours * 10) / 10,
+                hrvMs,
+                sleepScore,
+              }),
+            })
+          : await fetch("/api/me/sleep", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                sleepHours,
+                hrvMs,
+                sleepScore,
+                entryDate,
+              }),
+            });
         const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
         if (res.ok && Array.isArray(data.entries)) {
-          setSleepEntries(
-            (data.entries as Array<Record<string, unknown>>).map((e) => ({
-              sleepHours: Number(e.sleepHours ?? 0),
-              hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
-              dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
-            }))
-          );
+          applySleepEntriesFromApi(data);
         }
       } catch {
         // silently ignore
@@ -9665,14 +9817,109 @@ export default function ChatPage() {
         setSleepSaving(false);
       }
     },
-    []
+    [applySleepEntriesFromApi, selectedLandingDayKey, sleepEntries]
+  );
+
+  const saveSleepEntryEdit = useCallback(async () => {
+    if (!sleepEntryEditModal) return;
+    const hours = parseFloat(sleepEditHoursInput);
+    if (Number.isNaN(hours) || hours < 0.5 || hours > 24) return;
+    const hrvRaw = sleepEditHrvInput.trim();
+    let hrvMs: number | null = null;
+    if (hrvRaw) {
+      const h = parseFloat(hrvRaw);
+      if (Number.isNaN(h) || h < 1 || h > 300) return;
+      hrvMs = Math.round(h);
+    }
+    const scoreRaw = sleepEditScoreInput.trim();
+    let sleepScore: number | null = null;
+    if (scoreRaw) {
+      const s = parseFloat(scoreRaw);
+      if (Number.isNaN(s) || s < 1 || s > 100) return;
+      sleepScore = Math.round(s);
+    }
+    setSleepEditSaving(true);
+    try {
+      const res = await fetch("/api/me/sleep", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: sleepEntryEditModal.id,
+          sleepHours: Math.round(hours * 10) / 10,
+          hrvMs,
+          sleepScore,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+      if (res.ok && Array.isArray(data.entries)) {
+        applySleepEntriesFromApi(data);
+        setSleepEntryEditModal(null);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setSleepEditSaving(false);
+    }
+  }, [
+    sleepEntryEditModal,
+    sleepEditHoursInput,
+    sleepEditHrvInput,
+    sleepEditScoreInput,
+    applySleepEntriesFromApi,
+  ]);
+
+  const deleteSleepEntryEdit = useCallback(async () => {
+    if (!sleepEntryEditModal) return;
+    if (!window.confirm("Delete this sleep entry?")) return;
+    setSleepEditSaving(true);
+    try {
+      const res = await fetch(`/api/me/sleep?id=${encodeURIComponent(sleepEntryEditModal.id)}`, {
+        method: "DELETE",
+      });
+      const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+      if (res.ok && Array.isArray(data.entries)) {
+        applySleepEntriesFromApi(data);
+        setSleepEntryEditModal(null);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setSleepEditSaving(false);
+    }
+  }, [sleepEntryEditModal, applySleepEntriesFromApi]);
+
+  useEffect(() => {
+    if (!sleepEntryEditModal) return;
+    setSleepEditHoursInput(String(sleepEntryEditModal.sleepHours));
+    setSleepEditHrvInput(sleepEntryEditModal.hrvMs != null ? String(sleepEntryEditModal.hrvMs) : "");
+    setSleepEditScoreInput(sleepEntryEditModal.sleepScore != null ? String(sleepEntryEditModal.sleepScore) : "");
+  }, [sleepEntryEditModal]);
+
+  const handleTimelineSleepClick = useCallback(
+    (e: { type: string; sleepEntryId?: string }) => {
+      if (e.type !== "sleep" || !e.sleepEntryId) return;
+      const entry =
+        sleepEntries.find((s) => s.id === e.sleepEntryId) ??
+        sleepEntries.find((s) => s.dayKey === e.sleepEntryId);
+      if (!entry?.id) return;
+      playSelectionChime();
+      setSleepEntryEditModal({
+        id: entry.id,
+        dayKey: entry.dayKey,
+        sleepHours: entry.sleepHours,
+        hrvMs: entry.hrvMs,
+        sleepScore: entry.sleepScore,
+      });
+    },
+    [sleepEntries]
   );
 
   const sleepFocusSuggestion = useMemo(() => {
     if (sleepEntries.length === 0) return null;
-    const latest = sleepEntries[0];
+    const forSelectedDay = sleepEntries.find((e) => e.dayKey === selectedLandingDayKey);
+    const latest = forSelectedDay ?? sleepEntries[0];
     return computeSuggestedFocusMinutes(latest.sleepHours, latest.hrvMs);
-  }, [sleepEntries]);
+  }, [sleepEntries, selectedLandingDayKey]);
 
   const [thoughtOfTheDay, setThoughtOfTheDay] = useState<{
     conceptId: string;
@@ -10076,7 +10323,7 @@ export default function ChatPage() {
   }, [weightTrackerFilteredChronological, weightTrackerRange, weightTrackerTargetKg]);
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !sleepInsightsModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
@@ -10090,6 +10337,7 @@ export default function ChatPage() {
           setMentorReflectionsRegenerateLoading(false);
         }
         else if (nutritionDayViewModalOpen) setNutritionDayViewModalOpen(false);
+        else if (sleepInsightsModalOpen && !sleepInsightsLoading) resetSleepInsightsModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
         else if (weightTrackerModalOpen && !weightTrackerSaving) resetWeightTrackerModal();
         else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) setGoalsModalOpen(false);
@@ -10125,7 +10373,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, sleepInsightsModalOpen, sleepInsightsLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal, resetSleepInsightsModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -14357,6 +14605,7 @@ export default function ChatPage() {
                         timelineEyebrow={landingTranslations.landingTimelineEyebrow}
                         timelineLabel={headerCalendarLabel}
                         timelineEvents={selectedLandingDayTimelineEvents}
+                        onTimelineEventClick={handleTimelineSleepClick}
                         caffeineIntakes={selectedLandingDayCaffeineIntakes}
                         caffeineFocusWindow={selectedLandingDayCaffeineFocusWindow}
                         featuredMentalModelName={mentalModelsIndex.size > 0 ? [...mentalModelsIndex.values()][0] : null}
@@ -14368,9 +14617,11 @@ export default function ChatPage() {
                         onOpenConversations={() => { playSelectionChime(); setLibraryPanelOpen("conversations"); }}
                         weeklySummary={landingWeeklySummary}
                         sleepEntries={sleepEntries}
+                        sleepEntryDayKey={selectedLandingDayKey}
                         sleepFocusSuggestion={sleepFocusSuggestion}
                         sleepSaving={sleepSaving}
                         onSaveSleepEntry={saveSleepEntry}
+                        onViewSleepInsights={openSleepInsightsModal}
                         thoughtOfTheDay={thoughtOfTheDay}
                         thoughtReviewing={thoughtReviewing}
                         onReviewThought={reviewThoughtOfTheDay}
@@ -14619,7 +14870,7 @@ export default function ChatPage() {
                                     className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors shrink-0 border-[0.75px] ${
                                       isSelected
                                         ? "bg-foreground text-background border-foreground"
-                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                        : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                                     }`}
                                   >
                                     {cat.name}
@@ -14928,7 +15179,7 @@ export default function ChatPage() {
               }
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b-[0.75px] border-neutral-200/80 dark:border-white/8 shrink-0">
+              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-300/90 px-4 py-3 dark:border-neutral-600/55">
                 <h2 className="text-lg font-semibold text-foreground">
                   {libraryPanelOpen === "conversations" ? getUiTranslations(language).conversations :
                    libraryPanelOpen === "figures" ? getUiTranslations(language).famousFigures :
@@ -15043,7 +15294,7 @@ export default function ChatPage() {
                       className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
                         figuresCategoryFilter === "all"
                           ? "bg-foreground text-background border-foreground"
-                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                       }`}
                     >
                       All
@@ -15056,7 +15307,7 @@ export default function ChatPage() {
                         className={`px-3 py-1.5 rounded-full text-xs font-medium border-[0.75px] transition-colors ${
                           figuresCategoryFilter === cat.id
                             ? "bg-foreground text-background border-foreground"
-                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                            : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                         }`}
                       >
                         {cat.name}
@@ -16459,7 +16710,7 @@ export default function ChatPage() {
                           className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
                             background === id
                               ? "border-[#B87B51] bg-[#B87B51]/12 dark:border-white/20 dark:bg-neutral-800 text-foreground ring-2 ring-[#B87B51]/25 dark:ring-foreground/20"
-                              : "border-neutral-200/60 dark:border-white/12 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                              : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                           }`}
                         >
                           {image ? (
@@ -16480,7 +16731,7 @@ export default function ChatPage() {
                   </div>
                 </section>
 
-                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <section className="pt-6 app-section-divider">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                     Installation Guide
                   </h3>
@@ -16528,7 +16779,7 @@ export default function ChatPage() {
                   </section>
 
                 {!isAnonymous && userScore && (
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                <section className="pt-6 app-section-divider">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                     Your stats
                   </h3>
@@ -16552,7 +16803,7 @@ export default function ChatPage() {
                 </section>
                 )}
 
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                <section className="pt-6 app-section-divider">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1">Conversation</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2">Language and tone for your conversations.</p>
                   <div className="space-y-4">
@@ -16594,7 +16845,7 @@ export default function ChatPage() {
                             user.fullName?.trim()?.split(/\s+/)[0] ||
                             "Your name"
                           }
-                          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/12 bg-background px-3 py-2 text-sm text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                          className="w-full rounded-xl border border-neutral-400/85 dark:border-neutral-500/55 bg-background px-3 py-2 text-sm text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20"
                         />
                       </div>
                     )}
@@ -16612,7 +16863,7 @@ export default function ChatPage() {
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
                                 ? "bg-[#B87B51] text-white dark:bg-foreground dark:text-background"
-                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-[0.75px] border-neutral-200/60 dark:border-white/12"
+                                : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                             }`}
                           >
                             <span aria-hidden>{icon}</span>
@@ -16625,7 +16876,7 @@ export default function ChatPage() {
                 </section>
 
                 {!isAnonymous && (
-                  <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                  <section className="pt-6 app-section-divider">
                     <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                       Reminder notifications
                     </h3>
@@ -16641,7 +16892,7 @@ export default function ChatPage() {
                         return (
                           <div
                             key={type}
-                            className="rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50/70 dark:bg-neutral-900/60 p-3"
+                            className="app-inset-panel rounded-xl p-3"
                           >
                             <div className="flex items-center justify-between gap-3">
                               <label className="text-sm font-medium text-foreground">
@@ -16687,7 +16938,7 @@ export default function ChatPage() {
                                     className={`w-8 h-8 rounded-lg text-xs font-semibold border transition-colors ${
                                       selected
                                         ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
-                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/70 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-400/75 dark:border-neutral-500/55 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                                     }`}
                                   >
                                     {label}
@@ -16723,7 +16974,7 @@ export default function ChatPage() {
                 )}
 
                 {!isAnonymous && (
-                <section className="pt-6 border-t-[0.75px] border-neutral-100 dark:border-white/8">
+                <section className="pt-6 app-section-divider">
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Leaderboard</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Appear on the global XP leaderboard and compete with other learners.</p>
                   <div className="flex items-center justify-between gap-4">
@@ -16778,7 +17029,7 @@ export default function ChatPage() {
                       onClick={() => setExportSectionOpen((prev) => !prev)}
                       aria-expanded={exportSectionOpen}
                       aria-controls="settings-data-export-panel"
-                      className="w-full flex items-center justify-between gap-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors"
+                      className="app-inset-panel flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors hover:brightness-[0.98] dark:hover:brightness-110"
                     >
                       <span className="min-w-0 text-left">
                         <span className="block text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Data export</span>
@@ -16800,7 +17051,7 @@ export default function ChatPage() {
                       </svg>
                     </button>
                     {exportSectionOpen && (
-                      <div id="settings-data-export-panel" className="mt-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 p-3">
+                      <div id="settings-data-export-panel" className="app-inset-panel mt-2 rounded-xl p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                           <button
                             type="button"
@@ -16812,7 +17063,7 @@ export default function ChatPage() {
                                 ) as Record<ExportDataSection, boolean>
                               );
                             }}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-white/12 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                            className="rounded-lg border border-neutral-400/80 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-neutral-100 dark:border-neutral-500/55 dark:hover:bg-neutral-800"
                           >
                             {allExportSectionsSelected ? "Deselect all" : "Select all"}
                           </button>
@@ -16899,7 +17150,7 @@ export default function ChatPage() {
                       onClick={() => setImportSectionOpen((prev) => !prev)}
                       aria-expanded={importSectionOpen}
                       aria-controls="settings-data-import-panel"
-                      className="w-full flex items-center justify-between gap-3 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 px-3 py-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors"
+                      className="app-inset-panel flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors hover:brightness-[0.98] dark:hover:brightness-110"
                     >
                       <span className="min-w-0 text-left">
                         <span className="block text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Data import</span>
@@ -16921,7 +17172,7 @@ export default function ChatPage() {
                       </svg>
                     </button>
                     {importSectionOpen && (
-                      <div id="settings-data-import-panel" className="mt-2 rounded-xl border border-neutral-200/70 dark:border-white/12 bg-neutral-50 dark:bg-neutral-900 p-3">
+                      <div id="settings-data-import-panel" className="app-inset-panel mt-2 rounded-xl p-3">
                         <ImportWizard onClose={() => setImportSectionOpen(false)} />
                       </div>
                     )}
@@ -17620,6 +17871,114 @@ export default function ChatPage() {
         </div>
       )}
 
+      {sleepInsightsModalOpen && (
+        <div
+          className="fixed inset-0 z-[53] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!sleepInsightsLoading) resetSleepInsightsModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={getLandingTranslations(language).sleepInsightsModalTitle}
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">
+                {getLandingTranslations(language).sleepInsightsModalTitle}
+              </h2>
+              <button
+                type="button"
+                onClick={resetSleepInsightsModal}
+                disabled={sleepInsightsLoading}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto space-y-3">
+              {sleepInsightsError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{sleepInsightsError}</p>
+              )}
+              {sleepInsightsLoading && (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {getLandingTranslations(language).sleepInsightsLoading}
+                </p>
+              )}
+              {!sleepInsightsLoading && sleepInsightsMarkdown.trim() !== "" && (
+                <div className="max-w-none text-foreground">
+                  <ChatMarkdown
+                    content={sleepInsightsMarkdown}
+                    idToName={mentalModelsIndex}
+                    ltmIdToTitle={
+                      new Map(
+                        longTermMemories.map((ltm) => [
+                          ltm._id,
+                          translatedTitles[ltm._id] ?? ltm.title,
+                        ])
+                      )
+                    }
+                    ccIdToTitle={
+                      new Map(
+                        customConcepts.map((cc) => [
+                          cc._id,
+                          translatedTitles[cc._id] ?? cc.title,
+                        ])
+                      )
+                    }
+                    cgIdToTitle={
+                      new Map(
+                        conceptGroups.map((cg) => [
+                          cg._id,
+                          translatedTitles[cg._id] ?? cg.title,
+                        ])
+                      )
+                    }
+                    figureIdToName={(() => {
+                      const m = new Map(figuresData?.figures.map((f) => [f.id, f.name]) ?? []);
+                      if (activeConversationFigure) m.set(activeConversationFigure.id, activeConversationFigure.name);
+                      return m;
+                    })()}
+                    figureIdToDescription={(() => {
+                      const m = new Map(figuresData?.figures.map((f) => [f.id, f.description]) ?? []);
+                      if (activeConversationFigure?.description) m.set(activeConversationFigure.id, activeConversationFigure.description);
+                      return m;
+                    })()}
+                    onMentalModelClick={handleMentalModelClick}
+                    onLtmClick={(id) => {
+                      const item = longTermMemories.find((m) => m._id === id);
+                      if (item) setLtmDetailModal(item);
+                    }}
+                    onCustomConceptClick={(id) => {
+                      const item = customConcepts.find((c) => c._id === id);
+                      if (item) openConceptDetail(item);
+                    }}
+                    onConceptGroupClick={(id) => {
+                      const item = conceptGroups.find((g) => g._id === id);
+                      if (!item) return;
+                      fetch(`/api/me/concept-groups/${id}`)
+                        .then((r) => (r.ok ? r.json() : Promise.reject()))
+                        .then((data) =>
+                          setCgDetailModal({ ...item, concepts: data.concepts ?? [] })
+                        )
+                        .catch(() => setCgDetailModal(item));
+                    }}
+                    previewMap={previewMap}
+                    compact
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {weeklySummaryModalOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -18195,6 +18554,110 @@ export default function ChatPage() {
         </div>
       )}
 
+      {sleepEntryEditModal && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => !sleepEditSaving && setSleepEntryEditModal(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Edit sleep entry"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,420px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Edit sleep</h2>
+                <p className="text-[12px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                  {sleepEntryEditModal.dayKey}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => !sleepEditSaving && setSleepEntryEditModal(null)}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              <label className="block">
+                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Hours</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  min={0.5}
+                  max={24}
+                  value={sleepEditHoursInput}
+                  onChange={(e) => setSleepEditHoursInput(e.target.value)}
+                  disabled={sleepEditSaving}
+                  className="mt-1 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="block">
+                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">HRV (ms, optional)</span>
+                <input
+                  type="number"
+                  step="1"
+                  min={1}
+                  max={300}
+                  value={sleepEditHrvInput}
+                  onChange={(e) => setSleepEditHrvInput(e.target.value)}
+                  disabled={sleepEditSaving}
+                  placeholder="—"
+                  className="mt-1 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="block">
+                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Score (1–100, optional)</span>
+                <input
+                  type="number"
+                  step="1"
+                  min={1}
+                  max={100}
+                  value={sleepEditScoreInput}
+                  onChange={(e) => setSleepEditScoreInput(e.target.value)}
+                  disabled={sleepEditSaving}
+                  placeholder="—"
+                  className="mt-1 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm"
+                />
+              </label>
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={deleteSleepEntryEdit}
+                  disabled={sleepEditSaving}
+                  className="rounded-full border border-red-200 px-3 py-1.5 text-[13px] font-medium text-red-700 hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/40 disabled:opacity-50 mr-auto"
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  onClick={() => !sleepEditSaving && setSleepEntryEditModal(null)}
+                  disabled={sleepEditSaving}
+                  className="rounded-full border border-neutral-300 px-3 py-1.5 text-[13px] font-medium text-neutral-700 dark:border-neutral-600 dark:text-neutral-200 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={saveSleepEntryEdit}
+                  disabled={sleepEditSaving}
+                  className="rounded-full border border-[#B87B51] bg-[#FBF4EC] px-4 py-1.5 text-[13px] font-semibold text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] disabled:opacity-50"
+                >
+                  {sleepEditSaving ? "Saving…" : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {journalTypeChooserOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
@@ -18363,7 +18826,7 @@ export default function ChatPage() {
                   disabled={journalEntrySaving}
                   ariaLabel="Journal voice input"
                   compactStopWhileListening
-                  className="!border-neutral-200/60 dark:!border-neutral-800/90 !bg-neutral-50/60 dark:!bg-neutral-900/35"
+                  className="!border-neutral-400/75 dark:!border-neutral-500/55 !bg-neutral-50/70 dark:!bg-neutral-900/40"
                   onTranscription={(text) =>
                     replaceJournalEntryText(
                       journalEntryTextRef.current.trim()
@@ -22758,7 +23221,7 @@ export default function ChatPage() {
                         : getUiTranslations(language).habitBucketOther}
                     </span>
                   </div>
-                  <div className="rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                  <div className="app-inset-panel rounded-xl p-3">
                     <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
                       Consistency
                     </p>
@@ -22768,7 +23231,7 @@ export default function ChatPage() {
                     <p className="text-sm text-neutral-700 dark:text-neutral-300 whitespace-pre-wrap">{habitDetailModal.description}</p>
                   </div>
                   {/* Reminder */}
-                  <div className="rounded-xl border border-neutral-200/60 bg-neutral-50/50 p-3 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                  <div className="app-inset-panel rounded-xl p-3">
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
                         Reminder
@@ -22881,7 +23344,7 @@ export default function ChatPage() {
                     )}
                   </div>
                   {habitDetailModal.calorieImpact && habitDetailModal.calorieImpact.calories > 0 ? (
-                    <div className="flex items-center gap-2 rounded-lg border border-neutral-200/60 bg-neutral-50/50 px-3 py-2 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+                    <div className="app-inset-panel flex items-center gap-2 rounded-lg px-3 py-2">
                       <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white ${habitDetailModal.calorieImpact.type === "burn" ? "bg-orange-500" : "bg-[#5A9E8A]"}`}>
                         {habitDetailModal.calorieImpact.type === "burn" ? "−" : "+"}
                       </span>
@@ -23239,7 +23702,7 @@ export default function ChatPage() {
                         className={`px-3 py-1.5 rounded-full text-sm font-medium border-[0.75px] transition-colors ${
                           cgCustomCreateSelectedIds.has(cc._id)
                             ? "bg-foreground text-background border-foreground"
-                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200/60 dark:border-white/12 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                            : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                         } disabled:opacity-60`}
                         title={cc.title}
                       >

@@ -47,7 +47,7 @@ function LeaderboardTable({
         {entries.map((e) => (
           <tr
             key={e.rank}
-            className="border-b border-neutral-100 dark:border-neutral-800/80 last:border-0"
+            className="border-b border-neutral-200/90 last:border-0 dark:border-neutral-600/50"
           >
             <td className="py-3 px-3">
               <RankCell rank={e.rank} />

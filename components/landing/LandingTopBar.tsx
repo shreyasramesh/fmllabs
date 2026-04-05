@@ -18,7 +18,7 @@ export function LandingTopBar({
   onOpenCalendar,
 }: LandingTopBarProps) {
   return (
-    <section className="w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
+    <section className="module-glass-hero w-full overflow-hidden rounded-[2rem] bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:bg-white/[0.04] sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">

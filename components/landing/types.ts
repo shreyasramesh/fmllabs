@@ -42,6 +42,8 @@ export interface LandingTimelineEvent {
   endMinute: number;
   label: string;
   color: string;
+  /** Present for `sleep` events — opens edit modal */
+  sleepEntryId?: string;
 }
 
 export interface LandingNutritionSummary {
@@ -113,8 +115,11 @@ export interface LandingWeeklySummaryPreview {
 }
 
 export interface LandingSleepEntry {
+  /** MongoDB document id (required for edit / backfill) */
+  id: string;
   sleepHours: number;
   hrvMs: number | null;
+  sleepScore: number | null;
   dayKey: string;
 }
 

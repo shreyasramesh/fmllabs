@@ -3333,3 +3333,56 @@ export async function generateTitle(
   return text.trim().slice(0, 60) || "Conversation";
 }
 
+/** One night of sleep as stored in the app (hours may be manual; score often from Fitbit). */
+export interface SleepInsightsEntry {
+  dayKey: string;
+  sleepHours: number;
+  hrvMs: number | null;
+  sleepScore: number | null;
+}
+
+/**
+ * Gemini markdown note: interprets Fitbit sleep score (1–100) as vendor composite when present.
+ */
+export async function generateSleepInsightsMarkdown(
+  entries: SleepInsightsEntry[],
+  usageContext?: GeminiUsageContext
+): Promise<string> {
+  const sorted = [...entries].sort((a, b) => b.dayKey.localeCompare(a.dayKey));
+  const lines = sorted.slice(0, 40).map((e) => {
+    const hrv = e.hrvMs != null && Number.isFinite(e.hrvMs) ? `${Math.round(e.hrvMs)} ms` : "not logged";
+    const scorePart =
+      e.sleepScore != null && e.sleepScore >= 1 && e.sleepScore <= 100
+        ? `Fitbit sleep score: ${Math.round(e.sleepScore)}/100 (device composite score on a 1–100 scale; not a clinical measure)`
+        : "Fitbit sleep score: not logged for this night";
+    return `- ${e.dayKey}: sleep duration logged ${e.sleepHours} h; resting HRV ${hrv}; ${scorePart}`;
+  });
+
+  const dataBlock = lines.length > 0 ? lines.join("\n") : "(no nights logged)";
+
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are a supportive sleep and recovery coach. The user tracks sleep in this app. Some fields may come from a Fitbit-linked account or similar wearable.
+
+How to read the data:
+- **Sleep duration (hours)** is what the user logged for that calendar night (time asleep / main sleep block as recorded in the app).
+- **Fitbit sleep score (1–100)** when present is Fitbit's proprietary composite (sleep stages, duration, restoration, etc.). It is a consumer wellness metric, not a medical diagnosis. Refer to it as "your Fitbit sleep score" or "the score from your Fitbit" — never as a clinical measure of sleep quality.
+- **HRV (ms)** is resting heart rate variability when the user logged it; omit deep interpretation if most values are missing.
+
+USER SLEEP LOG (most recent nights first):
+${dataBlock}
+
+Write a helpful insights note in **Markdown**:
+- Start with ## title (e.g. "## Sleep insights").
+- Use ### subheadings for sections like Patterns, Fitbit score trend (only if scores exist), What to try this week.
+- Be specific to the dates and numbers provided.
+- 3–7 actionable, non-alarmist suggestions (schedule, wind-down, consistency, light exposure, caffeine, movement). No medical diagnosis or treatment claims.
+- If the log is sparse, encourage consistent logging and still offer 2–4 general sleep hygiene tips.
+- Keep length roughly 350–900 words unless there is almost no data (then shorter).
+- Do not invent nights or scores not shown above.`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const text = result.response.text().trim();
+  return text || "Could not generate insights. Please try again.";
+}
+

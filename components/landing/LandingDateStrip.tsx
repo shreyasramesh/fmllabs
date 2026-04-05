@@ -30,13 +30,13 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
   }, [items.length]);
 
   return (
-    <section className="w-full overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
+    <section className="landing-module-glass w-full overflow-hidden rounded-[1.75rem] border p-4 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-500 dark:text-neutral-400">
             {label}
           </p>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
             {hint}
           </p>
         </div>
@@ -53,7 +53,7 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
               className={`relative flex min-h-[78px] w-[74px] shrink-0 flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition-all lg:w-auto ${
                 item.selected
                   ? "border-[#B87B51] bg-[#FBF4EC] shadow-[0_12px_24px_rgba(184,123,81,0.16)] dark:border-[#D6A67E] dark:bg-[#241a14]"
-                  : "border-neutral-200 bg-white hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
+                  : "border-neutral-400/90 bg-white hover:-translate-y-0.5 hover:border-neutral-500 hover:bg-neutral-50 dark:border-neutral-600 dark:bg-neutral-950 dark:hover:border-neutral-500 dark:hover:bg-neutral-900"
               }`}
             >
               <span

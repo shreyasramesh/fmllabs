@@ -991,7 +991,7 @@ export function MentionInput({
             }}
           >
           {mentionState?.mode === "both" && mentionState?.filterQuery === "" && (
-            <p className="px-4 py-1.5 text-[11px] text-neutral-500 dark:text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1">
+            <p className="mb-1 border-b border-neutral-200/90 px-4 py-1.5 text-[11px] text-neutral-500 dark:border-neutral-600/50 dark:text-neutral-400">
               {t.hint}
             </p>
           )}

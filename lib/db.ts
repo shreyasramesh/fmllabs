@@ -35,10 +35,12 @@ let client: MongoClient | null = null;
 let db: Db | null = null;
 
 // ── Cache namespaces (TTLs in ms) ──
-const TTL_1M  = 5  * 60_000;
-const TTL_2M  = 15 * 60_000;
-const TTL_3M  = 30 * 60_000;
-const TTL_5M  = 60 * 60_000;
+// Short TTLs for mutation-heavy data that must feel instant after writes.
+// Longer TTLs for rarely-mutated reference data (mental models, settings).
+const TTL_1M  = 30_000;        // 30s — habit completions
+const TTL_2M  = 45_000;        // 45s — sessions, habits, focus, transcripts
+const TTL_3M  = 2 * 60_000;    // 2m  — sleep, weight, custom concepts, memories
+const TTL_5M  = 10 * 60_000;   // 10m — settings, mental models, saved concepts, perspective cards
 
 const settingsCache     = getCache("settings");
 const sessionsCache     = getCache("sessions");
@@ -407,6 +409,8 @@ export interface SleepEntry {
   userId: string;
   sleepHours: number;
   hrvMs: number | null;
+  /** User-provided sleep quality score (1-100), e.g. from a wearable. */
+  sleepScore: number | null;
   entryDay: number;
   entryMonth: number;
   entryYear: number;
@@ -2544,6 +2548,7 @@ export async function addSleepEntry(
   input: {
     sleepHours: number;
     hrvMs: number | null;
+    sleepScore: number | null;
     entryDay: number;
     entryMonth: number;
     entryYear: number;
@@ -2556,6 +2561,7 @@ export async function addSleepEntry(
     userId,
     sleepHours: input.sleepHours,
     hrvMs: input.hrvMs,
+    sleepScore: input.sleepScore,
     entryDay: input.entryDay,
     entryMonth: input.entryMonth,
     entryYear: input.entryYear,
@@ -2591,6 +2597,29 @@ export async function getSleepEntries(
   }));
   sleepCache.set(userId, result, TTL_3M);
   return result;
+}
+
+export async function updateSleepEntry(
+  id: string,
+  userId: string,
+  updates: { sleepScore?: number | null; hrvMs?: number | null; sleepHours?: number },
+): Promise<boolean> {
+  sleepCache.invalidate(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const $set: Record<string, unknown> = { updatedAt: new Date() };
+  if (updates.sleepScore !== undefined) $set.sleepScore = updates.sleepScore;
+  if (updates.hrvMs !== undefined) $set.hrvMs = updates.hrvMs;
+  if (updates.sleepHours !== undefined) $set.sleepHours = updates.sleepHours;
+  const result = await database
+    .collection<SleepEntryDoc>("user_sleep_entries")
+    .updateOne({ _id: oid, userId }, { $set });
+  return result.modifiedCount > 0;
 }
 
 export async function deleteSleepEntry(id: string, userId: string): Promise<boolean> {

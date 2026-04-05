@@ -66,6 +66,7 @@ interface LandingTimelineCardProps {
   eyebrow: string;
   dayLabel: string;
   events: LandingTimelineEvent[];
+  onTimelineEventClick?: (event: LandingTimelineEvent) => void;
 }
 
 /** Every 3 hours — desktop / tablet */
@@ -107,7 +108,12 @@ function getPstMinuteOfDay(): number {
   return pst.getHours() * 60 + pst.getMinutes();
 }
 
-export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimelineCardProps) {
+export function LandingTimelineCard({
+  eyebrow,
+  dayLabel,
+  events,
+  onTimelineEventClick,
+}: LandingTimelineCardProps) {
   const timeTicks = useTimelineTickMinutes();
   const nowMinute = useMemo(getPstMinuteOfDay, []);
 
@@ -139,7 +145,7 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
         </h2>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-[#E8D8C7]/80 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.94)_58%,rgba(255,244,236,0.9)_100%)] px-2 py-4 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-4">
+      <div className="module-nested-frame mt-4 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.94)_58%,rgba(255,244,236,0.9)_100%)] px-2 py-4 dark:bg-neutral-800 sm:px-4">
         {activeLanes.length === 0 ? (
           <p className="py-2 text-center text-[13px] text-neutral-400 dark:text-neutral-500">
             No activity yet for this day.
@@ -222,10 +228,13 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
                       if (lane.isRange) {
                         const left = toPercent(event.startMinute);
                         const width = Math.max(0.6, toPercent(event.endMinute) - left);
+                        const interactive = Boolean(event.sleepEntryId && onTimelineEventClick);
                         return (
                           <div
-                            key={`bar-${lane.type}-${i}`}
-                            className="absolute z-10 rounded-full"
+                            key={`bar-${lane.type}-${i}-${event.sleepEntryId ?? i}`}
+                            role={interactive ? "button" : undefined}
+                            tabIndex={interactive ? 0 : undefined}
+                            className={`absolute z-10 rounded-full ${interactive ? "cursor-pointer hover:opacity-100 hover:ring-2 hover:ring-white/30" : ""}`}
                             style={{
                               left: `${left}%`,
                               width: `${width}%`,
@@ -235,6 +244,24 @@ export function LandingTimelineCard({ eyebrow, dayLabel, events }: LandingTimeli
                               opacity: 0.8,
                             }}
                             title={`${event.label} · ${formatMinuteOfDay(event.startMinute)}–${formatMinuteOfDay(event.endMinute)}`}
+                            onClick={
+                              interactive
+                                ? (e) => {
+                                    e.stopPropagation();
+                                    onTimelineEventClick?.(event);
+                                  }
+                                : undefined
+                            }
+                            onKeyDown={
+                              interactive
+                                ? (e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      onTimelineEventClick?.(event);
+                                    }
+                                  }
+                                : undefined
+                            }
                           />
                         );
                       }

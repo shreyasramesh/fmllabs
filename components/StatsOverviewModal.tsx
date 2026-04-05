@@ -113,7 +113,7 @@ export function StatsOverviewModal({
 
 function StatRow({ label, value, emoji }: { label: string; value: string; emoji: string }) {
   return (
-    <li className="flex items-center justify-between gap-3 py-1.5 border-b border-neutral-100 dark:border-neutral-800/80 last:border-0">
+    <li className="flex items-center justify-between gap-3 border-b border-neutral-200/90 py-1.5 last:border-0 dark:border-neutral-600/50">
       <span className="text-neutral-600 dark:text-neutral-400 flex items-center gap-2 min-w-0">
         <span aria-hidden>{emoji}</span>
         <span>{label}</span>

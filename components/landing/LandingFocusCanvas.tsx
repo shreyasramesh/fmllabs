@@ -102,7 +102,7 @@ function ActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: 
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-1 flex-col items-center gap-1.5 rounded-2xl border border-neutral-200/80 bg-white/80 px-3 py-3 text-center transition-all hover:bg-neutral-50 hover:shadow-sm active:scale-[0.97] dark:border-neutral-600 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+      className="module-nested flex flex-1 flex-col items-center gap-1.5 px-3 py-3 text-center transition-all hover:shadow-md active:scale-[0.97] dark:hover:bg-neutral-800/90"
     >
       <span className="text-neutral-600 dark:text-neutral-300">{icon}</span>
       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300">{label}</span>
@@ -247,7 +247,7 @@ export function LandingFocusCanvas({
             onClick={onDescribeFood}
             className="flex flex-col items-center gap-2 py-4"
           >
-            <div className="flex h-[148px] w-[148px] items-center justify-center rounded-full border-[11px] border-neutral-200/40 dark:border-neutral-700/40">
+            <div className="flex h-[148px] w-[148px] items-center justify-center rounded-full border-[11px] border-neutral-400/65 dark:border-neutral-500/55">
               <div className="flex flex-col items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-400 dark:text-neutral-500">
                   <path d="M12 5v14M5 12h14" />
@@ -418,7 +418,7 @@ export function LandingFocusCanvas({
 
         {/* 7-day calorie trend mini-chart */}
         {trendOptions && (
-          <div className="rounded-2xl border border-[#ECD9C8]/50 bg-white/60 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-800/60">
+          <div className="module-chart-inset px-3 py-2">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
               Calories — 7 Day Trend
             </p>

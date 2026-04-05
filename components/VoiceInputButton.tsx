@@ -11,7 +11,7 @@ import type { LanguageCode } from "@/lib/languages";
 const ELEVENLABS_WS_URL = "wss://api.elevenlabs.io/v1/speech-to-text/realtime";
 const SCRIBE_MODEL = "scribe_v2_realtime";
 const LONG_PRESS_MS = 1000;
-const AUTO_STOP_MS = 60_000;
+const AUTO_STOP_MS = 180_000;
 const AudioOrbVisual = dynamic(
   () => import("@/components/AudioOrbVisual").then((m) => m.AudioOrbVisual),
   { ssr: false }
@@ -287,7 +287,7 @@ async function startElevenLabsStt(
         done = true;
         resolveCommitWait = null;
         resolve();
-      }, 700);
+      }, 2500);
       resolveCommitWait = () => {
         if (done) return;
         done = true;
@@ -419,7 +419,7 @@ async function startWebSpeechStt(
             resolveEnd = null;
             resolve();
           }
-        }, 500);
+        }, 1500);
       });
     },
   };
@@ -494,7 +494,7 @@ async function startNativeSpeechStt(
             resolveStopWait();
             resolveStopWait = null;
           }
-        }, 900);
+        }, 2000);
       });
       const finalText = lastPartial.trim();
       if (finalText) onCommittedTranscript(finalText);
@@ -718,7 +718,7 @@ export function VoiceInputButton({
     try {
       if (session) {
         try {
-          await withTimeout(session.requestCommit(), 1600);
+          await withTimeout(session.requestCommit(), 4000);
         } catch {
           /* best effort */
         }
@@ -923,8 +923,14 @@ export function VoiceInputButton({
       onContextMenu={(e) => e.preventDefault()}
       disabled={disabled}
       aria-label={ariaLabel}
-      className={`relative flex items-center justify-center min-w-[52px] min-h-[52px] rounded-2xl border border-neutral-200/70 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 select-none touch-manipulation no-touch-callout [-webkit-tap-highlight-color:transparent] ${className}`}
+      className={`relative flex min-h-[52px] min-w-[52px] shrink-0 select-none items-center justify-center rounded-2xl border border-neutral-400/85 text-neutral-600 no-touch-callout transition-all duration-200 [-webkit-tap-highlight-color:transparent] hover:bg-neutral-100 hover:text-foreground dark:border-neutral-500/55 dark:text-neutral-400 dark:hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
+      {!disabled && holdProgress === 0 && (
+        <>
+          <span className="voice-button-wave" aria-hidden />
+          <span className="voice-button-wave" style={{ animationDelay: "1.5s" }} aria-hidden />
+        </>
+      )}
       {onLongPress && !disabled && holdProgress === 0 && (
         <span
           className="absolute inset-0 rounded-2xl border-2 border-current pointer-events-none animate-voice-hold-hint"

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { addSleepEntry, deleteSleepEntry, getSleepEntries } from "@/lib/db";
+import { addSleepEntry, deleteSleepEntry, getSleepEntries, updateSleepEntry } from "@/lib/db";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
@@ -31,11 +31,12 @@ function normalizeDatePartsFromBody(body: Record<string, unknown>, fallback: Dat
   });
 }
 
-function mapEntry(e: { _id: string; sleepHours: number; hrvMs: number | null; entryDay: number; entryMonth: number; entryYear: number; createdAt: Date }) {
+function mapEntry(e: { _id: string; sleepHours: number; hrvMs: number | null; sleepScore?: number | null; entryDay: number; entryMonth: number; entryYear: number; createdAt: Date }) {
   return {
     id: e._id,
     sleepHours: e.sleepHours,
     hrvMs: e.hrvMs,
+    sleepScore: e.sleepScore ?? null,
     day: e.entryDay,
     month: e.entryMonth,
     year: e.entryYear,
@@ -89,11 +90,21 @@ export async function POST(request: Request) {
       hrvMs = Math.round(parsed);
     }
 
+    let sleepScore: number | null = null;
+    if (body.sleepScore != null) {
+      const parsed = parseFiniteNumber(body.sleepScore);
+      if (parsed == null || parsed < 1 || parsed > 100) {
+        return NextResponse.json({ error: "sleepScore must be between 1 and 100 (or omitted)" }, { status: 400 });
+      }
+      sleepScore = Math.round(parsed);
+    }
+
     const { day, month, year } = normalizeDatePartsFromBody(body, new Date());
 
     await addSleepEntry(userId, {
       sleepHours: Math.round(sleepHours * 10) / 10,
       hrvMs,
+      sleepScore,
       entryDay: day,
       entryMonth: month,
       entryYear: year,
@@ -107,6 +118,72 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
     return NextResponse.json({ error: "Failed to save sleep entry" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const rlPatch = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rlPatch.allowed) return tooManyRequestsResponse(rlPatch.resetMs);
+  recordMongoUsageRequest(userId).catch(() => {});
+  try {
+    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const id = typeof body.id === "string" ? body.id.trim() : "";
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    const updates: { sleepScore?: number | null; hrvMs?: number | null; sleepHours?: number } = {};
+
+    if (body.sleepScore !== undefined) {
+      if (body.sleepScore === null) {
+        updates.sleepScore = null;
+      } else {
+        const parsed = parseFiniteNumber(body.sleepScore);
+        if (parsed == null || parsed < 1 || parsed > 100) {
+          return NextResponse.json({ error: "sleepScore must be between 1 and 100 (or null)" }, { status: 400 });
+        }
+        updates.sleepScore = Math.round(parsed);
+      }
+    }
+
+    if (body.hrvMs !== undefined) {
+      if (body.hrvMs === null) {
+        updates.hrvMs = null;
+      } else {
+        const parsed = parseFiniteNumber(body.hrvMs);
+        if (parsed == null || parsed < 1 || parsed > 300) {
+          return NextResponse.json({ error: "hrvMs must be between 1 and 300 (or null)" }, { status: 400 });
+        }
+        updates.hrvMs = Math.round(parsed);
+      }
+    }
+
+    if (body.sleepHours !== undefined) {
+      const parsed = parseFiniteNumber(body.sleepHours);
+      if (parsed == null || parsed < 0.5 || parsed > 24) {
+        return NextResponse.json({ error: "sleepHours must be between 0.5 and 24" }, { status: 400 });
+      }
+      updates.sleepHours = Math.round(parsed * 10) / 10;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+    }
+
+    const updated = await updateSleepEntry(id, userId, updates);
+    if (!updated) {
+      return NextResponse.json({ error: "Sleep entry not found" }, { status: 404 });
+    }
+
+    const rows = await getSleepEntries(userId, { limit: 30 });
+    return NextResponse.json({ entries: rows.map(mapEntry) });
+  } catch (err) {
+    console.error("Sleep PATCH failed:", err);
+    return NextResponse.json({ error: "Failed to update sleep entry" }, { status: 500 });
   }
 }
 

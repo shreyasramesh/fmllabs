@@ -94,7 +94,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
   return (
     <div className="space-y-4">
       {/* Summary banner */}
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-neutral-200/60 bg-neutral-50/50 px-4 py-3 dark:border-neutral-700/50 dark:bg-neutral-800/30">
+      <div className="module-nested-muted flex items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-baseline gap-1.5">
           <span className="text-2xl font-bold tabular-nums text-[#5A9E8A]">
             {summaryStats.doneToday}
@@ -114,20 +114,15 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
       </div>
 
       {/* Mobile: name + today toggle list */}
-      <div className="flex flex-col gap-2 sm:hidden">
+      <div className="flex flex-col gap-3 sm:hidden">
         {habitStats.map(({ habit, set, streak, doneToday }) => (
-          <div
-            key={habit._id}
-            className="flex items-center gap-3 rounded-xl border border-neutral-200/60 bg-neutral-50/40 px-3 py-2.5 dark:border-neutral-700/50 dark:bg-neutral-800/30"
-          >
+          <div key={habit._id} className="module-nested flex items-center gap-3 px-3 py-2.5">
             <button
               type="button"
               onClick={() => onToggle(habit._id, today)}
               className={[
                 "shrink-0 w-8 h-8 rounded-lg transition-all duration-150 flex items-center justify-center",
-                doneToday
-                  ? "bg-[#5A9E8A] shadow-sm"
-                  : "bg-neutral-200/50 border border-neutral-300/60 dark:bg-neutral-700/40 dark:border-neutral-600/50",
+                doneToday ? "border-2 border-[#4a8a7a] bg-[#5A9E8A] shadow-sm" : "module-toggle-empty",
                 "hover:scale-110 active:scale-95",
               ].join(" ")}
               aria-label={`Toggle ${habit.name} today`}
@@ -203,8 +198,8 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
                       className={[
                         "w-7 h-7 rounded-lg transition-all duration-150 flex items-center justify-center",
                         completed
-                          ? "bg-[#5A9E8A] shadow-sm"
-                          : "bg-neutral-200/50 border border-neutral-300/60 dark:bg-neutral-700/40 dark:border-neutral-600/50",
+                          ? "border-2 border-[#4a8a7a] bg-[#5A9E8A] shadow-sm"
+                          : "module-toggle-empty",
                         isToday && !completed
                           ? "ring-2 ring-[#B87B51] ring-offset-1 ring-offset-white dark:ring-offset-neutral-900"
                           : "",

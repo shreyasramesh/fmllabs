@@ -48,7 +48,7 @@ export function HeaderStatsPill({
   const pad = compact ? "px-2 py-1.5 sm:px-3 sm:py-2" : "gap-1.5 px-3 py-2 sm:px-4";
   const padTight = compact ? "px-2 py-1.5 sm:px-3 sm:py-2" : "gap-1.5 px-3 py-2 sm:px-4";
 
-  const pillClass = `flex shrink-0 items-stretch rounded-full border border-neutral-200/80 bg-neutral-100/80 dark:border-white/12 dark:bg-neutral-800/80 tabular-nums ${
+  const pillClass = `flex shrink-0 items-stretch rounded-full border border-neutral-400/85 bg-neutral-100/80 dark:border-neutral-500/55 dark:bg-neutral-800/80 tabular-nums ${
     compact ? "text-[11px] sm:text-sm" : "text-sm"
   }`;
 

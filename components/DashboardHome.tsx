@@ -271,7 +271,7 @@ function StatCard({
   description: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-200/80 dark:border-white/10 bg-neutral-50 dark:bg-neutral-900/50 p-5 text-left">
+    <div className="module-nested p-5 text-left">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
         {label}
       </p>

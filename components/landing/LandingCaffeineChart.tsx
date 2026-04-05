@@ -215,7 +215,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
           ))}
         </div>
       </div>
-      <div className="mt-3 rounded-2xl border border-[#E8D8C7]/60 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,250,245,0.94)_100%)] p-2 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800">
+      <div className="module-nested-frame mt-3 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,250,245,0.94)_100%)] p-2 dark:bg-neutral-800">
         <HighchartsReact highcharts={Highcharts} options={chartOptions} />
       </div>
       {focusWindow && (

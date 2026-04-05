@@ -176,6 +176,7 @@ export async function POST(request: Request) {
         await addSleepEntry(userId, {
           sleepHours: row.hours,
           hrvMs: row.hrvMs,
+          sleepScore: "sleepScore" in row && row.sleepScore != null ? Number(row.sleepScore) : null,
           entryDay: date.day,
           entryMonth: date.month,
           entryYear: date.year,

@@ -134,6 +134,7 @@ export async function POST(request: Request) {
       const saved = await addSleepEntry(userId, {
         sleepHours,
         hrvMs,
+        sleepScore: null,
         entryDay: entryDate.day,
         entryMonth: entryDate.month,
         entryYear: entryDate.year,

@@ -298,7 +298,7 @@ function SegmentedPicker({
   options: readonly { key: string; label: string }[];
 }) {
   return (
-    <div className="inline-flex rounded-md border border-neutral-200 bg-neutral-100 p-px dark:border-neutral-700 dark:bg-neutral-800">
+    <div className="inline-flex rounded-md border border-neutral-300 bg-neutral-100 p-px dark:border-neutral-700 dark:bg-neutral-800">
       {options.map((opt) => (
         <button
           key={opt.key}
@@ -328,7 +328,7 @@ function ChevronRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-left text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-300 px-2.5 py-1.5 text-left text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
     >
       {label}
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
@@ -447,6 +447,7 @@ interface LandingShellProps {
   timelineEyebrow: string;
   timelineLabel: string;
   timelineEvents: LandingTimelineEvent[];
+  onTimelineEventClick?: (event: LandingTimelineEvent) => void;
   caffeineIntakes: CaffeineIntake[];
   caffeineFocusWindow: CaffeineFocusWindow | null;
   featuredMentalModelName: string | null;
@@ -458,9 +459,12 @@ interface LandingShellProps {
   onOpenConversations: () => void;
   weeklySummary: LandingWeeklySummaryPreview | null;
   sleepEntries: LandingSleepEntry[];
+  /** Calendar day (YYYY-MM-DD) for sleep quick capture — matches the date strip selection. */
+  sleepEntryDayKey: string;
   sleepFocusSuggestion: FocusDurationSuggestion | null;
   sleepSaving: boolean;
-  onSaveSleepEntry: (sleepHours: number, hrvMs: number | null) => void;
+  onSaveSleepEntry: (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => void;
+  onViewSleepInsights?: () => void;
   thoughtOfTheDay: LandingThoughtOfTheDay | null;
   thoughtReviewing: boolean;
   onReviewThought: () => void;
@@ -583,6 +587,7 @@ export function LandingShell({
   timelineEyebrow,
   timelineLabel,
   timelineEvents,
+  onTimelineEventClick,
   caffeineIntakes,
   caffeineFocusWindow,
   featuredMentalModelName,
@@ -594,9 +599,11 @@ export function LandingShell({
   onOpenConversations,
   weeklySummary,
   sleepEntries,
+  sleepEntryDayKey,
   sleepFocusSuggestion,
   sleepSaving,
   onSaveSleepEntry,
+  onViewSleepInsights,
   thoughtOfTheDay,
   thoughtReviewing,
   onReviewThought,
@@ -619,18 +626,47 @@ export function LandingShell({
 
   const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
   const [hrvInput, setHrvInput] = useState("");
+  const [sleepScoreInput, setSleepScoreInput] = useState("");
   const [sleepFormOpen, setSleepFormOpen] = useState(false);
   const [selectedMentorId, setSelectedMentorId] = useState<string | null>(null);
   const [selectedHabitDiscoveryBucket, setSelectedHabitDiscoveryBucket] = useState<HabitBucket>("creative");
 
-  const lastSleep = sleepEntries.length > 0 ? sleepEntries[0] : null;
+  const sleepForSelectedDay = useMemo(() => {
+    const rows = sleepEntries.filter((e) => e.dayKey === sleepEntryDayKey);
+    if (rows.length === 0) return null;
+    return rows.slice().sort((a, b) => b.id.localeCompare(a.id))[0]!;
+  }, [sleepEntries, sleepEntryDayKey]);
+
+  useEffect(() => {
+    if (sleepForSelectedDay) {
+      setSleepHoursInput(String(sleepForSelectedDay.sleepHours));
+      setHrvInput(sleepForSelectedDay.hrvMs != null ? String(sleepForSelectedDay.hrvMs) : "");
+      setSleepScoreInput(sleepForSelectedDay.sleepScore != null ? String(sleepForSelectedDay.sleepScore) : "");
+    } else {
+      setSleepHoursInput("7.5");
+      setHrvInput("");
+      setSleepScoreInput("");
+    }
+  }, [
+    sleepEntryDayKey,
+    sleepForSelectedDay?.id,
+    sleepForSelectedDay?.sleepHours,
+    sleepForSelectedDay?.hrvMs,
+    sleepForSelectedDay?.sleepScore,
+  ]);
 
   function handleSaveSleep() {
     const hours = parseFloat(sleepHoursInput);
     if (isNaN(hours) || hours < 0.5 || hours > 24) return;
     const hrv = hrvInput.trim() ? parseFloat(hrvInput) : null;
     if (hrv != null && (isNaN(hrv) || hrv < 1 || hrv > 300)) return;
-    onSaveSleepEntry(Math.round(hours * 10) / 10, hrv != null ? Math.round(hrv) : null);
+    const score = sleepScoreInput.trim() ? parseFloat(sleepScoreInput) : null;
+    if (score != null && (isNaN(score) || score < 1 || score > 100)) return;
+    onSaveSleepEntry(
+      Math.round(hours * 10) / 10,
+      hrv != null ? Math.round(hrv) : null,
+      score != null ? Math.round(score) : null,
+    );
   }
 
   const inlineChartBase: Highcharts.Options = useMemo(() => {
@@ -833,13 +869,13 @@ export function LandingShell({
           {/* Quick Capture */}
           <section className="landing-module-glass flex-1 overflow-hidden rounded-[2rem] border p-4 sm:p-5">
             <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
-            <div className="mt-2 grid grid-cols-3 gap-1.5">
+            <div className="mt-2 grid grid-cols-3 gap-2">
               {quickCaptures.map((item) => (
                 <button
                   key={item.key}
                   type="button"
                   onClick={item.onClick}
-                  className="flex flex-col items-center gap-1 rounded-lg border border-neutral-200 px-1.5 py-2 transition-colors hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                  className="module-nested flex flex-col items-center gap-1 px-1.5 py-2 text-center transition-shadow hover:shadow-md active:scale-[0.98] dark:hover:brightness-110"
                 >
                   <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
                     {item.icon}
@@ -850,10 +886,10 @@ export function LandingShell({
               <button
                 type="button"
                 onClick={() => setSleepFormOpen((prev) => !prev)}
-                className={`flex flex-col items-center gap-1 rounded-lg border px-1.5 py-2 transition-colors ${
+                className={`module-nested flex flex-col items-center gap-1 px-1.5 py-2 transition-shadow hover:shadow-md active:scale-[0.98] dark:hover:brightness-110 ${
                   sleepFormOpen
-                    ? "border-[#DDB691] bg-[#FBF4EC] dark:border-[#6A4A33] dark:bg-[#241a14]"
-                    : "border-neutral-200 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                    ? "ring-2 ring-[#B87B51]/50 ring-offset-2 ring-offset-transparent dark:ring-[#D6A67E]/55"
+                    : ""
                 }`}
               >
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
@@ -866,11 +902,11 @@ export function LandingShell({
             </div>
 
             {sleepFormOpen && (
-              <div className="mt-2 space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-2.5 dark:border-neutral-700 dark:bg-neutral-900">
+              <div className="module-nested-muted mt-2 space-y-2 p-2.5">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  Log last night
+                  Sleep · {selectedDateLabel}
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
                       Sleep (hours)
@@ -882,12 +918,12 @@ export function LandingShell({
                       max="24"
                       value={sleepHoursInput}
                       onChange={(e) => setSleepHoursInput(e.target.value)}
-                      className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
                     />
                   </div>
                   <div>
                     <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                      HRV (ms, optional)
+                      HRV (ms)
                     </label>
                     <input
                       type="number"
@@ -897,7 +933,22 @@ export function LandingShell({
                       placeholder="—"
                       value={hrvInput}
                       onChange={(e) => setHrvInput(e.target.value)}
-                      className="mt-0.5 w-full rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] dark:border-neutral-700 dark:bg-neutral-800"
+                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                      Score (1-100)
+                    </label>
+                    <input
+                      type="number"
+                      step="1"
+                      min="1"
+                      max="100"
+                      placeholder="—"
+                      value={sleepScoreInput}
+                      onChange={(e) => setSleepScoreInput(e.target.value)}
+                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
                     />
                   </div>
                 </div>
@@ -907,14 +958,17 @@ export function LandingShell({
                   onClick={handleSaveSleep}
                   className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
                 >
-                  {sleepSaving ? "Saving…" : "Log last night"}
+                  {sleepSaving ? "Saving…" : sleepForSelectedDay ? "Update sleep" : "Save sleep"}
                 </button>
-                {lastSleep && (
+                {sleepForSelectedDay ? (
                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                    Last: {lastSleep.sleepHours}h sleep
-                    {lastSleep.hrvMs != null ? ` · ${lastSleep.hrvMs} ms HRV` : ""}
-                    {" · "}
-                    {lastSleep.dayKey}
+                    Logged: {sleepForSelectedDay.sleepHours}h sleep
+                    {sleepForSelectedDay.hrvMs != null ? ` · ${sleepForSelectedDay.hrvMs} ms HRV` : ""}
+                    {sleepForSelectedDay.sleepScore != null ? ` · ${sleepForSelectedDay.sleepScore}/100` : ""}
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                    No sleep logged for this day yet.
                   </p>
                 )}
               </div>
@@ -932,7 +986,7 @@ export function LandingShell({
           onOpenHabit={onOpenHabitDetail}
           emptyStateText="No experiments slated for this month yet. Find a new one below."
         />
-        <div className="mt-3 rounded-xl border border-white/55 bg-white/45 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] dark:border-neutral-600/90 dark:bg-neutral-950/65 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <div className="module-nested mt-3 p-3">
           <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
             Find a new habit
           </p>
@@ -948,7 +1002,7 @@ export function LandingShell({
                   className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
                     isSelected
                       ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                      : "border-neutral-200/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                      : "border-neutral-300/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
                   }`}
                 >
                   <span className="whitespace-nowrap">{option.label}</span>
@@ -968,7 +1022,12 @@ export function LandingShell({
 
       {/* 2. Timeline swim lanes — daily activity overview */}
       <div id="sec-timeline">
-        <LandingTimelineCard eyebrow={timelineEyebrow} dayLabel={timelineLabel} events={timelineEvents} />
+        <LandingTimelineCard
+          eyebrow={timelineEyebrow}
+          dayLabel={timelineLabel}
+          events={timelineEvents}
+          onTimelineEventClick={onTimelineEventClick}
+        />
       </div>
 
       {/* 3. Focus Timer */}
@@ -988,10 +1047,10 @@ export function LandingShell({
                 type="button"
                 onClick={() => onSelectPomodoroDuration(minutes)}
                 disabled={focusTrackerSaving || pomodoroSessionActive}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shadow-sm ${
                   pomodoroDurationMinutes === minutes
-                    ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                    : "border-neutral-300 bg-white/80 text-neutral-700 hover:bg-white dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+                    ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] ring-1 ring-[#B87B51]/25 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:ring-[#D6A67E]/20"
+                    : "border-neutral-400/85 bg-white/90 text-neutral-800 hover:shadow-md dark:border-neutral-500/55 dark:bg-neutral-800/95 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:brightness-110"
                 } disabled:opacity-50`}
               >
                 {minutes}m
@@ -1005,14 +1064,14 @@ export function LandingShell({
             onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
             placeholder="Tag this focus session..."
             disabled={focusTrackerSaving}
-            className="w-full rounded-full border border-neutral-300 bg-white/88 px-4 py-2.5 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+            className="w-full rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800 dark:shadow-none"
           />
 
           <button
             type="button"
             onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
             disabled={focusTrackerSaving}
-            className="w-full rounded-full border border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            className="w-full rounded-full border-2 border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
           >
             {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
           </button>
@@ -1026,13 +1085,13 @@ export function LandingShell({
               value={pomodoroCustomMinutesInput}
               onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
               disabled={focusTrackerSaving || pomodoroSessionActive}
-              className="w-24 rounded-full border border-neutral-300 bg-white/88 px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800"
+              className="w-24 rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2 text-sm text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
             />
             <button
               type="button"
               onClick={onApplyCustomPomodoroMinutes}
               disabled={focusTrackerSaving || pomodoroSessionActive}
-              className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              className="rounded-full border border-neutral-400/85 bg-white/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-neutral-500/55 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
             >
               Set minutes
             </button>
@@ -1040,7 +1099,7 @@ export function LandingShell({
               type="button"
               onClick={onResetPomodoro}
               disabled={focusTrackerSaving}
-              className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-white disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+              className="rounded-full border border-neutral-400/85 bg-white/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-neutral-500/55 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
             >
               Reset
             </button>
@@ -1049,7 +1108,7 @@ export function LandingShell({
                 type="button"
                 onClick={onEndPomodoro}
                 disabled={focusTrackerSaving}
-                className="rounded-full border border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#6A4A33] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
+                className="rounded-full border-2 border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] shadow-sm transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#C4A070] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
               >
                 End
               </button>
@@ -1145,11 +1204,11 @@ export function LandingShell({
                   })}
                 </div>
                 <div className="flex flex-1 gap-1.5 min-w-0">
-                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
                     <p className="text-base font-semibold text-foreground">{weeklySummary.trackedDays}<span className="text-[10px] font-normal text-neutral-400">/7</span></p>
                     <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Days</p>
                   </div>
-                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
                     <p className={`text-base font-semibold ${weeklySummary.caloriesUnderBudget >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                       {Math.abs(weeklySummary.caloriesUnderBudget).toLocaleString()}
                     </p>
@@ -1157,7 +1216,7 @@ export function LandingShell({
                       {weeklySummary.caloriesUnderBudget >= 0 ? "Under" : "Over"}
                     </p>
                   </div>
-                  <div className="flex-1 rounded-lg border border-neutral-200 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
                     <p className="text-base font-semibold text-foreground">{weeklySummary.foodEntries}</p>
                     <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Meals</p>
                   </div>
@@ -1165,13 +1224,13 @@ export function LandingShell({
               </div>
 
               <div className="mt-3 grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyMacrosOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-200 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
                   <HighchartsReact highcharts={Highcharts} options={weeklyFocusOpts} />
                 </button>
               </div>
@@ -1201,13 +1260,13 @@ export function LandingShell({
           )}
 
           <div className="mt-2 grid grid-cols-2 gap-1.5">
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-xl border border-neutral-300 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
               <p className="text-base font-semibold text-foreground">
                 {weightCurrentKg == null ? "--" : `${weightCurrentKg.toFixed(1)} kg`}
               </p>
               <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
             </div>
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-xl border border-neutral-300 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
               <p className="text-base font-semibold text-foreground">
                 {weightTargetKg == null ? "--" : `${weightTargetKg.toFixed(1)} kg`}
               </p>
@@ -1236,7 +1295,7 @@ export function LandingShell({
           title={activityTitle}
           description={activityDescription}
         >
-          <div className="space-y-1.5">
+          <div className="space-y-3">
             {activityGroups.length === 0 ? (
               <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
                 No activity yet for this day.
@@ -1247,15 +1306,15 @@ export function LandingShell({
                   key={group.key}
                   type="button"
                   onClick={group.onClick}
-                  className="flex w-full items-center justify-between gap-2 rounded-xl border border-neutral-200 px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+                  className="module-nested flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left transition-shadow hover:shadow-md active:scale-[0.99] dark:hover:brightness-110"
                 >
-                  <span>
+                  <span className="min-w-0">
                     <span className="block text-[13px] font-semibold text-foreground">{group.label}</span>
                     <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">
                       {tapToInspectLabel}
                     </span>
                   </span>
-                  <span className="rounded-full border border-neutral-200 px-1.5 py-0.5 text-[11px] text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
+                  <span className="shrink-0 rounded-full border border-neutral-400/85 bg-white/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-neutral-700 ring-1 ring-neutral-900/[0.05] dark:border-neutral-500/60 dark:bg-neutral-900/50 dark:text-neutral-200 dark:ring-white/[0.08]">
                     {group.count}
                   </span>
                 </button>
@@ -1274,7 +1333,11 @@ export function LandingShell({
 
       {/* 7. Sleep & Recovery — reference chart */}
       <div id="sec-sleep">
-        <LandingSleepRecoveryChart entries={sleepEntries} focusSuggestion={sleepFocusSuggestion} />
+        <LandingSleepRecoveryChart
+          entries={sleepEntries}
+          focusSuggestion={sleepFocusSuggestion}
+          onViewSleepInsights={onViewSleepInsights}
+        />
       </div>
 
       {/* 8. Mentor Hub — on-demand, lowest daily frequency */}
@@ -1284,7 +1347,7 @@ export function LandingShell({
           {/* Left column: structured action groups */}
           <div className="space-y-4">
             {/* Group 1: 1:1 Mentor Chat */}
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+            <div className="module-nested p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
                 1:1 Mentor Chat
               </p>
@@ -1302,7 +1365,7 @@ export function LandingShell({
                       className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
                         isSelected
                           ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
-                          : "border-neutral-200 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                          : "border-neutral-300 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
                       }`}
                     >
                       <span
@@ -1347,7 +1410,7 @@ export function LandingShell({
             </div>
 
             {/* Group 2: New Conversation */}
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+            <div className="module-nested p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
                 New Conversation
               </p>
@@ -1394,7 +1457,7 @@ export function LandingShell({
 
             {/* Group 3: Explore — mental models and learning */}
             {(featuredMentalModelName || true) && (
-              <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+              <div className="module-nested p-3">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
                   Explore
                 </p>
@@ -1406,7 +1469,7 @@ export function LandingShell({
                     <button
                       type="button"
                       onClick={onOpenMentalModels}
-                      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-300 bg-white px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
@@ -1425,7 +1488,7 @@ export function LandingShell({
 
           {/* Right column: Ask Mentors */}
           <div>
-            <div className="rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/60">
+            <div className="module-nested p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
                 Ask Mentors
               </p>

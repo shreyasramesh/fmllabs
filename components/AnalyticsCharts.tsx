@@ -75,7 +75,7 @@ export function CostTrendChart({
     [dailyTrend]
   );
   return (
-    <div className="rounded-xl border border-neutral-200/70 bg-white/70 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70">
+    <div className="app-inset-panel rounded-xl p-4 shadow-sm">
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
@@ -118,7 +118,7 @@ export function CostByServiceChart({
     [totalsByService]
   );
   return (
-    <div className="rounded-xl border border-neutral-200/70 bg-white/70 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70">
+    <div className="app-inset-panel rounded-xl p-4 shadow-sm">
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
@@ -161,7 +161,7 @@ export function RequestCountByServiceChart({
     [entries]
   );
   return (
-    <div className="rounded-xl border border-neutral-200/70 bg-white/70 p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70">
+    <div className="app-inset-panel rounded-xl p-4 shadow-sm">
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

@@ -109,7 +109,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div
-      className="min-w-0 max-w-2xl lg:max-w-4xl w-full rounded-2xl border border-neutral-200/80 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm flex overflow-visible items-stretch min-h-[52px] sm:min-h-[60px] py-1.5 sm:py-2"
+      className="flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-visible rounded-2xl border border-neutral-400/85 bg-white shadow-sm dark:border-neutral-500/55 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2"
       data-tour="input-area"
     >
       <div className="flex-1 min-w-0 flex items-stretch px-3">
@@ -144,7 +144,7 @@ export const ChatComposer = memo(function ChatComposer({
               disabled={disabled}
               ariaLabel="Voice input"
               compactStopWhileListening
-              className="!w-full !min-h-10 !min-w-0 !rounded-xl !border-neutral-200/70 dark:!border-neutral-400/70 !bg-neutral-50/70 dark:!bg-neutral-900/40 hover:!border-accent/70 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20"
+              className="!w-full !min-h-10 !min-w-0 !rounded-xl !border-neutral-400/85 dark:!border-neutral-500/55 !bg-neutral-50/80 dark:!bg-neutral-900/45 hover:!border-accent/80 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20"
             />
           </div>
           <button

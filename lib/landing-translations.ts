@@ -124,6 +124,8 @@ export interface LandingTranslations {
   weeklySummaryButtonLabel: string;
   weeklySummaryModalTitle: string;
   weeklySummaryLoading: string;
+  sleepInsightsModalTitle: string;
+  sleepInsightsLoading: string;
   weeklySummaryTabThisWeek: string;
   weeklySummaryTabLastWeek: string;
   weeklySummaryTabWeeksAgo: string;
@@ -320,6 +322,8 @@ const EN: LandingTranslations = {
   weeklySummaryButtonLabel: "Weekly Summary",
   weeklySummaryModalTitle: "Weekly Summary",
   weeklySummaryLoading: "Loading weekly summary...",
+  sleepInsightsModalTitle: "Sleep insights",
+  sleepInsightsLoading: "Generating sleep insights…",
   weeklySummaryTabThisWeek: "This week",
   weeklySummaryTabLastWeek: "Last week",
   weeklySummaryTabWeeksAgo: "weeks ago",

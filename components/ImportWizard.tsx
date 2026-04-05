@@ -278,7 +278,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className="relative">
-            <pre className="text-[10px] leading-relaxed bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3 overflow-auto max-h-64 whitespace-pre-wrap break-words text-neutral-700 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60">
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-lg border border-neutral-400/75 bg-neutral-100 p-3 text-[10px] leading-relaxed text-neutral-700 dark:border-neutral-500/55 dark:bg-neutral-800 dark:text-neutral-300">
               {IMPORT_PROMPT}
             </pre>
             <button
@@ -332,7 +332,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
             onChange={(e) => setMarkdownInput(e.target.value)}
             placeholder="Paste the markdown output here..."
             rows={12}
-            className="w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2.5 text-sm text-foreground placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-foreground/20 resize-y"
+            className="w-full resize-y rounded-lg border border-neutral-400/85 bg-white px-3 py-2.5 text-sm text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-foreground/20 dark:border-neutral-500/55 dark:bg-neutral-900 dark:placeholder:text-neutral-500"
           />
 
           {parseError && (
@@ -345,7 +345,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="px-3 py-2 rounded-xl text-sm font-medium border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="rounded-xl border border-neutral-400/85 px-3 py-2 text-sm font-medium transition-colors hover:bg-neutral-100 dark:border-neutral-500/55 dark:hover:bg-neutral-800"
             >
               Back
             </button>
@@ -415,7 +415,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
             })}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-neutral-200/60 dark:border-neutral-700/40">
+          <div className="flex items-center justify-between border-t border-neutral-300/90 pt-2 dark:border-neutral-600/50">
             <span className="text-xs text-neutral-500 dark:text-neutral-400">
               {totalSelected} item{totalSelected !== 1 ? "s" : ""} selected
               across {categoriesSelected} categor
@@ -425,7 +425,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="px-3 py-2 rounded-xl text-sm font-medium border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                className="rounded-xl border border-neutral-400/85 px-3 py-2 text-sm font-medium transition-colors hover:bg-neutral-100 dark:border-neutral-500/55 dark:hover:bg-neutral-800"
               >
                 Back
               </button>
@@ -455,7 +455,7 @@ export function ImportWizard({ onClose }: { onClose: () => void }) {
             </h4>
           </div>
 
-          <div className="rounded-lg border border-neutral-200/60 dark:border-neutral-700/50 bg-neutral-50 dark:bg-neutral-800/50 p-3 space-y-2">
+          <div className="app-inset-panel space-y-2 rounded-lg p-3">
             {Object.entries(importResult.inserted).map(([key, count]) => {
               const meta =
                 IMPORT_SECTION_META[key as ImportSectionKey] ?? { label: key, icon: "📦" };
@@ -544,7 +544,7 @@ function SectionCard({
   }, [sectionKey]);
 
   return (
-    <div className="rounded-lg border border-neutral-200/60 dark:border-neutral-700/50 overflow-hidden">
+    <div className="app-inset-panel overflow-hidden rounded-lg">
       <div className="flex items-center gap-2 px-3 py-2 bg-neutral-50 dark:bg-neutral-800/50">
         <button
           type="button"
@@ -585,7 +585,7 @@ function SectionCard({
       </div>
 
       {expanded && (
-        <div className="border-t border-neutral-200/60 dark:border-neutral-700/40 max-h-60 overflow-auto">
+        <div className="max-h-60 overflow-auto border-t border-neutral-300/90 dark:border-neutral-600/50">
           <table className="w-full text-[11px]">
             <thead>
               <tr className="bg-neutral-100 dark:bg-neutral-800">
@@ -607,7 +607,7 @@ function SectionCard({
                 return (
                   <tr
                     key={idx}
-                    className={`border-t border-neutral-100 dark:border-neutral-800 ${
+                    className={`border-t border-neutral-200/90 dark:border-neutral-600/50 ${
                       !row._valid
                         ? "bg-red-50/50 dark:bg-red-950/20"
                         : "hover:bg-neutral-50 dark:hover:bg-neutral-800/30"

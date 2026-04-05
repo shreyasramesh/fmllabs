@@ -5,6 +5,7 @@ import {
   type PermissionStatus,
 } from "@capacitor/local-notifications";
 import type { ReminderPreferences, ReminderType } from "@/lib/reminder-settings";
+import type { ReminderNotificationContext } from "@/lib/reminder-notification-context";
 
 const BASE_IDS: Record<ReminderType, number> = {
   nutrition: 1100,
@@ -50,11 +51,23 @@ function randomMentalModelPrompt(): string {
 const POMODORO_COMPLETION_NOTIFICATION_ID = 1600;
 const CAFFEINE_FOCUS_NOTIFICATION_ID = 1800;
 
+/** Stable numeric id for one habit + weekday slot (0–6). */
+function habitSlotNotificationId(habitId: string, day: number): number {
+  let h = 5381;
+  for (let i = 0; i < habitId.length; i++) {
+    h = (h * 33 + habitId.charCodeAt(i)) >>> 0;
+  }
+  return 21000 + (h % 8000) * 10 + day;
+}
+
+/** Ids scheduled on the last sync so we can cancel when habits change. */
+let lastHabitNotificationIds: number[] = [];
+
 function toCapacitorWeekday(day: number): number {
   return day + 1; // JS 0-6 (Sun-Sat) => Capacitor 1-7
 }
 
-function allManagedIds(): number[] {
+function allManagedGlobalIds(): number[] {
   const ids: number[] = [];
   for (const type of Object.keys(BASE_IDS) as ReminderType[]) {
     const base = BASE_IDS[type];
@@ -63,12 +76,37 @@ function allManagedIds(): number[] {
   return ids;
 }
 
-function buildNotifications(preferences: ReminderPreferences): LocalNotificationSchema[] {
+function shouldSkipGlobalSlot(
+  type: ReminderType,
+  scheduledWeekday: number,
+  ctx: ReminderNotificationContext | undefined,
+): boolean {
+  if (!ctx) return false;
+  if (scheduledWeekday !== ctx.todayWeekday) return false;
+  switch (type) {
+    case "weight":
+      return ctx.hasWeightEntryToday;
+    case "nutrition":
+      return Boolean(ctx.loggedNutritionToday);
+    case "exercise":
+      return Boolean(ctx.loggedExerciseToday);
+    case "gratitude":
+      return Boolean(ctx.loggedGratitudeToday);
+    default:
+      return false;
+  }
+}
+
+function buildGlobalNotifications(
+  preferences: ReminderPreferences,
+  ctx: ReminderNotificationContext | undefined,
+): LocalNotificationSchema[] {
   const notifications: LocalNotificationSchema[] = [];
   for (const type of Object.keys(BASE_IDS) as ReminderType[]) {
     const schedule = preferences[type];
     if (!schedule.enabled) continue;
     for (const day of schedule.days) {
+      if (shouldSkipGlobalSlot(type, day, ctx)) continue;
       const isMentalModel = type === "mentalModel";
       notifications.push({
         id: BASE_IDS[type] + day,
@@ -89,7 +127,41 @@ function buildNotifications(preferences: ReminderPreferences): LocalNotification
   return notifications;
 }
 
-export async function syncNativeReminders(preferences: ReminderPreferences): Promise<{
+function buildHabitNotifications(ctx: ReminderNotificationContext | undefined): LocalNotificationSchema[] {
+  const notifications: LocalNotificationSchema[] = [];
+  if (!ctx?.habits?.length) return notifications;
+
+  for (const h of ctx.habits) {
+    if (!h.reminder?.enabled) continue;
+    const doneToday = ctx.habitDoneToday?.[h.id] === true;
+    const { hour, minute, days } = h.reminder;
+    for (const day of days) {
+      if (doneToday && day === ctx.todayWeekday) continue;
+      const title = `Habit · ${h.name.trim() || "Check-in"}`;
+      const body = `Time to log this habit for today.`;
+      notifications.push({
+        id: habitSlotNotificationId(h.id, day),
+        title,
+        body,
+        schedule: {
+          repeats: true,
+          allowWhileIdle: true,
+          on: {
+            weekday: toCapacitorWeekday(day),
+            hour,
+            minute,
+          },
+        },
+      });
+    }
+  }
+  return notifications;
+}
+
+export async function syncNativeReminders(
+  preferences: ReminderPreferences,
+  context?: ReminderNotificationContext,
+): Promise<{
   ok: boolean;
   reason?: "not-native" | "permission-denied";
 }> {
@@ -101,11 +173,18 @@ export async function syncNativeReminders(preferences: ReminderPreferences): Pro
   }
   if (permissions.display !== "granted") return { ok: false, reason: "permission-denied" };
 
-  await LocalNotifications.cancel({
-    notifications: allManagedIds().map((id) => ({ id })),
-  });
+  const toCancel = [
+    ...allManagedGlobalIds().map((id) => ({ id })),
+    ...lastHabitNotificationIds.map((id) => ({ id })),
+  ];
+  await LocalNotifications.cancel({ notifications: toCancel });
+  lastHabitNotificationIds = [];
 
-  const notifications = buildNotifications(preferences);
+  const globalNotifications = buildGlobalNotifications(preferences, context);
+  const habitNotifications = buildHabitNotifications(context);
+  lastHabitNotificationIds = habitNotifications.map((n) => n.id as number);
+
+  const notifications = [...globalNotifications, ...habitNotifications];
   if (notifications.length > 0) {
     await LocalNotifications.schedule({ notifications });
   }
@@ -177,4 +256,3 @@ export async function scheduleCaffeineFocusNotification(focusWindowStartMinute: 
 
   return { ok: true };
 }
-
