@@ -13,6 +13,7 @@ interface LandingHeroHabitsProps {
   completions: LandingHabitCompletionMap;
   onToggle: (habitId: string, dateKey: string) => void;
   onOpenHabit: (habitId: string) => void;
+  emptyStateText?: string;
 }
 
 const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
@@ -57,6 +58,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
   completions,
   onToggle,
   onOpenHabit,
+  emptyStateText = "No hero habits yet. Tag a 30-day experiment as a hero habit to track it here.",
 }: LandingHeroHabitsProps) {
   const dateGrid = useMemo(buildWeekGrid, []);
   const today = useMemo(() => formatDateKey(new Date()), []);
@@ -84,7 +86,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
   if (habits.length === 0) {
     return (
       <p className="py-4 text-center text-xs text-neutral-400 dark:text-neutral-500">
-        No hero habits yet. Tag a 30-day experiment as a hero habit to track it here.
+        {emptyStateText}
       </p>
     );
   }

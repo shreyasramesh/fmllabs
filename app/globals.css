@@ -474,6 +474,7 @@ html {
 :root {
   --background: #FBF8F4;
   --foreground: #1a1a1a;
+  --app-wallpaper-image: url('/bg-light.png');
   /* Modal widths: 30% narrower on desktop */
   --modal-mental-model-max-w: min(90vw, 630px);
   --modal-perspective-card-max-w: 358px;
@@ -501,6 +502,7 @@ html {
   --background: #0a0a0a;
   --foreground: #ededed;
   --accent: #d4936a;
+  --app-wallpaper-image: url('/bg-dark.png');
   --selection-bg: #4a9188;
   --selection-color: #0f1f1d;
   /* Standard Tailwind neutral scale - components use dark:bg-neutral-800 for dark backgrounds, dark:text-neutral-300 for light text */
@@ -524,43 +526,56 @@ html {
 
 body {
   color: var(--foreground);
-  background-color: var(--background);
-  background-image: url('/bg-light.png');
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: transparent;
+  position: relative;
+  z-index: 1;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
-:root.dark body {
-  background-image: url('/bg-dark.png');
+html {
+  background-color: var(--background);
 }
-[data-background="air"]:not(.dark) body {
-  background-image: url('/bg-air-light.png');
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: -12px;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--app-wallpaper-image);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: blur(4px) brightness(0.97);
+  transform: scale(1.03);
+  transform-origin: center;
 }
-[data-background="air"].dark body {
-  background-image: url('/bg-air-dark.png');
+[data-background="air"]:not(.dark) {
+  --app-wallpaper-image: url('/bg-air-light.png');
 }
-[data-background="water"]:not(.dark) body {
-  background-image: url('/bg-water-light.png');
+[data-background="air"].dark {
+  --app-wallpaper-image: url('/bg-air-dark.png');
 }
-[data-background="water"].dark body {
-  background-image: url('/bg-water-dark.png');
+[data-background="water"]:not(.dark) {
+  --app-wallpaper-image: url('/bg-water-light.png');
 }
-[data-background="earth"]:not(.dark) body {
-  background-image: url('/bg-earth-light.png');
+[data-background="water"].dark {
+  --app-wallpaper-image: url('/bg-water-dark.png');
 }
-[data-background="earth"].dark body {
-  background-image: url('/bg-earth-dark.png');
+[data-background="earth"]:not(.dark) {
+  --app-wallpaper-image: url('/bg-earth-light.png');
 }
-[data-background="fire"]:not(.dark) body {
-  background-image: url('/bg-fire-light.png');
+[data-background="earth"].dark {
+  --app-wallpaper-image: url('/bg-earth-dark.png');
 }
-[data-background="fire"].dark body {
-  background-image: url('/bg-fire-dark.png');
+[data-background="fire"]:not(.dark) {
+  --app-wallpaper-image: url('/bg-fire-light.png');
+}
+[data-background="fire"].dark {
+  --app-wallpaper-image: url('/bg-fire-dark.png');
 }
 
 /* Light theme: ensure modal action buttons (including close icon buttons) have a visible border. */
@@ -1041,6 +1056,27 @@ body {
   background: rgba(10, 10, 10, 0.5);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* Landing modules: stronger frosted glass so wallpapers stay visible but content remains legible. */
+.landing-module-glass {
+  background: rgba(255, 255, 255, 0.64);
+  border-color: rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 10px 36px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+
+:root.dark .landing-module-glass {
+  background: rgba(12, 12, 12, 0.34);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(1.45);
+  -webkit-backdrop-filter: blur(24px) saturate(1.45);
 }
 
 /* Dark mode: star shimmer */

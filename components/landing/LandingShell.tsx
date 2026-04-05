@@ -11,6 +11,7 @@ import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepReco
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
+import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
@@ -212,7 +213,7 @@ function ModuleCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/60 bg-white/50 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
+    <section className="landing-module-glass overflow-hidden rounded-2xl border px-3 py-3">
       <h3 className="truncate text-[13px] font-semibold text-foreground">{eyebrow}</h3>
       {description && (
         <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
@@ -221,6 +222,18 @@ function ModuleCard({
     </section>
   );
 }
+
+const HABIT_DISCOVERY_BUCKETS: Array<{
+  bucket: HabitBucket;
+  /** Short label for compact one-row pills (avoids uneven wrap). */
+  label: string;
+  examples: string;
+}> = [
+  { bucket: "creative", label: "Creative", examples: "Art, music, writing" },
+  { bucket: "intellectual", label: "Intellectual", examples: "Reading, learning, travel" },
+  { bucket: "wellbeing", label: "Wellness", examples: "Yoga, meditation, sports" },
+  { bucket: "connection", label: "Connection", examples: "Shared meals, rituals, clubs" },
+];
 
 function ToggleRow({
   label,
@@ -435,10 +448,12 @@ interface LandingShellProps {
   onReviewThought: () => void;
   onOpenThoughtConcept: () => void;
   heroHabits: Array<{ _id: string; name: string }>;
+  experimentalHabits: Array<{ _id: string; name: string }>;
   heroHabitCompletions: LandingHabitCompletionMap;
   heroHabitsLabel: string;
   onToggleHabitCompletion: (habitId: string, dateKey: string) => void;
   onOpenHabitDetail: (habitId: string) => void;
+  onFindNewHabit: (bucket: HabitBucket) => void;
 }
 
 export function LandingShell({
@@ -566,10 +581,12 @@ export function LandingShell({
   onReviewThought,
   onOpenThoughtConcept,
   heroHabits,
+  experimentalHabits,
   heroHabitCompletions,
   heroHabitsLabel,
   onToggleHabitCompletion,
   onOpenHabitDetail,
+  onFindNewHabit,
 }: LandingShellProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -580,6 +597,7 @@ export function LandingShell({
   const [hrvInput, setHrvInput] = useState("");
   const [sleepFormOpen, setSleepFormOpen] = useState(false);
   const [selectedMentorId, setSelectedMentorId] = useState<string | null>(null);
+  const [selectedHabitDiscoveryBucket, setSelectedHabitDiscoveryBucket] = useState<HabitBucket>("creative");
 
   const lastSleep = sleepEntries.length > 0 ? sleepEntries[0] : null;
 
@@ -676,7 +694,7 @@ export function LandingShell({
 
   return (
     <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
-      <section className="sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white/55 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.05] sm:p-5">
+      <section className="landing-module-glass sticky top-0 z-30 w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -750,6 +768,48 @@ export function LandingShell({
         ) : (
           <div />
         )}
+
+        <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
+          <LandingHeroHabits
+            habits={experimentalHabits}
+            completions={heroHabitCompletions}
+            onToggle={onToggleHabitCompletion}
+            onOpenHabit={onOpenHabitDetail}
+            emptyStateText="No experiments slated for this month yet. Find a new one below."
+          />
+          <div className="mt-3 rounded-xl border border-white/55 bg-white/45 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] dark:border-white/10 dark:bg-white/[0.03]">
+            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+              Find a new habit
+            </p>
+            <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
+              {HABIT_DISCOVERY_BUCKETS.map((option) => {
+                const isSelected = option.bucket === selectedHabitDiscoveryBucket;
+                return (
+                  <button
+                    key={option.bucket}
+                    type="button"
+                    title={option.examples}
+                    onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
+                    className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
+                      isSelected
+                        ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                        : "border-neutral-200/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700/70 dark:bg-neutral-900/30 dark:text-neutral-300 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                    }`}
+                  >
+                    <span className="whitespace-nowrap">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
+              className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            >
+              Find me a new habit
+            </button>
+          </div>
+        </ModuleCard>
       </div>
 
       {/* 2. Timeline swim lanes — daily activity overview */}
@@ -759,7 +819,7 @@ export function LandingShell({
 
       {/* 3. Focus Timer + Quick Capture — daily action tools */}
       <div className="grid gap-4 xl:grid-cols-2">
-        <section className="flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border border-white/60 bg-white/50 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] sm:p-5">
+        <section className="landing-module-glass flex w-full flex-1 flex-col overflow-hidden rounded-[2.2rem] border p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
             Focus Timer
           </p>
@@ -881,7 +941,7 @@ export function LandingShell({
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-2xl border border-white/60 bg-white/50 px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04]">
+        <section className="landing-module-glass overflow-hidden rounded-2xl border px-3 py-3">
           <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
           <div className="mt-2 grid grid-cols-3 gap-1.5">
             {quickCaptures.map((item) => (

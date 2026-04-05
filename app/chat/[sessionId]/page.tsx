@@ -49,6 +49,14 @@ import {
 import { consumeConceptExtractionNdjsonStream } from "@/lib/concept-extraction-ndjson";
 import { getHabitBucketLabel, getUiTranslations } from "@/lib/ui-translations";
 import { HABIT_BUCKET_IDS, type HabitBucket } from "@/lib/habit-buckets";
+
+/** Compact labels for habit finder pills (matches landing; avoids "Well-being" wrap). */
+const HABIT_BUCKET_SHORT_LABELS: Record<HabitBucket, string> = {
+  creative: "Creative",
+  intellectual: "Intellectual",
+  wellbeing: "Wellness",
+  connection: "Connection",
+};
 import { formatHabitIntendedPeriod, getHabitIntendedYearOptions } from "@/lib/habit-intended";
 import { playSelectionChime } from "@/lib/selection-chime";
 import { stripMarkdown } from "@/lib/strip-markdown";
@@ -7730,6 +7738,39 @@ export default function ChatPage() {
     }
   }, [isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, pendingOneOnOneMentor, pendingSecondOrder, multiMentorMode, selectedMentorFigureIds, replaceComposerInput]);
 
+  const handleFindNewHabit = useCallback((bucket: HabitBucket) => {
+    const bucketPrompts: Record<HabitBucket, string> = {
+      creative:
+        "Creative habits like art, music, writing, or making things.",
+      intellectual:
+        "Intellectual habits like reading, learning, studying, or travel-inspired exploration.",
+      wellbeing:
+        "Well-being habits like yoga, meditation, walking, sports, sleep, or recovery.",
+      connection:
+        "Connection habits like shared meals, rituals, clubs, outreach, or quality time with people.",
+    };
+    const prompt = [
+      "Suggest exactly one new 30-day habit experiment for me.",
+      `Category: ${bucketPrompts[bucket]}`,
+      "Use a James Clear style approach:",
+      "- make it fun and easy to stick with",
+      "- include a 2-minute floor version and an ideal ceiling version",
+      "- include one environment-priming idea",
+      "- frame it around identity, not just outcomes",
+      "- optimize for getting started in the first 5 minutes",
+      "Keep the suggestion concise and practical.",
+      "After suggesting it, ask me two follow-up questions only:",
+      '1. "Do you want to save this habit?"',
+      '2. "Which month should I save it for?"',
+      "Do not save anything yet.",
+    ].join("\n");
+    setHabitCreateDraft(null);
+    setHabitCreateStep("input");
+    setHabitCreatePreview(null);
+    setLibraryPanelOpen(null);
+    void sendMessage(prompt);
+  }, [sendMessage]);
+
   useEffect(() => {
     if (journalBridgeAutoSendTrigger === 0) return;
     const text = journalBridgeAutoSendTextRef.current;
@@ -14265,9 +14306,18 @@ export default function ChatPage() {
                         onReviewThought={reviewThoughtOfTheDay}
                         onOpenThoughtConcept={openThoughtConcept}
                         heroHabits={habits.filter((h) => h.isHeroHabit).map((h) => ({ _id: h._id, name: h.name }))}
+                        experimentalHabits={(() => {
+                          const now = new Date();
+                          const cm = now.getMonth() + 1;
+                          const cy = now.getFullYear();
+                          return habits
+                            .filter((h) => !h.isHeroHabit && h.intendedMonth === cm && h.intendedYear === cy)
+                            .map((h) => ({ _id: h._id, name: h.name }));
+                        })()}
                         heroHabitCompletions={habitCompletions}
                         heroHabitsLabel={landingTranslations.landingHeroHabitsLabel}
                         onToggleHabitCompletion={handleToggleHabitCompletion}
+                        onFindNewHabit={handleFindNewHabit}
                         onOpenHabitDetail={(habitId) => {
                           playSelectionChime();
                           setLibraryPanelOpen("habits");
@@ -22220,6 +22270,38 @@ export default function ChatPage() {
                   </p>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-700 dark:bg-neutral-800/40">
+                    <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
+                      Find a new habit
+                    </p>
+                    <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
+                      {HABIT_BUCKET_IDS.map((b) => (
+                        <button
+                          key={b}
+                          type="button"
+                          onClick={() =>
+                            setHabitCreateDraft((d) =>
+                              d ? { ...d, bucket: b } : null
+                            )
+                          }
+                          className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
+                            habitCreateDraft.bucket === b
+                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-900/40 dark:text-neutral-300 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                          }`}
+                        >
+                          <span className="whitespace-nowrap">{HABIT_BUCKET_SHORT_LABELS[b]}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleFindNewHabit(habitCreateDraft.bucket)}
+                      className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                    >
+                      Find me a new habit
+                    </button>
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
                       {getUiTranslations(language).habitLifeArea}
