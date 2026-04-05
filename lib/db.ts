@@ -1,4 +1,5 @@
 import { MongoClient, Db, ObjectId } from "mongodb";
+import { getCache } from "./cache";
 import {
   decryptConceptGroupFields,
   decryptCustomConceptFields,
@@ -33,6 +34,28 @@ const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/and-then-what"
 let client: MongoClient | null = null;
 let db: Db | null = null;
 
+// ── Cache namespaces (TTLs in ms) ──
+const TTL_1M  = 5  * 60_000;
+const TTL_2M  = 15 * 60_000;
+const TTL_3M  = 30 * 60_000;
+const TTL_5M  = 60 * 60_000;
+
+const settingsCache     = getCache("settings");
+const sessionsCache     = getCache("sessions");
+const habitsCache       = getCache("habits");
+const completionsCache  = getCache("completions");
+const sleepCache        = getCache("sleep");
+const weightCache       = getCache("weight");
+const focusCache        = getCache("focus");
+const transcriptsCache  = getCache("transcripts");
+const mentalModelsCache = getCache("mentalModels");
+const savedConceptsCache = getCache("savedConcepts");
+const customConceptsCache = getCache("customConcepts");
+const perspectiveCardsCache = getCache("perspectiveCards");
+const conceptGroupsCache = getCache("conceptGroups");
+const memoriesCache     = getCache("memories");
+const reusableItemsCache = getCache("reusableItems");
+
 // M0 clusters have low connection limits (~500). Default maxPoolSize is 100 per client.
 // Limit pool size to avoid exhausting connections in serverless/multi-instance deployments.
 // Override with MONGODB_MAX_POOL_SIZE env var (e.g. 20 if you upgrade to M10+).
@@ -48,7 +71,36 @@ export async function getDb(): Promise<Db> {
   });
   await client.connect();
   db = client.db();
+  void ensureIndexes(db);
   return db;
+}
+
+let indexesEnsured = false;
+async function ensureIndexes(database: Db): Promise<void> {
+  if (indexesEnsured) return;
+  indexesEnsured = true;
+  try {
+    await Promise.all([
+      database.collection("sessions").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("messages").createIndex({ sessionId: 1, createdAt: 1 }, { background: true }),
+      database.collection("transcripts").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("habits").createIndex({ userId: 1 }, { background: true }),
+      database.collection("habit_completions").createIndex({ userId: 1, habitId: 1, dateKey: 1 }, { background: true }),
+      database.collection("user_settings").createIndex({ userId: 1 }, { unique: true, background: true }),
+      database.collection("user_sleep_entries").createIndex({ userId: 1, entryYear: -1, entryMonth: -1 }, { background: true }),
+      database.collection("user_weight_entries").createIndex({ userId: 1, recordedAt: -1 }, { background: true }),
+      database.collection("user_focus_entries").createIndex({ userId: 1, startedAt: -1 }, { background: true }),
+      database.collection("user_mental_models").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("user_saved_concepts").createIndex({ userId: 1, savedAt: -1 }, { background: true }),
+      database.collection("custom_concepts").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("saved_perspective_cards").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("concept_groups").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("long_term_memory").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("user_reusable_journal_items").createIndex({ userId: 1, kind: 1, usageCount: -1 }, { background: true }),
+    ]);
+  } catch {
+    indexesEnsured = false;
+  }
 }
 
 export interface Session {
@@ -186,6 +238,13 @@ export interface Habit {
     type: "intake" | "burn";
     calories: number;
     label: string;
+  };
+  /** Optional per-habit reminder schedule. */
+  reminder?: {
+    enabled: boolean;
+    hour: number;
+    minute: number;
+    days: number[];
   };
   createdAt: Date;
   updatedAt: Date;
@@ -575,15 +634,19 @@ export interface UsageEventDoc {
 }
 
 export async function getSessions(userId: string): Promise<(Session & { _id: string })[]> {
+  const cached = sessionsCache.get<(Session & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const sessions = await database
     .collection<Session>("sessions")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return sessions.map((s) =>
+  const result = sessions.map((s) =>
     decryptSessionFields({ ...s, _id: s._id?.toString() ?? "" } as Session & { _id: string })
   ) as (Session & { _id: string })[];
+  sessionsCache.set(userId, result, TTL_2M);
+  return result;
 }
 
 export async function createSession(
@@ -591,6 +654,7 @@ export async function createSession(
   title?: string,
   responseVerbosity?: "compact" | "detailed"
 ): Promise<Session & { _id: string }> {
+  sessionsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const session: Omit<Session, "_id"> = encryptSessionFields({
@@ -728,6 +792,7 @@ export async function updateSession(
     clearPerspectiveCard?: boolean;
   }
 ): Promise<boolean> {
+  sessionsCache.invalidate(userId);
   const database = await getDb();
   let id: ObjectId;
   try {
@@ -833,13 +898,15 @@ export interface SavedConcept {
 export async function getSavedConcepts(
   userId: string
 ): Promise<{ modelId: string; savedAt: Date; reflection?: string }[]> {
+  const cached = savedConceptsCache.get<{ modelId: string; savedAt: Date; reflection?: string }[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<SavedConcept>("user_saved_concepts")
     .find({ userId })
     .sort({ savedAt: -1 })
     .toArray();
-  return docs.map((d) => {
+  const result = docs.map((d) => {
     const dec = decryptSavedConceptFields<SavedConcept>(d);
     return {
       modelId: dec.modelId,
@@ -847,6 +914,8 @@ export async function getSavedConcepts(
       reflection: dec.reflection,
     };
   });
+  savedConceptsCache.set(userId, result, TTL_5M);
+  return result;
 }
 
 export async function addSavedConcept(
@@ -854,6 +923,7 @@ export async function addSavedConcept(
   modelId: string,
   reflection?: string
 ): Promise<boolean> {
+  savedConceptsCache.invalidate(userId);
   const database = await getDb();
   const enc =
     reflection != null
@@ -878,6 +948,7 @@ export async function removeSavedConcept(
   userId: string,
   modelId: string
 ): Promise<boolean> {
+  savedConceptsCache.invalidate(userId);
   const database = await getDb();
   const result = await database
     .collection<SavedConcept>("user_saved_concepts")
@@ -886,18 +957,22 @@ export async function removeSavedConcept(
 }
 
 export async function getUserMentalModels(userId: string): Promise<UserMentalModel[]> {
+  const cached = mentalModelsCache.get<UserMentalModel[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<UserMentalModelDoc>("user_mental_models")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptUserMentalModelFields({
       ...d,
       _id: d._id.toString(),
     } as UserMentalModel)
   ) as UserMentalModel[];
+  mentalModelsCache.set(userId, result, TTL_5M);
+  return result;
 }
 
 export async function getUserMentalModelById(
@@ -919,6 +994,7 @@ export async function createUserMentalModel(
   userId: string,
   model: Omit<UserMentalModel, "userId" | "createdAt" | "updatedAt" | "_id">
 ): Promise<UserMentalModel> {
+  mentalModelsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptUserMentalModelFields({
@@ -953,6 +1029,7 @@ export async function updateUserMentalModel(
   id: string,
   updates: Partial<Omit<UserMentalModel, "userId" | "id" | "createdAt" | "_id">>
 ): Promise<boolean> {
+  mentalModelsCache.invalidate(userId);
   const database = await getDb();
   const enc = encryptUserMentalModelFields<Record<string, unknown>>(updates as object);
   const result = await database
@@ -965,6 +1042,7 @@ export async function updateUserMentalModel(
 }
 
 export async function deleteUserMentalModel(userId: string, id: string): Promise<boolean> {
+  mentalModelsCache.invalidate(userId);
   const database = await getDb();
   const result = await database
     .collection<UserMentalModelDoc>("user_mental_models")
@@ -975,15 +1053,19 @@ export async function deleteUserMentalModel(userId: string, id: string): Promise
 export async function getLongTermMemories(
   userId: string
 ): Promise<(LongTermMemory & { _id: string })[]> {
+  const cached = memoriesCache.get<(LongTermMemory & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<LongTermMemory>("long_term_memory")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptLongTermMemoryFields({ ...d, _id: d._id.toString() } as LongTermMemory & { _id: string })
   ) as (LongTermMemory & { _id: string })[];
+  memoriesCache.set(userId, result, TTL_3M);
+  return result;
 }
 
 export async function getLongTermMemory(
@@ -1054,6 +1136,7 @@ export async function createLongTermMemory(
   enrichmentPrompt: string,
   chainOfThought?: string[]
 ): Promise<LongTermMemory & { _id: string }> {
+  memoriesCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptLongTermMemoryFields({
@@ -1078,6 +1161,7 @@ export async function updateLongTermMemory(
   userId: string,
   updates: { title?: string; summary?: string; enrichmentPrompt?: string; chainOfThought?: string[] }
 ): Promise<boolean> {
+  memoriesCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1096,6 +1180,7 @@ export async function updateLongTermMemory(
 }
 
 export async function deleteLongTermMemory(id: string, userId: string): Promise<boolean> {
+  memoriesCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1118,15 +1203,19 @@ export async function deleteLongTermMemory(id: string, userId: string): Promise<
 export async function getCustomConcepts(
   userId: string
 ): Promise<(CustomConcept & { _id: string })[]> {
+  const cached = customConceptsCache.get<(CustomConcept & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<CustomConceptDoc>("custom_concepts")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptCustomConceptFields({ ...d, _id: d._id.toString() } as CustomConcept & { _id: string })
   ) as (CustomConcept & { _id: string })[];
+  customConceptsCache.set(userId, result, TTL_3M);
+  return result;
 }
 
 export async function getCustomConcept(
@@ -1204,6 +1293,7 @@ export async function createCustomConcept(
   sourceVideoTitle?: string,
   sourceTranscriptId?: string
 ): Promise<CustomConcept & { _id: string }> {
+  customConceptsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptCustomConceptFields({
@@ -1235,6 +1325,7 @@ export async function updateCustomConcept(
     sourceTranscriptId?: string;
   }
 ): Promise<boolean> {
+  customConceptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1253,6 +1344,7 @@ export async function updateCustomConcept(
 }
 
 export async function deleteCustomConcept(id: string, userId: string): Promise<boolean> {
+  customConceptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1274,6 +1366,7 @@ export async function deleteCustomConceptsFromTranscript(
   userId: string,
   transcriptId: string
 ): Promise<{ deletedConcepts: number; removedEmptyGroups: number }> {
+  customConceptsCache.invalidate(userId);
   const database = await getDb();
   const docs = await database
     .collection<CustomConceptDoc>("custom_concepts")
@@ -1314,15 +1407,19 @@ export async function deleteCustomConceptsFromTranscript(
 }
 
 export async function getHabits(userId: string): Promise<(Habit & { _id: string })[]> {
+  const cached = habitsCache.get<(Habit & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<HabitDoc>("habits")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptHabitFields({ ...d, _id: d._id.toString() } as Habit & { _id: string })
   ) as (Habit & { _id: string })[];
+  habitsCache.set(userId, result, TTL_2M);
+  return result;
 }
 
 export async function getHabit(id: string, userId: string): Promise<(Habit & { _id: string }) | null> {
@@ -1359,6 +1456,7 @@ export async function createHabit(
     calorieImpact?: { type: "intake" | "burn"; calories: number; label: string };
   }
 ): Promise<Habit & { _id: string }> {
+  habitsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptHabitFields({
@@ -1400,8 +1498,10 @@ export async function updateHabit(
     intendedYear?: number | null;
     isHeroHabit?: boolean;
     calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null;
+    reminder?: { enabled: boolean; hour: number; minute: number; days: number[] } | null;
   }
 ): Promise<boolean> {
+  habitsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1427,6 +1527,18 @@ export async function updateHabit(
       setDoc.calorieImpact = null;
     } else {
       setDoc.calorieImpact = updates.calorieImpact;
+    }
+  }
+  if (updates.reminder !== undefined) {
+    if (updates.reminder === null) {
+      setDoc.reminder = null;
+    } else {
+      setDoc.reminder = {
+        enabled: !!updates.reminder.enabled,
+        hour: Math.max(0, Math.min(23, Math.floor(updates.reminder.hour))),
+        minute: Math.max(0, Math.min(59, Math.floor(updates.reminder.minute))),
+        days: (updates.reminder.days ?? []).filter((d) => d >= 0 && d <= 6).map(Math.floor),
+      };
     }
   }
   if (researchUpdatedAt instanceof Date) {
@@ -1458,6 +1570,7 @@ export async function updateHabit(
 }
 
 export async function deleteHabit(id: string, userId: string): Promise<boolean> {
+  habitsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1502,6 +1615,9 @@ export async function getHabitCompletions(
   fromDateKey: string,
   toDateKey: string
 ): Promise<Array<{ habitId: string; dateKey: string }>> {
+  const cacheKey = `${userId}:${fromDateKey}:${toDateKey}`;
+  const cached = completionsCache.get<Array<{ habitId: string; dateKey: string }>>(cacheKey);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   await ensureHabitCompletionIndex(database);
   const docs = await database
@@ -1512,6 +1628,7 @@ export async function getHabitCompletions(
     })
     .project<{ habitId: string; dateKey: string }>({ habitId: 1, dateKey: 1, _id: 0 })
     .toArray();
+  completionsCache.set(cacheKey, docs, TTL_1M);
   return docs;
 }
 
@@ -1521,6 +1638,7 @@ export async function toggleHabitCompletion(
   dateKey: string,
   calorieImpact?: { type: "intake" | "burn"; calories: number; label: string } | null
 ): Promise<{ completed: boolean }> {
+  completionsCache.invalidatePrefix(userId);
   const database = await getDb();
   await ensureHabitCompletionIndex(database);
   const col = database.collection<HabitCompletionDoc>("habit_completions");
@@ -1606,18 +1724,22 @@ export async function toggleHabitCompletion(
 export async function getSavedPerspectiveCards(
   userId: string
 ): Promise<(SavedPerspectiveCard & { _id: string })[]> {
+  const cached = perspectiveCardsCache.get<(SavedPerspectiveCard & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<SavedPerspectiveCardDoc>("saved_perspective_cards")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptSavedPerspectiveCardFields({
       ...d,
       _id: d._id.toString(),
     } as SavedPerspectiveCard & { _id: string })
   ) as (SavedPerspectiveCard & { _id: string })[];
+  perspectiveCardsCache.set(userId, result, TTL_5M);
+  return result;
 }
 
 export async function createSavedPerspectiveCard(
@@ -1628,6 +1750,7 @@ export async function createSavedPerspectiveCard(
   sourceDeckId?: string,
   sourceDeckName?: string
 ): Promise<SavedPerspectiveCard & { _id: string }> {
+  perspectiveCardsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptSavedPerspectiveCardFields({
@@ -1648,6 +1771,7 @@ export async function createSavedPerspectiveCard(
 }
 
 export async function deleteSavedPerspectiveCard(id: string, userId: string): Promise<boolean> {
+  perspectiveCardsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1664,15 +1788,19 @@ export async function deleteSavedPerspectiveCard(id: string, userId: string): Pr
 export async function getConceptGroups(
   userId: string
 ): Promise<(ConceptGroup & { _id: string })[]> {
+  const cached = conceptGroupsCache.get<(ConceptGroup & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<ConceptGroupDoc>("concept_groups")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptConceptGroupFields({ ...d, _id: d._id.toString() } as ConceptGroup & { _id: string })
   ) as (ConceptGroup & { _id: string })[];
+  conceptGroupsCache.set(userId, result, TTL_5M);
+  return result;
 }
 
 export async function getConceptGroup(
@@ -1726,6 +1854,7 @@ export async function createConceptGroup(
   conceptIds: string[],
   isCustomGroup?: boolean
 ): Promise<ConceptGroup & { _id: string }> {
+  conceptGroupsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc = encryptConceptGroupFields({
@@ -1753,6 +1882,7 @@ export async function updateConceptGroup(
   },
   options?: { unsetLegacyFrameworkSummary?: boolean }
 ): Promise<boolean> {
+  conceptGroupsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1797,6 +1927,7 @@ export async function getConceptGroupEnrichmentWithIds(
 }
 
 export async function deleteConceptGroup(id: string, userId: string): Promise<boolean> {
+  conceptGroupsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -1856,6 +1987,7 @@ export async function deleteSession(
   sessionId: string,
   userId: string
 ): Promise<boolean> {
+  sessionsCache.invalidate(userId);
   const database = await getDb();
   let id: ObjectId;
   try {
@@ -1873,15 +2005,19 @@ export async function deleteSession(
 export async function getSavedTranscripts(
   userId: string
 ): Promise<(SavedTranscript & { _id: string })[]> {
+  const cached = transcriptsCache.get<(SavedTranscript & { _id: string })[]>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const docs = await database
     .collection<SavedTranscriptDoc>("transcripts")
     .find({ userId })
     .sort({ updatedAt: -1 })
     .toArray();
-  return docs.map((d) =>
+  const result = docs.map((d) =>
     decryptTranscriptFields({ ...d, _id: d._id.toString() } as SavedTranscript & { _id: string })
   ) as (SavedTranscript & { _id: string })[];
+  transcriptsCache.set(userId, result, TTL_2M);
+  return result;
 }
 
 export async function getSavedTranscript(
@@ -1927,6 +2063,7 @@ export async function saveTranscript(
   videoTitle?: string,
   channel?: string
 ): Promise<SavedTranscript & { _id: string }> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const existing = await getSavedTranscriptByVideoId(videoId, userId);
@@ -1984,6 +2121,7 @@ export async function saveJournalTranscript(
     journalEntryTime?: { hour: number; minute: number };
   }
 ): Promise<SavedTranscript & { _id: string }> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const videoId = `journal_${new ObjectId().toHexString()}`;
@@ -2021,6 +2159,7 @@ export async function upsertReusableJournalItem(
   entryText: string,
   preferredDisplayName?: string
 ): Promise<void> {
+  reusableItemsCache.invalidatePrefix(userId);
   const database = await getDb();
   const baseText = preferredDisplayName?.trim() || entryText.trim();
   if (!baseText) return;
@@ -2065,6 +2204,9 @@ export async function getReusableJournalItems(
   query?: string,
   limit = 8
 ): Promise<Array<SavedNutritionExerciseItem & { _id: string }>> {
+  const cacheKey = `${userId}:${kind}:${query ?? ""}:${limit}`;
+  const cached = reusableItemsCache.get<Array<SavedNutritionExerciseItem & { _id: string }>>(cacheKey);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const safeLimit = Math.max(1, Math.min(20, Math.floor(limit)));
   const q = normalizeReusableItemName(query ?? "");
@@ -2086,10 +2228,12 @@ export async function getReusableJournalItems(
     .limit(safeLimit)
     .toArray();
 
-  return docs.map((d) => ({
+  const result = docs.map((d) => ({
     ...d,
     _id: d._id?.toString() ?? "",
   }));
+  reusableItemsCache.set(cacheKey, result, TTL_3M);
+  return result;
 }
 
 export async function upsertReusableJournalTags(
@@ -2257,6 +2401,7 @@ export async function addWeightEntry(
   weightKg: number,
   options?: { targetWeightKg?: number | null; recordedAt?: Date }
 ): Promise<WeightEntry & { _id: string }> {
+  weightCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const recordedAt = options?.recordedAt ?? now;
@@ -2285,6 +2430,8 @@ export async function getWeightEntries(
   userId: string,
   limit = 500
 ): Promise<Array<WeightEntry & { _id: string }>> {
+  const cached = weightCache.get<Array<WeightEntry & { _id: string }>>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const safeLimit = Math.max(1, Math.min(2000, Math.floor(limit)));
   const docs = await database
@@ -2293,10 +2440,12 @@ export async function getWeightEntries(
     .sort({ recordedAt: -1, createdAt: -1 })
     .limit(safeLimit)
     .toArray();
-  return docs.map((d) => ({
+  const result = docs.map((d) => ({
     ...d,
     _id: d._id.toString(),
   }));
+  weightCache.set(userId, result, TTL_3M);
+  return result;
 }
 
 export async function addFocusEntry(
@@ -2311,6 +2460,7 @@ export async function addFocusEntry(
     entryYear: number;
   }
 ): Promise<FocusEntry & { _id: string }> {
+  focusCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc: Omit<FocusEntryDoc, "_id"> = {
@@ -2343,6 +2493,8 @@ export async function getFocusEntries(
     limit?: number;
   }
 ): Promise<Array<FocusEntry & { _id: string }>> {
+  const cached = focusCache.get<Array<FocusEntry & { _id: string }>>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const safeLimit = Math.max(1, Math.min(2000, Math.floor(options?.limit ?? 500)));
   const filter: {
@@ -2360,13 +2512,16 @@ export async function getFocusEntries(
     .sort({ endedAt: -1, createdAt: -1 })
     .limit(safeLimit)
     .toArray();
-  return docs.map((d) => ({
+  const result = docs.map((d) => ({
     ...d,
     _id: d._id.toString(),
   }));
+  focusCache.set(userId, result, TTL_2M);
+  return result;
 }
 
 export async function deleteFocusEntry(id: string, userId: string): Promise<boolean> {
+  focusCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2390,6 +2545,7 @@ export async function addSleepEntry(
     entryYear: number;
   }
 ): Promise<SleepEntry & { _id: string }> {
+  sleepCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const doc: Omit<SleepEntryDoc, "_id"> = {
@@ -2415,6 +2571,8 @@ export async function getSleepEntries(
   userId: string,
   options?: { limit?: number }
 ): Promise<Array<SleepEntry & { _id: string }>> {
+  const cached = sleepCache.get<Array<SleepEntry & { _id: string }>>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const safeLimit = Math.max(1, Math.min(200, Math.floor(options?.limit ?? 30)));
   const docs = await database
@@ -2423,13 +2581,16 @@ export async function getSleepEntries(
     .sort({ entryYear: -1, entryMonth: -1, entryDay: -1 })
     .limit(safeLimit)
     .toArray();
-  return docs.map((d) => ({
+  const result = docs.map((d) => ({
     ...d,
     _id: d._id.toString(),
   }));
+  sleepCache.set(userId, result, TTL_3M);
+  return result;
 }
 
 export async function deleteSleepEntry(id: string, userId: string): Promise<boolean> {
+  sleepCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2564,6 +2725,7 @@ export async function upsertDailyLifeReport(
 }
 
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2582,6 +2744,7 @@ export async function updateTranscriptExtractedConcepts(
   userId: string,
   groups: ExtractedConceptGroup[]
 ): Promise<boolean> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2609,6 +2772,7 @@ export async function updateJournalMentorReflections(
     reflections?: JournalMentorReflectionItem[];
   }
 ): Promise<boolean> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2640,6 +2804,7 @@ export async function updateSavedTranscriptText(
   userId: string,
   transcriptText: string
 ): Promise<(SavedTranscript & { _id: string }) | null> {
+  transcriptsCache.invalidate(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2661,11 +2826,13 @@ export async function updateSavedTranscriptText(
 }
 
 export async function getUserSettings(userId: string): Promise<UserSettings | null> {
+  const cached = settingsCache.get<UserSettings | null>(userId);
+  if (cached !== undefined) return cached;
   const database = await getDb();
   const doc = await database
     .collection<UserSettingsDoc>("user_settings")
     .findOne({ userId });
-  if (!doc) return null;
+  if (!doc) { settingsCache.set(userId, null, TTL_5M); return null; }
   const nutritionFatLossMethods: NutritionFatLossMethod[] = Array.isArray(doc.nutritionFatLossMethods)
     ? doc.nutritionFatLossMethods
         .filter(
@@ -2684,7 +2851,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     doc.nutritionMethodConfig && typeof doc.nutritionMethodConfig === "object"
       ? (doc.nutritionMethodConfig as NutritionMethodConfig)
       : undefined;
-  return decryptUserSettingsFields({
+  const settings = decryptUserSettingsFields<UserSettings>({
     userId: doc.userId,
     theme: doc.theme,
     language: doc.language,
@@ -2709,12 +2876,15 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     reminderPreferences: doc.reminderPreferences as UserSettings["reminderPreferences"],
     updatedAt: doc.updatedAt,
   });
+  settingsCache.set(userId, settings, TTL_5M);
+  return settings;
 }
 
 export async function upsertUserSettings(
   userId: string,
   updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
+  settingsCache.invalidate(userId);
   const database = await getDb();
   const now = new Date();
   const enc = encryptUserSettingsFields<Record<string, unknown>>(updates as object);
@@ -2835,6 +3005,21 @@ export async function markWeeklyReflectionSendStatus(
 
 /** Delete all user data stored in app DB collections for this user. */
 export async function deleteAllUserData(userId: string): Promise<void> {
+  settingsCache.invalidate(userId);
+  sessionsCache.invalidate(userId);
+  habitsCache.invalidate(userId);
+  completionsCache.invalidatePrefix(userId);
+  sleepCache.invalidate(userId);
+  weightCache.invalidate(userId);
+  focusCache.invalidate(userId);
+  transcriptsCache.invalidate(userId);
+  mentalModelsCache.invalidate(userId);
+  savedConceptsCache.invalidate(userId);
+  customConceptsCache.invalidate(userId);
+  perspectiveCardsCache.invalidate(userId);
+  conceptGroupsCache.invalidate(userId);
+  memoriesCache.invalidate(userId);
+  reusableItemsCache.invalidatePrefix(userId);
   const database = await getDb();
   const sessions = await database
     .collection<SessionDoc>("sessions")
