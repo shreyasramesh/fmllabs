@@ -206,11 +206,11 @@ export function LandingBrainDump({ language = "en", onSaved }: LandingBrainDumpP
         type="button"
         onClick={startRecording}
         aria-label="Brain Dump — voice capture"
-        className="fixed right-6 z-50 isolate flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 voice-fab bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
+        className="fixed right-6 z-50 isolate flex h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 voice-fab bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
       >
         <span className="voice-fab-wave" aria-hidden />
         <span className="voice-fab-wave" style={{ animationDelay: "1.5s" }} aria-hidden />
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-[17px] w-[17px]">
           <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
           <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
         </svg>
