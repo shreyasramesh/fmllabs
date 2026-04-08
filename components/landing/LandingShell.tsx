@@ -824,7 +824,7 @@ export function LandingShell({
           {activeMobileTab !== "more" ? (
             mobileTabContent
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 px-4">
               {/* Experiments */}
               <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
                 <LandingHeroHabits
