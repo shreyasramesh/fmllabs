@@ -11,6 +11,11 @@ import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepReco
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
+import { LandingMobileTabBar, type MobileTab } from "@/components/landing/LandingMobileTabBar";
+import { LandingMobileNutritionTab } from "@/components/landing/LandingMobileNutritionTab";
+import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
+import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
+import { LandingMobileHabitsTab } from "@/components/landing/LandingMobileHabitsTab";
 import { useTheme } from "@/components/ThemeProvider";
 import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
@@ -21,6 +26,7 @@ import type {
   LandingDateItem,
   LandingFigureSummary,
   LandingFocusSummaryRow,
+  LandingFoodSuggestion,
   LandingHabitCompletionMap,
   LandingNutritionGoals,
   LandingNutritionSummary,
@@ -318,6 +324,15 @@ interface LandingShellProps {
   onSearchFood: () => void;
   onCaptureFood: () => void;
   onDescribeFood: () => void;
+  /** Inline food input state for the mobile nutrition tab. */
+  inlineFoodInput: string;
+  onInlineFoodInputChange: (value: string) => void;
+  onInlineFoodSubmit: () => void;
+  inlineFoodLoading: boolean;
+  inlineFoodSuggestions: LandingFoodSuggestion[];
+  inlineFoodSuggestionsLoading: boolean;
+  onInlineFoodSuggestionSelect: (suggestionId: string) => void;
+  recentFoodEntries: Array<{ id: string; label: string; calories: number; time: string }>;
   onPomodoroCustomMinutesInputChange: (value: string) => void;
   onApplyCustomPomodoroMinutes: () => void;
   onSelectPomodoroDuration: (minutes: number) => void;
@@ -411,6 +426,7 @@ interface LandingShellProps {
   heroHabitsLabel: string;
   onToggleHabitCompletion: (habitId: string, dateKey: string) => void;
   onOpenHabitDetail: (habitId: string) => void;
+  onReorderHeroHabits: (orderedIds: string[]) => void;
   onFindNewHabit: (bucket: HabitBucket) => void;
   /** Scroll container for the dashboard (e.g. chat messages column) — powers section scroll-spy. */
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
@@ -456,6 +472,14 @@ export function LandingShell({
   onSearchFood,
   onCaptureFood,
   onDescribeFood,
+  inlineFoodInput,
+  onInlineFoodInputChange,
+  onInlineFoodSubmit,
+  inlineFoodLoading,
+  inlineFoodSuggestions,
+  inlineFoodSuggestionsLoading,
+  onInlineFoodSuggestionSelect,
+  recentFoodEntries,
   onPomodoroCustomMinutesInputChange,
   onApplyCustomPomodoroMinutes,
   onSelectPomodoroDuration,
@@ -548,11 +572,13 @@ export function LandingShell({
   heroHabitsLabel,
   onToggleHabitCompletion,
   onOpenHabitDetail,
+  onReorderHeroHabits,
   onFindNewHabit,
   dashboardScrollRootRef,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
+  const [activeMobileTab, setActiveMobileTab] = useState<MobileTab>("nutrition");
 
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -724,8 +750,294 @@ export function LandingShell({
     };
   }, [inlineChartBase, weeklyChartTitleStyle, weeklyDayLetters, weeklySummary]);
 
+  const mobileTabContent = (() => {
+    switch (activeMobileTab) {
+      case "nutrition":
+        return (
+          <LandingMobileNutritionTab
+            nutrition={nutrition}
+            nutritionGoals={nutritionGoals}
+            weeklySummary={weeklySummary}
+            onOpenNutrition={onOpenNutrition}
+            onSearchFood={onSearchFood}
+            onCaptureFood={onCaptureFood}
+            inlineFoodInput={inlineFoodInput}
+            onInlineFoodInputChange={onInlineFoodInputChange}
+            onInlineFoodSubmit={onInlineFoodSubmit}
+            inlineFoodLoading={inlineFoodLoading}
+            inlineFoodSuggestions={inlineFoodSuggestions}
+            inlineFoodSuggestionsLoading={inlineFoodSuggestionsLoading}
+            onInlineFoodSuggestionSelect={onInlineFoodSuggestionSelect}
+            recentFoodEntries={recentFoodEntries}
+          />
+        );
+      case "weight":
+        return (
+          <LandingMobileWeightTab
+            weightCurrentKg={weightCurrentKg}
+            weightTargetKg={weightTargetKg}
+            weightEntryCount={weightEntryCount}
+            weightWeekPoints={weightWeekPoints}
+            weightTitle={weightTitle}
+            weightDescription={weightDescription}
+            currentWeightLabel={currentWeightLabel}
+            targetWeightLabel={targetWeightLabel}
+            noTargetYetLabel={noTargetYetLabel}
+            openLabel={openLabel}
+            onOpenWeight={onOpenWeight}
+          />
+        );
+      case "sleep":
+        return (
+          <LandingMobileSleepTab
+            selectedDayLabel={selectedDayLabel}
+            sleepEntries={sleepEntries}
+            sleepEntryDayKey={sleepEntryDayKey}
+            sleepFocusSuggestion={sleepFocusSuggestion}
+            sleepSaving={sleepSaving}
+            onSaveSleepEntry={onSaveSleepEntry}
+            onViewSleepInsights={onViewSleepInsights}
+          />
+        );
+      case "habits":
+        return (
+          <LandingMobileHabitsTab
+            heroHabits={heroHabits}
+            heroHabitCompletions={heroHabitCompletions}
+            onToggleHabitCompletion={onToggleHabitCompletion}
+            onOpenHabitDetail={onOpenHabitDetail}
+            onReorderHeroHabits={onReorderHeroHabits}
+            onOpenHabits={onOpenHabits}
+            heroHabitsLabel={heroHabitsLabel}
+          />
+        );
+      case "more":
+        return null;
+    }
+  })();
+
   return (
-    <div className="w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
+    <>
+      {/* ===== Mobile tabbed layout ===== */}
+      <div className="w-full min-w-0 animate-fade-in-up md:hidden">
+        <div className="pb-20">
+          {activeMobileTab !== "more" ? (
+            mobileTabContent
+          ) : (
+            <div className="space-y-4">
+              {/* Experiments */}
+              <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
+                <LandingHeroHabits
+                  habits={experimentalHabits}
+                  completions={heroHabitCompletions}
+                  onToggle={onToggleHabitCompletion}
+                  onOpenHabit={onOpenHabitDetail}
+                  emptyStateText="No experiments slated for this month yet. Find a new one below."
+                />
+                <div className="module-nested mt-3 p-3">
+                  <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
+                    Find a new habit
+                  </p>
+                  <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
+                    {HABIT_DISCOVERY_BUCKETS.map((option) => {
+                      const isSelected = option.bucket === selectedHabitDiscoveryBucket;
+                      return (
+                        <button
+                          key={option.bucket}
+                          type="button"
+                          title={option.examples}
+                          onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
+                          className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
+                            isSelected
+                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+                              : "border-neutral-300/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                          }`}
+                        >
+                          <span className="whitespace-nowrap">{option.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
+                    className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  >
+                    Find me a new habit
+                  </button>
+                </div>
+              </ModuleCard>
+
+              {/* Timeline */}
+              <LandingTimelineCard
+                eyebrow={timelineEyebrow}
+                dayLabel={timelineLabel}
+                events={timelineEvents}
+                onTimelineEventClick={onTimelineEventClick}
+              />
+
+              {/* Focus Timer */}
+              <section className="landing-module-glass flex w-full flex-col overflow-hidden rounded-[2rem] border p-4 sm:p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+                  Focus Timer
+                </p>
+                <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
+                  {pomodoroClockLabel}
+                </p>
+                <div className="mt-4 flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[30, 60, 90].map((minutes) => (
+                      <button
+                        key={`mobile-focus-timer-dur-${minutes}`}
+                        type="button"
+                        onClick={() => onSelectPomodoroDuration(minutes)}
+                        disabled={focusTrackerSaving || pomodoroSessionActive}
+                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shadow-sm ${
+                          pomodoroDurationMinutes === minutes
+                            ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] ring-1 ring-[#B87B51]/25 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:ring-[#D6A67E]/20"
+                            : "border-neutral-400/85 bg-white/90 text-neutral-800 hover:shadow-md dark:border-neutral-500/55 dark:bg-neutral-800/95 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:brightness-110"
+                        } disabled:opacity-50`}
+                      >
+                        {minutes}m
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={focusSessionTagInput}
+                    onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
+                    placeholder="Tag this focus session..."
+                    disabled={focusTrackerSaving}
+                    className="w-full rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800 dark:shadow-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
+                    disabled={focusTrackerSaving}
+                    className="w-full rounded-full border-2 border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  >
+                    {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
+                  </button>
+                </div>
+              </section>
+
+              {/* Thought of the Day */}
+              {thoughtOfTheDay && (
+                <LandingThoughtOfTheDayBanner
+                  thought={thoughtOfTheDay}
+                  onReview={onReviewThought}
+                  onOpenConcept={onOpenThoughtConcept}
+                  reviewing={thoughtReviewing}
+                />
+              )}
+
+              {/* Activity */}
+              <ModuleCard eyebrow="Activity" title={activityTitle} description={activityDescription}>
+                <div className="space-y-3">
+                  {activityGroups.length === 0 ? (
+                    <p className="text-[13px] text-neutral-500 dark:text-neutral-400">No activity yet for this day.</p>
+                  ) : (
+                    activityGroups.map((group) => (
+                      <button
+                        key={group.key}
+                        type="button"
+                        onClick={group.onClick}
+                        className="module-nested flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left transition-shadow hover:shadow-md active:scale-[0.99] dark:hover:brightness-110"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[13px] font-semibold text-foreground">{group.label}</span>
+                          <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">{tapToInspectLabel}</span>
+                        </span>
+                        <span className="shrink-0 rounded-full border border-neutral-400/85 bg-white/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-neutral-700 ring-1 ring-neutral-900/[0.05] dark:border-neutral-500/60 dark:bg-neutral-900/50 dark:text-neutral-200 dark:ring-white/[0.08]">
+                          {group.count}
+                        </span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </ModuleCard>
+
+              {/* Caffeine */}
+              <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />
+
+              {/* Mentor Hub */}
+              <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
+                <div className="space-y-4">
+                  <div className="module-nested p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                      1:1 Mentor Chat
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Pick a mentor for a private coaching conversation.
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {mentors.slice(0, 5).map((mentor) => {
+                        const isSelected = selectedMentorId === mentor.id;
+                        return (
+                          <button
+                            key={mentor.id}
+                            type="button"
+                            onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
+                            className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
+                              isSelected
+                                ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
+                                : "border-neutral-300 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                            }`}
+                          >
+                            <span
+                              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white"
+                              style={{ backgroundColor: `hsl(${mentor.hue} 70% 45%)` }}
+                            >
+                              {mentor.initials}
+                            </span>
+                            <span className="truncate text-[12px] font-medium text-foreground">{mentor.name}</span>
+                          </button>
+                        );
+                      })}
+                      {mentorCount === 0 && (
+                        <p className="text-[12px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+                      )}
+                    </div>
+                    <div className="mt-2">
+                      {selectedMentorId ? (
+                        <button
+                          type="button"
+                          onClick={() => onSelectMentor(selectedMentorId)}
+                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                        >
+                          Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={onOpenOneOnOneMentor}
+                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                        >
+                          Browse all mentors
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="module-nested p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                      Ask Mentors
+                    </p>
+                    <p className="mt-0.5 mb-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Get recommendations from multiple mentors at once.
+                    </p>
+                    {askMentorsContent}
+                  </div>
+                </div>
+              </ModuleCard>
+            </div>
+          )}
+        </div>
+        <LandingMobileTabBar activeTab={activeMobileTab} onTabChange={setActiveMobileTab} />
+      </div>
+
+      {/* ===== Desktop stacked layout (unchanged) ===== */}
+    <div className="hidden md:block w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
       <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
 
       {/* 1. Focus Canvas + Hero Habits + Quick Capture */}
@@ -1421,5 +1733,6 @@ export function LandingShell({
       </div>
 
     </div>
+    </>
   );
 }

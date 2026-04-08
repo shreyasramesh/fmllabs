@@ -62,6 +62,13 @@ export interface LandingNutritionGoals {
   fatGrams: number;
 }
 
+export interface LandingRecentFoodEntry {
+  id: string;
+  label: string;
+  calories: number;
+  time: string;
+}
+
 export interface CaffeineIntake {
   minuteOfDay: number;
   mg: number;
@@ -146,4 +153,15 @@ export interface LandingThoughtOfTheDay {
   daysSinceLastReview: number | null;
   totalReviews: number;
   streak: number;
+}
+
+/** Compact food suggestion for inline nutrition input typeahead. */
+export interface LandingFoodSuggestion {
+  id: string;
+  displayName: string;
+  sampleEntry: string;
+  calories: number | null;
+  proteinGrams: number | null;
+  carbsGrams: number | null;
+  fatGrams: number | null;
 }

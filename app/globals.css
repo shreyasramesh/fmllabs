@@ -527,7 +527,7 @@ html {
 :root {
   --background: #FBF8F4;
   --foreground: #1a1a1a;
-  --app-wallpaper-image: url('/bg-light.png');
+  --app-wallpaper-image: none;
   /* Modal widths: 30% narrower on desktop */
   --modal-mental-model-max-w: min(90vw, 630px);
   --modal-perspective-card-max-w: 358px;
@@ -555,7 +555,7 @@ html {
   --background: #0a0a0a;
   --foreground: #ededed;
   --accent: #d4936a;
-  --app-wallpaper-image: url('/bg-dark.png');
+  --app-wallpaper-image: none;
   --selection-bg: #4a9188;
   --selection-color: #0f1f1d;
   /* Standard Tailwind neutral scale - components use dark:bg-neutral-800 for dark backgrounds, dark:text-neutral-300 for light text */
@@ -592,43 +592,7 @@ html {
 }
 
 html::before {
-  content: "";
-  position: fixed;
-  inset: -12px;
-  z-index: 0;
-  pointer-events: none;
-  background-image: var(--app-wallpaper-image);
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  filter: blur(4px) brightness(0.97);
-  transform: scale(1.03);
-  transform-origin: center;
-}
-[data-background="air"]:not(.dark) {
-  --app-wallpaper-image: url('/bg-air-light.png');
-}
-[data-background="air"].dark {
-  --app-wallpaper-image: url('/bg-air-dark.png');
-}
-[data-background="water"]:not(.dark) {
-  --app-wallpaper-image: url('/bg-water-light.png');
-}
-[data-background="water"].dark {
-  --app-wallpaper-image: url('/bg-water-dark.png');
-}
-[data-background="earth"]:not(.dark) {
-  --app-wallpaper-image: url('/bg-earth-light.png');
-}
-[data-background="earth"].dark {
-  --app-wallpaper-image: url('/bg-earth-dark.png');
-}
-[data-background="fire"]:not(.dark) {
-  --app-wallpaper-image: url('/bg-fire-light.png');
-}
-[data-background="fire"].dark {
-  --app-wallpaper-image: url('/bg-fire-dark.png');
+  display: none;
 }
 
 /* Light theme: ensure modal action buttons (including close icon buttons) have a visible border. */
@@ -961,37 +925,12 @@ html::before {
   --neutral-900: #2a2318;
   --neutral-950: #1a1810;
 }
-[data-background="default"]:not(.dark) .chat-bg-area {
-  background: transparent;
+/* Solid glass-chrome surfaces — no wallpaper to blur through */
+.glass-chrome {
+  background: var(--background);
 }
-[data-background="default"]:not(.dark) .glass-chrome {
-  background: rgba(251, 248, 244, 0.78);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="default"].dark .chat-bg-area {
-  background: transparent;
-}
-[data-background="default"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.62);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="air"]:not(.dark) .chat-bg-area {
-  background: transparent;
-}
-[data-background="air"]:not(.dark) .glass-chrome {
-  background: rgba(254, 253, 244, 0.78);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="air"].dark .chat-bg-area {
-  background: transparent;
-}
-[data-background="air"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.62);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+.dark .glass-chrome {
+  background: var(--background);
 }
 
 /* Water - muted blue palette */
@@ -1016,22 +955,6 @@ html::before {
   --neutral-900: #1f2a3a;
   --neutral-950: #141c28;
 }
-[data-background="water"]:not(.dark) .chat-bg-area {
-  background: transparent;
-}
-[data-background="water"]:not(.dark) .glass-chrome {
-  background: rgba(240, 246, 250, 0.78);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="water"].dark .chat-bg-area {
-  background: transparent;
-}
-[data-background="water"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.62);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
 
 /* Earth - muted green palette */
 [data-background="earth"]:not(.dark) {
@@ -1054,22 +977,6 @@ html::before {
   --neutral-800: #2d4a3a;
   --neutral-900: #1f3a2a;
   --neutral-950: #142a1c;
-}
-[data-background="earth"]:not(.dark) .chat-bg-area {
-  background: transparent;
-}
-[data-background="earth"]:not(.dark) .glass-chrome {
-  background: rgba(242, 247, 242, 0.78);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="earth"].dark .chat-bg-area {
-  background: transparent;
-}
-[data-background="earth"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.62);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
 }
 
 /* Fire - muted orange-red palette */
@@ -1094,32 +1001,13 @@ html::before {
   --neutral-900: #3e2a1a;
   --neutral-950: #2a1a0f;
 }
-[data-background="fire"]:not(.dark) .chat-bg-area {
-  background: transparent;
-}
-[data-background="fire"]:not(.dark) .glass-chrome {
-  background: rgba(250, 245, 240, 0.78);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
-[data-background="fire"].dark .chat-bg-area {
-  background: transparent;
-}
-[data-background="fire"].dark .glass-chrome {
-  background: rgba(10, 10, 10, 0.62);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-}
 
-/*
- * Main chat / landing surface: busier wallpapers need clearer edges and secondary text
- * that reads closer to body copy (Tailwind neutral-* map to theme CSS variables).
- */
+/* Subtle edge on the main chat / landing chrome surface */
 .chat-bg-area .glass-chrome {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 22%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 .dark .chat-bg-area .glass-chrome {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 26%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 12%, transparent);
 }
 
 .chat-bg-area .text-neutral-400 {
@@ -1135,27 +1023,18 @@ html::before {
   color: var(--neutral-300);
 }
 
-/* Landing modules: translucent frosted glass matching Focus Canvas / Caffeine cards.
- * Light mode: avoid white-on-white borders — use foreground-tinted edges (same idea as .glass-chrome). */
+/* Landing modules: clean solid surfaces inspired by Apple Finder / system UI.
+ * Light: white cards on a subtle gray canvas.  Dark: elevated dark surfaces. */
 .landing-module-glass {
-  background: rgba(255, 255, 255, 0.52);
-  /* Slightly stronger edge so nested cards don’t blend into the module on warm/light gradients */
-  border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--foreground) 12%, transparent),
-    0 8px 32px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 :root.dark .landing-module-glass {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--foreground) 14%, transparent),
-    0 8px 32px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /*

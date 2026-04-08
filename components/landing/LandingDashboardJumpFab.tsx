@@ -39,7 +39,7 @@ export function LandingDashboardJumpFab() {
   return (
     <div
       ref={rootRef}
-      className="pointer-events-none fixed right-6 z-[45] md:right-8"
+      className="pointer-events-none fixed right-6 z-[45] hidden md:block md:right-8"
       style={{
         /* Stacks above the Brain Dump voice FAB (bottom-6 = 1.5rem + h-14 = 3.5rem + 0.75rem gap). */
         bottom: "calc(5.75rem + env(safe-area-inset-bottom, 0px))",

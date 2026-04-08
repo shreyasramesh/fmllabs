@@ -235,6 +235,8 @@ export interface Habit {
   researchUpdatedAt?: Date;
   /** When true, habit appears in the Hero Habits landing module. */
   isHeroHabit?: boolean;
+  /** Sort position within the Hero Habits list (lower = higher). */
+  heroHabitOrder?: number;
   /** AI-estimated calorie impact when the habit is completed once. */
   calorieImpact?: {
     type: "intake" | "burn";

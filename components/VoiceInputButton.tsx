@@ -510,6 +510,7 @@ export function VoiceInputButton({
   className = "",
   ariaLabel = "Voice input",
   compactStopWhileListening = false,
+  noPulse = false,
 }: {
   onTranscription: (text: string) => void;
   onLongPress?: () => void;
@@ -518,6 +519,7 @@ export function VoiceInputButton({
   className?: string;
   ariaLabel?: string;
   compactStopWhileListening?: boolean;
+  noPulse?: boolean;
 }) {
   const [listening, setListening] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -925,13 +927,13 @@ export function VoiceInputButton({
       aria-label={ariaLabel}
       className={`relative flex min-h-[52px] min-w-[52px] shrink-0 select-none items-center justify-center rounded-2xl border border-neutral-400/85 text-neutral-600 no-touch-callout transition-all duration-200 [-webkit-tap-highlight-color:transparent] hover:bg-neutral-100 hover:text-foreground dark:border-neutral-500/55 dark:text-neutral-400 dark:hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
-      {!disabled && holdProgress === 0 && (
+      {!noPulse && !disabled && holdProgress === 0 && (
         <>
           <span className="voice-button-wave" aria-hidden />
           <span className="voice-button-wave" style={{ animationDelay: "1.5s" }} aria-hidden />
         </>
       )}
-      {onLongPress && !disabled && holdProgress === 0 && (
+      {!noPulse && onLongPress && !disabled && holdProgress === 0 && (
         <span
           className="absolute inset-0 rounded-2xl border-2 border-current pointer-events-none animate-voice-hold-hint"
           aria-hidden

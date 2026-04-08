@@ -206,7 +206,7 @@ export function LandingBrainDump({ language = "en", onSaved }: LandingBrainDumpP
         type="button"
         onClick={startRecording}
         aria-label="Brain Dump — voice capture"
-        className="fixed bottom-6 right-6 z-50 isolate flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 voice-fab"
+        className="fixed right-6 z-50 isolate flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 voice-fab bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:bottom-6"
       >
         <span className="voice-fab-wave" aria-hidden />
         <span className="voice-fab-wave" style={{ animationDelay: "1.5s" }} aria-hidden />
