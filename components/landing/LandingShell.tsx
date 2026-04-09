@@ -857,49 +857,9 @@ export function LandingShell({
                   completions={heroHabitCompletions}
                   onToggle={onToggleHabitCompletion}
                   onOpenHabit={onOpenHabitDetail}
-                  emptyStateText="No experiments slated for this month yet. Find a new one below."
+                  emptyStateText="No experiments slated for this month yet."
                 />
-                <div className="module-nested mt-3 p-3">
-                  <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
-                    Find a new habit
-                  </p>
-                  <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
-                    {HABIT_DISCOVERY_BUCKETS.map((option) => {
-                      const isSelected = option.bucket === selectedHabitDiscoveryBucket;
-                      return (
-                        <button
-                          key={option.bucket}
-                          type="button"
-                          title={option.examples}
-                          onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
-                          className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
-                            isSelected
-                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                              : "border-neutral-300/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
-                          }`}
-                        >
-                          <span className="whitespace-nowrap">{option.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
-                    className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-                  >
-                    Find me a new habit
-                  </button>
-                </div>
               </ModuleCard>
-
-              {/* Timeline */}
-              <LandingTimelineCard
-                eyebrow={timelineEyebrow}
-                dayLabel={timelineLabel}
-                events={timelineEvents}
-                onTimelineEventClick={onTimelineEventClick}
-              />
 
               {/* Focus Timer */}
               <section className="landing-module-glass flex w-full flex-col overflow-hidden rounded-[2rem] border p-4 sm:p-5">
