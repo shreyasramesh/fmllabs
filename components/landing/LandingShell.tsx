@@ -794,6 +794,7 @@ export function LandingShell({
             onInlineExerciseInputChange={onInlineExerciseInputChange}
             onInlineExerciseSubmit={onInlineExerciseSubmit}
             inlineExerciseLoading={inlineExerciseLoading}
+            weeklySummary={weeklySummary}
           />
         );
       case "weight":

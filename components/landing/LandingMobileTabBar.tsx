@@ -26,26 +26,24 @@ function TabIcon({ tab, active }: { tab: MobileTab; active: boolean }) {
     case "nutrition":
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
-          <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
-          <path d="M8.5 8.5v.01" />
-          <path d="M16 15.5v.01" />
-          <path d="M12 12v.01" />
-          <path d="M11 17v.01" />
-          <path d="M7 14v.01" />
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+          <path d="M7 2v20" />
+          <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
         </svg>
       );
     case "exercise":
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
-          <path d="M14.4 14.4 9.6 9.6" />
-          <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767-1.768a2 2 0 1 1-2.829-2.829l-1.767-1.767a2 2 0 1 1-2.829-2.829L2.879 5.707a2 2 0 1 1 2.828-2.828L9.464 6.636a2 2 0 1 1 2.829 2.828l1.767 1.768a2 2 0 1 1 2.829 2.829l1.768 1.767a2 2 0 1 1 2.828 2.829z" />
+          <rect x="2" y="8.5" width="4" height="7" rx="1" />
+          <rect x="18" y="8.5" width="4" height="7" rx="1" />
+          <path d="M6 12h12" />
         </svg>
       );
     case "weight":
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
-          <circle cx="12" cy="5" r="3" />
-          <path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.23A2 2 0 0 0 4 21h16a2 2 0 0 0 1.9-2.77l-2.495-8.77A2 2 0 0 0 17.5 8Z" />
+          <path d="m12 14 4-4" />
+          <path d="M3.34 19a10 10 0 1 1 17.32 0" />
         </svg>
       );
     case "sleep":

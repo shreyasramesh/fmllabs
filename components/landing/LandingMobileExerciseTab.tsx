@@ -1,6 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useMemo, useState } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
+import type { LandingWeeklySummaryPreview } from "@/components/landing/types";
 
 interface RecentExerciseEntry {
   id: string;
@@ -17,6 +21,7 @@ interface LandingMobileExerciseTabProps {
   onInlineExerciseInputChange: (value: string) => void;
   onInlineExerciseSubmit: () => void;
   inlineExerciseLoading: boolean;
+  weeklySummary: LandingWeeklySummaryPreview | null;
 }
 
 export function LandingMobileExerciseTab({
@@ -27,9 +32,71 @@ export function LandingMobileExerciseTab({
   onInlineExerciseInputChange,
   onInlineExerciseSubmit,
   inlineExerciseLoading,
+  weeklySummary,
 }: LandingMobileExerciseTabProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
+
+  const trendOptions = useMemo<Highcharts.Options | null>(() => {
+    if (!weeklySummary || weeklySummary.rows.length === 0) return null;
+    const rows = weeklySummary.rows;
+    const categories = rows.map((r) => r.weekdayLabel);
+    const data = rows.map((r) => r.caloriesExercise);
+
+    return {
+      chart: {
+        backgroundColor: "transparent",
+        height: 120,
+        style: { fontFamily: "Inter, system-ui, sans-serif" },
+        spacing: [6, 4, 6, 4],
+      },
+      credits: { enabled: false },
+      title: { text: undefined },
+      legend: { enabled: false },
+      xAxis: {
+        categories,
+        lineColor: "transparent",
+        tickColor: "transparent",
+        labels: { style: { color: "#a3a3a3", fontSize: "10px" } },
+      },
+      yAxis: {
+        title: { text: undefined },
+        labels: { enabled: false },
+        gridLineWidth: 0,
+        min: 0,
+      },
+      tooltip: {
+        backgroundColor: "#1c1917",
+        borderColor: "#44403c",
+        style: { color: "#fafaf9", fontSize: "11px" },
+        pointFormat: "{point.y} kcal",
+        headerFormat: "<b>{point.key}</b><br/>",
+      },
+      plotOptions: {
+        column: {
+          groupPadding: 0.06,
+          pointPadding: 0.04,
+          borderRadius: 4,
+          borderWidth: 0,
+        },
+      },
+      series: [
+        {
+          type: "column",
+          data: data.map((val) => ({
+            y: val,
+            color: {
+              linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+              stops: [
+                [0, "rgba(96,165,250,0.85)"],
+                [1, "rgba(96,165,250,0.3)"],
+              ],
+            },
+          })),
+        },
+      ],
+    };
+  }, [weeklySummary]);
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-4">
@@ -102,6 +169,16 @@ export function LandingMobileExerciseTab({
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Exercise — 7 Day Trend */}
+      {trendOptions && (
+        <div className="space-y-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
+            Exercise — 7 Day Trend
+          </p>
+          <HighchartsReact highcharts={Highcharts} options={trendOptions} />
         </div>
       )}
     </div>

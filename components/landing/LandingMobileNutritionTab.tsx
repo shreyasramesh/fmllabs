@@ -152,27 +152,39 @@ export function LandingMobileNutritionTab({
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
-      {/* Total calories hero card */}
-      <div className="landing-module-glass flex flex-col items-center gap-2.5 rounded-2xl border px-4 py-5">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🔥</span>
-          <span className="text-4xl font-bold tabular-nums text-foreground">{totalCalories.toLocaleString()}</span>
-          <span className="text-sm text-neutral-400 dark:text-neutral-500">total calories</span>
+      {/* Goals — progress bars */}
+      <div className="landing-module-glass rounded-2xl border px-4 py-4">
+        <p className="mb-3 text-[15px] font-bold text-foreground">Goals</p>
+        <div className="flex flex-col gap-3">
+          {goalRows.map((row) => {
+            const color = barColor(row.current, row.target);
+            return (
+              <div key={row.key}>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-[13px] font-medium text-foreground">
+                    <span>{row.icon}</span> {row.label}
+                  </span>
+                  <span className="text-[13px] font-semibold tabular-nums text-foreground">
+                    {Math.round(row.current).toLocaleString()} / {row.target.toLocaleString()}{row.unit}
+                  </span>
+                </div>
+                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
+                  <div
+                    className="h-full rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${Math.min(pct(row.current, row.target), 100)}%`, backgroundColor: color }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <div className="flex w-full justify-around">
-          {([
-            { value: nutrition.proteinGrams, label: "Protein", icon: MACRO_ICONS.protein },
-            { value: nutrition.carbsGrams, label: "Carbs", icon: MACRO_ICONS.carbs },
-            { value: nutrition.fatGrams, label: "Fat", icon: MACRO_ICONS.fat },
-          ] as const).map((m) => (
-            <div key={m.label} className="flex flex-col items-center">
-              <span className="text-lg font-semibold tabular-nums text-foreground">{Math.round(m.value)} g</span>
-              <span className="flex items-center gap-1 text-[12px] text-neutral-400 dark:text-neutral-500">
-                <span>{m.icon}</span> {m.label}
-              </span>
-            </div>
-          ))}
-        </div>
+        <button
+          type="button"
+          onClick={onOpenNutrition}
+          className="mt-3 w-full rounded-xl border border-neutral-200 py-2 text-center text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
+        >
+          View details
+        </button>
       </div>
 
       {/* Inline food input */}
@@ -291,41 +303,6 @@ export function LandingMobileNutritionTab({
           </div>
         </div>
       )}
-
-      {/* Goals — progress bars */}
-      <div className="landing-module-glass rounded-2xl border px-4 py-4">
-        <p className="mb-3 text-[15px] font-bold text-foreground">Goals</p>
-        <div className="flex flex-col gap-3">
-          {goalRows.map((row) => {
-            const color = barColor(row.current, row.target);
-            return (
-              <div key={row.key}>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-[13px] font-medium text-foreground">
-                    <span>{row.icon}</span> {row.label}
-                  </span>
-                  <span className="text-[13px] font-semibold tabular-nums text-foreground">
-                    {Math.round(row.current).toLocaleString()} / {row.target.toLocaleString()}{row.unit}
-                  </span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
-                  <div
-                    className="h-full rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${Math.min(pct(row.current, row.target), 100)}%`, backgroundColor: color }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <button
-          type="button"
-          onClick={onOpenNutrition}
-          className="mt-3 w-full rounded-xl border border-neutral-200 py-2 text-center text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
-        >
-          View details
-        </button>
-      </div>
 
       {/* 7-day calorie trend */}
       {trendOptions && (
