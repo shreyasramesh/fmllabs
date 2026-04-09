@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type MobileTab = "nutrition" | "weight" | "sleep" | "habits" | "more";
+export type MobileTab = "nutrition" | "exercise" | "weight" | "sleep" | "habits" | "more";
 
 interface LandingMobileTabBarProps {
   activeTab: MobileTab;
@@ -12,6 +12,7 @@ interface LandingMobileTabBarProps {
 
 const TABS: Array<{ key: MobileTab; label: string }> = [
   { key: "nutrition", label: "Nutrition" },
+  { key: "exercise", label: "Exercise" },
   { key: "weight", label: "Weight" },
   { key: "sleep", label: "Sleep" },
   { key: "habits", label: "Habits" },
@@ -19,7 +20,7 @@ const TABS: Array<{ key: MobileTab; label: string }> = [
 ];
 
 function TabIcon({ tab, active }: { tab: MobileTab; active: boolean }) {
-  const cls = `h-6 w-6 transition-colors ${active ? "text-[#B87B51] dark:text-[#D6A67E]" : "text-neutral-400 dark:text-neutral-500"}`;
+  const cls = `h-5 w-5 transition-colors ${active ? "text-[#B87B51] dark:text-[#D6A67E]" : "text-neutral-400 dark:text-neutral-500"}`;
 
   switch (tab) {
     case "nutrition":
@@ -31,6 +32,13 @@ function TabIcon({ tab, active }: { tab: MobileTab; active: boolean }) {
           <path d="M12 12v.01" />
           <path d="M11 17v.01" />
           <path d="M7 14v.01" />
+        </svg>
+      );
+    case "exercise":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <path d="M14.4 14.4 9.6 9.6" />
+          <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767-1.768a2 2 0 1 1-2.829-2.829l-1.767-1.767a2 2 0 1 1-2.829-2.829L2.879 5.707a2 2 0 1 1 2.828-2.828L9.464 6.636a2 2 0 1 1 2.829 2.828l1.767 1.768a2 2 0 1 1 2.829 2.829l1.768 1.767a2 2 0 1 1 2.828 2.829z" />
         </svg>
       );
     case "weight":

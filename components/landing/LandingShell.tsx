@@ -13,6 +13,7 @@ import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
 import { LandingMobileTabBar, type MobileTab } from "@/components/landing/LandingMobileTabBar";
 import { LandingMobileNutritionTab } from "@/components/landing/LandingMobileNutritionTab";
+import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExerciseTab";
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
 import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
 import { LandingMobileHabitsTab } from "@/components/landing/LandingMobileHabitsTab";
@@ -321,6 +322,7 @@ interface LandingShellProps {
   customFocusMinutesInput: string;
   customFocusTimeInput: string;
   onOpenNutrition: () => void;
+  onOpenExercise: () => void;
   onSearchFood: () => void;
   onCaptureFood: () => void;
   onDescribeFood: () => void;
@@ -333,6 +335,11 @@ interface LandingShellProps {
   inlineFoodSuggestionsLoading: boolean;
   onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: Array<{ id: string; label: string; calories: number; time: string }>;
+  recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; time: string }>;
+  inlineExerciseInput: string;
+  onInlineExerciseInputChange: (value: string) => void;
+  onInlineExerciseSubmit: () => void;
+  inlineExerciseLoading: boolean;
   onPomodoroCustomMinutesInputChange: (value: string) => void;
   onApplyCustomPomodoroMinutes: () => void;
   onSelectPomodoroDuration: (minutes: number) => void;
@@ -469,6 +476,7 @@ export function LandingShell({
   customFocusMinutesInput,
   customFocusTimeInput,
   onOpenNutrition,
+  onOpenExercise,
   onSearchFood,
   onCaptureFood,
   onDescribeFood,
@@ -480,6 +488,11 @@ export function LandingShell({
   inlineFoodSuggestionsLoading,
   onInlineFoodSuggestionSelect,
   recentFoodEntries,
+  recentExerciseEntries,
+  inlineExerciseInput,
+  onInlineExerciseInputChange,
+  onInlineExerciseSubmit,
+  inlineExerciseLoading,
   onPomodoroCustomMinutesInputChange,
   onApplyCustomPomodoroMinutes,
   onSelectPomodoroDuration,
@@ -769,6 +782,18 @@ export function LandingShell({
             inlineFoodSuggestionsLoading={inlineFoodSuggestionsLoading}
             onInlineFoodSuggestionSelect={onInlineFoodSuggestionSelect}
             recentFoodEntries={recentFoodEntries}
+          />
+        );
+      case "exercise":
+        return (
+          <LandingMobileExerciseTab
+            caloriesBurned={nutrition?.caloriesExercise ?? 0}
+            recentExerciseEntries={recentExerciseEntries}
+            onOpenExercise={onOpenExercise}
+            inlineExerciseInput={inlineExerciseInput}
+            onInlineExerciseInputChange={onInlineExerciseInputChange}
+            onInlineExerciseSubmit={onInlineExerciseSubmit}
+            inlineExerciseLoading={inlineExerciseLoading}
           />
         );
       case "weight":
