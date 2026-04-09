@@ -556,6 +556,8 @@ export interface UserSettings {
   nutritionGoalIntent?: string;
   /** When true, user appears on the global XP leaderboard */
   leaderboardOptIn?: boolean;
+  /** When true, Gemini responds in ultra-terse caveman style to save tokens. */
+  cavemanMode?: boolean;
   /** How the assistant should address the user; falls back to Clerk name when unset */
   preferredName?: string;
   /** Local reminder schedule preferences for Android notifications. */
@@ -2907,6 +2909,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     nutritionGoalIntent: doc.nutritionGoalIntent,
     followedFigureIds: doc.followedFigureIds,
     leaderboardOptIn: doc.leaderboardOptIn,
+    cavemanMode: doc.cavemanMode,
     preferredName: doc.preferredName,
     reminderPreferences: doc.reminderPreferences as UserSettings["reminderPreferences"],
     updatedAt: doc.updatedAt,
@@ -2917,7 +2920,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();

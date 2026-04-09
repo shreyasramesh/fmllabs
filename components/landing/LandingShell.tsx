@@ -413,6 +413,8 @@ interface LandingShellProps {
   onToggleSecondOrderCitations: () => void;
   responseVerbosity: "compact" | "detailed";
   onResponseVerbosityChange: (value: "compact" | "detailed") => void;
+  cavemanMode: boolean;
+  onCavemanModeChange: (value: boolean) => void;
   onStartMindLabConversation: () => void;
   onOpenConversations: () => void;
   weeklySummary: LandingWeeklySummaryPreview | null;
@@ -566,6 +568,8 @@ export function LandingShell({
   onToggleSecondOrderCitations,
   responseVerbosity,
   onResponseVerbosityChange,
+  cavemanMode,
+  onCavemanModeChange,
   onStartMindLabConversation,
   onOpenConversations,
   weeklySummary,
@@ -1630,7 +1634,20 @@ export function LandingShell({
                 <ToggleRow
                   label="Detailed responses"
                   checked={responseVerbosity === "detailed"}
-                  onChange={() => onResponseVerbosityChange(responseVerbosity === "detailed" ? "compact" : "detailed")}
+                  onChange={() => {
+                    const next = responseVerbosity === "detailed" ? "compact" : "detailed";
+                    onResponseVerbosityChange(next);
+                    if (next === "detailed" && cavemanMode) onCavemanModeChange(false);
+                  }}
+                />
+                <ToggleRow
+                  label="Caveman mode"
+                  checked={cavemanMode}
+                  onChange={() => {
+                    const next = !cavemanMode;
+                    onCavemanModeChange(next);
+                    if (next && responseVerbosity === "detailed") onResponseVerbosityChange("compact");
+                  }}
                 />
               </div>
               <button

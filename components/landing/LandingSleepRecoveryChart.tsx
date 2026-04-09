@@ -240,20 +240,32 @@ export function LandingSleepRecoveryChart({
           <div className="flex justify-center gap-4">
             <div className={`flex flex-col items-center ${innerCard}`}>
               <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                Time in bed
+                Duration
               </span>
               <span className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
                 {formatHoursMinutes(latestEntry.sleepHours)}
               </span>
             </div>
-            <div className={`flex flex-col items-center ${innerCard}`}>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                Time asleep
-              </span>
-              <span className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
-                {formatHoursMinutes(latestEntry.sleepHours)}
-              </span>
-            </div>
+            {latestEntry.hrvMs != null && (
+              <div className={`flex flex-col items-center ${innerCard}`}>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                  HRV
+                </span>
+                <span className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
+                  {latestEntry.hrvMs} ms
+                </span>
+              </div>
+            )}
+            {latestEntry.sleepScore != null && (
+              <div className={`flex flex-col items-center ${innerCard}`}>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                  Score
+                </span>
+                <span className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
+                  {latestEntry.sleepScore}/100
+                </span>
+              </div>
+            )}
           </div>
         )}
 

@@ -195,6 +195,9 @@ export async function PATCH(request: Request) {
     if (body.leaderboardOptIn !== undefined) {
       updates.leaderboardOptIn = Boolean(body.leaderboardOptIn);
     }
+    if (body.cavemanMode !== undefined) {
+      updates.cavemanMode = Boolean(body.cavemanMode);
+    }
     if (body.preferredName !== undefined) {
       if (typeof body.preferredName === "string") {
         const t = body.preferredName.trim();

@@ -103,6 +103,7 @@ import {
   resumeNativePomodoroLive,
   startNativePomodoroLive,
 } from "@/lib/native-pomodoro-live";
+import { syncWidgetAuth, refreshCalorieWidget } from "@/lib/native-widget-data";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -3788,6 +3789,8 @@ export default function ChatPage() {
   const [pendingSecondOrder, setPendingSecondOrder] = useState(false);
   /** Default on: cite mental models + saved context in second-order mode. */
   const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(true);
+  /** When true, Gemini responds in ultra-terse caveman style. */
+  const [cavemanMode, setCavemanMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sessionLoading, setSessionLoading] = useState(!isNew && !incognitoMode);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(
@@ -5519,6 +5522,7 @@ export default function ChatPage() {
         if (typeof window !== "undefined") {
           window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
         }
+        refreshCalorieWidget();
         }
         return nextResult;
       } catch (err) {
@@ -5681,6 +5685,7 @@ export default function ChatPage() {
       if (typeof window !== "undefined") {
         window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
       }
+      refreshCalorieWidget();
       const snap = suggestion.nutritionSnapshot;
       setCalorieTrackerResult({
         intent: "nutrition",
@@ -8289,6 +8294,9 @@ export default function ChatPage() {
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
   }, []);
   useEffect(() => {
+    if (userId) syncWidgetAuth();
+  }, [userId]);
+  useEffect(() => {
     if (!userId) return;
     let cancelled = false;
     fetch("/api/me/settings")
@@ -8348,6 +8356,9 @@ export default function ChatPage() {
         setNutritionMethodConfig(nextNutritionMethodConfig);
         setNutritionGoalIntent(nextNutritionGoalIntent);
         replaceGoalsCoachIntentDraft(nextNutritionGoalIntent);
+        if (typeof data?.cavemanMode === "boolean") {
+          setCavemanMode(data.cavemanMode);
+        }
       })
       .catch(() => {});
     return () => {
@@ -14920,6 +14931,15 @@ export default function ChatPage() {
                         onToggleSecondOrderCitations={() => setSecondOrderCitationsEnabled((v) => !v)}
                         responseVerbosity={newConversationResponseVerbosity}
                         onResponseVerbosityChange={setNewConversationResponseVerbosity}
+                        cavemanMode={cavemanMode}
+                        onCavemanModeChange={(v) => {
+                          setCavemanMode(v);
+                          fetch("/api/me/settings", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ cavemanMode: v }),
+                          }).catch(() => {});
+                        }}
                         onStartMindLabConversation={() => startSecondOrderConversation(!secondOrderCitationsEnabled, newConversationResponseVerbosity)}
                         onOpenConversations={() => { playSelectionChime(); setLibraryPanelOpen("conversations"); }}
                         weeklySummary={landingWeeklySummary}

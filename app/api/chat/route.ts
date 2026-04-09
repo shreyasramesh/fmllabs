@@ -246,6 +246,15 @@ const DETAILED_RESPONSE_VERBOSITY_ADDENDUM = `
 - Still stay readable and avoid repetitive filler.
 `;
 
+const CAVEMAN_MODE_ADDENDUM = `
+CAVEMAN MODE: Respond terse like smart caveman. All technical substance stay. Only fluff die.
+Rules: Drop articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Technical terms exact.
+Pattern: [thing] [action] [reason]. [next step].
+Not: "Sure! I'd be happy to help you with that. The issue you're experiencing is likely caused by..."
+Yes: "Bug in auth middleware. Token expiry check use < not <=. Fix:"
+Drop caveman for: security warnings, irreversible action confirmations, multi-step sequences where fragment order risks misread. Resume caveman after clear part done.
+`;
+
 const RESPONSE_VERBOSITY_MAX_OUTPUT_TOKENS: Record<ResponseVerbosity, number> = {
   compact: 320,
   detailed: 820,
@@ -1341,6 +1350,9 @@ ${userNamePromptSuffix}${langInstr}`;
   // assistant messages, inject them into the system prompt and strip from history.
   let messagesForGemini = messagesForModel;
   let systemPromptForGemini = fullSystemPrompt;
+  if (userSettings?.cavemanMode) {
+    systemPromptForGemini += CAVEMAN_MODE_ADDENDUM;
+  }
   while (messagesForGemini[0]?.role === "assistant") {
     const m = messagesForGemini[0];
     systemPromptForGemini =
