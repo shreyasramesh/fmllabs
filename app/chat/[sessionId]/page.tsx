@@ -19377,8 +19377,32 @@ export default function ChatPage() {
                     )}
                   </div>
 
-                  {/* Quick action row: camera, upload, voice, log new */}
-                  <div className="flex items-center gap-2">
+                  {/* Log new CTA */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      replaceCalorieTrackerInput("");
+                      replaceCalorieTrackerCustomTag("");
+                      setCalorieTrackerImageAnalyses([]);
+                      setCalorieTrackerError(null);
+                      setCalorieTrackerStep("input");
+                    }}
+                    disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
+                    className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-[#B87B51]/40 bg-[#FBF4EC]/50 px-4 py-3 text-left transition-colors hover:border-[#B87B51]/70 hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#D6A67E]/30 dark:bg-[#241a14]/40 dark:hover:border-[#D6A67E]/50 dark:hover:bg-[#241a14]"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#B87B51] text-white dark:bg-[#D6A67E] dark:text-neutral-900">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-[#7C522D] dark:text-[#F3D6B7]">Log something new</p>
+                      <p className="text-[11px] text-[#9A7B5A] dark:text-[#C4A07E]">{selectedLandingJournalChip === "exercise" ? "Describe your workout" : "Describe what you ate"}</p>
+                    </div>
+                  </button>
+
+                  {/* Quick action row: camera, upload, voice */}
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => {
@@ -19386,10 +19410,10 @@ export default function ChatPage() {
                         calorieTrackerImageInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
                       title={calorieTrackerImageProcessing ? "Analyzing..." : "Camera"}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-neutral-600 dark:text-neutral-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-neutral-600 dark:text-neutral-300">
                         <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
                         <circle cx="12" cy="13" r="3"/>
                       </svg>
@@ -19401,10 +19425,10 @@ export default function ChatPage() {
                         calorieTrackerUploadInputRef.current?.click();
                       }}
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 transition-colors"
                       title="Upload photo"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px] text-neutral-600 dark:text-neutral-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-neutral-600 dark:text-neutral-300">
                         <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
                         <circle cx="9" cy="9" r="2"/>
                         <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
@@ -19416,7 +19440,7 @@ export default function ChatPage() {
                       ariaLabel="Voice input"
                       compactStopWhileListening
                       noPulse
-                      className="!h-10 !min-h-[40px] !w-10 !min-w-[40px] !rounded-xl !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
+                      className="!h-11 !min-h-[44px] !w-11 !min-w-[44px] !rounded-xl !border-neutral-300 dark:!border-neutral-600 !bg-background !text-neutral-500 dark:!text-neutral-300 hover:!bg-neutral-100 dark:hover:!bg-neutral-800"
                       onTranscription={(text) => {
                         replaceCalorieTrackerInput(
                           calorieTrackerInputRef.current.trim()
@@ -19426,36 +19450,10 @@ export default function ChatPage() {
                         setCalorieTrackerStep("input");
                       }}
                     />
-
-                    {/* Log new — fills remaining space */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        replaceCalorieTrackerInput("");
-                        replaceCalorieTrackerCustomTag("");
-                        setCalorieTrackerImageAnalyses([]);
-                        setCalorieTrackerError(null);
-                        setCalorieTrackerStep("input");
-                      }}
-                      disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                      className="flex flex-1 items-center gap-3 rounded-2xl border-2 border-dashed border-[#B87B51]/40 bg-[#FBF4EC]/50 px-4 py-2.5 text-left transition-colors hover:border-[#B87B51]/70 hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#D6A67E]/30 dark:bg-[#241a14]/40 dark:hover:border-[#D6A67E]/50 dark:hover:bg-[#241a14]"
-                    >
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#B87B51] text-white dark:bg-[#D6A67E] dark:text-neutral-900">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                          <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                        </svg>
-                      </span>
-                      <div>
-                        <p className="text-sm font-semibold text-[#7C522D] dark:text-[#F3D6B7]">Log something new</p>
-                        <p className="text-[11px] text-[#9A7B5A] dark:text-[#C4A07E]">{selectedLandingJournalChip === "exercise" ? "Describe your workout" : "Describe what you ate"}</p>
-                      </div>
-                    </button>
+                    {calorieTrackerImageProcessing && (
+                      <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium ml-1">Analyzing image...</span>
+                    )}
                   </div>
-
-                  {/* Image analysis processing indicator */}
-                  {calorieTrackerImageProcessing && (
-                    <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">Analyzing image...</span>
-                  )}
 
                   {/* Results list */}
                   <div>
