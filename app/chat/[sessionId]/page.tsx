@@ -3272,6 +3272,210 @@ const POMODORO_THEME_OPTIONS: Array<{ id: PomodoroThemeId; label: string; image:
   { id: "fire", label: "Fire", image: "/images/fire.png" },
   { id: "earth", label: "Earth", image: "/images/earth.png" },
 ];
+function ResultDetailsConfidenceRing({ score }: { score: number }) {
+  const radius = 22;
+  const stroke = 5;
+  const center = radius + stroke;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.max(0, Math.min(score, 100)) / 100;
+  const dashOffset = circumference * (1 - progress);
+  const color = score >= 65 ? "#22C55E" : score >= 40 ? "#F59E0B" : "#EF4444";
+
+  return (
+    <div className="relative" style={{ width: center * 2, height: center * 2 }}>
+      <svg width={center * 2} height={center * 2} className="-rotate-90">
+        <circle cx={center} cy={center} r={radius} fill="none" stroke="currentColor" strokeWidth={stroke} className="text-neutral-200 dark:text-neutral-700/50" />
+        <circle cx={center} cy={center} r={radius} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={dashOffset} className="transition-all duration-700 ease-out" />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-sm font-bold tabular-nums text-foreground">{score}</span>
+      </div>
+    </div>
+  );
+}
+
+function ResultDetailsView({
+  result,
+  entryText,
+  chip,
+  onReviewEdit,
+  onLogAnother,
+  onDone,
+}: {
+  result: {
+    intent: string;
+    confidence: "low" | "medium" | "high";
+    confidenceScore: number;
+    assumptions: string[];
+    reasoning: string;
+    nutritionItems: Array<{ name: string; calories: number | null; proteinGrams: number | null; carbsGrams: number | null; fatGrams: number | null }>;
+    exerciseItems: Array<{ name: string; caloriesBurned: number | null; durationMinutes: number | null }>;
+    nutrition?: { calories: number | null; proteinGrams: number | null; carbsGrams: number | null; fatGrams: number | null; notes: string };
+    exercise?: { caloriesBurned: number | null; carbsUsedGrams?: number | null; fatUsedGrams?: number | null; proteinDeltaGrams?: number | null; notes: string };
+  };
+  entryText: string;
+  chip: string;
+  onReviewEdit: () => void;
+  onLogAnother: () => void;
+  onDone: () => void;
+}) {
+  const [expandedItem, setExpandedItem] = React.useState<number | null>(null);
+  const isNutrition = chip === "nutrition" || (result.intent === "nutrition" && chip !== "exercise");
+  const isExercise = chip === "exercise" || result.intent === "exercise";
+  const totalCal = isNutrition
+    ? result.nutrition?.calories ?? 0
+    : result.exercise?.caloriesBurned ?? 0;
+  const confLabel = result.confidence === "high" ? "High" : result.confidence === "medium" ? "Medium" : "Low";
+  const confColor = result.confidence === "high" ? "text-green-600 dark:text-green-400" : result.confidence === "medium" ? "text-amber-600 dark:text-amber-400" : "text-red-500 dark:text-red-400";
+
+  return (
+    <>
+      {/* Entry title */}
+      <p className="text-lg font-bold text-foreground leading-snug">{entryText || (isNutrition ? "Nutrition entry" : "Exercise entry")}</p>
+
+      {/* Summary card */}
+      <div className="landing-module-glass rounded-2xl border px-4 py-4">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="text-xl">🔥</span>
+          <span className="text-3xl font-bold tabular-nums text-foreground">{Math.round(totalCal).toLocaleString()}</span>
+          <span className="text-sm text-neutral-400 dark:text-neutral-500">{isExercise ? "kcal burned" : "total calories"}</span>
+        </div>
+        {isNutrition && result.nutrition && (
+          <div className="flex justify-around">
+            {([
+              { value: result.nutrition.proteinGrams, label: "Protein", icon: "🐟" },
+              { value: result.nutrition.carbsGrams, label: "Carbs", icon: "🍎" },
+              { value: result.nutrition.fatGrams, label: "Fat", icon: "💧" },
+            ] as const).map((m) => (
+              <div key={m.label} className="flex flex-col items-center">
+                <span className="text-base font-semibold tabular-nums text-foreground">{m.value != null ? `${Math.round(m.value)} g` : "? g"}</span>
+                <span className="flex items-center gap-1 text-[11px] text-neutral-400 dark:text-neutral-500">
+                  <span>{m.icon}</span> {m.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+        {isExercise && result.exercise && (
+          <div className="flex justify-around text-[13px] text-neutral-600 dark:text-neutral-400">
+            {result.exercise.carbsUsedGrams != null && <span>Carbs {result.exercise.carbsUsedGrams}g</span>}
+            {result.exercise.fatUsedGrams != null && <span>Fat {result.exercise.fatUsedGrams}g</span>}
+            {result.exercise.proteinDeltaGrams != null && <span>Protein {result.exercise.proteinDeltaGrams}g</span>}
+          </div>
+        )}
+      </div>
+
+      {/* Items breakdown */}
+      {isNutrition && result.nutritionItems.length > 0 && (
+        <div>
+          <p className="mb-2 text-[12px] font-semibold text-neutral-500 dark:text-neutral-400">Items</p>
+          <div className="space-y-1.5">
+            {result.nutritionItems.map((item, idx) => {
+              const open = expandedItem === idx;
+              return (
+                <div key={idx} className="landing-module-glass rounded-xl border overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedItem(open ? null : idx)}
+                    className="flex w-full items-center justify-between px-3.5 py-2.5 text-left"
+                  >
+                    <span className="text-[13px] font-medium text-foreground truncate">{item.name}</span>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <span className="text-[13px] tabular-nums text-neutral-600 dark:text-neutral-400">{item.calories != null ? `${Math.round(item.calories)} cal` : "? cal"}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 text-neutral-400 transition-transform ${open ? "rotate-180" : ""}`}>
+                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </button>
+                  {open && (
+                    <div className="border-t border-neutral-100 dark:border-neutral-800 px-3.5 py-2.5">
+                      <div className="flex justify-around">
+                        {([
+                          { value: item.proteinGrams, label: "Protein", icon: "🐟" },
+                          { value: item.carbsGrams, label: "Carbs", icon: "🍎" },
+                          { value: item.fatGrams, label: "Fat", icon: "💧" },
+                        ] as const).map((m) => (
+                          <div key={m.label} className="flex flex-col items-center">
+                            <span className="text-sm font-semibold tabular-nums text-foreground">{m.value != null ? `${Math.round(m.value)} g` : "? g"}</span>
+                            <span className="flex items-center gap-1 text-[10px] text-neutral-400 dark:text-neutral-500">
+                              <span>{m.icon}</span> {m.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {isExercise && result.exerciseItems.length > 0 && (
+        <div>
+          <p className="mb-2 text-[12px] font-semibold text-neutral-500 dark:text-neutral-400">Activities</p>
+          <div className="space-y-1.5">
+            {result.exerciseItems.map((item, idx) => (
+              <div key={idx} className="landing-module-glass flex items-center justify-between rounded-xl border px-3.5 py-2.5">
+                <span className="text-[13px] font-medium text-foreground truncate">{item.name}</span>
+                <div className="flex items-center gap-3 shrink-0 ml-2 text-[12px] tabular-nums text-neutral-500 dark:text-neutral-400">
+                  {item.durationMinutes != null && <span>{Math.round(item.durationMinutes)} min</span>}
+                  {item.caloriesBurned != null && <span>{Math.round(item.caloriesBurned)} kcal</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Thought process */}
+      {(result.reasoning || result.confidenceScore > 0) && (
+        <div className="landing-module-glass rounded-2xl border px-4 py-4 space-y-3">
+          <p className="text-[12px] font-semibold text-neutral-500 dark:text-neutral-400">Thought process</p>
+          <div className="flex items-center gap-3">
+            <ResultDetailsConfidenceRing score={result.confidenceScore} />
+            <div>
+              <p className="text-[11px] text-neutral-400 dark:text-neutral-500">Confidence level</p>
+              <p className={`text-sm font-semibold ${confColor}`}>{confLabel}</p>
+            </div>
+          </div>
+          {result.reasoning && (
+            <p className="text-[13px] leading-relaxed text-neutral-600 dark:text-neutral-400">{result.reasoning}</p>
+          )}
+          {result.assumptions.length > 0 && (
+            <details className="text-xs text-neutral-500 dark:text-neutral-400">
+              <summary className="cursor-pointer font-medium hover:text-foreground transition-colors">Assumptions made</summary>
+              <ul className="mt-1 space-y-0.5 pl-3">
+                {result.assumptions.map((a, i) => (
+                  <li key={i}>- {a}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      )}
+
+      {/* Action buttons */}
+      <div className="flex gap-2">
+        {chip === "nutrition" && result.nutrition && (
+          <button type="button" onClick={onReviewEdit} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+            Review &amp; Edit
+          </button>
+        )}
+        {chip === "nutrition" && (
+          <button type="button" onClick={onLogAnother} className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+            Log another
+          </button>
+        )}
+        <button type="button" onClick={onDone} className={`${chip === "nutrition" ? "flex-1" : "w-full"} px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity`}>
+          Done
+        </button>
+      </div>
+    </>
+  );
+}
+
 type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight";
 type ReusableJournalSuggestion = {
   id: string;
@@ -4504,7 +4708,11 @@ export default function ChatPage() {
   const [calorieTrackerResult, setCalorieTrackerResult] = useState<{
     intent: "nutrition" | "exercise" | "mixed";
     confidence: "low" | "medium" | "high";
+    confidenceScore: number;
     assumptions: string[];
+    reasoning: string;
+    nutritionItems: Array<{ name: string; calories: number | null; proteinGrams: number | null; carbsGrams: number | null; fatGrams: number | null }>;
+    exerciseItems: Array<{ name: string; caloriesBurned: number | null; durationMinutes: number | null }>;
     nutrition?: {
       calories: number | null;
       proteinGrams: number | null;
@@ -5246,7 +5454,11 @@ export default function ChatPage() {
           error?: string;
           intent?: "nutrition" | "exercise" | "mixed";
           confidence?: "low" | "medium" | "high";
+          confidenceScore?: number;
           assumptions?: string[];
+          reasoning?: string;
+          nutritionItems?: Array<{ name: string; calories: number | null; proteinGrams: number | null; carbsGrams: number | null; fatGrams: number | null }>;
+          exerciseItems?: Array<{ name: string; caloriesBurned: number | null; durationMinutes: number | null }>;
           nutrition?: {
             calories: number | null;
             proteinGrams: number | null;
@@ -5286,10 +5498,15 @@ export default function ChatPage() {
         if (!res.ok) {
           throw new Error(data.error || "Could not estimate calories right now.");
         }
+        const conf = data.confidence ?? "medium";
         const nextResult = {
           intent: data.intent ?? "nutrition",
-          confidence: data.confidence ?? "medium",
+          confidence: conf,
+          confidenceScore: typeof data.confidenceScore === "number" ? data.confidenceScore : conf === "high" ? 80 : conf === "medium" ? 55 : 25,
           assumptions: Array.isArray(data.assumptions) ? data.assumptions : [],
+          reasoning: typeof data.reasoning === "string" ? data.reasoning : "",
+          nutritionItems: Array.isArray(data.nutritionItems) ? data.nutritionItems : [],
+          exerciseItems: Array.isArray(data.exerciseItems) ? data.exerciseItems : [],
           nutrition: data.nutrition,
           exercise: data.exercise,
           savedEntries: data.savedEntries,
@@ -5468,7 +5685,11 @@ export default function ChatPage() {
       setCalorieTrackerResult({
         intent: "nutrition",
         confidence: "high",
+        confidenceScore: 90,
         assumptions: [],
+        reasoning: "Re-logged from a previously saved entry with known nutrition data.",
+        nutritionItems: snap ? [{ name: suggestion.canonicalName || "Saved entry", calories: snap.calories ?? null, proteinGrams: snap.proteinGrams ?? null, carbsGrams: snap.carbsGrams ?? null, fatGrams: snap.fatGrams ?? null }] : [],
+        exerciseItems: [],
         nutrition: snap ? {
           calories: snap.calories ?? null,
           proteinGrams: snap.proteinGrams ?? null,
@@ -19727,82 +19948,20 @@ export default function ChatPage() {
               )}
 
               {calorieTrackerStep === "result" && calorieTrackerResult && (
-                <>
-                  {/* Compact success card */}
-                  <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/30 p-4 text-center space-y-2">
-                    <div className="flex items-center justify-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-emerald-600 dark:text-emerald-400">
-                        <path d="M20 6 9 17l-5-5"/>
-                      </svg>
-                      <span className="text-base font-semibold text-emerald-700 dark:text-emerald-300">
-                        {calorieTrackerResult.nutrition
-                          ? `Logged! ~${calorieTrackerResult.nutrition.calories ?? "?"} kcal`
-                          : calorieTrackerResult.exercise
-                            ? `Logged! ~${calorieTrackerResult.exercise.caloriesBurned ?? "?"} kcal burned`
-                            : "Logged!"}
-                      </span>
-                    </div>
-                    {calorieTrackerResult.nutrition && (
-                      <div className="flex items-center justify-center gap-3 text-[13px] text-neutral-600 dark:text-neutral-400">
-                        <span>P {calorieTrackerResult.nutrition.proteinGrams ?? "?"}g</span>
-                        <span className="text-neutral-300 dark:text-neutral-600">|</span>
-                        <span>C {calorieTrackerResult.nutrition.carbsGrams ?? "?"}g</span>
-                        <span className="text-neutral-300 dark:text-neutral-600">|</span>
-                        <span>F {calorieTrackerResult.nutrition.fatGrams ?? "?"}g</span>
-                      </div>
-                    )}
-                    {calorieTrackerResult.exercise && (
-                      <div className="flex items-center justify-center gap-3 text-[13px] text-neutral-600 dark:text-neutral-400">
-                        {calorieTrackerResult.exercise.carbsUsedGrams != null && <span>Carbs {calorieTrackerResult.exercise.carbsUsedGrams}g</span>}
-                        {calorieTrackerResult.exercise.fatUsedGrams != null && <span>Fat {calorieTrackerResult.exercise.fatUsedGrams}g</span>}
-                        {calorieTrackerResult.exercise.proteinDeltaGrams != null && <span>Protein {calorieTrackerResult.exercise.proteinDeltaGrams}g</span>}
-                      </div>
-                    )}
-                    {selectedLandingJournalChip === "nutrition" && calorieTrackerResult.nutrition && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (calorieTrackerResult?.nutrition) {
-                            setCalorieTrackerReviewDraft(buildCalorieTrackerReviewDraftFromNutrition(calorieTrackerResult.nutrition));
-                            setCalorieTrackerReviewAnswers([]);
-                            setCalorieTrackerStep("review");
-                          }
-                        }}
-                        className="text-[12px] font-medium text-amber-600 dark:text-amber-400 hover:underline"
-                      >
-                        Review &amp; Edit macros
-                      </button>
-                    )}
-                  </div>
-                    {calorieTrackerResult.assumptions.length > 0 && (
-                    <details className="text-xs text-neutral-500 dark:text-neutral-400">
-                      <summary className="cursor-pointer font-medium hover:text-foreground transition-colors">Assumptions made</summary>
-                      <ul className="mt-1 space-y-0.5 pl-3">
-                          {calorieTrackerResult.assumptions.map((a, i) => (
-                          <li key={i}>- {a}</li>
-                          ))}
-                        </ul>
-                    </details>
-                  )}
-                  <div className="flex gap-2">
-                    {selectedLandingJournalChip === "nutrition" && (
-                      <button
-                        type="button"
-                        onClick={handleCalorieTrackerLogAnother}
-                        className="flex-1 px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                      >
-                        Log another
-                      </button>
-                    )}
-                  <button
-                    type="button"
-                    onClick={resetCalorieTrackerModal}
-                      className={`${selectedLandingJournalChip === "nutrition" ? "flex-1" : "w-full"} px-4 py-2 rounded-xl text-sm font-medium bg-foreground text-background hover:opacity-90 transition-opacity`}
-                  >
-                      Done
-                  </button>
-                  </div>
-                </>
+                <ResultDetailsView
+                  result={calorieTrackerResult}
+                  entryText={calorieTrackerInput}
+                  chip={selectedLandingJournalChip}
+                  onReviewEdit={() => {
+                    if (calorieTrackerResult?.nutrition) {
+                      setCalorieTrackerReviewDraft(buildCalorieTrackerReviewDraftFromNutrition(calorieTrackerResult.nutrition));
+                      setCalorieTrackerReviewAnswers([]);
+                      setCalorieTrackerStep("review");
+                    }
+                  }}
+                  onLogAnother={handleCalorieTrackerLogAnother}
+                  onDone={resetCalorieTrackerModal}
+                />
               )}
 
               {calorieTrackerError && (

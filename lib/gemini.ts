@@ -392,10 +392,28 @@ export interface NutritionFactsFromMacrosInput {
   fatGrams: number;
 }
 
+export interface CalorieTrackingNutritionItem {
+  name: string;
+  calories: number | null;
+  proteinGrams: number | null;
+  carbsGrams: number | null;
+  fatGrams: number | null;
+}
+
+export interface CalorieTrackingExerciseItem {
+  name: string;
+  caloriesBurned: number | null;
+  durationMinutes: number | null;
+}
+
 export interface CalorieTrackingFinalizeResult {
   intent: CalorieTrackingIntent;
   confidence: "low" | "medium" | "high";
+  confidenceScore: number;
   assumptions: string[];
+  reasoning: string;
+  nutritionItems: CalorieTrackingNutritionItem[];
+  exerciseItems: CalorieTrackingExerciseItem[];
   nutrition?: {
     calories: number | null;
     proteinGrams: number | null;
@@ -1230,7 +1248,15 @@ Return ONLY valid JSON with exactly this shape:
 {
   "intent": "nutrition" | "exercise" | "mixed",
   "confidence": "low" | "medium" | "high",
+  "confidenceScore": number (0-100),
   "assumptions": ["short assumption", "..."],
+  "reasoning": "2-4 sentence explanation of how you derived the estimate, what sources or knowledge you referenced, and why you assigned this confidence level.",
+  "nutritionItems": [
+    { "name": "item name", "calories": number|null, "proteinGrams": number|null, "carbsGrams": number|null, "fatGrams": number|null }
+  ],
+  "exerciseItems": [
+    { "name": "activity name", "caloriesBurned": number|null, "durationMinutes": number|null }
+  ],
   "nutrition": {
     "calories": number | null,
     "proteinGrams": number | null,
@@ -1269,9 +1295,13 @@ Return ONLY valid JSON with exactly this shape:
 }
 
 Rules:
-- For nutrition-only, set exercise to null.
-- For exercise-only, set nutrition to null.
+- For nutrition-only, set exercise to null and exerciseItems to [].
+- For exercise-only, set nutrition to null and nutritionItems to [].
 - For mixed, provide both.
+- nutritionItems should break down each distinct food/drink item with its own macros. The sum of items should approximately equal the nutrition totals.
+- exerciseItems should break down each distinct activity.
+- confidenceScore: 75-100 for high confidence, 40-74 for medium, 0-39 for low.
+- reasoning: explain what knowledge/sources you used, why this confidence level, and any key assumptions.
 - Use null when unknown instead of inventing exact values.
 - For nutrition facts, provide your best realistic estimate per field when nutrition exists.
 - Keep assumptions concise and grounded.
@@ -1289,7 +1319,11 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
     const parsed = JSON.parse(cleaned) as {
       intent?: string;
       confidence?: string;
+      confidenceScore?: unknown;
       assumptions?: unknown;
+      reasoning?: unknown;
+      nutritionItems?: unknown;
+      exerciseItems?: unknown;
       nutrition?: {
         calories?: unknown;
         proteinGrams?: unknown;
@@ -1331,11 +1365,39 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       parsed.intent === "exercise" || parsed.intent === "mixed" ? parsed.intent : "nutrition";
     const confidence: "low" | "medium" | "high" =
       parsed.confidence === "low" || parsed.confidence === "high" ? parsed.confidence : "medium";
+    const confidenceScore = typeof parsed.confidenceScore === "number" && Number.isFinite(parsed.confidenceScore)
+      ? Math.max(0, Math.min(100, Math.round(parsed.confidenceScore)))
+      : confidence === "high" ? 80 : confidence === "medium" ? 55 : 25;
     const assumptions = Array.isArray(parsed.assumptions)
       ? parsed.assumptions
           .map((s) => (typeof s === "string" ? s.trim() : ""))
           .filter(Boolean)
           .slice(0, 6)
+      : [];
+    const reasoning = typeof parsed.reasoning === "string" ? parsed.reasoning.trim().slice(0, 1000) : "";
+
+    const nutritionItems: CalorieTrackingNutritionItem[] = Array.isArray(parsed.nutritionItems)
+      ? (parsed.nutritionItems as Record<string, unknown>[])
+          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
+          .map((item) => ({
+            name: (item.name as string).trim().slice(0, 200),
+            calories: toFiniteNumberOrNull(item.calories),
+            proteinGrams: toFiniteNumberOrNull(item.proteinGrams),
+            carbsGrams: toFiniteNumberOrNull(item.carbsGrams),
+            fatGrams: toFiniteNumberOrNull(item.fatGrams),
+          }))
+          .slice(0, 20)
+      : [];
+
+    const exerciseItems: CalorieTrackingExerciseItem[] = Array.isArray(parsed.exerciseItems)
+      ? (parsed.exerciseItems as Record<string, unknown>[])
+          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
+          .map((item) => ({
+            name: (item.name as string).trim().slice(0, 200),
+            caloriesBurned: toFiniteNumberOrNull(item.caloriesBurned),
+            durationMinutes: toFiniteNumberOrNull(item.durationMinutes),
+          }))
+          .slice(0, 20)
       : [];
 
     const nutrition =
@@ -1384,7 +1446,11 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
     return {
       intent,
       confidence,
+      confidenceScore,
       assumptions,
+      reasoning,
+      nutritionItems,
+      exerciseItems,
       nutrition,
       exercise,
     };
@@ -1392,7 +1458,11 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
     return {
       intent: "nutrition",
       confidence: "low",
+      confidenceScore: 25,
       assumptions: [],
+      reasoning: "",
+      nutritionItems: [],
+      exerciseItems: [],
       nutrition: {
         calories: null,
         proteinGrams: null,
