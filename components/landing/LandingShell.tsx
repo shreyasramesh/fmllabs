@@ -334,7 +334,7 @@ interface LandingShellProps {
   inlineFoodSuggestions: LandingFoodSuggestion[];
   inlineFoodSuggestionsLoading: boolean;
   onInlineFoodSuggestionSelect: (suggestionId: string) => void;
-  recentFoodEntries: Array<{ id: string; label: string; calories: number; time: string }>;
+  recentFoodEntries: Array<{ id: string; label: string; calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number; time: string }>;
   recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; time: string }>;
   inlineExerciseInput: string;
   onInlineExerciseInputChange: (value: string) => void;

@@ -19,7 +19,6 @@ interface LandingMobileNutritionTabProps {
   onOpenNutrition: () => void;
   onSearchFood: () => void;
   onCaptureFood: () => void;
-  /** Inline food input state — user types here and submits without a modal. */
   inlineFoodInput: string;
   onInlineFoodInputChange: (value: string) => void;
   onInlineFoodSubmit: () => void;
@@ -35,118 +34,20 @@ function pct(current: number, target: number): number {
   return Math.min((current / target) * 100, 100);
 }
 
-function CalorieRing({
-  consumed,
-  target,
-}: {
-  consumed: number;
-  target: number;
-}) {
-  const radius = 62;
-  const stroke = 10;
-  const center = radius + stroke;
-  const circumference = 2 * Math.PI * radius;
-  const progress = target > 0 ? Math.min(consumed / target, 1) : 0;
-  const dashOffset = circumference * (1 - progress);
-  const over = consumed > target;
-  const remaining = target - consumed;
-
-  return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="relative">
-        <svg
-          width={center * 2}
-          height={center * 2}
-          className="-rotate-90"
-        >
-          <circle
-            cx={center}
-            cy={center}
-            r={radius}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={stroke}
-            className="text-neutral-200 dark:text-neutral-700/50"
-          />
-          <circle
-            cx={center}
-            cy={center}
-            r={radius}
-            fill="none"
-            stroke={over ? "#C4705E" : "#9A8872"}
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={dashOffset}
-            className="transition-all duration-700 ease-out"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold tabular-nums text-foreground">
-            {consumed.toLocaleString()}
-          </span>
-          <span className="text-xs text-neutral-400 dark:text-neutral-500">
-            of {target.toLocaleString()} kcal
-          </span>
-        </div>
-      </div>
-      {remaining > 0 ? (
-        <p className="text-sm font-medium tabular-nums text-[#9A8872]">
-          {remaining.toLocaleString()} kcal remaining
-        </p>
-      ) : remaining < 0 ? (
-        <p className="text-sm font-medium tabular-nums text-[#C4705E]">
-          {Math.abs(remaining).toLocaleString()} kcal over
-        </p>
-      ) : null}
-    </div>
-  );
+function barColor(current: number, target: number): string {
+  if (target <= 0) return "#a3a3a3";
+  const ratio = current / target;
+  if (ratio > 1.15) return "#EF4444";
+  if (ratio < 0.5) return "#EF4444";
+  return "#22C55E";
 }
 
-const MACRO_DEFS = [
-  { key: "protein", label: "Protein", unit: "g", color: "#5A9E8A" },
-  { key: "carbs", label: "Carbs", unit: "g", color: "#D49A42" },
-  { key: "fat", label: "Fat", unit: "g", color: "#C4705E" },
-] as const;
-
-const KCAL_PER_GRAM: Record<string, number> = { protein: 4, carbs: 4, fat: 9 };
-
-function MacroPill({
-  label,
-  macroKey,
-  current,
-  target,
-  unit,
-  color,
-}: {
-  label: string;
-  macroKey: string;
-  current: number;
-  target: number;
-  unit: string;
-  color: string;
-}) {
-  const filled = pct(current, target);
-  const kcal = Math.round(current * (KCAL_PER_GRAM[macroKey] ?? 4));
-  return (
-    <div className="landing-module-glass flex flex-1 flex-col items-center gap-1.5 rounded-2xl border px-3 py-3">
-      <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color }}>
-        {label}
-      </span>
-      <div className="flex items-baseline gap-0.5">
-        <span className="text-lg font-bold tabular-nums text-foreground">{Math.round(current)}</span>
-        <span className="text-[11px] text-neutral-400 dark:text-neutral-500">/ {target}{unit}</span>
-      </div>
-      <p className="text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500">{kcal} kcal</p>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
-        <div
-          className="h-full rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${filled}%`, backgroundColor: color }}
-        />
-      </div>
-    </div>
-  );
-}
+const MACRO_ICONS: Record<string, string> = {
+  calories: "🔥",
+  carbs: "🍎",
+  protein: "🐟",
+  fat: "💧",
+};
 
 export function LandingMobileNutritionTab({
   nutrition,
@@ -167,11 +68,7 @@ export function LandingMobileNutritionTab({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
 
-  const macroValues: Record<string, { current: number; target: number }> = {
-    protein: { current: nutrition.proteinGrams, target: nutritionGoals.proteinGrams },
-    carbs: { current: nutrition.carbsGrams, target: nutritionGoals.carbsGrams },
-    fat: { current: nutrition.fatGrams, target: nutritionGoals.fatGrams },
-  };
+  const totalCalories = nutrition.caloriesFood;
 
   const showTypeahead =
     inputFocused &&
@@ -246,29 +143,36 @@ export function LandingMobileNutritionTab({
     };
   }, [weeklySummary, nutritionGoals.caloriesTarget]);
 
-  return (
-    <div className="flex flex-col gap-6 px-4 pb-4">
-      {/* Calorie ring */}
-      <div className="flex justify-center pt-2">
-        <CalorieRing
-          consumed={nutrition.caloriesFood}
-          target={nutritionGoals.caloriesTarget}
-        />
-      </div>
+  const goalRows = [
+    { key: "calories", label: "Calories", icon: MACRO_ICONS.calories, current: totalCalories, target: nutritionGoals.caloriesTarget, unit: "" },
+    { key: "carbs", label: "Carbs", icon: MACRO_ICONS.carbs, current: nutrition.carbsGrams, target: nutritionGoals.carbsGrams, unit: "g" },
+    { key: "protein", label: "Protein", icon: MACRO_ICONS.protein, current: nutrition.proteinGrams, target: nutritionGoals.proteinGrams, unit: "g" },
+    { key: "fat", label: "Fat", icon: MACRO_ICONS.fat, current: nutrition.fatGrams, target: nutritionGoals.fatGrams, unit: "g" },
+  ];
 
-      {/* Macro pills */}
-      <div className="flex gap-2">
-        {MACRO_DEFS.map((macro) => (
-          <MacroPill
-            key={macro.key}
-            label={macro.label}
-            macroKey={macro.key}
-            current={macroValues[macro.key].current}
-            target={macroValues[macro.key].target}
-            unit={macro.unit}
-            color={macro.color}
-          />
-        ))}
+  return (
+    <div className="flex flex-col gap-5 px-4 pb-4">
+      {/* Total calories hero card */}
+      <div className="landing-module-glass flex flex-col items-center gap-2.5 rounded-2xl border px-4 py-5">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🔥</span>
+          <span className="text-4xl font-bold tabular-nums text-foreground">{totalCalories.toLocaleString()}</span>
+          <span className="text-sm text-neutral-400 dark:text-neutral-500">total calories</span>
+        </div>
+        <div className="flex w-full justify-around">
+          {([
+            { value: nutrition.proteinGrams, label: "Protein", icon: MACRO_ICONS.protein },
+            { value: nutrition.carbsGrams, label: "Carbs", icon: MACRO_ICONS.carbs },
+            { value: nutrition.fatGrams, label: "Fat", icon: MACRO_ICONS.fat },
+          ] as const).map((m) => (
+            <div key={m.label} className="flex flex-col items-center">
+              <span className="text-lg font-semibold tabular-nums text-foreground">{Math.round(m.value)} g</span>
+              <span className="flex items-center gap-1 text-[12px] text-neutral-400 dark:text-neutral-500">
+                <span>{m.icon}</span> {m.label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Inline food input */}
@@ -318,29 +222,36 @@ export function LandingMobileNutritionTab({
           <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-xl border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
             {inlineFoodSuggestions.slice(0, 4).map((s) => {
               const macroBits = [
-                s.proteinGrams != null ? `P ${s.proteinGrams}g` : null,
-                s.carbsGrams != null ? `C ${s.carbsGrams}g` : null,
-                s.fatGrams != null ? `F ${s.fatGrams}g` : null,
-                s.calories != null ? `${s.calories} kcal` : null,
+                s.calories != null ? `🔥 ${s.calories} cal` : null,
+                s.proteinGrams != null ? `P: ${s.proteinGrams}g` : null,
+                s.carbsGrams != null ? `C: ${s.carbsGrams}g` : null,
+                s.fatGrams != null ? `F: ${s.fatGrams}g` : null,
               ]
                 .filter(Boolean)
-                .join(" · ");
+                .join("  ");
               return (
                 <button
                   key={s.id}
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => onInlineFoodSuggestionSelect(s.id)}
-                  className="flex w-full flex-col gap-0.5 border-b border-neutral-100 px-4 py-2.5 text-left transition-colors last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
+                  className="flex w-full items-center justify-between border-b border-neutral-100 px-4 py-2.5 text-left transition-colors last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
                 >
-                  <span className="text-sm font-medium text-foreground truncate">
-                    {s.displayName || s.sampleEntry.split("\n").find(Boolean)?.slice(0, 60) || "Saved entry"}
-                  </span>
-                  {macroBits && (
-                    <span className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
-                      {macroBits}
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium text-foreground truncate">
+                      {s.displayName || s.sampleEntry.split("\n").find(Boolean)?.slice(0, 60) || "Saved entry"}
                     </span>
-                  )}
+                    {macroBits && (
+                      <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
+                        {macroBits}
+                      </span>
+                    )}
+                  </div>
+                  <span className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#7C3AED] text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                      <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                  </span>
                 </button>
               );
             })}
@@ -355,7 +266,7 @@ export function LandingMobileNutritionTab({
         )}
       </div>
 
-      {/* Recents — compact list of today's logged food */}
+      {/* Recents — compact list with macro breakdown */}
       {recentFoodEntries.length > 0 && (
         <div>
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
@@ -365,16 +276,15 @@ export function LandingMobileNutritionTab({
             {recentFoodEntries.map((entry, idx) => (
               <div
                 key={entry.id}
-                className={`flex items-center justify-between px-3.5 py-2 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`}
+                className={`px-3.5 py-2.5 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`}
               >
-                <p className="min-w-0 flex-1 truncate text-[13px] text-foreground">{entry.label}</p>
-                <div className="ml-3 flex shrink-0 items-center gap-2">
-                  {entry.time && (
-                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{entry.time}</span>
-                  )}
-                  <span className="text-[11px] font-medium tabular-nums text-neutral-500 dark:text-neutral-400">
-                    {entry.calories} kcal
-                  </span>
+                <p className="truncate text-[13px] font-medium text-foreground">{entry.label}</p>
+                <div className="mt-0.5 flex items-center gap-2 text-[11px] tabular-nums text-neutral-500 dark:text-neutral-400">
+                  <span>🔥 {entry.calories} cal</span>
+                  {entry.proteinGrams > 0 && <span>P: {entry.proteinGrams}g</span>}
+                  {entry.carbsGrams > 0 && <span>C: {entry.carbsGrams}g</span>}
+                  {entry.fatGrams > 0 && <span>F: {entry.fatGrams}g</span>}
+                  {entry.time && <span className="ml-auto">{entry.time}</span>}
                 </div>
               </div>
             ))}
@@ -382,26 +292,40 @@ export function LandingMobileNutritionTab({
         </div>
       )}
 
-      {/* Goals detail card */}
-      <button
-        type="button"
-        onClick={onOpenNutrition}
-        className="landing-module-glass flex items-center justify-between rounded-2xl border px-4 py-3.5 shadow-sm transition-all active:scale-[0.99]"
-      >
-        <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-[#B87B51] dark:text-[#D6A67E]">
-            <path d="M2 20h.01" />
-            <path d="M7 20v-4" />
-            <path d="M12 20v-8" />
-            <path d="M17 20V8" />
-            <path d="M22 4v16" />
-          </svg>
-          <span className="text-[14px] font-semibold text-foreground">Goals &amp; Details</span>
+      {/* Goals — progress bars */}
+      <div className="landing-module-glass rounded-2xl border px-4 py-4">
+        <p className="mb-3 text-[15px] font-bold text-foreground">Goals</p>
+        <div className="flex flex-col gap-3">
+          {goalRows.map((row) => {
+            const color = barColor(row.current, row.target);
+            return (
+              <div key={row.key}>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-[13px] font-medium text-foreground">
+                    <span>{row.icon}</span> {row.label}
+                  </span>
+                  <span className="text-[13px] font-semibold tabular-nums text-foreground">
+                    {Math.round(row.current).toLocaleString()} / {row.target.toLocaleString()}{row.unit}
+                  </span>
+                </div>
+                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
+                  <div
+                    className="h-full rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${Math.min(pct(row.current, row.target), 100)}%`, backgroundColor: color }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 text-neutral-400">
-          <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-        </svg>
-      </button>
+        <button
+          type="button"
+          onClick={onOpenNutrition}
+          className="mt-3 w-full rounded-xl border border-neutral-200 py-2 text-center text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
+        >
+          View details
+        </button>
+      </div>
 
       {/* 7-day calorie trend */}
       {trendOptions && (

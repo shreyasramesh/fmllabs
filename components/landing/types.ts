@@ -66,6 +66,9 @@ export interface LandingRecentFoodEntry {
   id: string;
   label: string;
   calories: number;
+  proteinGrams: number;
+  carbsGrams: number;
+  fatGrams: number;
   time: string;
 }
 

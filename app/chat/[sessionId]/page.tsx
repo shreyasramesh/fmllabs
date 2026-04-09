@@ -5974,7 +5974,7 @@ export default function ChatPage() {
     [journalEntriesSorted, nutritionGoals.caloriesTarget, selectedLandingDayKey, habits, habitCompletions]
   );
   const selectedLandingDayRecentFood = useMemo(() => {
-    const results: { id: string; label: string; calories: number; time: string }[] = [];
+    const results: { id: string; label: string; calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number; time: string }[] = [];
     for (const t of journalEntriesSorted) {
       if (t.sourceType !== "journal" || t.journalCategory !== "nutrition" || !t.transcriptText) continue;
       if (t.transcriptText.includes("Source: Habit completion")) continue;
@@ -5991,6 +5991,9 @@ export default function ChatPage() {
         || t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim()
         || "Food entry";
       const cal = extractEstimatedNumber(t.transcriptText, /- Calories:\s*([\d.]+)\s*kcal/i) ?? 0;
+      const protein = extractEstimatedNumber(t.transcriptText, /- Protein:\s*([\d.]+)\s*g/i) ?? 0;
+      const carbs = extractEstimatedNumber(t.transcriptText, /- Carbs:\s*([\d.]+)\s*g/i) ?? 0;
+      const fat = extractEstimatedNumber(t.transcriptText, /- Fat:\s*([\d.]+)\s*g/i) ?? 0;
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
         const h = t.journalEntryHour;
@@ -6001,7 +6004,7 @@ export default function ChatPage() {
         const d = new Date(t.createdAt);
         if (!Number.isNaN(d.getTime())) time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
       }
-      results.push({ id: t._id, label, calories: Math.round(cal), time });
+      results.push({ id: t._id, label, calories: Math.round(cal), proteinGrams: Math.round(protein), carbsGrams: Math.round(carbs), fatGrams: Math.round(fat), time });
     }
     return results;
   }, [journalEntriesSorted, selectedLandingDayKey]);
