@@ -150,7 +150,7 @@ export function LandingMobileHabitsTab({
 
   if (heroHabits.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 px-4 pb-4 pt-12 text-center">
+      <div className="flex w-full flex-col items-center gap-3 px-4 pb-4 pt-12 text-center">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10 text-neutral-300 dark:text-neutral-600">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
           <polyline points="22 4 12 14.01 9 11.01" />

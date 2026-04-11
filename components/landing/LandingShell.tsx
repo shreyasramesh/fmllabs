@@ -11,7 +11,7 @@ import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepReco
 import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThoughtOfTheDay";
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
-import { LandingMobileTabBar, type MobileTab } from "@/components/landing/LandingMobileTabBar";
+import { LandingMobileTabBar, type MobileBottomTab } from "@/components/landing/LandingMobileTabBar";
 import { LandingMobileNutritionTab } from "@/components/landing/LandingMobileNutritionTab";
 import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExerciseTab";
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
@@ -441,6 +441,12 @@ interface LandingShellProps {
   onOpenHabitDetail: (habitId: string) => void;
   onReorderHeroHabits: (orderedIds: string[]) => void;
   onFindNewHabit: (bucket: HabitBucket) => void;
+  /** Mobile exercise tab: daily calorie burn target (derived from nutrition intake goal). */
+  exerciseBurnGoalKcal: number;
+  /** Mobile sleep tab: nightly sleep hour target (e.g. 8). */
+  sleepHoursGoal: number;
+  /** Mobile spend tab: optional USD daily cap from settings; null shows hint to set in Goals. */
+  spendBudgetUsd: number | null;
   /** Scroll container for the dashboard (e.g. chat messages column) — powers section scroll-spy. */
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
 }
@@ -597,11 +603,14 @@ export function LandingShell({
   onOpenHabitDetail,
   onReorderHeroHabits,
   onFindNewHabit,
+  exerciseBurnGoalKcal,
+  sleepHoursGoal,
+  spendBudgetUsd,
   dashboardScrollRootRef,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
-  const [activeMobileTab, setActiveMobileTab] = useState<MobileTab>("nutrition");
+  const [activeMobileTab, setActiveMobileTab] = useState<MobileBottomTab>("nutrition");
 
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -798,6 +807,7 @@ export function LandingShell({
         return (
           <LandingMobileExerciseTab
             caloriesBurned={nutrition?.caloriesExercise ?? 0}
+            exerciseBurnGoalKcal={exerciseBurnGoalKcal}
             recentExerciseEntries={recentExerciseEntries}
             onOpenExercise={onOpenExercise}
             inlineExerciseInput={inlineExerciseInput}
@@ -813,6 +823,8 @@ export function LandingShell({
             spendDaySummary={spendDaySummary}
             selectedDayLabel={selectedDayLabel}
             onOpenSpend={onOpenSpend}
+            spendBudgetUsd={spendBudgetUsd}
+            onOpenGoals={onOpenGoals}
           />
         );
       case "weight":
@@ -841,6 +853,7 @@ export function LandingShell({
             sleepSaving={sleepSaving}
             onSaveSleepEntry={onSaveSleepEntry}
             onViewSleepInsights={onViewSleepInsights}
+            sleepHoursGoal={sleepHoursGoal}
           />
         );
       case "habits":
@@ -855,7 +868,7 @@ export function LandingShell({
             heroHabitsLabel={heroHabitsLabel}
           />
         );
-      case "more":
+      case "metacognition":
         return null;
     }
   })();
@@ -865,66 +878,10 @@ export function LandingShell({
       {/* ===== Mobile tabbed layout ===== */}
       <div className="w-full min-w-0 animate-fade-in-up md:hidden">
         <div className="pb-20">
-          {activeMobileTab !== "more" ? (
+          {activeMobileTab !== "metacognition" ? (
             mobileTabContent
           ) : (
             <div className="space-y-4 px-4">
-              {/* Experiments */}
-              <ModuleCard eyebrow="This Month's Experiments" title="This Month's Experiments">
-                <LandingHeroHabits
-                  habits={experimentalHabits}
-                  completions={heroHabitCompletions}
-                  onToggle={onToggleHabitCompletion}
-                  onOpenHabit={onOpenHabitDetail}
-                  emptyStateText="No experiments slated for this month yet."
-                />
-              </ModuleCard>
-
-              {/* Focus Timer */}
-              <section className="landing-module-glass flex w-full flex-col overflow-hidden rounded-[2rem] border p-4 sm:p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
-                  Focus Timer
-                </p>
-                <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
-                  {pomodoroClockLabel}
-                </p>
-                <div className="mt-4 flex flex-col gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {[30, 60, 90].map((minutes) => (
-                      <button
-                        key={`mobile-focus-timer-dur-${minutes}`}
-                        type="button"
-                        onClick={() => onSelectPomodoroDuration(minutes)}
-                        disabled={focusTrackerSaving || pomodoroSessionActive}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shadow-sm ${
-                          pomodoroDurationMinutes === minutes
-                            ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] ring-1 ring-[#B87B51]/25 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:ring-[#D6A67E]/20"
-                            : "border-neutral-400/85 bg-white/90 text-neutral-800 hover:shadow-md dark:border-neutral-500/55 dark:bg-neutral-800/95 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:brightness-110"
-                        } disabled:opacity-50`}
-                      >
-                        {minutes}m
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    type="text"
-                    value={focusSessionTagInput}
-                    onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
-                    placeholder="Tag this focus session..."
-                    disabled={focusTrackerSaving}
-                    className="w-full rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800 dark:shadow-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
-                    disabled={focusTrackerSaving}
-                    className="w-full rounded-full border-2 border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
-                  >
-                    {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
-                  </button>
-                </div>
-              </section>
-
               {/* Thought of the Day */}
               {thoughtOfTheDay && (
                 <LandingThoughtOfTheDayBanner
@@ -934,32 +891,6 @@ export function LandingShell({
                   reviewing={thoughtReviewing}
                 />
               )}
-
-              {/* Activity */}
-              <ModuleCard eyebrow="Activity" title={activityTitle} description={activityDescription}>
-                <div className="space-y-3">
-                  {activityGroups.length === 0 ? (
-                    <p className="text-[13px] text-neutral-500 dark:text-neutral-400">No activity yet for this day.</p>
-                  ) : (
-                    activityGroups.map((group) => (
-                      <button
-                        key={group.key}
-                        type="button"
-                        onClick={group.onClick}
-                        className="module-nested flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left transition-shadow hover:shadow-md active:scale-[0.99] dark:hover:brightness-110"
-                      >
-                        <span className="min-w-0">
-                          <span className="block text-[13px] font-semibold text-foreground">{group.label}</span>
-                          <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">{tapToInspectLabel}</span>
-                        </span>
-                        <span className="shrink-0 rounded-full border border-neutral-400/85 bg-white/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-neutral-700 ring-1 ring-neutral-900/[0.05] dark:border-neutral-500/60 dark:bg-neutral-900/50 dark:text-neutral-200 dark:ring-white/[0.08]">
-                          {group.count}
-                        </span>
-                      </button>
-                    ))
-                  )}
-                </div>
-              </ModuleCard>
 
               {/* Caffeine */}
               <LandingCaffeineChart intakes={caffeineIntakes} focusWindow={caffeineFocusWindow} />

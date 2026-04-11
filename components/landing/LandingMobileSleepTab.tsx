@@ -6,6 +6,7 @@ import type {
   FocusDurationSuggestion,
   LandingSleepEntry,
 } from "@/components/landing/types";
+import { LandingMobileSleepGoalPanel } from "@/components/landing/LandingMobileSleepGoalPanel";
 
 interface LandingMobileSleepTabProps {
   selectedDayLabel: string;
@@ -15,6 +16,7 @@ interface LandingMobileSleepTabProps {
   sleepSaving: boolean;
   onSaveSleepEntry: (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => void;
   onViewSleepInsights?: () => void;
+  sleepHoursGoal: number;
 }
 
 export function LandingMobileSleepTab({
@@ -25,6 +27,7 @@ export function LandingMobileSleepTab({
   sleepSaving,
   onSaveSleepEntry,
   onViewSleepInsights,
+  sleepHoursGoal,
 }: LandingMobileSleepTabProps) {
   const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
   const [hrvInput, setHrvInput] = useState("");
@@ -70,6 +73,12 @@ export function LandingMobileSleepTab({
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
+      <LandingMobileSleepGoalPanel
+        loggedHours={sleepForSelectedDay != null ? sleepForSelectedDay.sleepHours : null}
+        sleepHoursGoal={sleepHoursGoal}
+        selectedDayLabel={selectedDayLabel}
+      />
+
       <h2 className="text-xl font-bold text-foreground">
         Sleep · {selectedDayLabel}
       </h2>

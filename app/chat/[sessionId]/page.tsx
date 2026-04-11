@@ -2303,6 +2303,10 @@ const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
 const GOAL_PERCENT_MIN = 5;
 const GOAL_PERCENT_MAX = 85;
+const GOAL_SPEND_USD_MIN = 1;
+const GOAL_SPEND_USD_MAX = 100_000;
+/** Nightly sleep hours shown on the mobile Sleep tab until a user setting exists. */
+const MOBILE_SLEEP_HOURS_GOAL = 8;
 const DEFAULT_NUTRITION_FAT_LOSS_METHOD = "calorie_counting" as const;
 const DEFAULT_FASTING_EATING_WINDOW_HOURS = 8;
 const DEFAULT_DIET_BASED_TEMPLATE = "balanced" as const;
@@ -3975,7 +3979,9 @@ export default function ChatPage() {
     carbsGrams: String(DEFAULT_NUTRITION_GOALS.carbsGrams),
     proteinGrams: String(DEFAULT_NUTRITION_GOALS.proteinGrams),
     fatGrams: String(DEFAULT_NUTRITION_GOALS.fatGrams),
+    dailySpendUsd: "",
   }));
+  const [spendBudgetUsd, setSpendBudgetUsd] = useState<number | null>(null);
   const [goalsSaving, setGoalsSaving] = useState(false);
   const [goalsSaveError, setGoalsSaveError] = useState<string | null>(null);
   const [goalsWizardActive, setGoalsWizardActive] = useState(false);
@@ -6402,6 +6408,10 @@ export default function ChatPage() {
       })),
     [openLandingJournalChip]
   );
+  const mobileExerciseBurnGoalKcal = useMemo(
+    () => Math.max(200, Math.round(nutritionGoals.caloriesTarget * 0.2)),
+    [nutritionGoals.caloriesTarget]
+  );
   const selectedLandingDayNutrition = useMemo(
     () =>
       summarizeNutritionForDay(
@@ -8613,11 +8623,20 @@ export default function ChatPage() {
           ),
         };
         setNutritionGoals(nextGoals);
+        const rawSpend = data?.goalDailySpendUsd;
+        const nextSpend =
+          typeof rawSpend === "number" &&
+          Number.isFinite(rawSpend) &&
+          rawSpend >= GOAL_SPEND_USD_MIN
+            ? Math.round(Math.min(GOAL_SPEND_USD_MAX, rawSpend) * 100) / 100
+            : null;
+        setSpendBudgetUsd(nextSpend);
         setGoalsDraft({
           caloriesTarget: String(nextGoals.caloriesTarget),
           carbsGrams: String(nextGoals.carbsGrams),
           proteinGrams: String(nextGoals.proteinGrams),
           fatGrams: String(nextGoals.fatGrams),
+          dailySpendUsd: nextSpend != null ? String(nextSpend) : "",
         });
         const nextNutritionGoalIntent =
           typeof data?.nutritionGoalIntent === "string"
@@ -8800,6 +8819,7 @@ export default function ChatPage() {
       carbsGrams: String(nutritionGoals.carbsGrams),
       proteinGrams: String(nutritionGoals.proteinGrams),
       fatGrams: String(nutritionGoals.fatGrams),
+      dailySpendUsd: spendBudgetUsd != null ? String(spendBudgetUsd) : "",
     });
     const derivedPercents = deriveMacroPercentsFromGoals(nutritionGoals);
     skipGoalsMacroRecalculateRef.current = true;
@@ -8821,7 +8841,15 @@ export default function ChatPage() {
     setGoalsCoachResult(null);
     setGoalsCoachLoading(false);
     setGoalsModalOpen(true);
-  }, [incognitoMode, isAnonymous, nutritionGoalIntent, nutritionGoals, replaceGoalsCoachIntentDraft, router]);
+  }, [
+    incognitoMode,
+    isAnonymous,
+    nutritionGoalIntent,
+    nutritionGoals,
+    replaceGoalsCoachIntentDraft,
+    router,
+    spendBudgetUsd,
+  ]);
 
   const saveNutritionGoals = useCallback(async () => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -8852,6 +8880,15 @@ export default function ChatPage() {
       ),
     };
     const nextNutritionGoalIntent = goalsCoachIntentDraftRef.current.trim().slice(0, 500);
+    const spendTrim = goalsDraft.dailySpendUsd.trim();
+    const spendPatch: { goalDailySpendUsd?: number } = {};
+    if (spendTrim !== "") {
+      const pv = parseFloat(spendTrim.replace(/,/g, ""));
+      if (Number.isFinite(pv) && pv >= GOAL_SPEND_USD_MIN) {
+        spendPatch.goalDailySpendUsd =
+          Math.round(Math.min(GOAL_SPEND_USD_MAX, pv) * 100) / 100;
+      }
+    }
     setGoalsSaving(true);
     setGoalsSaveError(null);
     try {
@@ -8863,6 +8900,7 @@ export default function ChatPage() {
           goalCarbsGrams: nextGoals.carbsGrams,
           goalProteinGrams: nextGoals.proteinGrams,
           goalFatGrams: nextGoals.fatGrams,
+          ...spendPatch,
           nutritionFatLossMethods,
           nutritionFatLossMethod,
           nutritionMethodConfig,
@@ -8874,11 +8912,18 @@ export default function ChatPage() {
         throw new Error(j.error || "Could not save goals.");
       }
       setNutritionGoals(nextGoals);
+      if (spendPatch.goalDailySpendUsd !== undefined) {
+        setSpendBudgetUsd(spendPatch.goalDailySpendUsd);
+      }
       setGoalsDraft({
         caloriesTarget: String(nextGoals.caloriesTarget),
         carbsGrams: String(nextGoals.carbsGrams),
         proteinGrams: String(nextGoals.proteinGrams),
         fatGrams: String(nextGoals.fatGrams),
+        dailySpendUsd:
+          spendPatch.goalDailySpendUsd !== undefined
+            ? String(spendPatch.goalDailySpendUsd)
+            : goalsDraft.dailySpendUsd,
       });
       setNutritionGoalIntent(nextNutritionGoalIntent);
       setGoalsModalOpen(false);
@@ -9053,12 +9098,13 @@ export default function ChatPage() {
         GOAL_MACRO_MIN,
         GOAL_MACRO_MAX
       );
-      setGoalsDraft({
+      setGoalsDraft((prev) => ({
+        ...prev,
         caloriesTarget: String(caloriesTarget),
         carbsGrams: String(carbsGrams),
         proteinGrams: String(proteinGrams),
         fatGrams: String(fatGrams),
-      });
+      }));
       skipGoalsMacroRecalculateRef.current = true;
       setGoalsMacroPercents({
         carbs: String(
@@ -15274,6 +15320,9 @@ export default function ChatPage() {
                           playSelectionChime();
                           setLibraryPanelOpen("habits");
                         }}
+                        exerciseBurnGoalKcal={mobileExerciseBurnGoalKcal}
+                        sleepHoursGoal={MOBILE_SLEEP_HOURS_GOAL}
+                        spendBudgetUsd={spendBudgetUsd}
                       />
                       )}
                 {!incognitoMode && (
@@ -18468,6 +18517,29 @@ export default function ChatPage() {
                         <div className="text-sm font-medium pb-2">{grams}g</div>
                       </div>
                     ))}
+                  </div>
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      Daily spend budget (USD, optional)
+                    </label>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      min={GOAL_SPEND_USD_MIN}
+                      max={GOAL_SPEND_USD_MAX}
+                      step={0.01}
+                      placeholder={`Min ${GOAL_SPEND_USD_MIN}`}
+                      value={goalsDraft.dailySpendUsd}
+                      onChange={(e) =>
+                        setGoalsDraft((prev) => ({ ...prev, dailySpendUsd: e.target.value }))
+                      }
+                      disabled={goalsSaving || goalsRecalculateLoading}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                    <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Used on the Spend tab to compare today&apos;s total in USD. Leave blank to keep your current
+                      budget unchanged.
+                    </p>
                   </div>
                   {goalsCalculatorRationale && (
                     <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>

@@ -11,6 +11,7 @@ import type {
   LandingRecentFoodEntry,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
+import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
 interface LandingMobileNutritionTabProps {
   nutrition: LandingNutritionSummary;
@@ -27,19 +28,6 @@ interface LandingMobileNutritionTabProps {
   inlineFoodSuggestionsLoading: boolean;
   onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: LandingRecentFoodEntry[];
-}
-
-function pct(current: number, target: number): number {
-  if (target <= 0) return 0;
-  return Math.min((current / target) * 100, 100);
-}
-
-function barColor(current: number, target: number): string {
-  if (target <= 0) return "#a3a3a3";
-  const ratio = current / target;
-  if (ratio > 1.15) return "#EF4444";
-  if (ratio < 0.5) return "#EF4444";
-  return "#22C55E";
 }
 
 const MACRO_ICONS: Record<string, string> = {
@@ -144,48 +132,15 @@ export function LandingMobileNutritionTab({
   }, [weeklySummary, nutritionGoals.caloriesTarget]);
 
   const goalRows = [
-    { key: "calories", label: "Calories", icon: MACRO_ICONS.calories, current: totalCalories, target: nutritionGoals.caloriesTarget, unit: "" },
-    { key: "carbs", label: "Carbs", icon: MACRO_ICONS.carbs, current: nutrition.carbsGrams, target: nutritionGoals.carbsGrams, unit: "g" },
-    { key: "protein", label: "Protein", icon: MACRO_ICONS.protein, current: nutrition.proteinGrams, target: nutritionGoals.proteinGrams, unit: "g" },
-    { key: "fat", label: "Fat", icon: MACRO_ICONS.fat, current: nutrition.fatGrams, target: nutritionGoals.fatGrams, unit: "g" },
+    { key: "calories", label: "Calories", icon: MACRO_ICONS.calories, current: totalCalories, target: nutritionGoals.caloriesTarget, unit: "", mode: "default" as const },
+    { key: "carbs", label: "Carbs", icon: MACRO_ICONS.carbs, current: nutrition.carbsGrams, target: nutritionGoals.carbsGrams, unit: "g", mode: "default" as const },
+    { key: "protein", label: "Protein", icon: MACRO_ICONS.protein, current: nutrition.proteinGrams, target: nutritionGoals.proteinGrams, unit: "g", mode: "default" as const },
+    { key: "fat", label: "Fat", icon: MACRO_ICONS.fat, current: nutrition.fatGrams, target: nutritionGoals.fatGrams, unit: "g", mode: "default" as const },
   ];
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
-      {/* Goals — progress bars */}
-      <div className="landing-module-glass rounded-2xl border px-4 py-4">
-        <p className="mb-3 text-[15px] font-bold text-foreground">Goals</p>
-        <div className="flex flex-col gap-3">
-          {goalRows.map((row) => {
-            const color = barColor(row.current, row.target);
-            return (
-              <div key={row.key}>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-[13px] font-medium text-foreground">
-                    <span>{row.icon}</span> {row.label}
-                  </span>
-                  <span className="text-[13px] font-semibold tabular-nums text-foreground">
-                    {Math.round(row.current).toLocaleString()} / {row.target.toLocaleString()}{row.unit}
-                  </span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
-                  <div
-                    className="h-full rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${Math.min(pct(row.current, row.target), 100)}%`, backgroundColor: color }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <button
-          type="button"
-          onClick={onOpenNutrition}
-          className="mt-3 w-full rounded-xl border border-neutral-200 py-2 text-center text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
-        >
-          View details
-        </button>
-      </div>
+      <LandingMobileGoalsCard rows={goalRows} onViewDetails={onOpenNutrition} />
 
       {/* Inline food input */}
       <div className="relative">

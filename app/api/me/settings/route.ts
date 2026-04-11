@@ -12,6 +12,8 @@ const GOAL_CALORIES_MIN = 800;
 const GOAL_CALORIES_MAX = 6000;
 const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
+const GOAL_SPEND_USD_MIN = 1;
+const GOAL_SPEND_USD_MAX = 100_000;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
 const PREFERRED_NAME_MAX = 80;
 const NUTRITION_GOAL_INTENT_MAX = 500;
@@ -37,6 +39,10 @@ function clampGoalCalories(v: number): number {
 
 function clampGoalMacro(v: number): number {
   return Math.round(Math.max(GOAL_MACRO_MIN, Math.min(GOAL_MACRO_MAX, v)));
+}
+
+function clampGoalSpendUsd(v: number): number {
+  return Math.round(Math.max(GOAL_SPEND_USD_MIN, Math.min(GOAL_SPEND_USD_MAX, v)) * 100) / 100;
 }
 
 function isValidBackground(b: unknown): b is "default" | "air" | "water" | "earth" | "fire" {
@@ -149,6 +155,12 @@ export async function PATCH(request: Request) {
       const v = parseNumberish(body.goalFatGrams);
       if (v !== null) {
         updates.goalFatGrams = clampGoalMacro(v);
+      }
+    }
+    if (body.goalDailySpendUsd !== undefined) {
+      const v = parseNumberish(body.goalDailySpendUsd);
+      if (v !== null) {
+        updates.goalDailySpendUsd = clampGoalSpendUsd(v);
       }
     }
     if (body.nutritionFatLossMethod !== undefined && isNutritionFatLossMethod(body.nutritionFatLossMethod)) {

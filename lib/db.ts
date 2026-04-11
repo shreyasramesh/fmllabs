@@ -546,6 +546,8 @@ export interface UserSettings {
   goalCarbsGrams?: number;
   goalProteinGrams?: number;
   goalFatGrams?: number;
+  /** Optional daily spend cap in USD for dashboard spend goals (mobile). */
+  goalDailySpendUsd?: number;
   /** Primary fat-loss approach selected in daily goals calculator. */
   nutritionFatLossMethod?: NutritionFatLossMethod;
   /** Multi-select fat-loss approaches selected in daily goals calculator. */
@@ -2902,6 +2904,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     goalCarbsGrams: doc.goalCarbsGrams,
     goalProteinGrams: doc.goalProteinGrams,
     goalFatGrams: doc.goalFatGrams,
+    goalDailySpendUsd: doc.goalDailySpendUsd,
     nutritionFatLossMethod,
     nutritionFatLossMethods:
       nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],
@@ -2920,7 +2923,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();
@@ -2966,6 +2969,7 @@ export async function upsertUserSettings(
     goalCarbsGrams: result.goalCarbsGrams,
     goalProteinGrams: result.goalProteinGrams,
     goalFatGrams: result.goalFatGrams,
+    goalDailySpendUsd: result.goalDailySpendUsd,
     nutritionFatLossMethod,
     nutritionFatLossMethods:
       nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],

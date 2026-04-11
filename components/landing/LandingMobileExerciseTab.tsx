@@ -5,6 +5,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import type { LandingWeeklySummaryPreview } from "@/components/landing/types";
+import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
 interface RecentExerciseEntry {
   id: string;
@@ -15,6 +16,7 @@ interface RecentExerciseEntry {
 
 interface LandingMobileExerciseTabProps {
   caloriesBurned: number;
+  exerciseBurnGoalKcal: number;
   recentExerciseEntries: RecentExerciseEntry[];
   onOpenExercise: () => void;
   inlineExerciseInput: string;
@@ -26,6 +28,7 @@ interface LandingMobileExerciseTabProps {
 
 export function LandingMobileExerciseTab({
   caloriesBurned,
+  exerciseBurnGoalKcal,
   recentExerciseEntries,
   onOpenExercise,
   inlineExerciseInput,
@@ -100,6 +103,21 @@ export function LandingMobileExerciseTab({
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-4">
+      <LandingMobileGoalsCard
+        rows={[
+          {
+            key: "burn",
+            label: "Calories burned",
+            icon: "\u26A1",
+            current: caloriesBurned,
+            target: exerciseBurnGoalKcal,
+            unit: " kcal",
+            mode: "higherBetter",
+          },
+        ]}
+        onViewDetails={onOpenExercise}
+      />
+
       {/* Calories burned summary */}
       <div className="flex flex-col items-center gap-2 pt-2">
         <div className="flex items-baseline gap-1.5">

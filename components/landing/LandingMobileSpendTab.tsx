@@ -3,24 +3,52 @@
 import React from "react";
 
 import type { LandingSpendDaySummary } from "@/components/landing/types";
+import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
 interface LandingMobileSpendTabProps {
   spendDaySummary: LandingSpendDaySummary;
   selectedDayLabel: string;
   onOpenSpend: () => void;
+  spendBudgetUsd: number | null;
+  onOpenGoals: () => void;
 }
 
 export function LandingMobileSpendTab({
   spendDaySummary,
   selectedDayLabel,
   onOpenSpend,
+  spendBudgetUsd,
+  onOpenGoals,
 }: LandingMobileSpendTabProps) {
   const empty =
     Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
     spendDaySummary.recentEntries.length === 0;
 
+  const spentUsd = spendDaySummary.totalsByCurrency.USD ?? 0;
+  const spendGoalRows =
+    spendBudgetUsd != null && spendBudgetUsd > 0
+      ? [
+          {
+            key: "usd",
+            label: "Spend (USD)",
+            icon: "\u0024",
+            current: spentUsd,
+            target: spendBudgetUsd,
+            unit: "",
+            mode: "spendCap" as const,
+          },
+        ]
+      : [];
+
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
+      <LandingMobileGoalsCard
+        rows={spendGoalRows}
+        emptyHint="Set an optional daily USD budget under Daily goals (or open Goals below) to track spend against it."
+        onViewDetails={onOpenGoals}
+        detailsLabel="Open goals"
+      />
+
       <div className="landing-module-glass rounded-2xl border px-4 py-4">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
