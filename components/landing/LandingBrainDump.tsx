@@ -16,7 +16,10 @@ interface LandingBrainDumpProps {
   journalContextRows?: BrainDumpJournalContextRow[];
   onOpenJournalEntry?: (transcriptId: string) => void;
   onDeleteJournalEntry?: (transcriptId: string) => void;
-  onOpenReflectionMentor?: () => void;
+  onOpenReflectionMentor?: (ctx?: { reflectionText: string }) => void;
+  onOpenReflectionConversationChooser?: (ctx?: { reflectionText: string }) => void;
+  weightTrendSparklineKg?: number[];
+  sleepTrendSparklineHours?: number[];
 }
 
 export function LandingBrainDump({
@@ -25,6 +28,9 @@ export function LandingBrainDump({
   onOpenJournalEntry,
   onDeleteJournalEntry,
   onOpenReflectionMentor,
+  onOpenReflectionConversationChooser,
+  weightTrendSparklineKg,
+  sleepTrendSparklineHours,
 }: LandingBrainDumpProps) {
   const {
     phase,
@@ -100,7 +106,10 @@ export function LandingBrainDump({
           onOpenJournalContextEntry={onOpenJournalEntry}
           onDeleteJournalContextEntry={onDeleteJournalEntry}
           onOpenReflectionMentor={onOpenReflectionMentor}
+          onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
           layout="sheet"
+          weightTrendSparklineKg={weightTrendSparklineKg}
+          sleepTrendSparklineHours={sleepTrendSparklineHours}
         />
       )}
 

@@ -13,7 +13,10 @@ interface LandingMobileQuickNoteTabProps {
   journalContextRows?: BrainDumpJournalContextRow[];
   onOpenJournalEntry?: (transcriptId: string) => void;
   onDeleteJournalEntry?: (transcriptId: string) => void;
-  onOpenReflectionMentor?: () => void;
+  onOpenReflectionMentor?: (ctx?: { reflectionText: string }) => void;
+  onOpenReflectionConversationChooser?: (ctx?: { reflectionText: string }) => void;
+  weightTrendSparklineKg?: number[];
+  sleepTrendSparklineHours?: number[];
 }
 
 export function LandingMobileQuickNoteTab({
@@ -22,6 +25,9 @@ export function LandingMobileQuickNoteTab({
   onOpenJournalEntry,
   onDeleteJournalEntry,
   onOpenReflectionMentor,
+  onOpenReflectionConversationChooser,
+  weightTrendSparklineKg,
+  sleepTrendSparklineHours,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -56,10 +62,13 @@ export function LandingMobileQuickNoteTab({
         onOpenJournalContextEntry={onOpenJournalEntry}
         onDeleteJournalContextEntry={onDeleteJournalEntry}
         onOpenReflectionMentor={onOpenReflectionMentor}
+        onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
         layout="fullScreen"
         saveLineOnEnter
         onSaveLine={saveSingleLine}
         lineSaveBusy={phase !== "recording"}
+        weightTrendSparklineKg={weightTrendSparklineKg}
+        sleepTrendSparklineHours={sleepTrendSparklineHours}
       />
     </div>
   );

@@ -2,6 +2,12 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+/**
+ * `display:none` / Tailwind `hidden` breaks many mobile WebViews when opening
+ * the file picker via `input.click()` from a separate control (e.g. portaled FAB).
+ */
+const FILE_INPUT_VISUAL_CLASS = "sr-only";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 
 /** Vision prompt tuned for meals; quick-estimate still classifies exercise from the resulting text. */
@@ -70,6 +76,16 @@ export function BrainDumpImageIngestBar({
   const thumbsRef = useRef<Thumb[]>([]);
   /** Avoid hydration mismatch: SSR and first client paint must not use createPortal. */
   const [floatingPortalReady, setFloatingPortalReady] = useState(false);
+  const onAppendTextRef = useRef(onAppendText);
+  const hintTextRef = useRef(hintText);
+
+  useEffect(() => {
+    onAppendTextRef.current = onAppendText;
+  }, [onAppendText]);
+
+  useEffect(() => {
+    hintTextRef.current = hintText;
+  }, [hintText]);
 
   useEffect(() => {
     thumbsRef.current = thumbs;
@@ -119,7 +135,7 @@ export function BrainDumpImageIngestBar({
             body: JSON.stringify({
               imageBase64: base64,
               mimeType,
-              hintText: hintText.slice(0, 600),
+              hintText: hintTextRef.current.slice(0, 600),
               mode: IMAGE_TRANSCRIBE_MODE,
             }),
           });
@@ -129,7 +145,7 @@ export function BrainDumpImageIngestBar({
           }
           const draft = (data.nutritionLogDraft ?? "").trim();
           if (draft) {
-            onAppendText(draft);
+            onAppendTextRef.current(draft);
           } else {
             setError("No text could be extracted from this photo. Try a clearer image or type your note.");
           }
@@ -152,7 +168,7 @@ export function BrainDumpImageIngestBar({
         setBusy(false);
       }
     },
-    [hintText, onAppendText]
+    []
   );
 
   const onCameraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +187,30 @@ export function BrainDumpImageIngestBar({
   const thumbRounded = layout === "floating" ? "rounded-lg" : "rounded-xl";
   const floatingCol = layout === "floating";
 
-  const inner = (
+  const fileInputs = (
+    <>
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className={FILE_INPUT_VISUAL_CLASS}
+        tabIndex={-1}
+        onChange={onCameraChange}
+      />
+      <input
+        ref={galleryRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className={FILE_INPUT_VISUAL_CLASS}
+        tabIndex={-1}
+        onChange={onGalleryChange}
+      />
+    </>
+  );
+
+  const chrome = (
     <div
       className={`flex flex-col gap-1.5 ${floatingCol ? "max-w-[min(100%,18rem)] items-end" : "w-full items-center"}`}
     >
@@ -206,16 +245,6 @@ export function BrainDumpImageIngestBar({
         </div>
       ) : null}
 
-      <input
-        ref={cameraRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-        onChange={onCameraChange}
-      />
-      <input ref={galleryRef} type="file" accept="image/*" multiple className="hidden" onChange={onGalleryChange} />
-
       <div className={`flex items-center gap-2.5 ${floatingCol ? "justify-end" : "justify-center"}`}>
         <button
           type="button"
@@ -240,17 +269,29 @@ export function BrainDumpImageIngestBar({
   );
 
   if (layout === "floating") {
-    if (!floatingPortalReady || typeof document === "undefined") return null;
-    return createPortal(
-      <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-[40] flex justify-end px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4"
-        aria-hidden={false}
-      >
-        <div className="pointer-events-auto">{inner}</div>
-      </div>,
-      document.body
+    return (
+      <>
+        {/* Inputs stay in the app subtree (not under the portal) so mobile WebViews reliably open the picker. */}
+        {fileInputs}
+        {!floatingPortalReady || typeof document === "undefined"
+          ? null
+          : createPortal(
+              <div
+                className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-end px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4 md:pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]"
+                aria-hidden={false}
+              >
+                <div className="pointer-events-auto">{chrome}</div>
+              </div>,
+              document.body
+            )}
+      </>
     );
   }
 
-  return <div className="flex w-full flex-col items-center gap-1">{inner}</div>;
+  return (
+    <div className="flex w-full flex-col items-center gap-1">
+      {chrome}
+      {fileInputs}
+    </div>
+  );
 }

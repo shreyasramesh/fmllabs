@@ -2046,6 +2046,8 @@ const SECOND_ORDER_START_KEY = "fml-second-order-start";
 const RESPONSE_VERBOSITY_START_KEY = "fml-response-verbosity-start";
 const OPEN_WAYS_FROM_CHOOSER_KEY = "fml-open-ways-from-chooser";
 const MENTOR_PICKER_FROM_CHOOSER_KEY = "fml-open-mentor-picker-from-chooser";
+/** Quick Note reflection row → 1:1 or deep insights: body text handed to the next chat. */
+const REFLECTION_QUICK_NOTE_BRIDGE_KEY = "fml-reflection-quick-note-bridge";
 
 function parseResponseVerbosity(value: unknown): ResponseVerbosity | null {
   return value === "compact" || value === "detailed" ? value : null;
@@ -3933,6 +3935,8 @@ export default function ChatPage() {
   } | null>(null);
   /** First 1:1 turn only: journal entry + reflection when continuing from journal modal */
   const mentorJournalBridgeRef = useRef<{ journalText: string; reflectionText: string } | null>(null);
+  /** Reflection line from Quick Note journal list before opening 1:1 / deep insights. */
+  const reflectionQuickNoteBridgeRef = useRef<string | null>(null);
   /** After journal→1:1 handoff: send journal text as first user message once sendMessage exists */
   const journalBridgeAutoSendTextRef = useRef<string | null>(null);
   const [journalBridgeAutoSendTrigger, setJournalBridgeAutoSendTrigger] = useState(0);
@@ -3944,6 +3948,46 @@ export default function ChatPage() {
     journalBridgeAutoSendTextRef.current = t;
     setMentorJournalBridgePending(true);
     setJournalBridgeAutoSendTrigger((n) => n + 1);
+  }, []);
+  const clearReflectionQuickNoteBridge = useCallback(() => {
+    reflectionQuickNoteBridgeRef.current = null;
+    try {
+      sessionStorage.removeItem(REFLECTION_QUICK_NOTE_BRIDGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const setReflectionQuickNoteBridgeForQuickNote = useCallback(
+    (text: string) => {
+      const t = text.trim();
+      if (!t) {
+        clearReflectionQuickNoteBridge();
+        return;
+      }
+      reflectionQuickNoteBridgeRef.current = t;
+      try {
+        sessionStorage.setItem(REFLECTION_QUICK_NOTE_BRIDGE_KEY, JSON.stringify({ text: t }));
+      } catch {
+        /* ignore */
+      }
+    },
+    [clearReflectionQuickNoteBridge]
+  );
+  const takeReflectionQuickNoteBridgeForHandoff = useCallback((): string | null => {
+    const fromRef = reflectionQuickNoteBridgeRef.current?.trim() || null;
+    reflectionQuickNoteBridgeRef.current = null;
+    let fromStorage: string | null = null;
+    try {
+      const raw = sessionStorage.getItem(REFLECTION_QUICK_NOTE_BRIDGE_KEY);
+      sessionStorage.removeItem(REFLECTION_QUICK_NOTE_BRIDGE_KEY);
+      if (raw) {
+        const p = JSON.parse(raw) as { text?: string };
+        if (typeof p.text === "string") fromStorage = p.text.trim() || null;
+      }
+    } catch {
+      /* ignore */
+    }
+    return fromRef || fromStorage;
   }, []);
   /** Persists second-order mode for all turns (signed-in sessions + first anonymous message). */
   const activeSecondOrderRef = useRef(false);
@@ -6635,6 +6679,22 @@ export default function ChatPage() {
     });
     return merged;
   }, [journalEntriesSorted, selectedLandingDayKey, weightTrackerEntries, sleepEntries]);
+
+  /** Oldest → newest kg samples for Quick Note weight sparkline (last 20 tracker entries). */
+  const quickNoteWeightTrendSparklineKg = useMemo(() => {
+    const sorted = [...weightTrackerEntries]
+      .filter((e) => typeof e.weightKg === "number" && e.weightKg > 0 && e.recordedAt)
+      .sort((a, b) => new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime());
+    return sorted.slice(-20).map((e) => e.weightKg);
+  }, [weightTrackerEntries]);
+
+  const quickNoteSleepTrendSparklineHours = useMemo(() => {
+    const sorted = [...sleepEntries]
+      .filter((e) => typeof e.sleepHours === "number" && e.sleepHours > 0 && e.dayKey)
+      .sort((a, b) => a.dayKey.localeCompare(b.dayKey));
+    return sorted.slice(-20).map((e) => e.sleepHours);
+  }, [sleepEntries]);
+
   const selectedLandingDaySpendTotals = useMemo(
     () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
@@ -7634,10 +7694,19 @@ export default function ChatPage() {
             setPendingOneOnOneMentor(null);
             activeSecondOrderRef.current = true;
             let plainHandoff = true;
+            let seedUserMessage: string | undefined;
             try {
-              const parsed = JSON.parse(secondOrderStored) as { plain?: boolean };
-              if (parsed && typeof parsed === "object" && typeof parsed.plain === "boolean") {
-                plainHandoff = parsed.plain;
+              const parsed = JSON.parse(secondOrderStored) as {
+                plain?: boolean;
+                seedUserMessage?: string;
+              };
+              if (parsed && typeof parsed === "object") {
+                if (typeof parsed.plain === "boolean") {
+                  plainHandoff = parsed.plain;
+                }
+                if (typeof parsed.seedUserMessage === "string" && parsed.seedUserMessage.trim()) {
+                  seedUserMessage = parsed.seedUserMessage.trim();
+                }
               }
             } catch {
               plainHandoff = secondOrderStored === "1" || secondOrderStored === "true";
@@ -7656,6 +7725,11 @@ export default function ChatPage() {
             setCurrentSessionId(null);
             setCurrentSession(null);
             setCollapsedSummary(null);
+            if (seedUserMessage) {
+              queueJournalBridgeAutoSend(seedUserMessage);
+            } else {
+              inputRef.current?.focus();
+            }
             return;
           }
           const waysFromChooser = sessionStorage.getItem(OPEN_WAYS_FROM_CHOOSER_KEY);
@@ -7924,18 +7998,35 @@ export default function ChatPage() {
       setMentorCatalogSearch("");
       setMentorCatalogCategoryId(null);
       setSelectedMentorFigureIds([]);
-      const bridgePayload = journalBridge
-        ? {
+      const hasCallerBridge =
+        journalBridge &&
+        (Boolean(journalBridge.journalText?.trim()) ||
+          Boolean(journalBridge.reflectionText?.trim()));
+      let bridgePayload: { journalText: string; reflectionText: string } | null = null;
+      if (hasCallerBridge && journalBridge) {
+        clearReflectionQuickNoteBridge();
+        bridgePayload = {
+          journalText: truncateMentorJournalBridgeText(
+            journalBridge.journalText,
+            MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL
+          ),
+          reflectionText: truncateMentorJournalBridgeText(
+            journalBridge.reflectionText,
+            MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION
+          ),
+        };
+      } else {
+        const pending = takeReflectionQuickNoteBridgeForHandoff();
+        if (pending) {
+          bridgePayload = {
             journalText: truncateMentorJournalBridgeText(
-              journalBridge.journalText,
+              pending,
               MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL
             ),
-            reflectionText: truncateMentorJournalBridgeText(
-              journalBridge.reflectionText,
-              MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION
-            ),
-          }
-        : null;
+            reflectionText: "",
+          };
+        }
+      }
       mentorJournalBridgeRef.current = bridgePayload;
       setLibraryPanelOpen(null);
       if (typeof window !== "undefined" && window.innerWidth < 1024) {
@@ -7991,7 +8082,14 @@ export default function ChatPage() {
         }
       }
     },
-    [router, sessionId, language, queueJournalBridgeAutoSend]
+    [
+      router,
+      sessionId,
+      language,
+      queueJournalBridgeAutoSend,
+      clearReflectionQuickNoteBridge,
+      takeReflectionQuickNoteBridgeForHandoff,
+    ]
   );
 
   const startSecondOrderConversation = useCallback(
@@ -7999,6 +8097,12 @@ export default function ChatPage() {
       plain: boolean,
       responseVerbosity: ResponseVerbosity = activeResponseVerbosityRef.current
     ) => {
+    const seedRaw = takeReflectionQuickNoteBridgeForHandoff();
+    const seedTrimmed = seedRaw?.trim() ?? "";
+    const seedForStorage =
+      seedTrimmed.length > 0
+        ? truncateMentorJournalBridgeText(seedTrimmed, MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL)
+        : "";
     activeResponseVerbosityRef.current = responseVerbosity;
     setNewConversationChooserModalOpen(false);
     setIdeasModalOpen(false);
@@ -8011,7 +8115,13 @@ export default function ChatPage() {
     if (sessionId !== "new" && sessionId !== "incognito") {
       try {
         sessionStorage.setItem(RESPONSE_VERBOSITY_START_KEY, responseVerbosity);
-        sessionStorage.setItem(SECOND_ORDER_START_KEY, JSON.stringify({ plain }));
+        sessionStorage.setItem(
+          SECOND_ORDER_START_KEY,
+          JSON.stringify({
+            plain,
+            ...(seedForStorage ? { seedUserMessage: seedForStorage } : {}),
+          })
+        );
       } catch {
         /* ignore */
       }
@@ -8036,9 +8146,13 @@ export default function ChatPage() {
       setCurrentSessionId(null);
       setCurrentSession(null);
       setCollapsedSummary(null);
-      inputRef.current?.focus();
+      if (seedTrimmed.length > 0) {
+        queueJournalBridgeAutoSend(seedTrimmed);
+      } else {
+        inputRef.current?.focus();
+      }
     }
-  }, [router, sessionId, language]);
+  }, [router, sessionId, language, takeReflectionQuickNoteBridgeForHandoff, queueJournalBridgeAutoSend]);
 
   useEffect(() => {
     if (!pendingCardFetch) return;
@@ -9648,23 +9762,51 @@ export default function ChatPage() {
     [isAnonymous, incognitoMode, refetchTranscripts]
   );
 
-  const openReflectionMentorFromQuickNote = useCallback(() => {
-    playSelectionChime();
-    activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-    if (sessionId !== "new" && sessionId !== "incognito") {
-      try {
-        sessionStorage.setItem(RESPONSE_VERBOSITY_START_KEY, newConversationResponseVerbosity);
-        sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-      } catch {
-        /* ignore */
+  const openReflectionMentorFromQuickNote = useCallback(
+    (ctx?: { reflectionText?: string }) => {
+      playSelectionChime();
+      if (ctx?.reflectionText != null) {
+        setReflectionQuickNoteBridgeForQuickNote(ctx.reflectionText);
+      } else {
+        clearReflectionQuickNoteBridge();
       }
-      router.push("/chat/new");
-    } else {
-      setMentorCatalogSearch("");
-      setMentorCatalogCategoryId(null);
-      setMentorOneOnOneModalOpen(true);
-    }
-  }, [newConversationResponseVerbosity, router, sessionId]);
+      activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+      if (sessionId !== "new" && sessionId !== "incognito") {
+        try {
+          sessionStorage.setItem(RESPONSE_VERBOSITY_START_KEY, newConversationResponseVerbosity);
+          sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+        } catch {
+          /* ignore */
+        }
+        router.push("/chat/new");
+      } else {
+        setMentorCatalogSearch("");
+        setMentorCatalogCategoryId(null);
+        setMentorOneOnOneModalOpen(true);
+      }
+    },
+    [
+      newConversationResponseVerbosity,
+      router,
+      sessionId,
+      setReflectionQuickNoteBridgeForQuickNote,
+      clearReflectionQuickNoteBridge,
+    ]
+  );
+
+  /** Reflection journal rows: open the same chooser as “new chat” (style + metacognition + citations), not only 1:1. */
+  const openReflectionConversationChooserFromQuickNote = useCallback(
+    (ctx?: { reflectionText?: string }) => {
+      playSelectionChime();
+      if (ctx?.reflectionText != null) {
+        setReflectionQuickNoteBridgeForQuickNote(ctx.reflectionText);
+      } else {
+        clearReflectionQuickNoteBridge();
+      }
+      setNewConversationChooserModalOpen(true);
+    },
+    [setReflectionQuickNoteBridgeForQuickNote, clearReflectionQuickNoteBridge]
+  );
 
   const openLandingActivityGroupModal = useCallback(
     (group: { label: string; items: LandingDayActivityItem[] }) => {
@@ -11177,9 +11319,14 @@ export default function ChatPage() {
     if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !spendTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !sleepInsightsModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
-        else if (askMentorsRecommendModalOpen) setAskMentorsRecommendModalOpen(false);
-        else if (mentorOneOnOneModalOpen) setMentorOneOnOneModalOpen(false);
+        if (newConversationChooserModalOpen) {
+          clearReflectionQuickNoteBridge();
+          setNewConversationChooserModalOpen(false);
+        } else if (askMentorsRecommendModalOpen) setAskMentorsRecommendModalOpen(false);
+        else if (mentorOneOnOneModalOpen) {
+          clearReflectionQuickNoteBridge();
+          setMentorOneOnOneModalOpen(false);
+        }
         else if (ideasModalOpen) setIdeasModalOpen(false);
         else if (transcriptModalTranscript) {
           setTranscriptModalTranscript(null);
@@ -11225,7 +11372,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, spendTrackerModalOpen, spendTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, sleepInsightsModalOpen, sleepInsightsLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetSpendTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal, resetSleepInsightsModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, spendTrackerModalOpen, spendTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, sleepInsightsModalOpen, sleepInsightsLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetSpendTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal, resetSleepInsightsModal, clearReflectionQuickNoteBridge]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -11821,6 +11968,7 @@ export default function ChatPage() {
   }, [askMentorsRecommendModalOpen, replaceAskMentorsRecommendationInput]);
 
   const closeAllModalsExceptLeftPanel = useCallback(() => {
+    clearReflectionQuickNoteBridge();
     setHeaderCalendarOpen(false);
     setLibraryPanelOpen(null);
     setJournalTypeChooserOpen(false);
@@ -11854,7 +12002,13 @@ export default function ChatPage() {
     setCcDeleteConfirmModal(null);
     setCgDeleteConfirmModal(null);
     setGoBackConfirmModal(null);
-  }, [resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal]);
+  }, [
+    clearReflectionQuickNoteBridge,
+    resetCalorieTrackerModal,
+    resetWeightTrackerModal,
+    resetJournalEntryModal,
+    resetWeeklySummaryModal,
+  ]);
 
   const handleBrandLinkClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -15301,6 +15455,7 @@ export default function ChatPage() {
                         weightWeekPoints={landingWeightWeekPoints}
                         onOpenOneOnOneMentor={() => {
                           playSelectionChime();
+                          clearReflectionQuickNoteBridge();
                           activeResponseVerbosityRef.current = newConversationResponseVerbosity;
                           if (sessionId !== "new" && sessionId !== "incognito") {
                             try {
@@ -15559,6 +15714,9 @@ export default function ChatPage() {
                               isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
                             }
                             onOpenReflectionMentor={openReflectionMentorFromQuickNote}
+                            onOpenReflectionConversationChooser={openReflectionConversationChooserFromQuickNote}
+                            weightTrendSparklineKg={quickNoteWeightTrendSparklineKg}
+                            sleepTrendSparklineHours={quickNoteSleepTrendSparklineHours}
                             onSaved={(categories) => {
                               if (
                                 categories.some(
@@ -15582,6 +15740,9 @@ export default function ChatPage() {
                         onOpenJournalEntry={openLandingJournalTranscriptById}
                         onDeleteJournalEntry={isAnonymous ? undefined : deleteLandingJournalTranscriptById}
                         onOpenReflectionMentor={openReflectionMentorFromQuickNote}
+                        onOpenReflectionConversationChooser={openReflectionConversationChooserFromQuickNote}
+                        weightTrendSparklineKg={quickNoteWeightTrendSparklineKg}
+                        sleepTrendSparklineHours={quickNoteSleepTrendSparklineHours}
                         onSaved={(categories) => {
                           if (categories.some((c) => c === "reflection" || c === "nutrition" || c === "exercise")) {
                             refetchTranscripts();
@@ -20781,7 +20942,10 @@ export default function ChatPage() {
       {newConversationChooserModalOpen && (
         <div
           className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setNewConversationChooserModalOpen(false)}
+          onClick={() => {
+            clearReflectionQuickNoteBridge();
+            setNewConversationChooserModalOpen(false);
+          }}
           role="dialog"
           aria-modal="true"
           aria-label={getLandingTranslations(language).conversationChooserTitle}
@@ -20796,7 +20960,10 @@ export default function ChatPage() {
               </h2>
               <button
                 type="button"
-                onClick={() => setNewConversationChooserModalOpen(false)}
+                onClick={() => {
+                  clearReflectionQuickNoteBridge();
+                  setNewConversationChooserModalOpen(false);
+                }}
                 className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label={getUiTranslations(language).close}
               >
@@ -20936,6 +21103,7 @@ export default function ChatPage() {
                   onClick={() => {
                     playSelectionChime();
                   activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                  clearReflectionQuickNoteBridge();
                   setNewConversationChooserModalOpen(false);
                   void handleTeachMeClick();
                 }}
@@ -20958,6 +21126,7 @@ export default function ChatPage() {
                 onClick={() => {
                   playSelectionChime();
                   activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                  clearReflectionQuickNoteBridge();
                   setNewConversationChooserModalOpen(false);
                   setLibraryPanelOpen(null);
                   setWaysOfLookingAtModalOpen(true);
@@ -20996,6 +21165,7 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={() => {
+                  clearReflectionQuickNoteBridge();
                   setNewConversationChooserModalOpen(false);
                   openJournalTypeChooser();
                 }}
@@ -21272,7 +21442,10 @@ export default function ChatPage() {
       {mentorOneOnOneModalOpen && (
         <div
           className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setMentorOneOnOneModalOpen(false)}
+          onClick={() => {
+            clearReflectionQuickNoteBridge();
+            setMentorOneOnOneModalOpen(false);
+          }}
           role="dialog"
           aria-modal="true"
           aria-label={getLandingTranslations(language).mentorOneOnOneModalTitle}
@@ -21287,7 +21460,10 @@ export default function ChatPage() {
               </h2>
               <button
                 type="button"
-                onClick={() => setMentorOneOnOneModalOpen(false)}
+                onClick={() => {
+                  clearReflectionQuickNoteBridge();
+                  setMentorOneOnOneModalOpen(false);
+                }}
                 className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
                 aria-label={getUiTranslations(language).close}
               >
