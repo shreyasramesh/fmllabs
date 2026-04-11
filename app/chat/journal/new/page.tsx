@@ -21,11 +21,12 @@ function truncatePreview(text: string | undefined, max = 120): string {
   return `${normalized.slice(0, max - 3).trimEnd()}...`;
 }
 
-type JournalTypeLabel = "Regular" | "Nutrition" | "Exercise";
+type JournalTypeLabel = "Regular" | "Nutrition" | "Exercise" | "Spend";
 
-function getJournalTypeLabel(category?: "nutrition" | "exercise"): JournalTypeLabel {
+function getJournalTypeLabel(category?: "nutrition" | "exercise" | "spend"): JournalTypeLabel {
   if (category === "nutrition") return "Nutrition";
   if (category === "exercise") return "Exercise";
+  if (category === "spend") return "Spend";
   return "Regular";
 }
 
@@ -42,7 +43,7 @@ type JournalListItem = {
 function toJournalItem(row: {
   _id: string;
   sourceType?: "youtube" | "journal";
-  journalCategory?: "nutrition" | "exercise";
+  journalCategory?: "nutrition" | "exercise" | "spend";
   journalEntryDay?: number;
   journalEntryMonth?: number;
   journalEntryYear?: number;
@@ -138,7 +139,7 @@ export default function JournalNewPage() {
             toJournalItem(row as {
               _id: string;
               sourceType?: "youtube" | "journal";
-              journalCategory?: "nutrition" | "exercise";
+              journalCategory?: "nutrition" | "exercise" | "spend";
               journalEntryDay?: number;
               journalEntryMonth?: number;
               journalEntryYear?: number;

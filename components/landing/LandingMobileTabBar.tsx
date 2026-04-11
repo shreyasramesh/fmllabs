@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type MobileTab = "nutrition" | "exercise" | "weight" | "sleep" | "habits" | "more";
+export type MobileTab = "nutrition" | "exercise" | "spend" | "weight" | "sleep" | "habits" | "more";
 
 interface LandingMobileTabBarProps {
   activeTab: MobileTab;
@@ -13,6 +13,7 @@ interface LandingMobileTabBarProps {
 const TABS: Array<{ key: MobileTab; label: string }> = [
   { key: "nutrition", label: "Nutrition" },
   { key: "exercise", label: "Exercise" },
+  { key: "spend", label: "Spend" },
   { key: "weight", label: "Weight" },
   { key: "sleep", label: "Sleep" },
   { key: "habits", label: "Habits" },
@@ -37,6 +38,14 @@ function TabIcon({ tab, active }: { tab: MobileTab; active: boolean }) {
           <rect x="2" y="8.5" width="4" height="7" rx="1" />
           <rect x="18" y="8.5" width="4" height="7" rx="1" />
           <path d="M6 12h12" />
+        </svg>
+      );
+    case "spend":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2" />
+          <path d="M22 11h-4a2 2 0 0 0 0 4h4" />
         </svg>
       );
     case "weight":

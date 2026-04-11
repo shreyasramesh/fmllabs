@@ -104,6 +104,7 @@ import {
   startNativePomodoroLive,
 } from "@/lib/native-pomodoro-live";
 import { syncWidgetAuth, refreshCalorieWidget } from "@/lib/native-widget-data";
+import { parseSpendAmountFromJournalText } from "@/lib/spend-journal";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -2227,18 +2228,20 @@ function formatJournalEntryListDate(t: JournalEntryDateFields): string {
 }
 
 function getJournalCategoryLabel(
-  category: "nutrition" | "exercise" | undefined
+  category: "nutrition" | "exercise" | "spend" | undefined
 ): string | null {
   if (category === "nutrition") return "Nutrition";
   if (category === "exercise") return "Exercise";
+  if (category === "spend") return "Spend";
   return null;
 }
 
 function getJournalCategoryLabelWithRegular(
-  category: "nutrition" | "exercise" | undefined
-): "Regular" | "Nutrition" | "Exercise" {
+  category: "nutrition" | "exercise" | "spend" | undefined
+): "Regular" | "Nutrition" | "Exercise" | "Spend" {
   if (category === "nutrition") return "Nutrition";
   if (category === "exercise") return "Exercise";
+  if (category === "spend") return "Spend";
   return "Regular";
 }
 
@@ -2686,7 +2689,7 @@ function summarizeNutritionFactsForDay(
   entries: Array<{
     sourceType?: "youtube" | "journal";
     transcriptText?: string;
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalEntryYear?: number;
     journalEntryMonth?: number;
     journalEntryDay?: number;
@@ -2764,7 +2767,7 @@ function summarizeNutritionFactContributorsForDay(
   entries: Array<{
     sourceType?: "youtube" | "journal";
     transcriptText?: string;
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalEntryYear?: number;
     journalEntryMonth?: number;
     journalEntryDay?: number;
@@ -2835,7 +2838,7 @@ function summarizeNutritionForDay(
   entries: Array<{
     sourceType?: "youtube" | "journal";
     transcriptText?: string;
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalEntryYear?: number;
     journalEntryMonth?: number;
     journalEntryDay?: number;
@@ -2921,6 +2924,44 @@ function summarizeNutritionForDay(
     proteinGrams: Math.max(0, Math.round(proteinGrams)),
     fatGrams: Math.round(fatGrams),
   };
+}
+
+function summarizeSpendForDay(
+  entries: Array<{
+    sourceType?: "youtube" | "journal";
+    transcriptText?: string;
+    journalCategory?: "nutrition" | "exercise" | "spend";
+    journalEntryYear?: number;
+    journalEntryMonth?: number;
+    journalEntryDay?: number;
+    createdAt?: string;
+  }>,
+  dayKey: string
+): Record<string, number> {
+  const totalByCurrency: Record<string, number> = {};
+  for (const t of entries) {
+    if (t.sourceType !== "journal" || t.journalCategory !== "spend" || !t.transcriptText) continue;
+    let itemDayKey: string | null = null;
+    if (
+      typeof t.journalEntryYear === "number" &&
+      typeof t.journalEntryMonth === "number" &&
+      typeof t.journalEntryDay === "number"
+    ) {
+      itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+    } else if (t.createdAt) {
+      const d = new Date(t.createdAt);
+      if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+    }
+    if (itemDayKey !== dayKey) continue;
+    const parsed = parseSpendAmountFromJournalText(t.transcriptText);
+    if (!parsed) continue;
+    const c = parsed.currency;
+    totalByCurrency[c] = (totalByCurrency[c] ?? 0) + parsed.amount;
+  }
+  for (const k of Object.keys(totalByCurrency)) {
+    totalByCurrency[k] = Math.round(totalByCurrency[k]! * 100) / 100;
+  }
+  return totalByCurrency;
 }
 
 function hasMeaningfulNutritionData(snapshot: {
@@ -3258,7 +3299,7 @@ type LandingDayActivityItem = {
   kind: LandingActivityKind;
   dayKey: string;
   title: string;
-  journalCategory?: "nutrition" | "exercise";
+  journalCategory?: "nutrition" | "exercise" | "spend";
   hasCaffeine?: boolean;
   sublabel?: string;
   timestamp: number;
@@ -3477,7 +3518,7 @@ function ResultDetailsView({
   );
 }
 
-type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight";
+type LandingJournalChipKey = "gratitude" | "reflection" | "nutrition" | "exercise" | "weight" | "spend";
 type ReusableJournalSuggestion = {
   id: string;
   kind: "nutrition" | "exercise";
@@ -3545,6 +3586,7 @@ type LandingActivityGroupKey =
   | "journalRegular"
   | "journalNutrition"
   | "journalExercise"
+  | "journalSpend"
   | "journalWeight"
   | "journalFocus"
   | "journalSleep"
@@ -3561,6 +3603,7 @@ const LANDING_ACTIVITY_GROUP_LABEL: Record<LandingActivityGroupKey, string> = {
   journalRegular: "Journal Entries",
   journalNutrition: "Nutrition Entries",
   journalExercise: "Exercise Entries",
+  journalSpend: "Spend Entries",
   journalWeight: "Weight Entries",
   journalFocus: "Focus Entries",
   journalSleep: "Sleep Entries",
@@ -3578,6 +3621,7 @@ const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
   "journalRegular",
   "journalNutrition",
   "journalExercise",
+  "journalSpend",
   "journalWeight",
   "journalFocus",
   "journalSleep",
@@ -3590,15 +3634,28 @@ const LANDING_ACTIVITY_GROUP_ORDER: LandingActivityGroupKey[] = [
   "perspectiveCard",
 ];
 
+/** ISO codes for POST /api/me/journal/spend; UI shows symbol in the picker. */
+const SPEND_TRACKER_CURRENCY_OPTIONS: Array<{ iso: string; symbol: string }> = [
+  { iso: "USD", symbol: "$" },
+  { iso: "EUR", symbol: "€" },
+  { iso: "GBP", symbol: "£" },
+  { iso: "JPY", symbol: "¥" },
+  { iso: "CAD", symbol: "CA$" },
+  { iso: "AUD", symbol: "A$" },
+  { iso: "CHF", symbol: "Fr" },
+  { iso: "INR", symbol: "\u20B9" },
+];
+
 const LANDING_JOURNAL_CHIPS: Array<{
   key: LandingJournalChipKey;
   label: string;
-  flow: "regular" | "calorie" | "weight";
+  flow: "regular" | "calorie" | "weight" | "spend";
 }> = [
   { key: "nutrition", label: "Nutrition entry", flow: "calorie" },
   { key: "weight", label: "Weight entry", flow: "weight" },
   { key: "gratitude", label: "Gratitude entry", flow: "regular" },
   { key: "exercise", label: "Exercise entry", flow: "calorie" },
+  { key: "spend", label: "Spend entry", flow: "spend" },
   { key: "reflection", label: "Reflection entry", flow: "regular" },
 ];
 
@@ -3623,6 +3680,10 @@ const LANDING_JOURNAL_EXAMPLES: Record<LandingJournalChipKey, string[]> = {
     "Morning check-in: 73.2 kg after waking up.",
     "Post-workout check: 72.9 kg. Feeling lighter this week.",
   ],
+  spend: [
+    "Coffee and pastry at the café on the way to work.",
+    "Monthly software subscription, parking, and groceries.",
+  ],
 };
 
 const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
@@ -3631,6 +3692,7 @@ const LANDING_JOURNAL_MODAL_TITLE: Record<LandingJournalChipKey, string> = {
   nutrition: "Nutrition entry",
   exercise: "Exercise entry",
   weight: "Weight tracker",
+  spend: "Spend entry",
 };
 
 const LANDING_JOURNAL_CARD_DESCRIPTION: Record<LandingJournalChipKey, string> = {
@@ -3638,6 +3700,7 @@ const LANDING_JOURNAL_CARD_DESCRIPTION: Record<LandingJournalChipKey, string> = 
   weight: "Track progress with a simple trend chart.",
   gratitude: "Capture one thing you appreciate today.",
   exercise: "Track workouts, intensity, and duration quickly.",
+  spend: "Log purchases and see what you spent today.",
   reflection: "Note what worked and what to improve next.",
 };
 
@@ -3674,6 +3737,13 @@ function renderLandingJournalIcon(key: LandingJournalChipKey) {
           <path d="m12 11 2-2" />
         </svg>
       );
+    case "spend":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
+          <path d="M12 2v20" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+      );
     case "reflection":
     default:
       return (
@@ -3691,12 +3761,75 @@ function landingActivityGroupKey(item: LandingDayActivityItem): LandingActivityG
   if (item.kind === "journal") {
     if (item.journalCategory === "nutrition") return "journalNutrition";
     if (item.journalCategory === "exercise") return "journalExercise";
+    if (item.journalCategory === "spend") return "journalSpend";
     return "journalRegular";
   }
   if (item.kind === "weightEntry") return "journalWeight";
   if (item.kind === "focusEntry") return "journalFocus";
   if (item.kind === "sleepEntry") return "journalSleep";
   return item.kind;
+}
+
+function createEmptyTranscriptStatsDraft(): {
+  caloriesFood: string;
+  carbsGrams: string;
+  proteinGrams: string;
+  fatGrams: string;
+  caloriesExercise: string;
+  carbsUsedGrams: string;
+  fatUsedGrams: string;
+  proteinDeltaGrams: string;
+  totalCarbohydratesGrams: string;
+  dietaryFiberGrams: string;
+  sugarGrams: string;
+  addedSugarsGrams: string;
+  sugarAlcoholsGrams: string;
+  netCarbsGrams: string;
+  saturatedFatGrams: string;
+  transFatGrams: string;
+  polyunsaturatedFatGrams: string;
+  monounsaturatedFatGrams: string;
+  cholesterolMg: string;
+  sodiumMg: string;
+  calciumMg: string;
+  ironMg: string;
+  potassiumMg: string;
+  vitaminAIu: string;
+  vitaminCMg: string;
+  vitaminDMcg: string;
+  spendAmount: string;
+  spendCurrency: string;
+} {
+  return {
+    caloriesFood: "",
+    carbsGrams: "",
+    proteinGrams: "",
+    fatGrams: "",
+    caloriesExercise: "",
+    carbsUsedGrams: "",
+    fatUsedGrams: "",
+    proteinDeltaGrams: "",
+    totalCarbohydratesGrams: "",
+    dietaryFiberGrams: "",
+    sugarGrams: "",
+    addedSugarsGrams: "",
+    sugarAlcoholsGrams: "",
+    netCarbsGrams: "",
+    saturatedFatGrams: "",
+    transFatGrams: "",
+    polyunsaturatedFatGrams: "",
+    monounsaturatedFatGrams: "",
+    cholesterolMg: "",
+    sodiumMg: "",
+    calciumMg: "",
+    ironMg: "",
+    potassiumMg: "",
+    vitaminAIu: "",
+    vitaminCMg: "",
+    vitaminDMcg: "",
+    spendAmount: "",
+    spendCurrency: "USD",
+  };
 }
 
 export default function ChatPage() {
@@ -3928,7 +4061,7 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalBatchId?: string;
     journalEntryDay?: number;
     journalEntryMonth?: number;
@@ -3963,7 +4096,7 @@ export default function ChatPage() {
     videoTitle?: string;
     channel?: string;
     sourceType?: "youtube" | "journal";
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalBatchId?: string;
     journalEntryDay?: number;
     journalEntryMonth?: number;
@@ -4010,6 +4143,8 @@ export default function ChatPage() {
     vitaminAIu: string;
     vitaminCMg: string;
     vitaminDMcg: string;
+    spendAmount: string;
+    spendCurrency: string;
   } | null>(null);
   /** Transcript modal: which mentor avatar is selected to show reflection bubble (figureId or null). */
   const [journalMentorBubbleOpenId, setJournalMentorBubbleOpenId] = useState<string | null>(null);
@@ -4959,6 +5094,12 @@ export default function ChatPage() {
   const [weightTrackerWeightInput, setWeightTrackerWeightInput] = useState("");
   const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
   const [weightTrackerAddOpen, setWeightTrackerAddOpen] = useState(false);
+  const [spendTrackerModalOpen, setSpendTrackerModalOpen] = useState(false);
+  const [spendTrackerAmount, setSpendTrackerAmount] = useState("");
+  const [spendTrackerCurrency, setSpendTrackerCurrency] = useState("USD");
+  const [spendTrackerMemo, setSpendTrackerMemo] = useState("");
+  const [spendTrackerSaving, setSpendTrackerSaving] = useState(false);
+  const [spendTrackerError, setSpendTrackerError] = useState<string | null>(null);
   const [focusTrackerEntries, setFocusTrackerEntries] = useState<FocusTrackerEntry[]>([]);
   const [focusSessionTagInput, setFocusSessionTagInput] = useState("");
   const [customFocusTagInput, setCustomFocusTagInput] = useState("");
@@ -5237,6 +5378,74 @@ export default function ChatPage() {
     }
   }, [fetchCalorieTrackerFrequentMeals, incognitoMode, isAnonymous, replaceCalorieTrackerCustomTag, replaceCalorieTrackerInput, router]);
 
+  const resetSpendTrackerModal = useCallback(() => {
+    setSpendTrackerModalOpen(false);
+    setSpendTrackerSaving(false);
+    setSpendTrackerError(null);
+    setSpendTrackerAmount("");
+    setSpendTrackerCurrency("USD");
+    setSpendTrackerMemo("");
+  }, []);
+
+  const openSpendTrackerModal = useCallback(() => {
+    playSelectionChime();
+    if (isAnonymous || incognitoMode) {
+      router.push(`/sign-in?redirect_url=${encodeURIComponent("/chat/new")}`);
+      return;
+    }
+    setSpendTrackerError(null);
+    setSpendTrackerModalOpen(true);
+  }, [incognitoMode, isAnonymous, router]);
+
+  const saveSpendTrackerEntry = useCallback(async () => {
+    if (spendTrackerSaving) return;
+    const parsed = Number.parseFloat(spendTrackerAmount.trim().replace(/,/g, ""));
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setSpendTrackerError("Enter a valid amount greater than zero.");
+      return;
+    }
+    const memo = spendTrackerMemo.trim();
+    if (!memo) {
+      setSpendTrackerError("Describe what you bought (memo).");
+      return;
+    }
+    const currency = spendTrackerCurrency.trim().toUpperCase();
+    if (!SPEND_TRACKER_CURRENCY_OPTIONS.some((o) => o.iso === currency)) {
+      setSpendTrackerError("Pick a currency.");
+      return;
+    }
+    setSpendTrackerSaving(true);
+    setSpendTrackerError(null);
+    try {
+      const res = await fetch("/api/me/journal/spend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parsed,
+          currency,
+          memo,
+          entryDate: selectedLandingDayKey,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Could not save spend entry.");
+      refetchTranscripts();
+      resetSpendTrackerModal();
+    } catch (err) {
+      setSpendTrackerError(err instanceof Error ? err.message : "Could not save spend entry.");
+    } finally {
+      setSpendTrackerSaving(false);
+    }
+  }, [
+    refetchTranscripts,
+    resetSpendTrackerModal,
+    selectedLandingDayKey,
+    spendTrackerAmount,
+    spendTrackerCurrency,
+    spendTrackerMemo,
+    spendTrackerSaving,
+  ]);
+
   const openLandingJournalChip = useCallback(
     (chip: LandingJournalChipKey) => {
       playSelectionChime();
@@ -5254,9 +5463,13 @@ export default function ChatPage() {
         setWeightTrackerAddOpen(false);
         return;
       }
+      if (chip === "spend") {
+        openSpendTrackerModal();
+        return;
+      }
       openJournalEntryFlow(chip);
     },
-    [incognitoMode, isAnonymous, openCalorieTrackerModal, openJournalEntryFlow, router]
+    [incognitoMode, isAnonymous, openCalorieTrackerModal, openJournalEntryFlow, openSpendTrackerModal, router]
   );
 
   const fetchCalorieTrackerSuggestions = useCallback(
@@ -6265,6 +6478,49 @@ export default function ChatPage() {
     }
     return results;
   }, [journalEntriesSorted, selectedLandingDayKey]);
+  const selectedLandingDaySpendTotals = useMemo(
+    () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),
+    [journalEntriesSorted, selectedLandingDayKey]
+  );
+  const selectedLandingDayRecentSpend = useMemo(() => {
+    const results: { id: string; label: string; amount: number; currency: string; time: string }[] = [];
+    for (const t of journalEntriesSorted) {
+      if (t.sourceType !== "journal" || t.journalCategory !== "spend" || !t.transcriptText) continue;
+      let itemDayKey: string | null = null;
+      if (typeof t.journalEntryYear === "number" && typeof t.journalEntryMonth === "number" && typeof t.journalEntryDay === "number") {
+        itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+      } else if (t.createdAt) {
+        const d = new Date(t.createdAt);
+        if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+      }
+      if (itemDayKey !== selectedLandingDayKey) continue;
+      const parsed = parseSpendAmountFromJournalText(t.transcriptText);
+      if (!parsed) continue;
+      const purchaseMatch = /Purchase:\s*\n([\s\S]*?)(?:\n\n|$)/i.exec(t.transcriptText);
+      const label =
+        purchaseMatch?.[1]?.trim().split("\n")[0]?.trim() ||
+        t.videoTitle?.trim() ||
+        "Spend entry";
+      let time = "";
+      if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
+        const h = t.journalEntryHour;
+        const m = t.journalEntryMinute;
+        const ampm = h >= 12 ? "PM" : "AM";
+        time = `${h % 12 || 12}:${String(m).padStart(2, "0")} ${ampm}`;
+      } else if (t.createdAt) {
+        const d = new Date(t.createdAt);
+        if (!Number.isNaN(d.getTime())) time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      }
+      results.push({
+        id: t._id,
+        label,
+        amount: parsed.amount,
+        currency: parsed.currency,
+        time,
+      });
+    }
+    return results;
+  }, [journalEntriesSorted, selectedLandingDayKey]);
   const selectedLandingDayNutritionFacts = useMemo(
     () => summarizeNutritionFactsForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
@@ -6573,13 +6829,30 @@ export default function ChatPage() {
       dietaryFacts,
     };
   }, [nutritionGoals.caloriesTarget, transcriptModalTranscript]);
+  const transcriptModalSpendSnapshot = useMemo(() => {
+    if (!transcriptModalTranscript || transcriptModalTranscript.journalCategory !== "spend") return null;
+    return parseSpendAmountFromJournalText(transcriptModalTranscript.transcriptText ?? "");
+  }, [transcriptModalTranscript]);
   const showTranscriptMentorReflections =
     transcriptModalTranscript?.sourceType === "journal" &&
     transcriptModalTranscript?.journalCategory !== "nutrition" &&
-    transcriptModalTranscript?.journalCategory !== "exercise";
+    transcriptModalTranscript?.journalCategory !== "exercise" &&
+    transcriptModalTranscript?.journalCategory !== "spend";
   const beginTranscriptStatsEdit = useCallback(() => {
+    if (transcriptModalTranscript?.journalCategory === "spend") {
+      if (!transcriptModalSpendSnapshot) return;
+      setTranscriptStatsDraft({
+        ...createEmptyTranscriptStatsDraft(),
+        spendAmount: String(transcriptModalSpendSnapshot.amount),
+        spendCurrency: transcriptModalSpendSnapshot.currency,
+      });
+      setTranscriptStatsError(null);
+      setTranscriptStatsEditing(true);
+      return;
+    }
     if (!transcriptModalNutritionSnapshot) return;
     setTranscriptStatsDraft({
+      ...createEmptyTranscriptStatsDraft(),
       caloriesFood: String(transcriptModalNutritionSnapshot.caloriesFood),
       carbsGrams: String(transcriptModalNutritionSnapshot.carbsGrams),
       proteinGrams: String(transcriptModalNutritionSnapshot.proteinGrams),
@@ -6672,11 +6945,12 @@ export default function ChatPage() {
     });
     setTranscriptStatsError(null);
     setTranscriptStatsEditing(true);
-  }, [transcriptModalNutritionSnapshot]);
+  }, [transcriptModalNutritionSnapshot, transcriptModalSpendSnapshot, transcriptModalTranscript?.journalCategory]);
   const saveTranscriptStatsEdit = useCallback(async () => {
     if (!transcriptModalTranscript) return;
     if (!transcriptStatsDraft) return;
-    if (transcriptModalTranscript.journalCategory !== "nutrition" && transcriptModalTranscript.journalCategory !== "exercise") {
+    const jCat = transcriptModalTranscript.journalCategory;
+    if (jCat !== "nutrition" && jCat !== "exercise" && jCat !== "spend") {
       return;
     }
     const toNum = (s: string) => {
@@ -6687,7 +6961,14 @@ export default function ChatPage() {
     setTranscriptStatsError(null);
     try {
       let payload: Record<string, unknown>;
-      if (transcriptModalTranscript.journalCategory === "nutrition") {
+      if (jCat === "spend") {
+        const amount = toNum(transcriptStatsDraft.spendAmount);
+        const currency = transcriptStatsDraft.spendCurrency.trim().toUpperCase();
+        if (amount == null || !/^[A-Z]{3}$/.test(currency)) {
+          throw new Error("Enter a valid amount and 3-letter currency (e.g. USD).");
+        }
+        payload = { amount, currency };
+      } else if (transcriptModalTranscript.journalCategory === "nutrition") {
         const calories = toNum(transcriptStatsDraft.caloriesFood);
         const carbsGrams = toNum(transcriptStatsDraft.carbsGrams);
         const proteinGrams = toNum(transcriptStatsDraft.proteinGrams);
@@ -10603,7 +10884,7 @@ export default function ChatPage() {
   }, [weightTrackerFilteredChronological, weightTrackerRange, weightTrackerTargetKg]);
 
   useEffect(() => {
-    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !sleepInsightsModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
+    if (!libraryPanelOpen && !selectedMentalModel && !drawnPerspectiveCard && !waysOfLookingAtModalOpen && !ideasModalOpen && !calorieTrackerModalOpen && !weightTrackerModalOpen && !spendTrackerModalOpen && !journalEntryModalOpen && !journalTypeChooserOpen && !goalsModalOpen && !nutritionDayViewModalOpen && !weeklySummaryModalOpen && !sleepInsightsModalOpen && !mentorOneOnOneModalOpen && !askMentorsRecommendModalOpen && !newConversationChooserModalOpen && !habitDetailModal && !habitPromoteModal && !habitCreateDraft && !habitDeleteConfirmModal && !statsOverviewModalOpen && !rankModalOpen && !transcriptModalTranscript) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (newConversationChooserModalOpen) setNewConversationChooserModalOpen(false);
@@ -10619,6 +10900,7 @@ export default function ChatPage() {
         else if (nutritionDayViewModalOpen) setNutritionDayViewModalOpen(false);
         else if (sleepInsightsModalOpen && !sleepInsightsLoading) resetSleepInsightsModal();
         else if (weeklySummaryModalOpen && !weeklySummaryLoading) resetWeeklySummaryModal();
+        else if (spendTrackerModalOpen && !spendTrackerSaving) resetSpendTrackerModal();
         else if (weightTrackerModalOpen && !weightTrackerSaving) resetWeightTrackerModal();
         else if (goalsModalOpen && !goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) setGoalsModalOpen(false);
         else if (journalTypeChooserOpen) setJournalTypeChooserOpen(false);
@@ -10653,7 +10935,7 @@ export default function ChatPage() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, sleepInsightsModalOpen, sleepInsightsLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal, resetSleepInsightsModal]);
+  }, [libraryPanelOpen, selectedMentalModel, drawnPerspectiveCard, waysOfLookingAtModalOpen, ideasModalOpen, calorieTrackerModalOpen, weightTrackerModalOpen, weightTrackerSaving, spendTrackerModalOpen, spendTrackerSaving, journalEntryModalOpen, journalTypeChooserOpen, goalsModalOpen, goalsSaving, goalsCalculatorLoading, goalsRecalculateLoading, goalsCoachLoading, nutritionDayViewModalOpen, weeklySummaryModalOpen, weeklySummaryLoading, sleepInsightsModalOpen, sleepInsightsLoading, journalEntrySaving, mentorOneOnOneModalOpen, askMentorsRecommendModalOpen, newConversationChooserModalOpen, transcriptModalTranscript, waysOfLookingAtCategory, waysOfLookingAtCity, waysOfLookingAtCuisine, waysOfLookingAtMicrocosm, waysOfLookingAtHuman, waysOfLookingAtDigital, habitDetailModal, habitPromoteModal, habitCreateDraft, habitDeleteConfirmModal, habitPromoteLoading, habitCreateGenerating, habitCreateSaving, statsOverviewModalOpen, rankModalOpen, resetCalorieTrackerModal, resetSpendTrackerModal, resetWeightTrackerModal, resetJournalEntryModal, resetWeeklySummaryModal, resetSleepInsightsModal]);
 
   useEffect(() => {
     if (!headerCalendarOpen) return;
@@ -13794,7 +14076,7 @@ export default function ChatPage() {
                                     videoTitle?: string;
                                     channel?: string;
                                     sourceType?: "youtube" | "journal";
-                                    journalCategory?: "nutrition" | "exercise";
+                                    journalCategory?: "nutrition" | "exercise" | "spend";
                                     journalBatchId?: string;
                                     transcriptText?: string;
                                     journalEntryDay?: number;
@@ -13881,7 +14163,12 @@ export default function ChatPage() {
                               )}
                             </div>
                             <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                              {!(t.sourceType === "journal" && (t.journalCategory === "nutrition" || t.journalCategory === "exercise")) && (
+                              {!(
+                                t.sourceType === "journal" &&
+                                (t.journalCategory === "nutrition" ||
+                                  t.journalCategory === "exercise" ||
+                                  t.journalCategory === "spend")
+                              ) && (
                               <button
                                 type="button"
                                 onClick={() => {
@@ -14201,7 +14488,7 @@ export default function ChatPage() {
                                   videoTitle?: string;
                                   channel?: string;
                                   sourceType?: "youtube" | "journal";
-                                  journalCategory?: "nutrition" | "exercise";
+                                  journalCategory?: "nutrition" | "exercise" | "spend";
                                   journalBatchId?: string;
                                   transcriptText?: string;
                                   journalEntryDay?: number;
@@ -14271,7 +14558,9 @@ export default function ChatPage() {
                             <JournalMentorListHint row={t} language={language} />
                           </div>
                           <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                            {t.journalCategory !== "nutrition" && t.journalCategory !== "exercise" && (
+                            {t.journalCategory !== "nutrition" &&
+                            t.journalCategory !== "exercise" &&
+                            t.journalCategory !== "spend" && (
                             <button
                               type="button"
                               onClick={() => {
@@ -14701,6 +14990,11 @@ export default function ChatPage() {
                           setCalorieTrackerStep("input");
                         }}
                         inlineExerciseLoading={calorieTrackerLoading}
+                        spendDaySummary={{
+                          totalsByCurrency: selectedLandingDaySpendTotals,
+                          recentEntries: selectedLandingDayRecentSpend.slice().reverse(),
+                        }}
+                        onOpenSpend={openSpendTrackerModal}
                         onPomodoroCustomMinutesInputChange={setPomodoroCustomMinutesInput}
                         onApplyCustomPomodoroMinutes={applyCustomPomodoroMinutes}
                         onSelectPomodoroDuration={setPomodoroDurationMinutes}
@@ -15846,6 +16140,85 @@ export default function ChatPage() {
             )}
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
                 <div className="p-4 pb-6">
+                  {transcriptModalSpendSnapshot && (
+                    <div className="w-full mb-4">
+                      <div className="rounded-lg border border-emerald-500/30 dark:border-emerald-400/35 bg-emerald-500/10 dark:bg-emerald-900/20 p-3">
+                        <p className="text-sm font-semibold text-foreground">Amount</p>
+                        <div className="mt-1 flex flex-wrap items-end gap-2">
+                          {transcriptStatsEditing ? (
+                            <>
+                              <input
+                                type="number"
+                                inputMode="decimal"
+                                value={transcriptStatsDraft?.spendAmount ?? ""}
+                                onChange={(e) =>
+                                  setTranscriptStatsDraft((prev) =>
+                                    prev ? { ...prev, spendAmount: e.target.value } : prev
+                                  )
+                                }
+                                className="w-36 px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={transcriptStatsDraft?.spendCurrency ?? ""}
+                                onChange={(e) =>
+                                  setTranscriptStatsDraft((prev) =>
+                                    prev ? { ...prev, spendCurrency: e.target.value.toUpperCase() } : prev
+                                  )
+                                }
+                                maxLength={3}
+                                className="w-20 px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm uppercase"
+                              />
+                            </>
+                          ) : (
+                            <p className="text-2xl sm:text-3xl font-semibold tabular-nums text-foreground">
+                              {transcriptModalSpendSnapshot.amount.toLocaleString(undefined, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 2,
+                              })}{" "}
+                              {transcriptModalSpendSnapshot.currency}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-2 flex items-center justify-end gap-2">
+                        {transcriptStatsError && (
+                          <p className="text-xs text-red-600 dark:text-red-400 mr-auto">{transcriptStatsError}</p>
+                        )}
+                        {transcriptStatsEditing ? (
+                          <>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => {
+                                setTranscriptStatsEditing(false);
+                                setTranscriptStatsError(null);
+                              }}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              disabled={transcriptStatsSaving}
+                              onClick={() => void saveTranscriptStatsEdit()}
+                              className="px-2 py-1 rounded-md text-[11px] font-medium bg-foreground text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+                            >
+                              {transcriptStatsSaving ? "Saving..." : "Save stats"}
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={beginTranscriptStatsEdit}
+                            className="px-2 py-1 rounded-md text-[11px] font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                          >
+                            Edit stats
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   {transcriptModalNutritionSnapshot && (
                     <div className="w-full mb-4">
                       {transcriptModalNutritionSnapshot.mode === "nutrition" && (
@@ -16178,6 +16551,22 @@ export default function ChatPage() {
                       if (!t) return null;
                       if (
                         transcriptModalTranscript.sourceType === "journal" &&
+                        transcriptModalTranscript.journalCategory === "spend"
+                      ) {
+                        const purchaseMatch = /Purchase:\s*\n([\s\S]*?)(?:\n\n|$)/i.exec(t);
+                        const body = purchaseMatch?.[1]?.trim() ?? "";
+                        return (
+                          <div className="space-y-4">
+                            {body ? (
+                              <p>
+                                <span className="font-medium">Purchase:</span> {body}
+                              </p>
+                            ) : null}
+                          </div>
+                        );
+                      }
+                      if (
+                        transcriptModalTranscript.sourceType === "journal" &&
                         (transcriptModalTranscript.journalCategory === "nutrition" ||
                           transcriptModalTranscript.journalCategory === "exercise")
                       ) {
@@ -16416,7 +16805,8 @@ export default function ChatPage() {
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end shrink-0">
               {!(transcriptModalTranscript.sourceType === "journal" &&
                 (transcriptModalTranscript.journalCategory === "nutrition" ||
-                  transcriptModalTranscript.journalCategory === "exercise")) && (
+                  transcriptModalTranscript.journalCategory === "exercise" ||
+                  transcriptModalTranscript.journalCategory === "spend")) && (
               <button
                 type="button"
                 title="Run AI concept extraction again on this saved text"
@@ -18726,6 +19116,103 @@ export default function ChatPage() {
                   </div>
                 )}
               </div>
+                       </div>
+          </div>
+        </div>
+      )}
+
+      {spendTrackerModalOpen && (
+        <div
+          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          onClick={() => {
+            if (!spendTrackerSaving) resetSpendTrackerModal();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Spend entry"
+        >
+          <div
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,480px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
+              <h2 className="text-lg font-semibold text-foreground pr-2">Log spend</h2>
+              <button
+                type="button"
+                onClick={resetSpendTrackerModal}
+                disabled={spendTrackerSaving}
+                className="p-2 rounded-xl text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                aria-label={getUiTranslations(language).close}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3 overflow-y-auto">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 -mt-1">
+                Logged for <span className="font-medium text-foreground">{headerCalendarLabel}</span> (calendar above)
+              </p>
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Amount</label>
+                <div className="flex gap-2">
+                  <select
+                    value={spendTrackerCurrency}
+                    onChange={(e) => setSpendTrackerCurrency(e.target.value)}
+                    disabled={spendTrackerSaving}
+                    className="shrink-0 w-[min(7.5rem,32vw)] px-2 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    aria-label="Currency"
+                  >
+                    {SPEND_TRACKER_CURRENCY_OPTIONS.map((o) => (
+                      <option key={o.iso} value={o.iso}>
+                        {o.symbol} {o.iso}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    value={spendTrackerAmount}
+                    onChange={(e) => setSpendTrackerAmount(e.target.value)}
+                    disabled={spendTrackerSaving}
+                    className="min-w-0 flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">What did you buy?</label>
+                <textarea
+                  value={spendTrackerMemo}
+                  onChange={(e) => setSpendTrackerMemo(e.target.value)}
+                  disabled={spendTrackerSaving}
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y min-h-[72px]"
+                />
+              </div>
+              {spendTrackerError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{spendTrackerError}</p>
+              )}
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={resetSpendTrackerModal}
+                  disabled={spendTrackerSaving}
+                  className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveSpendTrackerEntry()}
+                  disabled={spendTrackerSaving}
+                  className="px-3 py-2 rounded-xl bg-foreground text-background text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {spendTrackerSaving ? "Saving…" : "Save"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -19071,6 +19558,19 @@ export default function ChatPage() {
                 <p className="text-sm font-semibold text-foreground">Weight tracker</p>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
                   Log your weight and track trends over time.
+                </p>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setJournalTypeChooserOpen(false);
+                  openSpendTrackerModal();
+                }}
+                className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 px-4 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <p className="text-sm font-semibold text-foreground">Spend log</p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
+                  Record a purchase and roll up spending for the day.
                 </p>
               </button>
             </div>

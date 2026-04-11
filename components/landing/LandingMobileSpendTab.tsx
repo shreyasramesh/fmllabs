@@ -1,0 +1,82 @@
+"use client";
+
+import React from "react";
+
+import type { LandingSpendDaySummary } from "@/components/landing/types";
+
+interface LandingMobileSpendTabProps {
+  spendDaySummary: LandingSpendDaySummary;
+  selectedDayLabel: string;
+  onOpenSpend: () => void;
+}
+
+export function LandingMobileSpendTab({
+  spendDaySummary,
+  selectedDayLabel,
+  onOpenSpend,
+}: LandingMobileSpendTabProps) {
+  const empty =
+    Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
+    spendDaySummary.recentEntries.length === 0;
+
+  return (
+    <div className="flex flex-col gap-5 px-4 pb-4">
+      <div className="landing-module-glass rounded-2xl border px-4 py-4">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[15px] font-bold text-foreground">Spend</p>
+            <p className="mt-0.5 text-[12px] text-neutral-500 dark:text-neutral-400">
+              Totals for {selectedDayLabel}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onOpenSpend}
+            className="shrink-0 rounded-xl border border-[#B87B51]/60 bg-[#FBF4EC] px-3 py-2 text-[12px] font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+          >
+            Log purchase
+          </button>
+        </div>
+
+        {empty ? (
+          <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+            No purchases for {selectedDayLabel}.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(spendDaySummary.totalsByCurrency).map(([code, total]) => (
+                <span
+                  key={code}
+                  className="inline-flex rounded-full border border-neutral-200 bg-white/80 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-foreground dark:border-neutral-600 dark:bg-neutral-900/50"
+                >
+                  {total.toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  {code}
+                </span>
+              ))}
+            </div>
+            {spendDaySummary.recentEntries.length > 0 ? (
+              <ul className="space-y-2 border-t border-neutral-200/80 pt-3 dark:border-neutral-700/80">
+                {spendDaySummary.recentEntries.slice(0, 8).map((e) => (
+                  <li
+                    key={e.id}
+                    className="flex justify-between gap-2 text-[13px] text-neutral-700 dark:text-neutral-300"
+                  >
+                    <span className="min-w-0 truncate font-medium text-foreground">{e.label}</span>
+                    <span className="shrink-0 tabular-nums text-neutral-600 dark:text-neutral-400">
+                      {e.amount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {e.currency}
+                      {e.time ? ` · ${e.time}` : ""}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

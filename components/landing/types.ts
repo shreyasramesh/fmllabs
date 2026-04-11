@@ -72,6 +72,12 @@ export interface LandingRecentFoodEntry {
   time: string;
 }
 
+/** Selected dashboard day spend rollup (journal category spend). */
+export interface LandingSpendDaySummary {
+  totalsByCurrency: Record<string, number>;
+  recentEntries: Array<{ id: string; label: string; amount: number; currency: string; time: string }>;
+}
+
 export interface CaffeineIntake {
   minuteOfDay: number;
   mg: number;

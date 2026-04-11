@@ -17,6 +17,7 @@ import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExer
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
 import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
 import { LandingMobileHabitsTab } from "@/components/landing/LandingMobileHabitsTab";
+import { LandingMobileSpendTab } from "@/components/landing/LandingMobileSpendTab";
 import { useTheme } from "@/components/ThemeProvider";
 import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
@@ -32,6 +33,7 @@ import type {
   LandingNutritionGoals,
   LandingNutritionSummary,
   LandingQuickCaptureItem,
+  LandingSpendDaySummary,
   LandingSleepEntry,
   LandingThoughtOfTheDay,
   LandingTimelineEvent,
@@ -376,6 +378,8 @@ interface LandingShellProps {
   onOpenWeeklySummary: () => void;
   onOpenHabits: () => void;
   onOpenWeight: () => void;
+  spendDaySummary: LandingSpendDaySummary;
+  onOpenSpend: () => void;
   mindLabTitle: string;
   mindLabDescription: string;
   mentalModelsLabel: string;
@@ -531,6 +535,8 @@ export function LandingShell({
   onOpenWeeklySummary,
   onOpenHabits,
   onOpenWeight,
+  spendDaySummary,
+  onOpenSpend,
   mindLabTitle,
   mindLabDescription,
   mentalModelsLabel,
@@ -799,6 +805,14 @@ export function LandingShell({
             onInlineExerciseSubmit={onInlineExerciseSubmit}
             inlineExerciseLoading={inlineExerciseLoading}
             weeklySummary={weeklySummary}
+          />
+        );
+      case "spend":
+        return (
+          <LandingMobileSpendTab
+            spendDaySummary={spendDaySummary}
+            selectedDayLabel={selectedDayLabel}
+            onOpenSpend={onOpenSpend}
           />
         );
       case "weight":
@@ -1181,6 +1195,54 @@ export function LandingShell({
                 )}
               </div>
             )}
+            <div className="module-nested-muted mt-3 p-2.5 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[11px] font-semibold text-foreground">Spent today</p>
+                <button
+                  type="button"
+                  onClick={onOpenSpend}
+                  className="shrink-0 rounded-lg border border-[#B87B51]/60 bg-[#FBF4EC] px-2.5 py-1 text-[11px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                >
+                  Log
+                </button>
+              </div>
+              {Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
+              spendDaySummary.recentEntries.length === 0 ? (
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  No purchases logged for {selectedDayLabel}.
+                </p>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1">
+                    {Object.entries(spendDaySummary.totalsByCurrency).map(([code, total]) => (
+                      <p key={code} className="text-sm font-semibold tabular-nums text-foreground">
+                        {total.toLocaleString(undefined, {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2,
+                        })}{" "}
+                        {code}
+                      </p>
+                    ))}
+                  </div>
+                  {spendDaySummary.recentEntries.length > 0 ? (
+                    <ul className="space-y-1 border-t border-neutral-200/80 pt-2 dark:border-neutral-700/80">
+                      {spendDaySummary.recentEntries.slice(0, 3).map((e) => (
+                        <li
+                          key={e.id}
+                          className="flex justify-between gap-2 text-[11px] text-neutral-600 dark:text-neutral-400"
+                        >
+                          <span className="min-w-0 truncate">{e.label}</span>
+                          <span className="shrink-0 tabular-nums">
+                            {e.amount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {e.currency}
+                            {e.time ? ` · ${e.time}` : ""}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </>
+              )}
+            </div>
           </section>
         </div>
       </div>

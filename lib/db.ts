@@ -277,8 +277,8 @@ export interface SavedTranscript {
   channel?: string;
   /** When omitted, treated as YouTube for backward compatibility. */
   sourceType?: "youtube" | "journal";
-  /** Journal subtype used for calorie tracking entries. */
-  journalCategory?: "nutrition" | "exercise";
+  /** Journal subtype used for calorie tracking and spend entries. */
+  journalCategory?: "nutrition" | "exercise" | "spend";
   /** Optional shared id to link related journal rows (e.g. mixed nutrition+exercise input). */
   journalBatchId?: string;
   /** Calendar date the user assigned to the entry (journal only); display and sorting. */
@@ -2128,7 +2128,7 @@ export async function saveJournalTranscript(
   journalTitle?: string,
   journalEntryDate?: { day: number; month: number; year: number },
   options?: {
-    journalCategory?: "nutrition" | "exercise";
+    journalCategory?: "nutrition" | "exercise" | "spend";
     journalBatchId?: string;
     journalEntryTime?: { hour: number; minute: number };
   }

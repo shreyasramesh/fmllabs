@@ -1,6 +1,6 @@
 export type WeeklySummaryTranscriptRow = {
   sourceType?: "youtube" | "journal";
-  journalCategory?: "nutrition" | "exercise";
+  journalCategory?: "nutrition" | "exercise" | "spend";
   journalEntryYear?: number;
   journalEntryMonth?: number;
   journalEntryDay?: number;

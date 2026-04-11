@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText } from "@/lib/db";
+import { upsertSpendAmountLine } from "@/lib/spend-journal";
 import { estimateNutritionFactsFromMacros } from "@/lib/gemini";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
@@ -152,9 +153,13 @@ export async function PATCH(
     }
     if (
       transcript.journalCategory !== "nutrition" &&
-      transcript.journalCategory !== "exercise"
+      transcript.journalCategory !== "exercise" &&
+      transcript.journalCategory !== "spend"
     ) {
-      return NextResponse.json({ error: "Only nutrition/exercise journals are supported" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Only nutrition, exercise, or spend journals are supported" },
+        { status: 400 }
+      );
     }
 
     const body = (await request.json().catch(() => ({}))) as {
@@ -167,11 +172,23 @@ export async function PATCH(
       fatUsedGrams?: unknown;
       proteinDeltaGrams?: unknown;
       facts?: unknown;
+      amount?: unknown;
+      currency?: unknown;
     };
     const rawLines = (transcript.transcriptText ?? "").split(/\r?\n/);
     let lines = rawLines.slice();
 
-    if (transcript.journalCategory === "nutrition") {
+    if (transcript.journalCategory === "spend") {
+      const amount = parseNumberish(body.amount);
+      const currencyRaw = typeof body.currency === "string" ? body.currency.trim().toUpperCase() : "";
+      if (amount == null || amount <= 0 || amount > 1e7) {
+        return NextResponse.json({ error: "Invalid spend amount" }, { status: 400 });
+      }
+      if (!/^[A-Z]{3}$/.test(currencyRaw)) {
+        return NextResponse.json({ error: "currency must be a 3-letter ISO code" }, { status: 400 });
+      }
+      lines = upsertSpendAmountLine(lines, amount, currencyRaw);
+    } else if (transcript.journalCategory === "nutrition") {
       const calories = parseNumberish(body.calories);
       const proteinGrams = parseNumberish(body.proteinGrams);
       const carbsGrams = parseNumberish(body.carbsGrams);
