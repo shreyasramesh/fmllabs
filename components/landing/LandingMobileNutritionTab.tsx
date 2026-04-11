@@ -11,7 +11,10 @@ import type {
   LandingRecentFoodEntry,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
-import { journalTypeBadgeClass } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
+import {
+  journalTypeBadgeClass,
+  JOURNAL_CATEGORY_TAG_PILL_CLASS,
+} from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import {
   AMY_JOURNAL_LIST_GRID,
   DeleteEntryIcon,
@@ -278,7 +281,7 @@ export function LandingMobileNutritionTab({
                       disabled={!onRecentFoodEntryClick}
                       className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                     >
-                      <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
+                      <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
                         Nutrition
                       </span>
                     </button>

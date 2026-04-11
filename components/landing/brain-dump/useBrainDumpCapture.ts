@@ -116,8 +116,9 @@ export function useBrainDumpCapture(options: {
 
         /** Inline estimate already ran; avoid categorizeBrainDump + second finalize when intent maps cleanly. */
         const fromEstimate =
-          frozenMeta.status === "done" && shouldRunQuickEstimate(text)
-            ? brainDumpResultFromQuickEstimateLine(text, frozenMeta.intent)
+          frozenMeta.status === "done" &&
+          (shouldRunQuickEstimate(text) || frozenMeta.intent === "sleep")
+            ? brainDumpResultFromQuickEstimateLine(text, frozenMeta.intent, frozenMeta.sleepHours)
             : null;
 
         const entries =

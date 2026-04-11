@@ -15553,7 +15553,6 @@ export default function ChatPage() {
                         spendBudgetUsd={spendBudgetUsd}
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
-                            language={language}
                             journalContextRows={brainDumpJournalContextRows}
                             onOpenJournalEntry={openLandingJournalTranscriptById}
                             onDeleteJournalEntry={
@@ -15579,7 +15578,6 @@ export default function ChatPage() {
                       )}
                 {!incognitoMode && (
                       <LandingBrainDump
-                        language={language}
                         journalContextRows={brainDumpJournalContextRows}
                         onOpenJournalEntry={openLandingJournalTranscriptById}
                         onDeleteJournalEntry={isAnonymous ? undefined : deleteLandingJournalTranscriptById}

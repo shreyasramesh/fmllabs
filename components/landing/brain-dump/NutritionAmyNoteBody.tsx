@@ -4,9 +4,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { SparklesIcon } from "@/components/SharedIcons";
 import {
   flushSentencesFromTyping,
+  looksLikeSleepSentence,
+  parseSleepHoursFromLine,
   shouldRunQuickEstimate,
+  shouldShowQuickNoteEstimateColumn,
   splitIntoSentences,
 } from "@/components/landing/brain-dump/sentence-entries";
+import { JOURNAL_CATEGORY_TAG_PILL_CLASS } from "@/components/landing/brain-dump/journal-category-tag-styles";
 import {
   EntryEstimateDetailModal,
   type EntryEstimateModalMeta,
@@ -46,6 +50,8 @@ function intentPillClass(intent: string): string {
       return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200";
     case "mixed":
       return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
+    case "sleep":
+      return "bg-indigo-100 text-indigo-900 dark:bg-indigo-900/35 dark:text-indigo-200";
     default:
       return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200";
   }
@@ -54,6 +60,7 @@ function intentPillClass(intent: string): string {
 function intentPillLabel(intent: string): string {
   if (intent === "exercise") return "Exercise";
   if (intent === "mixed") return "Mixed";
+  if (intent === "sleep") return "Sleep";
   return "Nutrition";
 }
 
@@ -72,6 +79,21 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
 
   if (meta.status === "thinking") {
     return <ThinkingEstimateLabel />;
+  }
+
+  if (meta.status === "done" && meta.intent === "sleep") {
+    const h = meta.sleepHours;
+    if (h != null && h > 0) {
+      const label = Number.isInteger(h) ? String(h) : String(Math.round(h * 10) / 10);
+      return (
+        <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-indigo-600 dark:text-indigo-400">
+          {label} h
+        </span>
+      );
+    }
+    return (
+      <span className="whitespace-nowrap text-[15px] font-medium text-indigo-600 dark:text-indigo-400">Sleep</span>
+    );
   }
 
   const { calories, sourceCount, exerciseCaloriesBurned } = meta;
@@ -123,11 +145,40 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
   return <span className="whitespace-nowrap text-[15px] text-neutral-400 dark:text-neutral-500">—</span>;
 }
 
-function useNutritionLineEstimate(line: string, enabled: boolean): LineMeta {
+function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSleepLocal: boolean): LineMeta {
   const [meta, setMeta] = useState<LineMeta>({ status: "idle" });
 
   useEffect(() => {
-    if (!enabled || !line.trim()) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      setMeta({ status: "idle" });
+      return;
+    }
+
+    if (runSleepLocal) {
+      const h = parseSleepHoursFromLine(trimmed);
+      setMeta({
+        status: "done",
+        calories: null,
+        exerciseCaloriesBurned: null,
+        sourceCount: 0,
+        confidence: h != null ? "high" : "medium",
+        intent: "sleep",
+        sleepHours: h,
+        reasoning: "",
+        assumptions: [],
+        nutritionItems: [],
+        nutritionNotes: "",
+        exerciseNotes: "",
+        proteinGrams: null,
+        carbsGrams: null,
+        fatGrams: null,
+        confidenceScore: h != null ? 90 : 70,
+      });
+      return;
+    }
+
+    if (!runNutritionApi) {
       setMeta({ status: "idle" });
       return;
     }
@@ -222,11 +273,11 @@ function useNutritionLineEstimate(line: string, enabled: boolean): LineMeta {
       })();
     }, 700);
 
-    return () => {
+       return () => {
       window.clearTimeout(timer);
       ac.abort();
     };
-  }, [line, enabled]);
+  }, [line, runNutritionApi, runSleepLocal]);
 
   return meta;
 }
@@ -291,9 +342,12 @@ export function CaptureDraftSentenceRow({
   showEstimateDetailTap?: boolean;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
-  const estimateLine = shouldRunQuickEstimate(draft);
+  const trimmedDraft = draft.trim();
+  const estimateNutrition = shouldRunQuickEstimate(draft);
+  const estimateSleep = looksLikeSleepSentence(draft);
+  const showEstimateColumn = shouldShowQuickNoteEstimateColumn(draft);
   /** Keep showing calories while textarea is disabled (save in flight); do not reset estimate to idle. */
-  const meta = useNutritionLineEstimate(draft, estimateLine && Boolean(draft.trim()));
+  const meta = useNutritionLineEstimate(draft, Boolean(trimmedDraft) && estimateNutrition, Boolean(trimmedDraft) && estimateSleep);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -328,13 +382,13 @@ export function CaptureDraftSentenceRow({
       : "appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-1 pt-0.5 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30";
 
   const rightCol =
-    estimateLine || !draft.trim() ? (
+    showEstimateColumn || !draft.trim() ? (
       <LineRightMeta meta={meta} />
     ) : (
       <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
     );
 
-   return (
+  return (
     <>
       <div
         className={`${AMY_ENTRY_ROW_GRID} min-h-0 flex-1 ${variant === "fullScreen" ? "items-start py-0.5" : "py-1.5"} ${
@@ -355,7 +409,7 @@ export function CaptureDraftSentenceRow({
           disabled={disabled}
           rows={variant === "fullScreen" ? 2 : 1}
           autoFocus
-          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing, or use the mic below…"}
+          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing or add photos below…"}
           className={`${taMin} min-w-0 w-full resize-none border-0 bg-transparent ${variant === "fullScreen" ? "text-[16px] leading-tight" : "text-[17px] leading-snug"} text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-100 ${NOTES_LIKE_TEXTAREA}`}
           aria-label="Note draft"
         />
@@ -384,7 +438,7 @@ export function CaptureDraftSentenceRow({
           open={detailOpen}
           onClose={() => setDetailOpen(false)}
           text={draft}
-          attemptedEstimate={estimateLine}
+          attemptedEstimate={showEstimateColumn}
           meta={meta}
         />
       ) : null}
@@ -415,14 +469,17 @@ export function DeleteEntryIcon({ className = "h-5 w-5" }: { className?: string 
 /** Persisted capture line: frozen analysis when done (no second request); tap text or estimate to open detail modal. */
 export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDumpCaptureEntry; onDelete: (id: string) => void }) {
   const [detailOpen, setDetailOpen] = useState(false);
+  const trimmed = entry.text.trim();
   const useLive =
-    entry.frozenMeta.status !== "done" &&
-    shouldRunQuickEstimate(entry.text) &&
-    Boolean(entry.text.trim());
-  const liveMeta = useNutritionLineEstimate(entry.text, useLive);
+    entry.frozenMeta.status !== "done" && shouldShowQuickNoteEstimateColumn(entry.text) && Boolean(trimmed);
+  const liveMeta = useNutritionLineEstimate(
+    entry.text,
+    useLive && shouldRunQuickEstimate(entry.text),
+    useLive && looksLikeSleepSentence(entry.text)
+  );
   const meta = entry.frozenMeta.status === "done" ? entry.frozenMeta : liveMeta;
 
-  const attemptedEstimate = shouldRunQuickEstimate(entry.text);
+  const attemptedEstimate = shouldShowQuickNoteEstimateColumn(entry.text);
   const showEstimateColumn = attemptedEstimate || meta.status !== "idle";
 
   const openDetailBtn =
@@ -439,7 +496,7 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
         >
           {meta.status === "done" ? (
             <span
-              className={`mb-0.5 inline-block rounded-full px-2 py-px text-[10px] font-medium ${intentPillClass(meta.intent)}`}
+              className={`mb-0.5 ${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${intentPillClass(meta.intent)}`}
             >
               {intentPillLabel(meta.intent)}
             </span>
@@ -569,8 +626,13 @@ function EditableAmyRow({
   onBackspaceEmpty: () => void;
   inputRef: (el: HTMLTextAreaElement | null) => void;
 }) {
-  const estimateLine = shouldRunQuickEstimate(line);
-  const meta = useNutritionLineEstimate(line, Boolean(line.trim()) && estimateLine);
+  const trimmed = line.trim();
+  const showEstimateCol = shouldShowQuickNoteEstimateColumn(line);
+  const meta = useNutritionLineEstimate(
+    line,
+    Boolean(trimmed) && shouldRunQuickEstimate(line),
+    Boolean(trimmed) && looksLikeSleepSentence(line)
+  );
   const [detailOpen, setDetailOpen] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -619,14 +681,14 @@ function EditableAmyRow({
           className="appearance-none justify-self-end self-start rounded-lg border-0 bg-transparent px-1 pt-1 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:disabled:hover:bg-transparent dark:focus-visible:ring-blue-400/30"
           aria-label={line.trim() ? "View estimate details for this line" : "Details for new line"}
         >
-          {estimateLine || line.trim() === "" ? <LineRightMeta meta={meta} /> : <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>}
+          {showEstimateCol || line.trim() === "" ? <LineRightMeta meta={meta} /> : <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>}
         </button>
       </div>
       <EntryEstimateDetailModal
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
         text={line}
-        attemptedEstimate={estimateLine}
+        attemptedEstimate={showEstimateCol}
         meta={meta}
       />
     </>

@@ -2,8 +2,6 @@
 
 import React, { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
 import type { BrainDumpCategory } from "@/lib/gemini";
-import { VoiceInputButton } from "@/components/VoiceInputButton";
-import type { LanguageCode } from "@/lib/languages";
 import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
@@ -13,16 +11,16 @@ import {
   NOTES_LIKE_TEXTAREA,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
-import {
-  BrainDumpImageIngestBar,
-  type BrainDumpImageTranscribeMode,
-} from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
+import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
 import { buildQuickNoteHighlightSegments } from "@/lib/quick-note-highlights";
 import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import { JOURNAL_CATEGORY_TAG_PILL_CLASS } from "@/components/landing/brain-dump/journal-category-tag-styles";
+
+export { JOURNAL_CATEGORY_TAG_PILL_CLASS };
 
 /** Matches journal list chips in app/chat/journal/new/page.tsx */
 export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
@@ -38,7 +36,7 @@ export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
     case "experiment":
       return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
     case "weight":
-      return "bg-orange-50 text-orange-900 dark:bg-orange-950/40 dark:text-orange-100";
+      return "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-200";
     case "sleep":
       return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/35 dark:text-indigo-200";
     default:
@@ -76,7 +74,7 @@ export function journalContextChipClass(
   if (journalCategory === "nutrition") return journalTypeBadgeClass("nutrition");
   if (journalCategory === "exercise") return journalTypeBadgeClass("exercise");
   if (journalCategory === "spend") {
-    return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
+    return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200";
   }
   if (journalCategory === "weight") return journalTypeBadgeClass("weight");
   if (journalCategory === "sleep") return journalTypeBadgeClass("sleep");
@@ -239,7 +237,7 @@ const GHOST_OPEN_BTN =
 function journalContextRowMetricToneClass(cat: BrainDumpJournalContextRow["journalCategory"]): string {
   if (cat === "spend") return "text-amber-700 dark:text-amber-300";
   if (cat === "sleep") return "text-indigo-600 dark:text-indigo-400";
-  if (cat === "weight") return "text-orange-800 dark:text-orange-200";
+  if (cat === "weight") return "text-teal-700 dark:text-teal-300";
   return "text-neutral-700 dark:text-neutral-200";
 }
 
@@ -321,7 +319,7 @@ function JournalContextRowSheet({
         disabled={!onOpenJournalContextEntry}
         className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
       >
-        <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
+        <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
           {row.categoryLabel}
         </span>
       </button>
@@ -467,7 +465,7 @@ function JournalContextRowNoteStream({
           disabled={!onOpenJournalContextEntry}
           className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
         >
-          <span className={`inline-flex rounded-full px-1.5 py-px text-[9px] font-medium leading-tight ${chipCls}`}>
+          <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
             {row.categoryLabel}
           </span>
         </button>
@@ -517,8 +515,6 @@ interface CaptureViewProps {
   sentenceDraft: string;
   setSentenceDraft: React.Dispatch<React.SetStateAction<string>>;
   phase: "recording" | "categorizing";
-  language: LanguageCode;
-  onTranscription: (text: string) => void;
   /** When the draft is empty, Enter runs categorize + save (same as Done). */
   onRequestFinishNote?: () => void;
   /** Journal rows already saved for the landing dashboard day (read-only context). */
@@ -541,8 +537,6 @@ export function BrainDumpCaptureView({
   sentenceDraft,
   setSentenceDraft,
   phase,
-  language,
-  onTranscription,
   onRequestFinishNote,
   journalContextRows = [],
   onOpenJournalContextEntry,
@@ -558,7 +552,6 @@ export function BrainDumpCaptureView({
     draftMetaRef.current = m;
   }, []);
 
-  const [imageIngestMode, setImageIngestMode] = useState<BrainDumpImageTranscribeMode>("nutrition");
   const appendTranscribedToDraft = useCallback(
     (text: string) => {
       const t = text.trim();
@@ -676,83 +669,73 @@ export function BrainDumpCaptureView({
     ) : null;
 
   const ingestDisabled = lineSaveBusy || (phase === "categorizing" && !saveLineOnEnter);
-  const captureFooter = (
-    <div
-      className={
-        full
-          ? "flex w-full shrink-0 flex-col gap-3 border-t border-neutral-200/60 bg-[var(--background)] px-1 pt-3 pb-[max(0.35rem,env(safe-area-inset-bottom))] dark:border-neutral-700/50"
-          : "mt-auto flex w-full shrink-0 flex-col gap-3 border-t border-neutral-200/60 pt-3 dark:border-neutral-700/50"
-      }
-    >
+  const captureFooterSheet = (
+    <div className="mt-auto flex w-full shrink-0 justify-center border-t border-neutral-200/60 pt-2.5 dark:border-neutral-700/50">
       <BrainDumpImageIngestBar
         disabled={ingestDisabled}
         hintText={sentenceDraft}
-        mode={imageIngestMode}
-        onModeChange={setImageIngestMode}
         onAppendText={appendTranscribedToDraft}
+        layout="inline"
       />
-      <div className="flex items-center justify-center gap-3">
-        <VoiceInputButton
-          onTranscription={onTranscription}
-          language={language}
-          ariaLabel="Dictate note"
-          compactStopWhileListening
-          disabled={lineSaveBusy}
-          className="!min-h-[48px] !min-w-[48px] !rounded-2xl !border-neutral-300/90 !bg-neutral-100/80 dark:!border-neutral-600 dark:!bg-neutral-800/80"
-        />
-      </div>
     </div>
   );
 
   if (full) {
     return (
-      <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]">
-          {journalRowsOrdered.map((row) => (
-            <JournalContextRowNoteStream
-              key={row.id}
-              row={row}
-              onOpenJournalContextEntry={onOpenJournalContextEntry}
-              onDeleteJournalContextEntry={onDeleteJournalContextEntry}
-              onOpenReflectionMentor={onOpenReflectionMentor}
-            />
-          ))}
-          {!saveLineOnEnter
-            ? captureEntries.map((entry) => (
-                <div key={entry.id} className="mb-3">
-                  <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} />
-                </div>
-              ))
-            : null}
-          <div
-            className={
-              journalRowsOrdered.length > 0 || (!saveLineOnEnter && captureEntries.length > 0)
-                ? "mt-2"
-                : undefined
-            }
-          >
-            <CaptureDraftSentenceRow
-              draft={sentenceDraft}
-              onDraftValue={handleDraftValue}
-              onEnterCommit={commitDraftOnEnter}
-              onMetaChange={syncDraftMeta}
-              disabled={lineSaveBusy}
-              variant="fullScreen"
-              showEstimateDetailTap
-            />
+      <>
+        <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
+            {journalRowsOrdered.map((row) => (
+              <JournalContextRowNoteStream
+                key={row.id}
+                row={row}
+                onOpenJournalContextEntry={onOpenJournalContextEntry}
+                onDeleteJournalContextEntry={onDeleteJournalContextEntry}
+                onOpenReflectionMentor={onOpenReflectionMentor}
+              />
+            ))}
+            {!saveLineOnEnter
+              ? captureEntries.map((entry) => (
+                  <div key={entry.id} className="mb-3">
+                    <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} />
+                  </div>
+                ))
+              : null}
+            <div
+              className={
+                journalRowsOrdered.length > 0 || (!saveLineOnEnter && captureEntries.length > 0)
+                  ? "mt-2"
+                  : undefined
+              }
+            >
+              <CaptureDraftSentenceRow
+                draft={sentenceDraft}
+                onDraftValue={handleDraftValue}
+                onEnterCommit={commitDraftOnEnter}
+                onMetaChange={syncDraftMeta}
+                disabled={lineSaveBusy}
+                variant="fullScreen"
+                showEstimateDetailTap
+              />
+            </div>
+            <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
-          <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
         </div>
-        {captureFooter}
-      </div>
+        <BrainDumpImageIngestBar
+          disabled={ingestDisabled}
+          hintText={sentenceDraft}
+          onAppendText={appendTranscribedToDraft}
+          layout="floating"
+        />
+      </>
     );
   }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-        Speak or type — we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done) saves
-        immediately — no review screen.
+        Type or add photos — we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done)
+        saves immediately — no review screen.
       </p>
       <div
         className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl bg-white/60 px-3 py-2 dark:bg-neutral-900/25"
@@ -769,7 +752,7 @@ export function BrainDumpCaptureView({
           onMetaChange={syncDraftMeta}
         />
       </div>
-      {captureFooter}
+      {captureFooterSheet}
     </div>
   );
 }
@@ -805,7 +788,7 @@ export function BrainDumpReviewView({
   return (
     <div className="flex flex-col gap-4 pb-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${badgeCls}`}>
+        <span className={`shrink-0 ${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${badgeCls}`}>
           {categoryMeta[cat].label}
         </span>
         <span className="text-xs text-neutral-400 dark:text-neutral-500">Tap to change type</span>
@@ -821,10 +804,10 @@ export function BrainDumpReviewView({
               type="button"
               disabled={disabled}
               onClick={() => onSwitchCategory(c)}
-              className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              className={`flex shrink-0 items-center gap-1 rounded-full text-[10px] font-medium transition-colors ${
                 active
-                  ? journalTypeBadgeClass(c) + " ring-2 ring-offset-1 ring-offset-[var(--background)] ring-neutral-400/50 dark:ring-neutral-500"
-                  : "bg-neutral-100/90 text-neutral-600 hover:bg-neutral-200/90 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700/80"
+                  ? `px-2 py-1 ${journalTypeBadgeClass(c)} ring-2 ring-offset-1 ring-offset-[var(--background)] ring-neutral-400/50 dark:ring-neutral-500`
+                  : "bg-neutral-100/90 px-2.5 py-1 text-[11px] text-neutral-600 hover:bg-neutral-200/90 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700/80"
               }`}
             >
               {meta.icon}

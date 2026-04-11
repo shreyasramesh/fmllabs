@@ -4,7 +4,6 @@ import React, { useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { BrainDumpCategory } from "@/lib/gemini";
-import type { LanguageCode } from "@/lib/languages";
 import {
   BrainDumpCaptureView,
   BrainDumpSheetFrame,
@@ -13,7 +12,6 @@ import {
 import { useBrainDumpCapture } from "@/components/landing/brain-dump/useBrainDumpCapture";
 
 interface LandingBrainDumpProps {
-  language?: LanguageCode;
   onSaved?: (categories: BrainDumpCategory[]) => void;
   journalContextRows?: BrainDumpJournalContextRow[];
   onOpenJournalEntry?: (transcriptId: string) => void;
@@ -22,7 +20,6 @@ interface LandingBrainDumpProps {
 }
 
 export function LandingBrainDump({
-  language = "en",
   onSaved,
   journalContextRows = [],
   onOpenJournalEntry,
@@ -40,7 +37,6 @@ export function LandingBrainDump({
     resetAll,
     startRecording,
     finishBatchTranscript,
-    handleTranscriptionToEntries,
   } = useBrainDumpCapture({ onSaved });
 
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -99,8 +95,6 @@ export function LandingBrainDump({
           sentenceDraft={captureDraft}
           setSentenceDraft={setCaptureDraft}
           phase={phase}
-                    language={language}
-          onTranscription={handleTranscriptionToEntries}
           onRequestFinishNote={() => void finishBatchTranscript()}
           journalContextRows={journalContextRows}
           onOpenJournalContextEntry={onOpenJournalEntry}

@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import type { BrainDumpCategory } from "@/lib/gemini";
-import type { LanguageCode } from "@/lib/languages";
 import {
   BrainDumpCaptureView,
   type BrainDumpJournalContextRow,
@@ -10,7 +9,6 @@ import {
 import { useBrainDumpCapture } from "@/components/landing/brain-dump/useBrainDumpCapture";
 
 interface LandingMobileQuickNoteTabProps {
-  language?: LanguageCode;
   onSaved?: (categories: BrainDumpCategory[]) => void;
   journalContextRows?: BrainDumpJournalContextRow[];
   onOpenJournalEntry?: (transcriptId: string) => void;
@@ -19,7 +17,6 @@ interface LandingMobileQuickNoteTabProps {
 }
 
 export function LandingMobileQuickNoteTab({
-  language = "en",
   onSaved,
   journalContextRows = [],
   onOpenJournalEntry,
@@ -55,8 +52,6 @@ export function LandingMobileQuickNoteTab({
         sentenceDraft={captureDraft}
         setSentenceDraft={setCaptureDraft}
         phase={phase === "categorizing" ? "categorizing" : "recording"}
-        language={language}
-        onTranscription={handleTranscriptionToDraft}
         journalContextRows={journalContextRows}
         onOpenJournalContextEntry={onOpenJournalEntry}
         onDeleteJournalContextEntry={onDeleteJournalEntry}

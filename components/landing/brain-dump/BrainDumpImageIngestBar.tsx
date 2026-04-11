@@ -3,7 +3,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 
-export type BrainDumpImageTranscribeMode = "nutrition" | "exercise";
+/** Vision prompt tuned for meals; quick-estimate still classifies exercise from the resulting text. */
+const IMAGE_TRANSCRIBE_MODE = "nutrition" as const;
 
 type Thumb = { id: string; previewUrl: string };
 
@@ -38,21 +39,21 @@ function PhotosGlyph({ className }: { className?: string }) {
   );
 }
 
-const BAR_BTN =
-  "flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-0.5 rounded-2xl border border-neutral-300/90 bg-neutral-100/80 px-2 text-[10px] font-medium text-neutral-700 shadow-sm transition-colors hover:bg-neutral-200/90 disabled:cursor-not-allowed disabled:opacity-45 dark:border-neutral-600 dark:bg-neutral-800/80 dark:text-neutral-200 dark:hover:bg-neutral-700/80";
+/** Small round icon-only control (Quick Note + modal). */
+const COMPACT_ICON_BTN =
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200/90 bg-background/95 text-neutral-700 shadow-md backdrop-blur-sm transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-neutral-600 dark:bg-neutral-900/95 dark:text-neutral-200 dark:hover:bg-neutral-800";
 
 export function BrainDumpImageIngestBar({
   disabled,
   hintText,
-  mode,
-  onModeChange,
   onAppendText,
+  layout = "inline",
 }: {
   disabled?: boolean;
   hintText: string;
-  mode: BrainDumpImageTranscribeMode;
-  onModeChange: (m: BrainDumpImageTranscribeMode) => void;
   onAppendText: (text: string) => void;
+  /** `floating`: fixed bottom-right above mobile tab bar. `inline`: slim row in modal sheet. */
+  layout?: "inline" | "floating";
 }) {
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -99,7 +100,7 @@ export function BrainDumpImageIngestBar({
               imageBase64: base64,
               mimeType,
               hintText: hintText.slice(0, 600),
-              mode,
+              mode: IMAGE_TRANSCRIBE_MODE,
             }),
           });
           const data = (await res.json().catch(() => ({}))) as { error?: string; nutritionLogDraft?: string };
@@ -129,7 +130,7 @@ export function BrainDumpImageIngestBar({
         setBusy(false);
       }
     },
-    [hintText, mode, onAppendText]
+    [hintText, onAppendText]
   );
 
   const onCameraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,53 +145,37 @@ export function BrainDumpImageIngestBar({
     if (f?.length) void processFiles(f);
   };
 
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <div className="flex justify-center gap-1 rounded-xl bg-neutral-100/90 p-0.5 dark:bg-neutral-800/60">
-        <button
-          type="button"
-          disabled={disabled || busy}
-          onClick={() => onModeChange("nutrition")}
-          className={`flex-1 rounded-lg px-2 py-1.5 text-[12px] font-semibold transition-colors ${
-            mode === "nutrition"
-              ? "bg-white text-orange-800 shadow-sm dark:bg-neutral-900 dark:text-orange-200"
-              : "text-neutral-500 dark:text-neutral-400"
-          }`}
-        >
-          Food
-        </button>
-        <button
-          type="button"
-          disabled={disabled || busy}
-          onClick={() => onModeChange("exercise")}
-          className={`flex-1 rounded-lg px-2 py-1.5 text-[12px] font-semibold transition-colors ${
-            mode === "exercise"
-              ? "bg-white text-emerald-800 shadow-sm dark:bg-neutral-900 dark:text-emerald-200"
-              : "text-neutral-500 dark:text-neutral-400"
-          }`}
-        >
-          Workout
-        </button>
-      </div>
+  const thumbSize = layout === "floating" ? "h-10 w-10" : "h-11 w-11";
+  const thumbRounded = layout === "floating" ? "rounded-lg" : "rounded-xl";
+  const floatingCol = layout === "floating";
 
+  const inner = (
+    <div
+      className={`flex flex-col gap-1.5 ${floatingCol ? "max-w-[min(100%,18rem)] items-end" : "w-full items-center"}`}
+    >
       {error ? (
-        <p className="text-center text-[12px] text-red-600 dark:text-red-400" role="alert">
+        <p
+          className={`text-red-600 dark:text-red-400 ${floatingCol ? "max-w-[min(100%,18rem)] text-right text-[11px] leading-snug" : "text-center text-[12px]"}`}
+          role="alert"
+        >
           {error}
         </p>
       ) : null}
 
       {thumbs.length > 0 ? (
-        <div className="flex max-h-16 gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+        <div
+          className={`flex max-h-14 gap-1.5 overflow-x-auto pb-0.5 [-webkit-overflow-scrolling:touch] ${floatingCol ? "max-w-[min(100vw-2rem,18rem)] justify-end" : ""}`}
+        >
           {thumbs.map((t) => (
             <div
               key={t.id}
-              className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-neutral-200/80 dark:border-neutral-600"
+              className={`relative ${thumbSize} shrink-0 overflow-hidden ${thumbRounded} border border-neutral-200/80 dark:border-neutral-600`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={t.previewUrl} alt="" className="h-full w-full object-cover opacity-80" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+              <img src={t.previewUrl} alt="" className="h-full w-full object-cover opacity-85" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                 <span
-                  className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"
+                  className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
                   aria-hidden
                 />
               </div>
@@ -209,28 +194,39 @@ export function BrainDumpImageIngestBar({
       />
       <input ref={galleryRef} type="file" accept="image/*" multiple className="hidden" onChange={onGalleryChange} />
 
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className={`flex items-center gap-2.5 ${floatingCol ? "justify-end" : "justify-center"}`}>
         <button
           type="button"
           disabled={disabled || busy}
-          className={BAR_BTN}
+          className={COMPACT_ICON_BTN}
           onClick={() => cameraRef.current?.click()}
           aria-label="Capture photo"
         >
-          <CameraGlyph className="h-6 w-6" />
-          <span>Capture</span>
+          <CameraGlyph className="h-4 w-4" />
         </button>
         <button
           type="button"
           disabled={disabled || busy}
-          className={BAR_BTN}
+          className={COMPACT_ICON_BTN}
           onClick={() => galleryRef.current?.click()}
-          aria-label="Upload photos"
+          aria-label="Add photos"
         >
-          <PhotosGlyph className="h-6 w-6" />
-          <span>Photos</span>
+          <PhotosGlyph className="h-4 w-4" />
         </button>
       </div>
     </div>
   );
+
+  if (layout === "floating") {
+    return (
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-[34] flex justify-end px-3 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4"
+        aria-hidden={false}
+      >
+        <div className="pointer-events-auto">{inner}</div>
+      </div>
+    );
+  }
+
+  return <div className="flex w-full flex-col items-center gap-1">{inner}</div>;
 }

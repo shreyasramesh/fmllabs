@@ -28,6 +28,8 @@ export type EntryEstimateModalMeta =
       sourceCount: number;
       confidence: string;
       intent: string;
+      /** Set for local sleep summary (no nutrition API). */
+      sleepHours?: number | null;
       reasoning: string;
       assumptions: string[];
       nutritionItems: NutritionEstimateDetailItem[];
@@ -55,7 +57,7 @@ export function EntryEstimateDetailModal({
   open: boolean;
   onClose: () => void;
   text: string;
-  /** True when this line matched food or exercise heuristics and we requested an estimate. */
+  /** True when this line matched food, exercise, or sleep heuristics (estimate or local summary). */
   attemptedEstimate: boolean;
   meta: EntryEstimateModalMeta;
 }) {
@@ -130,8 +132,8 @@ export function EntryEstimateDetailModal({
 
             {!attemptedEstimate && (
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                This line didn&apos;t match food or activity wording, so no estimate was requested. You can still edit it
-                in your note.
+                This line didn&apos;t match food, activity, or sleep wording, so no summary was shown. You can still edit
+                it in your note.
               </p>
             )}
 
@@ -147,7 +149,22 @@ export function EntryEstimateDetailModal({
               </p>
             )}
 
-            {attemptedEstimate && meta.status === "done" && (
+            {attemptedEstimate && meta.status === "done" && meta.intent === "sleep" ? (
+              <div className="space-y-3 text-sm">
+                <p className="text-xl font-semibold tabular-nums text-indigo-600 dark:text-indigo-400">
+                  {meta.sleepHours != null && meta.sleepHours > 0
+                    ? `${Number.isInteger(meta.sleepHours) ? meta.sleepHours : Math.round(meta.sleepHours * 10) / 10} h`
+                    : "Sleep"}
+                </p>
+                <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
+                  {meta.sleepHours != null && meta.sleepHours > 0
+                    ? "This line is summarized as sleep from the duration in your note (not a calorie estimate)."
+                    : "This line looks like sleep. Add a duration (for example 7 hours) to log time asleep more clearly."}
+                </p>
+              </div>
+            ) : null}
+
+            {attemptedEstimate && meta.status === "done" && meta.intent !== "sleep" ? (
               <div className="space-y-4 text-sm">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   {meta.exerciseCaloriesBurned != null && meta.exerciseCaloriesBurned > 0 ? (
@@ -230,7 +247,7 @@ export function EntryEstimateDetailModal({
                   </div>
                 )}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
