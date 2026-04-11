@@ -8,13 +8,14 @@ import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
   CapturePersistedEntryRow,
-  AMY_PERSISTED_ROW_GRID,
+  AMY_JOURNAL_LIST_GRID,
   DeleteEntryIcon,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
+import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 
 /** Matches journal list chips in app/chat/journal/new/page.tsx */
 export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
@@ -120,6 +121,7 @@ export function BrainDumpSheetFrame({
     >
       <div
         role="dialog"
+        data-brain-dump-dialog="true"
         aria-modal="true"
         aria-labelledby="brain-dump-sheet-title"
         className="flex h-[100dvh] max-h-[100dvh] w-full max-w-xl flex-col overflow-hidden rounded-t-[1.25rem] border border-neutral-200/80 bg-[var(--background)] shadow-2xl dark:border-neutral-700/80 sm:h-auto sm:max-h-[min(92dvh,860px)] sm:rounded-3xl sm:shadow-xl"
@@ -208,13 +210,10 @@ export function BrainDumpCaptureView({
 
   if (phase === "categorizing") {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16">
-        <span
-          className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-[#295a8a] dark:border-neutral-600 dark:border-t-blue-400"
-          aria-hidden
-        />
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">Analyzing with Gemini…</p>
-      </div>
+      <EstimateThinkingHero
+        message="Analyzing with Gemini"
+        subMessage="Sorting your note into the right journal."
+      />
     );
   }
 
@@ -258,74 +257,87 @@ export function BrainDumpCaptureView({
         immediately — no review screen.
       </p>
       <div
-        className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl border border-neutral-200/70 bg-white/60 px-3 py-2 dark:border-neutral-700/60 dark:bg-neutral-900/25"
+        className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl bg-white/60 px-3 py-2 dark:bg-neutral-900/25"
         role="list"
       >
         {journalContextRows.length > 0 ? (
-          <div className="border-b border-neutral-200/60 pb-2 dark:border-neutral-700/50">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
+          <div className="pb-2">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
               Today on your journal
             </p>
             {journalContextRows.map((row) => {
+              const ghostOpenBtn =
+                "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
               const chipCls = journalContextChipClass(row.journalCategory);
               const burn = row.caloriesSummary?.startsWith("-");
               const open = () => onOpenJournalContextEntry?.(row.id);
-              const calCol = (
-                <>
-                  {row.caloriesSummary ? (
-                    <span
-                      className={`inline-flex items-center gap-1 text-[15px] font-medium tabular-nums ${
-                        burn
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-blue-500 dark:text-blue-400"
-                      }`}
-                    >
-                      <SparklesIcon className="h-4 w-4 shrink-0" />
-                      {row.caloriesSummary}
-                    </span>
-                  ) : null}
-                  {row.time ? (
-                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
-                  ) : null}
-                  {!row.caloriesSummary && !row.time ? (
-                    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
-                  ) : null}
-                </>
-              );
+              const calOnly =
+                row.caloriesSummary != null && row.caloriesSummary !== "" ? (
+                  <span
+                    className={`inline-flex items-center gap-1 text-[15px] font-medium tabular-nums ${
+                      burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-500 dark:text-blue-400"
+                    }`}
+                  >
+                    <SparklesIcon className="h-4 w-4 shrink-0" />
+                    {row.caloriesSummary}
+                  </span>
+                ) : (
+                  <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+                );
+              const timeOnly = row.time ? (
+                <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
+              ) : null;
               return (
                 <div
                   key={row.id}
-                  className={`${AMY_PERSISTED_ROW_GRID} rounded-lg py-2 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
+                  className={`${AMY_JOURNAL_LIST_GRID} py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
                 >
                   <button
                     type="button"
                     onClick={open}
                     disabled={!onOpenJournalContextEntry}
-                    className="min-w-0 text-left disabled:cursor-default disabled:opacity-100"
+                    className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                   >
-                    <span
-                      className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${chipCls}`}
-                    >
+                    <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
                       {row.categoryLabel}
                     </span>
-                    <p className="text-[17px] leading-snug text-foreground whitespace-pre-wrap break-words">
-                      {row.bodyText}
-                    </p>
                   </button>
                   <button
                     type="button"
                     onClick={open}
                     disabled={!onOpenJournalContextEntry}
-                    className="justify-self-end self-start flex flex-col items-end gap-0.5 whitespace-nowrap pt-0.5 text-right disabled:cursor-default disabled:opacity-100"
+                    className={`col-start-2 row-start-1 justify-self-end self-center text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                     aria-live="polite"
                   >
-                    {calCol}
+                    {calOnly}
                   </button>
+                  <button
+                    type="button"
+                    onClick={open}
+                    disabled={!onOpenJournalContextEntry}
+                    className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
+                  >
+                    <p className="text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
+                      {row.bodyText}
+                    </p>
+                  </button>
+                  {timeOnly ? (
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onOpenJournalContextEntry}
+                      className={`col-start-2 row-start-2 justify-self-end self-end text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
+                    >
+                      {timeOnly}
+                    </button>
+                  ) : (
+                    <span className="col-start-2 row-start-2 justify-self-end self-end" aria-hidden />
+                  )}
                   <button
                     type="button"
                     onClick={() => void onDeleteJournalContextEntry?.(row.id)}
                     disabled={!onDeleteJournalContextEntry}
-                    className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                    className="col-start-3 row-start-1 row-span-2 justify-self-end self-center appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
                     aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
                   >
                     <DeleteEntryIcon />

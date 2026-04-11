@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { EstimateThinkingLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 
 export type NutritionEstimateDetailItem = {
   name: string;
@@ -106,7 +107,9 @@ export function EntryEstimateDetailModal({
             )}
 
             {attemptedEstimate && meta.status === "thinking" && (
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">Estimating…</p>
+              <div className="py-1">
+                <EstimateThinkingLabel message="Estimating" variant="prominent" />
+              </div>
             )}
 
             {attemptedEstimate && meta.status === "idle" && (

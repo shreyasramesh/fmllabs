@@ -6,7 +6,10 @@ import HighchartsReact from "highcharts-react-official";
 
 import type { LandingWeeklySummaryPreview } from "@/components/landing/types";
 import { journalTypeBadgeClass } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
-import { AMY_PERSISTED_ROW_GRID, DeleteEntryIcon } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import {
+  AMY_JOURNAL_LIST_GRID,
+  DeleteEntryIcon,
+} from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { SparklesIcon } from "@/components/SharedIcons";
 import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
@@ -173,62 +176,77 @@ export function LandingMobileExerciseTab({
       {/* Recents */}
       {recentExerciseEntries.length > 0 && (
         <div>
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
             Recents
           </p>
-          <div className="landing-module-glass overflow-hidden rounded-2xl border bg-white/80 dark:bg-neutral-900/30">
-            {recentExerciseEntries.map((entry, idx) => {
+          <div className="landing-module-glass overflow-hidden rounded-2xl bg-white/80 !shadow-none dark:bg-neutral-900/30">
+            {recentExerciseEntries.map((entry) => {
               const chipCls = journalTypeBadgeClass("exercise");
               const open = () => onRecentExerciseEntryClick?.(entry.id);
-              const calCol = (
-                <>
-                  {entry.caloriesBurned > 0 ? (
-                    <span className="inline-flex items-center gap-1 text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
-                      <SparklesIcon className="h-4 w-4 shrink-0" />
-                      −{entry.caloriesBurned} cal
-                    </span>
-                  ) : (
-                    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
-                  )}
-                  {entry.time ? (
-                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">
-                      {entry.time}
-                    </span>
-                  ) : null}
-                </>
-              );
-              const cls = `w-full px-3.5 transition-colors hover:bg-neutral-50/90 dark:hover:bg-neutral-800/40 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`;
+              const ghostOpenBtn =
+                "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
+              const calOnly =
+                entry.caloriesBurned > 0 ? (
+                  <span className="inline-flex items-center gap-1 text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
+                    <SparklesIcon className="h-4 w-4 shrink-0" />
+                    −{entry.caloriesBurned} cal
+                  </span>
+                ) : (
+                  <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+                );
+              const timeOnly = entry.time ? (
+                <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{entry.time}</span>
+              ) : null;
+              const cls =
+                "w-full px-3 transition-colors hover:bg-neutral-50/90 dark:hover:bg-neutral-800/40";
               return (
                 <div key={entry.id} className={cls}>
-                  <div className={`${AMY_PERSISTED_ROW_GRID} py-3`}>
+                  <div className={`${AMY_JOURNAL_LIST_GRID} py-1.5`}>
                     <button
                       type="button"
                       onClick={open}
                       disabled={!onRecentExerciseEntryClick}
-                      className="min-w-0 text-left disabled:cursor-default disabled:opacity-100"
+                      className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                     >
-                      <span
-                        className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${chipCls}`}
-                      >
+                      <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
                         Exercise
                       </span>
-                      <p className="text-[17px] leading-snug text-foreground whitespace-pre-wrap break-words">
+                    </button>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentExerciseEntryClick}
+                      className={`col-start-2 row-start-1 justify-self-end self-center text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
+                    >
+                      {calOnly}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentExerciseEntryClick}
+                      className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
+                    >
+                      <p className="text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
                         {entry.label}
                       </p>
                     </button>
-                    <button
-                      type="button"
-                      onClick={open}
-                      disabled={!onRecentExerciseEntryClick}
-                      className="justify-self-end self-start flex flex-col items-end gap-0.5 whitespace-nowrap pt-0.5 text-right disabled:cursor-default disabled:opacity-100"
-                    >
-                      {calCol}
-                    </button>
+                    {timeOnly ? (
+                      <button
+                        type="button"
+                        onClick={open}
+                        disabled={!onRecentExerciseEntryClick}
+                        className={`col-start-2 row-start-2 justify-self-end self-end text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
+                      >
+                        {timeOnly}
+                      </button>
+                    ) : (
+                      <span className="col-start-2 row-start-2 justify-self-end self-end" aria-hidden />
+                    )}
                     <button
                       type="button"
                       onClick={() => void onRecentExerciseEntryDelete?.(entry.id)}
                       disabled={!onRecentExerciseEntryDelete}
-                      className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                      className="col-start-3 row-start-1 row-span-2 justify-self-end self-center appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
                       aria-label={`Delete exercise entry: ${entry.label.slice(0, 48)}${entry.label.length > 48 ? "…" : ""}`}
                     >
                       <DeleteEntryIcon />

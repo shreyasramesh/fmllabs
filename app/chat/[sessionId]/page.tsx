@@ -2283,6 +2283,13 @@ function journalEntryTimestamp(t: JournalEntryDateFields): number {
   return 0;
 }
 
+/** Server save time (order the user logged entries), not journal meal/workout clock. */
+function transcriptCreatedAtMs(t: { createdAt?: string }): number {
+  if (!t.createdAt) return 0;
+  const d = new Date(t.createdAt);
+  return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+}
+
 const JOURNAL_LIST_PREVIEW_MAX = 160;
 const LANDING_TYPED_PLACEHOLDERS = [
   "Ask me to plan your day",
@@ -6546,18 +6553,18 @@ export default function ChatPage() {
     return results;
   }, [journalEntriesSorted, selectedLandingDayKey]);
   const brainDumpJournalContextRows = useMemo(() => {
-    const rows: {
-      id: string;
-      bodyText: string;
-      categoryLabel: string;
-      journalCategory: "nutrition" | "exercise" | "spend" | undefined;
-      time: string;
-      caloriesSummary: string | null;
-    }[] = [];
-    const byId = new Map(journalEntriesSorted.map((t) => [t._id, t]));
-    for (const t of journalEntriesSorted) {
-      if (!t.transcriptText) continue;
-      if (journalEntryDayKey(t) !== selectedLandingDayKey) continue;
+    const forDay = journalEntriesSorted.filter(
+      (t) => t.transcriptText && journalEntryDayKey(t) === selectedLandingDayKey
+    );
+    forDay.sort((a, b) => {
+      const ca = transcriptCreatedAtMs(a);
+      const cb = transcriptCreatedAtMs(b);
+      if (ca !== cb) return ca - cb;
+      const ida = typeof a._id === "string" ? a._id : String(a._id ?? "");
+      const idb = typeof b._id === "string" ? b._id : String(b._id ?? "");
+      return ida.localeCompare(idb);
+    });
+    return forDay.map((t) => {
       const bodyText = extractJournalQuickNoteBody(t);
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
@@ -6571,22 +6578,15 @@ export default function ChatPage() {
           time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
         }
       }
-      rows.push({
+      return {
         id: t._id,
         bodyText,
         categoryLabel: getJournalCategoryLabel(t.journalCategory) || "Journal",
         journalCategory: t.journalCategory,
         time,
         caloriesSummary: journalQuickNoteCaloriesSummary(t),
-      });
-    }
-    rows.sort((a, b) => {
-      const ta = byId.get(a.id);
-      const tb = byId.get(b.id);
-      if (!ta || !tb) return 0;
-      return journalEntryTimestamp(tb) - journalEntryTimestamp(ta);
+      };
     });
-    return rows;
   }, [journalEntriesSorted, selectedLandingDayKey]);
   const selectedLandingDaySpendTotals = useMemo(
     () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),

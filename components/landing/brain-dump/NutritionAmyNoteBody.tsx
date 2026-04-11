@@ -12,6 +12,7 @@ import {
   type EntryEstimateModalMeta,
   type NutritionEstimateDetailItem,
 } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
+import { EstimateThinkingLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 
 type LineMeta = EntryEstimateModalMeta;
 
@@ -28,6 +29,10 @@ const AMY_ENTRY_ROW_GRID =
 /** Persisted capture row: text, estimate, delete (no per-row border). Reused for saved “today” rows in Quick note. */
 export const AMY_PERSISTED_ROW_GRID =
   "grid w-full grid-cols-[minmax(0,1fr)_auto_auto] gap-x-2 gap-y-1 items-start text-left";
+
+/** Recents / journal list: tight two-row layout (badge + metrics on row 1, title + time on row 2). */
+export const AMY_JOURNAL_LIST_GRID =
+  "grid w-full grid-cols-[minmax(0,1fr)_auto_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0 items-start text-left";
 
 function intentPillClass(intent: string): string {
   switch (intent) {
@@ -60,9 +65,7 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
   if (meta.status === "idle") return <span className="inline-block min-w-[4rem]" aria-hidden />;
 
   if (meta.status === "thinking") {
-    return (
-      <span className="whitespace-nowrap text-[15px] text-neutral-400 dark:text-neutral-500 tabular-nums">Thinking</span>
-    );
+    return <EstimateThinkingLabel message="Thinking" />;
   }
 
   const { calories, sourceCount, exerciseCaloriesBurned } = meta;
@@ -296,7 +299,7 @@ export function CaptureDraftSentenceRow({
   }, [draft]);
 
   return (
-    <div className={`${AMY_ENTRY_ROW_GRID} py-2`}>
+    <div className={`${AMY_ENTRY_ROW_GRID} py-1.5`}>
       <textarea
         ref={setRefs}
         value={draft}
@@ -341,8 +344,9 @@ export function DeleteEntryIcon() {
   );
 }
 
-/** Persisted capture line: frozen analysis when done (no second request); delete control; no modal. */
+/** Persisted capture line: frozen analysis when done (no second request); tap text or estimate to open detail modal. */
 export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDumpCaptureEntry; onDelete: (id: string) => void }) {
+  const [detailOpen, setDetailOpen] = useState(false);
   const useLive =
     entry.frozenMeta.status !== "done" &&
     shouldRunQuickEstimate(entry.text) &&
@@ -350,34 +354,60 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
   const liveMeta = useNutritionLineEstimate(entry.text, useLive);
   const meta = entry.frozenMeta.status === "done" ? entry.frozenMeta : liveMeta;
 
-  const showEstimateColumn = shouldRunQuickEstimate(entry.text) || meta.status !== "idle";
+  const attemptedEstimate = shouldRunQuickEstimate(entry.text);
+  const showEstimateColumn = attemptedEstimate || meta.status !== "idle";
+
+  const openDetailBtn =
+    "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
 
   return (
-    <div className={`${AMY_PERSISTED_ROW_GRID} py-2`}>
-      <div className="min-w-0">
-        {meta.status === "done" ? (
-          <span className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${intentPillClass(meta.intent)}`}>
-            {intentPillLabel(meta.intent)}
-          </span>
-        ) : null}
-        <p className="text-[17px] leading-snug text-foreground">{entry.text}</p>
+    <>
+      <div className={`${AMY_PERSISTED_ROW_GRID} py-1.5`}>
+        <button
+          type="button"
+          onClick={() => setDetailOpen(true)}
+          className={`min-w-0 text-left ${openDetailBtn}`}
+          aria-label={`View estimate details: ${entry.text.slice(0, 48)}${entry.text.length > 48 ? "…" : ""}`}
+        >
+          {meta.status === "done" ? (
+            <span
+              className={`mb-0.5 inline-block rounded-full px-2 py-px text-[10px] font-medium ${intentPillClass(meta.intent)}`}
+            >
+              {intentPillLabel(meta.intent)}
+            </span>
+          ) : null}
+          <p className="text-[17px] leading-tight text-foreground">{entry.text}</p>
+        </button>
+        <button
+          type="button"
+          onClick={() => setDetailOpen(true)}
+          className={`justify-self-end self-start whitespace-nowrap text-right ${openDetailBtn}`}
+          aria-live="polite"
+          aria-label="View estimate details for this line"
+        >
+          {showEstimateColumn ? (
+            <LineRightMeta meta={meta} />
+          ) : (
+            <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => onDelete(entry.id)}
+          className="appearance-none justify-self-end self-start rounded-lg border-0 bg-transparent p-1.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
+          aria-label={`Remove entry: ${entry.text.slice(0, 40)}${entry.text.length > 40 ? "…" : ""}`}
+        >
+          <DeleteEntryIcon />
+        </button>
       </div>
-      <span className="justify-self-end self-start whitespace-nowrap pt-0.5 text-right" aria-live="polite">
-        {showEstimateColumn ? (
-          <LineRightMeta meta={meta} />
-        ) : (
-          <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
-        )}
-      </span>
-      <button
-        type="button"
-        onClick={() => onDelete(entry.id)}
-        className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
-        aria-label={`Remove entry: ${entry.text.slice(0, 40)}${entry.text.length > 40 ? "…" : ""}`}
-      >
-        <DeleteEntryIcon />
-      </button>
-    </div>
+      <EntryEstimateDetailModal
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        text={entry.text}
+        attemptedEstimate={attemptedEstimate}
+        meta={meta}
+      />
+    </>
   );
 }
 
@@ -493,7 +523,7 @@ function EditableAmyRow({
 
   return (
     <>
-      <div className={`${AMY_ENTRY_ROW_GRID} border-b border-transparent py-2 last:border-b-0`}>
+      <div className={`${AMY_ENTRY_ROW_GRID} border-b border-transparent py-1.5 last:border-b-0`}>
         <textarea
           ref={setRefs}
           value={line}
@@ -518,7 +548,7 @@ function EditableAmyRow({
           type="button"
           disabled={disabled || !line.trim()}
           onClick={() => setDetailOpen(true)}
-          className="justify-self-end self-start rounded-lg px-1 pt-1 text-right transition-colors hover:bg-neutral-100/90 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:disabled:hover:bg-transparent"
+          className="appearance-none justify-self-end self-start rounded-lg border-0 bg-transparent px-1 pt-1 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:disabled:hover:bg-transparent dark:focus-visible:ring-blue-400/30"
           aria-label={line.trim() ? "View estimate details for this line" : "Details for new line"}
         >
           {estimateLine || line.trim() === "" ? <LineRightMeta meta={meta} /> : <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>}
