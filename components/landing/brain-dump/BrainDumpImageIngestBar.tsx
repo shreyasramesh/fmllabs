@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 
 /** Vision prompt tuned for meals; quick-estimate still classifies exercise from the resulting text. */
@@ -43,6 +44,12 @@ function PhotosGlyph({ className }: { className?: string }) {
 const COMPACT_ICON_BTN =
   "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200/90 bg-background/95 text-neutral-700 shadow-md backdrop-blur-sm transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-neutral-600 dark:bg-neutral-900/95 dark:text-neutral-200 dark:hover:bg-neutral-800";
 
+function isProbablyImageFile(file: File): boolean {
+  if (file.type.startsWith("image/")) return true;
+  const name = file.name?.toLowerCase() ?? "";
+  return /\.(jpg|jpeg|png|webp|gif|heic|heif|bmp)(\?|$)/i.test(name);
+}
+
 export function BrainDumpImageIngestBar({
   disabled,
   hintText,
@@ -61,6 +68,8 @@ export function BrainDumpImageIngestBar({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const thumbsRef = useRef<Thumb[]>([]);
+  /** Avoid hydration mismatch: SSR and first client paint must not use createPortal. */
+  const [floatingPortalReady, setFloatingPortalReady] = useState(false);
 
   useEffect(() => {
     thumbsRef.current = thumbs;
@@ -74,11 +83,22 @@ export function BrainDumpImageIngestBar({
     };
   }, []);
 
+  useEffect(() => {
+    if (layout !== "floating") {
+      setFloatingPortalReady(false);
+      return;
+    }
+    setFloatingPortalReady(true);
+  }, [layout]);
+
   const processFiles = useCallback(
     async (files: FileList | File[]) => {
-      const list = Array.from(files).filter((f) => f.type.startsWith("image/"));
-      if (list.length === 0) return;
       setError(null);
+      const list = Array.from(files).filter(isProbablyImageFile);
+      if (list.length === 0) {
+        setError("No image file was selected.");
+        return;
+      }
       setBusy(true);
       const newThumbs: Thumb[] = list.map((file) => ({
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
@@ -110,6 +130,8 @@ export function BrainDumpImageIngestBar({
           const draft = (data.nutritionLogDraft ?? "").trim();
           if (draft) {
             onAppendText(draft);
+          } else {
+            setError("No text could be extracted from this photo. Try a clearer image or type your note.");
           }
           setThumbs((prev) => {
             const row = prev.find((t) => t.id === thumbId);
@@ -218,13 +240,15 @@ export function BrainDumpImageIngestBar({
   );
 
   if (layout === "floating") {
-    return (
+    if (!floatingPortalReady || typeof document === "undefined") return null;
+    return createPortal(
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-[34] flex justify-end px-3 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-[40] flex justify-end px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4"
         aria-hidden={false}
       >
         <div className="pointer-events-auto">{inner}</div>
-      </div>
+      </div>,
+      document.body
     );
   }
 

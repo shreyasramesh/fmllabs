@@ -431,34 +431,38 @@ function JournalContextRowNoteStream({
       </button>
     ) : null;
 
-   const singleLineBody = row.bodyText.replace(/\s+/g, " ").trim();
+  const rawDisplay = row.bodyText.trim();
+  const singleLineForHighlights = rawDisplay.replace(/\s+/g, " ").trim();
+  const canHighlight = rawDisplay.length > 0 && !/[\r\n]/.test(rawDisplay);
   const highlightSegments = useMemo(
-    () => buildQuickNoteHighlightSegments(singleLineBody),
-    [singleLineBody]
+    () => (canHighlight ? buildQuickNoteHighlightSegments(singleLineForHighlights) : []),
+    [singleLineForHighlights, canHighlight]
   );
 
   return (
-    <article className="mb-2 flex min-w-0 items-center gap-2">
+    <article className="mb-3 min-w-0">
       <button
         type="button"
         onClick={open}
         disabled={!onOpenJournalContextEntry}
-        title={singleLineBody ? row.bodyText : undefined}
-        className={`min-w-0 flex-1 truncate text-left text-[16px] leading-tight text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
+        title={rawDisplay ? row.bodyText : undefined}
+        className={`w-full text-left text-[16px] leading-snug text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
       >
-        {singleLineBody ? (
-          <span className="block min-w-0 truncate">
+        {rawDisplay ? (
+          canHighlight ? (
             <HighlightedQuickNoteText
-              text={singleLineBody}
+              text={singleLineForHighlights}
               segments={highlightSegments}
-              className="text-[16px] leading-tight text-foreground"
+              className="whitespace-normal break-words text-[16px] leading-snug text-foreground"
             />
-          </span>
+          ) : (
+            <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
+          )
         ) : (
           "—"
         )}
       </button>
-      <div className="flex shrink-0 items-center gap-1.5">
+      <div className="mt-1.5 flex min-w-0 flex-wrap items-center justify-end gap-1.5">
         <button
           type="button"
           onClick={open}
@@ -494,17 +498,17 @@ function JournalContextRowNoteStream({
         {row.time ? (
           <span className="shrink-0 text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
         ) : null}
+        {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
+          <button
+            type="button"
+            onClick={() => void onDeleteJournalContextEntry(row.id)}
+            className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
+            aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+          >
+            <DeleteEntryIcon className="h-4 w-4" />
+          </button>
+        ) : null}
       </div>
-      {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
-        <button
-          type="button"
-          onClick={() => void onDeleteJournalContextEntry(row.id)}
-          className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-          aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-        >
-          <DeleteEntryIcon className="h-4 w-4" />
-        </button>
-      ) : null}
     </article>
   );
 }
@@ -552,6 +556,9 @@ export function BrainDumpCaptureView({
     draftMetaRef.current = m;
   }, []);
 
+  const full = layout === "fullScreen";
+  const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
+
   const appendTranscribedToDraft = useCallback(
     (text: string) => {
       const t = text.trim();
@@ -560,12 +567,14 @@ export function BrainDumpCaptureView({
         const p = prev.trim();
         return p ? `${p}\n\n${t}` : t;
       });
+      if (full) {
+        requestAnimationFrame(() => {
+          quickNoteStreamEndRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+        });
+      }
     },
-    [setSentenceDraft]
+    [setSentenceDraft, full]
   );
-
-  const full = layout === "fullScreen";
-  const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
   const prevJournalCountRef = useRef<number | null>(null);
 
   const journalRowsOrdered = React.useMemo(() => {
