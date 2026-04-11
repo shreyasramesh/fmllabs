@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type MobileBottomTab =
+  | "quickNote"
   | "nutrition"
   | "exercise"
   | "spend"
@@ -18,6 +19,7 @@ interface LandingMobileTabBarProps {
 }
 
 const TABS: Array<{ key: MobileBottomTab; label: string }> = [
+  { key: "quickNote", label: "Quick Note" },
   { key: "nutrition", label: "Nutrition" },
   { key: "exercise", label: "Exercise" },
   { key: "spend", label: "Spend" },
@@ -31,6 +33,16 @@ function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
   const cls = `h-5 w-5 transition-colors ${active ? "text-[#B87B51] dark:text-[#D6A67E]" : "text-neutral-400 dark:text-neutral-500"}`;
 
   switch (tab) {
+    case "quickNote":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+          <path d="M8 7h8M8 11h6" />
+          <path d="m15.5 13.5 4.5-4.5a1.2 1.2 0 0 1 1.7 0l.3.3a1.2 1.2 0 0 1 0 1.7l-4.5 4.5" />
+          <path d="M14 15l3.5-3.5M13 21l3-1-2-2" />
+        </svg>
+      );
     case "nutrition":
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>

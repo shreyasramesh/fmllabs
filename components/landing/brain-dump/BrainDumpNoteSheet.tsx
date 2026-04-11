@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
 import type { LanguageCode } from "@/lib/languages";
@@ -10,11 +10,18 @@ import {
   CapturePersistedEntryRow,
   AMY_JOURNAL_LIST_GRID,
   DeleteEntryIcon,
+  NOTES_LIKE_TEXTAREA,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import {
+  BrainDumpImageIngestBar,
+  type BrainDumpImageTranscribeMode,
+} from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
+import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
+import { buildQuickNoteHighlightSegments } from "@/lib/quick-note-highlights";
 import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 
 /** Matches journal list chips in app/chat/journal/new/page.tsx */
@@ -39,23 +46,86 @@ export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
   }
 }
 
+export type BrainDumpJournalContextRowSource = "transcript" | "weight" | "sleep";
+
+export interface BrainDumpJournalContextRow {
+  id: string;
+  /** Transcript vs native weight/sleep row (non-transcript rows skip transcript delete). */
+  rowSource?: BrainDumpJournalContextRowSource;
+  /** Same line(s) the user sees in capture — enriched entry or first journal line, not the Gemini title. */
+  bodyText: string;
+  categoryLabel: string;
+  journalCategory: "nutrition" | "exercise" | "spend" | "weight" | "sleep" | "reflection" | undefined;
+  time: string;
+  /** e.g. "420 cal" intake or "-180 cal" burn; null if unknown */
+  caloriesSummary: string | null;
+  /** Spend ($), weight (kg), or sleep (h) for the right rail; mutually exclusive with calories for those types. */
+  metricSummary: string | null;
+  /** Habit completion auto-journal: show a check on the right. */
+  habitCompletionCheck?: boolean;
+  /** Reflection / brain-dump transcript: show 1:1 mentor control. */
+  showMentorCta?: boolean;
+  /** For ordering in Quick Note stream (oldest → newest). */
+  sortAtMs?: number;
+}
+
 /** Chip for saved journal rows in Quick note (includes spend; uncategorized → reflection). */
 export function journalContextChipClass(
-  journalCategory: "nutrition" | "exercise" | "spend" | undefined
+  journalCategory: BrainDumpJournalContextRow["journalCategory"]
 ): string {
   if (journalCategory === "nutrition") return journalTypeBadgeClass("nutrition");
   if (journalCategory === "exercise") return journalTypeBadgeClass("exercise");
   if (journalCategory === "spend") {
     return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
   }
+  if (journalCategory === "weight") return journalTypeBadgeClass("weight");
+  if (journalCategory === "sleep") return journalTypeBadgeClass("sleep");
   return journalTypeBadgeClass("reflection");
+}
+
+function MentorHumansIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className ?? "h-3.5 w-3.5"}
+      aria-hidden
+    >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function HabitDoneCheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className ?? "h-3.5 w-3.5"}
+      aria-hidden
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
 }
 
 const NOTE_TITLE_CLS =
   "w-full border-0 border-b border-transparent bg-transparent pb-1.5 text-2xl font-semibold tracking-tight text-foreground placeholder:text-neutral-400 focus:border-neutral-200/80 focus:outline-none focus:ring-0 dark:focus:border-neutral-600";
 
 const NOTE_BODY_CLS =
-  "w-full min-h-[12rem] flex-1 resize-none border-0 bg-transparent text-[17px] leading-[1.55] text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500";
+  `w-full min-h-[12rem] flex-1 resize-none border-0 bg-transparent text-[17px] leading-[1.55] text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 ${NOTES_LIKE_TEXTAREA}`;
 
 const INSET_GROUP_CLS =
   "overflow-hidden rounded-2xl border border-neutral-200/90 bg-neutral-50/90 dark:border-neutral-700/80 dark:bg-neutral-800/40";
@@ -163,15 +233,282 @@ export function BrainDumpSheetFrame({
   );
 }
 
-export interface BrainDumpJournalContextRow {
-  id: string;
-  /** Same line(s) the user sees in capture — enriched entry or first journal line, not the Gemini title. */
-  bodyText: string;
-  categoryLabel: string;
-  journalCategory: "nutrition" | "exercise" | "spend" | undefined;
-  time: string;
-  /** e.g. "420 cal" intake or "-180 cal" burn; null if unknown */
-  caloriesSummary: string | null;
+const GHOST_OPEN_BTN =
+  "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
+
+function journalContextRowMetricToneClass(cat: BrainDumpJournalContextRow["journalCategory"]): string {
+  if (cat === "spend") return "text-amber-700 dark:text-amber-300";
+  if (cat === "sleep") return "text-indigo-600 dark:text-indigo-400";
+  if (cat === "weight") return "text-orange-800 dark:text-orange-200";
+  return "text-neutral-700 dark:text-neutral-200";
+}
+
+function isJournalContextRowDeletable(row: BrainDumpJournalContextRow): boolean {
+  return row.rowSource === undefined || row.rowSource === "transcript";
+}
+
+function JournalContextRowSheet({
+  row,
+  onOpenJournalContextEntry,
+  onDeleteJournalContextEntry,
+  onOpenReflectionMentor,
+}: {
+  row: BrainDumpJournalContextRow;
+  onOpenJournalContextEntry?: (id: string) => void;
+  onDeleteJournalContextEntry?: (id: string) => void;
+  onOpenReflectionMentor?: () => void;
+}) {
+  const sheetHighlightSegments = useMemo(
+    () => buildQuickNoteHighlightSegments(row.bodyText),
+    [row.bodyText]
+  );
+  const chipCls = journalContextChipClass(row.journalCategory);
+  const burn = row.caloriesSummary?.startsWith("-");
+  const open = () => onOpenJournalContextEntry?.(row.id);
+  const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
+  const hasMetric = row.metricSummary != null && row.metricSummary !== "";
+  const showDash = !row.showMentorCta && !hasCal && !hasMetric && !row.habitCompletionCheck;
+  const rightRail = row.showMentorCta && onOpenReflectionMentor ? (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onOpenReflectionMentor();
+      }}
+      className="inline-flex items-center gap-1 rounded-full border border-[#295a8a]/35 bg-[#295a8a]/10 px-2 py-0.5 text-[11px] font-semibold text-[#295a8a] dark:border-blue-400/40 dark:bg-blue-400/15 dark:text-blue-200"
+      aria-label="1:1 mentor"
+    >
+      <MentorHumansIcon />
+      <span>1:1</span>
+    </button>
+  ) : showDash ? (
+    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+  ) : (
+    <span className="inline-flex items-center justify-end gap-1.5">
+      {hasCal ? (
+        <span
+          className={`inline-flex items-center gap-1 text-[15px] font-medium tabular-nums ${
+            burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-500 dark:text-blue-400"
+          }`}
+        >
+          <SparklesIcon className="h-4 w-4 shrink-0" />
+          {row.caloriesSummary}
+        </span>
+      ) : null}
+      {hasMetric ? (
+        <span className={`text-[15px] font-medium tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}>
+          {row.metricSummary}
+        </span>
+      ) : null}
+      {row.habitCompletionCheck ? (
+        <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
+          <HabitDoneCheckIcon className="h-4 w-4" />
+        </span>
+      ) : null}
+    </span>
+  );
+  const timeOnly = row.time ? (
+    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
+  ) : null;
+  return (
+    <div
+      className={`${AMY_JOURNAL_LIST_GRID} py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
+    >
+      <button
+        type="button"
+        onClick={open}
+        disabled={!onOpenJournalContextEntry}
+        className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+      >
+        <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
+          {row.categoryLabel}
+        </span>
+      </button>
+      <div className="col-start-2 row-start-1 flex justify-end self-center text-right" aria-live="polite">
+        {row.showMentorCta && onOpenReflectionMentor ? (
+          rightRail
+        ) : (
+          <button
+            type="button"
+            onClick={open}
+            disabled={!onOpenJournalContextEntry}
+            className={`max-w-[min(100%,12rem)] disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+          >
+            {rightRail}
+          </button>
+        )}
+      </div>
+      <button
+        type="button"
+        onClick={open}
+        disabled={!onOpenJournalContextEntry}
+        className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+      >
+        <HighlightedQuickNoteText
+          text={row.bodyText}
+          segments={sheetHighlightSegments}
+          as="p"
+          className="m-0 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
+        />
+      </button>
+      {timeOnly ? (
+        <button
+          type="button"
+          onClick={open}
+          disabled={!onOpenJournalContextEntry}
+          className={`col-start-2 row-start-2 justify-self-end self-end text-right disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+        >
+          {timeOnly}
+        </button>
+      ) : (
+        <span className="col-start-2 row-start-2 justify-self-end self-end" aria-hidden />
+      )}
+      <button
+        type="button"
+        onClick={() => void onDeleteJournalContextEntry?.(row.id)}
+        disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
+        className="col-start-3 row-start-1 row-span-2 justify-self-end self-center appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
+        aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+      >
+        <DeleteEntryIcon />
+      </button>
+    </div>
+  );
+}
+
+/** Saved lines in Quick Note: body reads like freeform notes; category & details follow. */
+function JournalContextRowNoteStream({
+  row,
+  onOpenJournalContextEntry,
+  onDeleteJournalContextEntry,
+  onOpenReflectionMentor,
+}: {
+  row: BrainDumpJournalContextRow;
+  onOpenJournalContextEntry?: (id: string) => void;
+  onDeleteJournalContextEntry?: (id: string) => void;
+  onOpenReflectionMentor?: () => void;
+}) {
+  const chipCls = journalContextChipClass(row.journalCategory);
+  const burn = row.caloriesSummary?.startsWith("-");
+  const open = () => onOpenJournalContextEntry?.(row.id);
+  const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
+  const hasMetric = row.metricSummary != null && row.metricSummary !== "";
+  const cal = hasCal ? (
+    <span
+      className={`inline-flex items-center gap-0.5 text-[12px] font-medium tabular-nums leading-none ${
+        burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-600 dark:text-blue-400"
+      }`}
+    >
+      <SparklesIcon className="h-3 w-3 shrink-0 opacity-75" aria-hidden />
+      {row.caloriesSummary}
+    </span>
+  ) : null;
+  const metric = hasMetric ? (
+    <span
+      className={`inline-flex text-[12px] font-medium tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
+    >
+      {row.metricSummary}
+    </span>
+  ) : null;
+  const habitCheck = row.habitCompletionCheck ? (
+    <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
+      <HabitDoneCheckIcon className="h-3.5 w-3.5" />
+    </span>
+  ) : null;
+  const mentorBtn =
+    row.showMentorCta && onOpenReflectionMentor ? (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onOpenReflectionMentor();
+        }}
+        className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#295a8a]/35 bg-[#295a8a]/10 px-1.5 py-px text-[10px] font-semibold text-[#295a8a] dark:border-blue-400/40 dark:bg-blue-400/15 dark:text-blue-200"
+        aria-label="1:1 mentor"
+      >
+        <MentorHumansIcon className="h-3 w-3" />
+        1:1
+      </button>
+    ) : null;
+
+   const singleLineBody = row.bodyText.replace(/\s+/g, " ").trim();
+  const highlightSegments = useMemo(
+    () => buildQuickNoteHighlightSegments(singleLineBody),
+    [singleLineBody]
+  );
+
+  return (
+    <article className="mb-2 flex min-w-0 items-center gap-2">
+      <button
+        type="button"
+        onClick={open}
+        disabled={!onOpenJournalContextEntry}
+        title={singleLineBody ? row.bodyText : undefined}
+        className={`min-w-0 flex-1 truncate text-left text-[16px] leading-tight text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
+      >
+        {singleLineBody ? (
+          <span className="block min-w-0 truncate">
+            <HighlightedQuickNoteText
+              text={singleLineBody}
+              segments={highlightSegments}
+              className="text-[16px] leading-tight text-foreground"
+            />
+          </span>
+        ) : (
+          "—"
+        )}
+      </button>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <button
+          type="button"
+          onClick={open}
+          disabled={!onOpenJournalContextEntry}
+          className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
+        >
+          <span className={`inline-flex rounded-full px-1.5 py-px text-[9px] font-medium leading-tight ${chipCls}`}>
+            {row.categoryLabel}
+          </span>
+        </button>
+        {mentorBtn}
+        {cal ? (
+          <button
+            type="button"
+            onClick={open}
+            disabled={!onOpenJournalContextEntry}
+            className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
+          >
+            {cal}
+          </button>
+        ) : null}
+        {metric ? (
+          <button
+            type="button"
+            onClick={open}
+            disabled={!onOpenJournalContextEntry}
+            className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
+          >
+            {metric}
+          </button>
+        ) : null}
+        {habitCheck}
+        {row.time ? (
+          <span className="shrink-0 text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
+        ) : null}
+      </div>
+      {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
+        <button
+          type="button"
+          onClick={() => void onDeleteJournalContextEntry(row.id)}
+          className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
+          aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+        >
+          <DeleteEntryIcon className="h-4 w-4" />
+        </button>
+      ) : null}
+    </article>
+  );
 }
 
 interface CaptureViewProps {
@@ -188,6 +525,14 @@ interface CaptureViewProps {
   journalContextRows?: BrainDumpJournalContextRow[];
   onOpenJournalContextEntry?: (id: string) => void;
   onDeleteJournalContextEntry?: (id: string) => void;
+  /** Opens 1:1 mentor picker (reflection / brain-dump rows). */
+  onOpenReflectionMentor?: () => void;
+  /** Modal sheet vs mobile full-tab layout. */
+  layout?: "sheet" | "fullScreen";
+  /** Mobile Quick Note: Enter saves one line via Gemini (no local row first). */
+  saveLineOnEnter?: boolean;
+  onSaveLine?: (text: string, frozenMeta: EntryEstimateModalMeta) => Promise<void>;
+  lineSaveBusy?: boolean;
 }
 
 export function BrainDumpCaptureView({
@@ -202,13 +547,62 @@ export function BrainDumpCaptureView({
   journalContextRows = [],
   onOpenJournalContextEntry,
   onDeleteJournalContextEntry,
+  onOpenReflectionMentor,
+  layout = "sheet",
+  saveLineOnEnter = false,
+  onSaveLine,
+  lineSaveBusy = false,
 }: CaptureViewProps) {
-  const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
+   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const syncDraftMeta = useCallback((m: EntryEstimateModalMeta) => {
     draftMetaRef.current = m;
   }, []);
 
-  if (phase === "categorizing") {
+  const [imageIngestMode, setImageIngestMode] = useState<BrainDumpImageTranscribeMode>("nutrition");
+  const appendTranscribedToDraft = useCallback(
+    (text: string) => {
+      const t = text.trim();
+      if (!t) return;
+      setSentenceDraft((prev) => {
+        const p = prev.trim();
+        return p ? `${p}\n\n${t}` : t;
+      });
+    },
+    [setSentenceDraft]
+  );
+
+  const full = layout === "fullScreen";
+  const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
+  const prevJournalCountRef = useRef<number | null>(null);
+
+  const journalRowsOrdered = React.useMemo(() => {
+    if (journalContextRows.length === 0) return journalContextRows;
+    const withKey = journalContextRows.map((r) => ({
+      row: r,
+      ms: r.sortAtMs ?? 0,
+    }));
+    const allHaveMs = withKey.every((x) => x.ms > 0);
+    if (allHaveMs) {
+      return [...withKey].sort((a, b) => a.ms - b.ms).map((x) => x.row);
+    }
+    return journalContextRows;
+  }, [journalContextRows]);
+
+  useLayoutEffect(() => {
+    if (!full) return;
+    quickNoteStreamEndRef.current?.scrollIntoView({ block: "end" });
+  }, [full]);
+
+  useLayoutEffect(() => {
+    if (!full) return;
+    const prev = prevJournalCountRef.current;
+    if (prev != null && journalContextRows.length > prev) {
+      quickNoteStreamEndRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+    }
+    prevJournalCountRef.current = journalContextRows.length;
+  }, [full, journalContextRows.length]);
+
+  if (phase === "categorizing" && !saveLineOnEnter) {
     return (
       <EstimateThinkingHero
         message="Analyzing with Gemini"
@@ -218,6 +612,10 @@ export function BrainDumpCaptureView({
   }
 
   const handleDraftValue = (raw: string) => {
+    if (saveLineOnEnter) {
+      setSentenceDraft(raw);
+      return;
+    }
     const { commits, rest } = flushSentencesFromTyping(raw);
     if (commits.length > 0) {
       const snap = draftMetaRef.current;
@@ -236,19 +634,119 @@ export function BrainDumpCaptureView({
   };
 
   const commitDraftOnEnter = () => {
-    const t = sentenceDraft.trim();
-    if (t) {
-      const snap = draftMetaRef.current;
-      setCaptureEntries((prev) => [...prev, { id: crypto.randomUUID(), text: t, frozenMeta: snap }]);
-      setSentenceDraft("");
-      return;
-    }
-    onRequestFinishNote?.();
+    void (async () => {
+      const t = sentenceDraft.trim();
+      if (saveLineOnEnter) {
+        if (t && onSaveLine) {
+          await onSaveLine(t, draftMetaRef.current);
+          setSentenceDraft("");
+        }
+        return;
+      }
+      if (t) {
+        const snap = draftMetaRef.current;
+        setCaptureEntries((prev) => [...prev, { id: crypto.randomUUID(), text: t, frozenMeta: snap }]);
+        setSentenceDraft("");
+        return;
+      }
+      onRequestFinishNote?.();
+    })();
   };
 
   const removeEntry = (id: string) => {
     setCaptureEntries((prev) => prev.filter((e) => e.id !== id));
   };
+
+  const journalRowsSheet =
+    journalRowsOrdered.length > 0 ? (
+      <div className="pb-2">
+        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
+          Today on your journal
+        </p>
+        {journalRowsOrdered.map((row) => (
+          <JournalContextRowSheet
+            key={row.id}
+            row={row}
+            onOpenJournalContextEntry={onOpenJournalContextEntry}
+            onDeleteJournalContextEntry={onDeleteJournalContextEntry}
+            onOpenReflectionMentor={onOpenReflectionMentor}
+          />
+        ))}
+      </div>
+    ) : null;
+
+  const ingestDisabled = lineSaveBusy || (phase === "categorizing" && !saveLineOnEnter);
+  const captureFooter = (
+    <div
+      className={
+        full
+          ? "flex w-full shrink-0 flex-col gap-3 border-t border-neutral-200/60 bg-[var(--background)] px-1 pt-3 pb-[max(0.35rem,env(safe-area-inset-bottom))] dark:border-neutral-700/50"
+          : "mt-auto flex w-full shrink-0 flex-col gap-3 border-t border-neutral-200/60 pt-3 dark:border-neutral-700/50"
+      }
+    >
+      <BrainDumpImageIngestBar
+        disabled={ingestDisabled}
+        hintText={sentenceDraft}
+        mode={imageIngestMode}
+        onModeChange={setImageIngestMode}
+        onAppendText={appendTranscribedToDraft}
+      />
+      <div className="flex items-center justify-center gap-3">
+        <VoiceInputButton
+          onTranscription={onTranscription}
+          language={language}
+          ariaLabel="Dictate note"
+          compactStopWhileListening
+          disabled={lineSaveBusy}
+          className="!min-h-[48px] !min-w-[48px] !rounded-2xl !border-neutral-300/90 !bg-neutral-100/80 dark:!border-neutral-600 dark:!bg-neutral-800/80"
+        />
+      </div>
+    </div>
+  );
+
+  if (full) {
+    return (
+      <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [-webkit-overflow-scrolling:touch]">
+          {journalRowsOrdered.map((row) => (
+            <JournalContextRowNoteStream
+              key={row.id}
+              row={row}
+              onOpenJournalContextEntry={onOpenJournalContextEntry}
+              onDeleteJournalContextEntry={onDeleteJournalContextEntry}
+              onOpenReflectionMentor={onOpenReflectionMentor}
+            />
+          ))}
+          {!saveLineOnEnter
+            ? captureEntries.map((entry) => (
+                <div key={entry.id} className="mb-3">
+                  <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} />
+                </div>
+              ))
+            : null}
+          <div
+            className={
+              journalRowsOrdered.length > 0 || (!saveLineOnEnter && captureEntries.length > 0)
+                ? "mt-2"
+                : undefined
+            }
+          >
+            <CaptureDraftSentenceRow
+              draft={sentenceDraft}
+              onDraftValue={handleDraftValue}
+              onEnterCommit={commitDraftOnEnter}
+              onMetaChange={syncDraftMeta}
+              disabled={lineSaveBusy}
+              variant="fullScreen"
+              showEstimateDetailTap
+            />
+          </div>
+          <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
+        </div>
+        {captureFooter}
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
@@ -260,93 +758,7 @@ export function BrainDumpCaptureView({
         className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl bg-white/60 px-3 py-2 dark:bg-neutral-900/25"
         role="list"
       >
-        {journalContextRows.length > 0 ? (
-          <div className="pb-2">
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
-              Today on your journal
-            </p>
-            {journalContextRows.map((row) => {
-              const ghostOpenBtn =
-                "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
-              const chipCls = journalContextChipClass(row.journalCategory);
-              const burn = row.caloriesSummary?.startsWith("-");
-              const open = () => onOpenJournalContextEntry?.(row.id);
-              const calOnly =
-                row.caloriesSummary != null && row.caloriesSummary !== "" ? (
-                  <span
-                    className={`inline-flex items-center gap-1 text-[15px] font-medium tabular-nums ${
-                      burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-500 dark:text-blue-400"
-                    }`}
-                  >
-                    <SparklesIcon className="h-4 w-4 shrink-0" />
-                    {row.caloriesSummary}
-                  </span>
-                ) : (
-                  <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
-                );
-              const timeOnly = row.time ? (
-                <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
-              ) : null;
-              return (
-                <div
-                  key={row.id}
-                  className={`${AMY_JOURNAL_LIST_GRID} py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
-                >
-                  <button
-                    type="button"
-                    onClick={open}
-                    disabled={!onOpenJournalContextEntry}
-                    className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
-                  >
-                    <span className={`inline-block rounded-full px-2 py-px text-[10px] font-medium ${chipCls}`}>
-                      {row.categoryLabel}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={open}
-                    disabled={!onOpenJournalContextEntry}
-                    className={`col-start-2 row-start-1 justify-self-end self-center text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
-                    aria-live="polite"
-                  >
-                    {calOnly}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={open}
-                    disabled={!onOpenJournalContextEntry}
-                    className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
-                  >
-                    <p className="text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
-                      {row.bodyText}
-                    </p>
-                  </button>
-                  {timeOnly ? (
-                    <button
-                      type="button"
-                      onClick={open}
-                      disabled={!onOpenJournalContextEntry}
-                      className={`col-start-2 row-start-2 justify-self-end self-end text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
-                    >
-                      {timeOnly}
-                    </button>
-                  ) : (
-                    <span className="col-start-2 row-start-2 justify-self-end self-end" aria-hidden />
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => void onDeleteJournalContextEntry?.(row.id)}
-                    disabled={!onDeleteJournalContextEntry}
-                    className="col-start-3 row-start-1 row-span-2 justify-self-end self-center appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-                    aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-                  >
-                    <DeleteEntryIcon />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
+        {journalRowsSheet}
         {captureEntries.map((entry) => (
           <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} />
         ))}
@@ -357,16 +769,7 @@ export function BrainDumpCaptureView({
           onMetaChange={syncDraftMeta}
         />
       </div>
-
-      <div className="mt-auto flex shrink-0 items-center justify-center gap-3 border-t border-neutral-200/60 pt-3 dark:border-neutral-700/50">
-        <VoiceInputButton
-          onTranscription={onTranscription}
-          language={language}
-          ariaLabel="Dictate note"
-          compactStopWhileListening
-          className="!min-h-[48px] !min-w-[48px] !rounded-2xl !border-neutral-300/90 !bg-neutral-100/80 dark:!border-neutral-600 dark:!bg-neutral-800/80"
-        />
-      </div>
+      {captureFooter}
     </div>
   );
 }

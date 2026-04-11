@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { EstimateThinkingLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import { ThinkingEstimateLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
+import {
+  buildQuickNoteHighlightSegments,
+  validateHighlightSegments,
+} from "@/lib/quick-note-highlights";
+import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 
 export type NutritionEstimateDetailItem = {
   name: string;
@@ -31,6 +37,7 @@ export type EntryEstimateModalMeta =
       carbsGrams: number | null;
       fatGrams: number | null;
       confidenceScore: number;
+      highlightSpans?: QuickNoteHighlightSegment[];
     };
 
 function macroLabel(g: number | null, suffix: string): string {
@@ -60,6 +67,19 @@ export function EntryEstimateDetailModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  const displayText = text.trim() || "—";
+  const blockSegments = useMemo(() => {
+    if (meta.status !== "done") return [];
+    const t = text.trim();
+    if (!t) return [];
+    if (meta.highlightSpans?.length) {
+      return validateHighlightSegments(t, meta.highlightSpans);
+    }
+    return buildQuickNoteHighlightSegments(t, {
+      nutritionItemNames: meta.nutritionItems.map((i) => i.name),
+    });
+  }, [meta, text]);
 
   if (!open || typeof document === "undefined") return null;
 
@@ -96,7 +116,16 @@ export function EntryEstimateDetailModal({
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
             <blockquote className="mb-4 rounded-xl bg-neutral-50 px-3 py-2.5 text-[17px] leading-snug text-foreground dark:bg-neutral-800/60">
-              {text.trim() || "—"}
+              {meta.status === "done" ? (
+                <HighlightedQuickNoteText
+                  text={displayText}
+                  segments={blockSegments}
+                  as="p"
+                  className="m-0 text-[17px] leading-snug text-foreground"
+                />
+              ) : (
+                displayText
+              )}
             </blockquote>
 
             {!attemptedEstimate && (
@@ -107,8 +136,8 @@ export function EntryEstimateDetailModal({
             )}
 
             {attemptedEstimate && meta.status === "thinking" && (
-              <div className="py-1">
-                <EstimateThinkingLabel message="Estimating" variant="prominent" />
+              <div className="flex justify-center py-2">
+                <ThinkingEstimateLabel variant="prominent" />
               </div>
             )}
 

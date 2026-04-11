@@ -49,37 +49,93 @@ function barWidthPct(row: LandingMobileGoalRow): number {
   return pctDefault(row.current, row.target);
 }
 
-function barColor(row: LandingMobileGoalRow): string {
+/**
+ * Uniform fill color: % of goal used (0 → 1) maps green (142°) → red (0°). Every ratio tick shifts hue.
+ */
+function solidConsumptionUsed(ratio: number): string {
+  const t = Math.max(0, Math.min(1, ratio));
+  const hue = 142 * (1 - t);
+  return `hsl(${hue} 70% 46%)`;
+}
+
+/** Progress toward goal (0 → 1): red → green. */
+function solidProgressTowardGoal(ratio: number): string {
+  const t = Math.max(0, Math.min(1, ratio));
+  const hue = 142 * t;
+  return `hsl(${hue} 70% 46%)`;
+}
+
+function solidOverBudget(): string {
+  return "hsl(0 72% 38%)";
+}
+
+function barFillStyle(row: LandingMobileGoalRow): React.CSSProperties {
   const mode = row.mode ?? "default";
-  if (mode === "higherBetter") {
-    const r = row.target > 0 ? row.current / row.target : 0;
-    if (r >= 0.95) return "#22C55E";
-    if (r >= 0.6) return "#EAB308";
-    return "#EF4444";
-  }
+  const width = barWidthPct(row);
+  const transition = "width 500ms ease-out, background-color 80ms linear";
+
   if (mode === "matchTarget") {
-    const pct = weightProgressPct(row.current, row.target);
-    if (pct >= 85) return "#22C55E";
-    if (pct >= 50) return "#EAB308";
-    return "#EF4444";
+    const pct = weightProgressPct(row.current, row.target) / 100;
+    const hue = 142 * Math.max(0, Math.min(1, pct));
+    return {
+      width: `${width}%`,
+      backgroundColor: `hsl(${hue} 65% 46%)`,
+      transition,
+    };
   }
+
   if (mode === "sleep") {
-    if (row.current >= 7) return "#22C55E";
-    if (row.current >= 5) return "#EAB308";
-    return "#EF4444";
-  }
-  if (mode === "spendCap") {
-    if (row.target <= 0) return "#a3a3a3";
+    if (row.target <= 0) {
+      return { width: `${width}%`, backgroundColor: "#a3a3a3", transition };
+    }
     const ratio = row.current / row.target;
-    if (ratio <= 1) return "#22C55E";
-    if (ratio <= 1.15) return "#EAB308";
-    return "#EF4444";
+    return {
+      width: `${width}%`,
+      backgroundColor: solidProgressTowardGoal(ratio),
+      transition,
+    };
   }
-  if (row.target <= 0) return "#a3a3a3";
+
+  if (mode === "higherBetter") {
+    if (row.target <= 0) {
+      return { width: `${width}%`, backgroundColor: "#a3a3a3", transition };
+    }
+    const ratio = row.current / row.target;
+    return {
+      width: `${width}%`,
+      backgroundColor: solidProgressTowardGoal(ratio),
+      transition,
+    };
+  }
+
+  if (mode === "spendCap") {
+    if (row.target <= 0) {
+      return { width: `${width}%`, backgroundColor: "#a3a3a3", transition };
+    }
+    const ratio = row.current / row.target;
+    if (ratio > 1.08) {
+      return { width: `${width}%`, backgroundColor: solidOverBudget(), transition };
+    }
+    return {
+      width: `${width}%`,
+      backgroundColor: solidConsumptionUsed(Math.min(1, ratio)),
+      transition,
+    };
+  }
+
+  // default: calories / macros
+  if (row.target <= 0) {
+    return { width: `${width}%`, backgroundColor: "#a3a3a3", transition };
+  }
   const ratio = row.current / row.target;
-  if (ratio > 1.15) return "#EF4444";
-  if (ratio < 0.5) return "#EF4444";
-  return "#22C55E";
+  if (ratio > 1.05) {
+    return { width: `${width}%`, backgroundColor: solidOverBudget(), transition };
+  }
+  return {
+    width: `${width}%`,
+    backgroundColor: solidConsumptionUsed(ratio),
+    transition,
+  };
 }
 
 interface LandingMobileGoalsCardProps {
@@ -104,8 +160,7 @@ export function LandingMobileGoalsCard({
       ) : (
         <div className="flex flex-col gap-3">
           {rows.map((row) => {
-            const width = barWidthPct(row);
-            const color = barColor(row);
+            const fillStyle = barFillStyle(row);
             const showBar = row.target > 0;
             return (
               <div key={row.key}>
@@ -123,10 +178,7 @@ export function LandingMobileGoalsCard({
                 </div>
                 {showBar ? (
                   <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700/50">
-                    <div
-                      className="h-full rounded-full transition-all duration-500 ease-out"
-                      style={{ width: `${width}%`, backgroundColor: color }}
-                    />
+                    <div className="h-full max-w-full rounded-full ease-out" style={fillStyle} />
                   </div>
                 ) : null}
               </div>

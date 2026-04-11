@@ -31,6 +31,8 @@ import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextContro
 import { LandingShell } from "@/components/landing/LandingShell";
 import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJumpFab";
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
+import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
+import type { BrainDumpJournalContextRow } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
 import { UserMessageContent } from "@/components/UserMessageContent";
 import { useTheme } from "@/components/ThemeProvider";
@@ -104,7 +106,8 @@ import {
   startNativePomodoroLive,
 } from "@/lib/native-pomodoro-live";
 import { syncWidgetAuth, refreshCalorieWidget } from "@/lib/native-widget-data";
-import { parseSpendAmountFromJournalText } from "@/lib/spend-journal";
+import { formatSpendForQuickNoteDisplay, parseSpendAmountFromJournalText } from "@/lib/spend-journal";
+import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -2484,73 +2487,6 @@ function dateFromDayKey(dayKey: string): Date | null {
   return parsed;
 }
 
-function estimateBase64Bytes(value: string): number {
-  const noPadding = value.replace(/=+$/, "");
-  return Math.floor((noPadding.length * 3) / 4);
-}
-
-async function loadImageFromFile(file: File): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file);
-    const image = new window.Image();
-    image.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(image);
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      reject(new Error("Could not decode image file."));
-    };
-    image.src = objectUrl;
-  });
-}
-
-async function compressImageForUpload(
-  file: File,
-  maxBytes = 5 * 1024 * 1024
-): Promise<{ dataUrl: string; base64: string; mimeType: string }> {
-  const image = await loadImageFromFile(file);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not initialize image processor.");
-
-  const maxDimension = 1600;
-  const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
-  let width = Math.max(1, Math.round(image.width * scale));
-  let height = Math.max(1, Math.round(image.height * scale));
-  const outputMimeType = "image/jpeg";
-
-  const toDataUrl = (quality: number): string => {
-    canvas.width = width;
-    canvas.height = height;
-    ctx.clearRect(0, 0, width, height);
-    ctx.drawImage(image, 0, 0, width, height);
-    return canvas.toDataURL(outputMimeType, quality);
-  };
-
-  let dataUrl = "";
-  let quality = 0.88;
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    dataUrl = toDataUrl(quality);
-    const b64 = dataUrl.split(",")[1] ?? "";
-    if (estimateBase64Bytes(b64) <= maxBytes) {
-      return { dataUrl, base64: b64, mimeType: outputMimeType };
-    }
-    if (quality > 0.52) {
-      quality -= 0.08;
-    } else {
-      width = Math.max(640, Math.round(width * 0.85));
-      height = Math.max(640, Math.round(height * 0.85));
-    }
-  }
-
-  const fallbackBase64 = dataUrl.split(",")[1] ?? "";
-  if (fallbackBase64 && estimateBase64Bytes(fallbackBase64) <= maxBytes) {
-    return { dataUrl, base64: fallbackBase64, mimeType: outputMimeType };
-  }
-  throw new Error("Image is too large after compression. Please retake closer to the food.");
-}
-
 function isNonNull<T>(value: T | null): value is T {
   return value !== null;
 }
@@ -2565,6 +2501,33 @@ function extractEstimatedNumber(text: string, pattern: RegExp): number | null {
 function isGenericBrainDumpTitle(title: string | undefined): boolean {
   const t = (title ?? "").trim().toLowerCase();
   return !t || t === "brain dump" || t === "voice note";
+}
+
+/** When `journalCategory` is missing, infer from formatted journal text (Quick Note chips). */
+function inferQuickNoteJournalCategoryFromTranscript(t: { transcriptText?: string }): "nutrition" | "exercise" | "spend" | undefined {
+  const txt = t.transcriptText ?? "";
+  if (/^Spend Tracking Journal/im.test(txt) || /- Amount:\s*[\d,.]+\s+[A-Z]{3}\b/im.test(txt)) {
+    return "spend";
+  }
+  if (/- Calories burned:\s*[\d.]+\s*kcal/i.test(txt)) return "exercise";
+  if (/- Calories:\s*[\d.]+\s*kcal/i.test(txt)) return "nutrition";
+  return undefined;
+}
+
+function quickNoteJournalCategoryForChip(t: {
+  journalCategory?: "nutrition" | "exercise" | "spend";
+  transcriptText?: string;
+}): "nutrition" | "exercise" | "spend" | undefined {
+  return t.journalCategory ?? inferQuickNoteJournalCategoryFromTranscript(t);
+}
+
+function quickNoteCategoryLabel(t: {
+  journalCategory?: "nutrition" | "exercise" | "spend";
+  transcriptText?: string;
+}): string {
+  const label = getJournalCategoryLabel(quickNoteJournalCategoryForChip(t));
+  if (label) return label;
+  return "Reflection";
 }
 
 /** Primary line for Quick note "today" list — matches capture row wording, not the Gemini title. */
@@ -2598,15 +2561,26 @@ function journalQuickNoteCaloriesSummary(t: {
   journalCategory?: "nutrition" | "exercise" | "spend";
 }): string | null {
   const txt = t.transcriptText ?? "";
-  if (t.journalCategory === "nutrition") {
+  const jc = quickNoteJournalCategoryForChip(t);
+  if (jc === "nutrition") {
     const cal = extractEstimatedNumber(txt, /- Calories:\s*([\d.]+)\s*kcal/i);
     if (cal != null && cal > 0) return `${Math.round(cal)} cal`;
   }
-  if (t.journalCategory === "exercise") {
+  if (jc === "exercise") {
     const burned = extractEstimatedNumber(txt, /- Calories burned:\s*([\d.]+)\s*kcal/i);
     if (burned != null && burned > 0) return `-${Math.round(burned)} cal`;
   }
   return null;
+}
+
+function journalQuickNoteSpendSummary(t: {
+  transcriptText?: string;
+  journalCategory?: "nutrition" | "exercise" | "spend";
+}): string | null {
+  if (quickNoteJournalCategoryForChip(t) !== "spend") return null;
+  const parsed = parseSpendAmountFromJournalText(t.transcriptText ?? "");
+  if (!parsed) return null;
+  return formatSpendForQuickNoteDisplay(parsed.amount, parsed.currency);
 }
 
 type NutritionFactsDaySummary = {
@@ -4008,7 +3982,6 @@ export default function ChatPage() {
   const [exportMarkdownLoading, setExportMarkdownLoading] = useState(false);
   const [exportMarkdownError, setExportMarkdownError] = useState<string | null>(null);
   const [importSectionOpen, setImportSectionOpen] = useState(false);
-  const [importModalOpen, setImportModalOpen] = useState(false);
   const { background, setBackground } = useBackground();
   const [reminderPreferences, setReminderPreferences] = useState<ReminderPreferences>(
     DEFAULT_REMINDER_PREFERENCES
@@ -6554,7 +6527,10 @@ export default function ChatPage() {
   }, [journalEntriesSorted, selectedLandingDayKey]);
   const brainDumpJournalContextRows = useMemo(() => {
     const forDay = journalEntriesSorted.filter(
-      (t) => t.transcriptText && journalEntryDayKey(t) === selectedLandingDayKey
+      (t) =>
+        t.transcriptText &&
+        journalEntryDayKey(t) === selectedLandingDayKey &&
+        (t.sourceType === "journal" || t.sourceType == null)
     );
     forDay.sort((a, b) => {
       const ca = transcriptCreatedAtMs(a);
@@ -6564,7 +6540,7 @@ export default function ChatPage() {
       const idb = typeof b._id === "string" ? b._id : String(b._id ?? "");
       return ida.localeCompare(idb);
     });
-    return forDay.map((t) => {
+    const transcriptRows = forDay.map((t) => {
       const bodyText = extractJournalQuickNoteBody(t);
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
@@ -6578,16 +6554,87 @@ export default function ChatPage() {
           time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
         }
       }
+      const jc = quickNoteJournalCategoryForChip(t);
+      const isReflection = jc === undefined;
+      const chipCategory: BrainDumpJournalContextRow["journalCategory"] =
+        jc === undefined ? "reflection" : jc;
+      const spendMetric = journalQuickNoteSpendSummary(t);
+      const calSummary = jc === "nutrition" || jc === "exercise" ? journalQuickNoteCaloriesSummary(t) : null;
+      const habitDone = (t.transcriptText ?? "").includes("Source: Habit completion");
       return {
         id: t._id,
+        rowSource: "transcript" as const,
         bodyText,
-        categoryLabel: getJournalCategoryLabel(t.journalCategory) || "Journal",
-        journalCategory: t.journalCategory,
+        categoryLabel: quickNoteCategoryLabel(t),
+        journalCategory: chipCategory,
         time,
-        caloriesSummary: journalQuickNoteCaloriesSummary(t),
+        caloriesSummary: calSummary,
+        metricSummary: spendMetric,
+        habitCompletionCheck: habitDone && (jc === "nutrition" || jc === "exercise"),
+        showMentorCta: isReflection,
+        sortAtMs: transcriptCreatedAtMs(t),
       };
     });
-  }, [journalEntriesSorted, selectedLandingDayKey]);
+
+    const weightForDay = weightTrackerEntries.filter((e) => {
+      const d = new Date(e.recordedAt);
+      if (Number.isNaN(d.getTime())) return false;
+      return toDayKey(d) === selectedLandingDayKey;
+    });
+    const weightRows = weightForDay
+      .slice()
+      .sort((a, b) => new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime())
+      .map((e) => {
+        const d = new Date(e.recordedAt);
+        const sortAtMs = d.getTime();
+        let time = "";
+        if (!Number.isNaN(d.getTime())) {
+          time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+        }
+        const kgRounded = Math.round(e.weightKg * 10) / 10;
+        return {
+          id: `landing-weight-${e.id}`,
+          rowSource: "weight" as const,
+          bodyText: "Weight",
+          categoryLabel: "Weight",
+          journalCategory: "weight" as const,
+          time,
+          caloriesSummary: null,
+          metricSummary: `${kgRounded} kg`,
+          sortAtMs,
+        };
+      });
+
+    const sleepForDay = sleepEntries.filter((e) => e.dayKey === selectedLandingDayKey);
+    const sleepAnchor = (() => {
+      const [y, m, d] = selectedLandingDayKey.split("-").map((s) => parseInt(s, 10));
+      if (!y || !m || !d) return 0;
+      return new Date(y, m - 1, d, 12, 0, 0).getTime();
+    })();
+    const sleepRows = sleepForDay.map((e, idx) => {
+      const hoursRounded = Math.round(e.sleepHours * 10) / 10;
+      return {
+        id: `landing-sleep-${e.id}`,
+        rowSource: "sleep" as const,
+        bodyText: "Sleep",
+        categoryLabel: "Sleep",
+        journalCategory: "sleep" as const,
+        time: "",
+        caloriesSummary: null,
+        metricSummary: `${hoursRounded} h`,
+        sortAtMs: sleepAnchor + idx * 60_000,
+      };
+    });
+
+    const merged = [...transcriptRows, ...weightRows, ...sleepRows];
+    merged.sort((a, b) => {
+      const ca = a.sortAtMs ?? 0;
+      const cb = b.sortAtMs ?? 0;
+      if (ca !== cb) return ca - cb;
+      return a.id.localeCompare(b.id);
+    });
+    return merged;
+  }, [journalEntriesSorted, selectedLandingDayKey, weightTrackerEntries, sleepEntries]);
   const selectedLandingDaySpendTotals = useMemo(
     () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
@@ -8679,7 +8726,6 @@ export default function ChatPage() {
     .filter(({ key }) => exportSelections[key])
     .map(({ key }) => key);
   const allExportSectionsSelected = selectedExportSections.length === EXPORT_DATA_SECTION_OPTIONS.length;
-  const showImportCta = !isAnonymous && !incognitoMode && sessions.length === 0 && savedTranscripts.length === 0 && sleepEntries.length === 0;
   useEffect(() => {
     if (typeof navigator === "undefined") return;
     setIsSafari(/safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent));
@@ -9535,6 +9581,28 @@ export default function ChatPage() {
 
   const openLandingJournalTranscriptById = useCallback(
     (transcriptId: string) => {
+      if (transcriptId.startsWith("landing-weight-")) {
+        playSelectionChime();
+        setWeightTrackerModalOpen(true);
+        setWeightTrackerRange("week");
+        setWeightTrackerAddOpen(false);
+        return;
+      }
+      if (transcriptId.startsWith("landing-sleep-")) {
+        playSelectionChime();
+        const rawId = transcriptId.slice("landing-sleep-".length);
+        const entry =
+          sleepEntries.find((e) => e.id === rawId) ?? sleepEntries.find((e) => e.dayKey === rawId);
+        if (!entry?.id) return;
+        setSleepEntryEditModal({
+          id: entry.id,
+          dayKey: entry.dayKey,
+          sleepHours: entry.sleepHours,
+          hrvMs: entry.hrvMs,
+          sleepScore: entry.sleepScore,
+        });
+        return;
+      }
       const row = savedTranscripts.find((t) => t._id === transcriptId);
       if (!row || row.sourceType !== "journal" || !row.transcriptText) return;
       setTranscriptModalTranscript({
@@ -9558,12 +9626,13 @@ export default function ChatPage() {
         journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
       });
     },
-    [savedTranscripts]
+    [savedTranscripts, sleepEntries]
   );
 
   const deleteLandingJournalTranscriptById = useCallback(
     async (transcriptId: string) => {
       if (isAnonymous || incognitoMode) return;
+      if (transcriptId.startsWith("landing-weight-") || transcriptId.startsWith("landing-sleep-")) return;
       try {
         const res = await fetch(`/api/me/transcripts/${encodeURIComponent(transcriptId)}`, {
           method: "DELETE",
@@ -9578,6 +9647,24 @@ export default function ChatPage() {
     },
     [isAnonymous, incognitoMode, refetchTranscripts]
   );
+
+  const openReflectionMentorFromQuickNote = useCallback(() => {
+    playSelectionChime();
+    activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+    if (sessionId !== "new" && sessionId !== "incognito") {
+      try {
+        sessionStorage.setItem(RESPONSE_VERBOSITY_START_KEY, newConversationResponseVerbosity);
+        sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+      router.push("/chat/new");
+    } else {
+      setMentorCatalogSearch("");
+      setMentorCatalogCategoryId(null);
+      setMentorOneOnOneModalOpen(true);
+    }
+  }, [newConversationResponseVerbosity, router, sessionId]);
 
   const openLandingActivityGroupModal = useCallback(
     (group: { label: string; items: LandingDayActivityItem[] }) => {
@@ -10514,6 +10601,17 @@ export default function ChatPage() {
     );
   }, []);
 
+  const refetchSleepEntries = useCallback(() => {
+    if (isAnonymous || incognitoMode || !userId) return;
+    fetch("/api/me/sleep?limit=30")
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        if (!res.ok || !Array.isArray(data.entries)) return;
+        applySleepEntriesFromApi(data);
+      })
+      .catch(() => {});
+  }, [isAnonymous, incognitoMode, userId, applySleepEntriesFromApi]);
+
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
     let cancelled = false;
@@ -11223,15 +11321,6 @@ export default function ChatPage() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [settingsOpen]);
-
-  useEffect(() => {
-    if (!importModalOpen) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setImportModalOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [importModalOpen]);
 
   useEffect(() => {
     if (!settingsOpen || !userId) return;
@@ -12657,21 +12746,6 @@ export default function ChatPage() {
                 <path d="M3.51 9a9 9 0 0 0 2.12 9.36L1 14" />
               </svg>
             </button>
-            {showImportCta && (
-              <button
-                type="button"
-                onClick={() => setImportModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors"
-                aria-label="Import data"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Import data
-              </button>
-            )}
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
@@ -15477,6 +15551,30 @@ export default function ChatPage() {
                         exerciseBurnGoalKcal={mobileExerciseBurnGoalKcal}
                         sleepHoursGoal={MOBILE_SLEEP_HOURS_GOAL}
                         spendBudgetUsd={spendBudgetUsd}
+                        mobileQuickNote={
+                          <LandingMobileQuickNoteTab
+                            language={language}
+                            journalContextRows={brainDumpJournalContextRows}
+                            onOpenJournalEntry={openLandingJournalTranscriptById}
+                            onDeleteJournalEntry={
+                              isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
+                            }
+                            onOpenReflectionMentor={openReflectionMentorFromQuickNote}
+                            onSaved={(categories) => {
+                              if (
+                                categories.some(
+                                  (c) => c === "reflection" || c === "nutrition" || c === "exercise"
+                                )
+                              ) {
+                                refetchTranscripts();
+                              }
+                              if (categories.some((c) => c === "concept")) refetchCustomConcepts();
+                              if (categories.some((c) => c === "experiment")) refetchHabits();
+                              if (categories.some((c) => c === "weight")) void fetchWeightTracker();
+                              if (categories.some((c) => c === "sleep")) void refetchSleepEntries();
+                            }}
+                          />
+                        }
                       />
                       )}
                 {!incognitoMode && (
@@ -15485,6 +15583,7 @@ export default function ChatPage() {
                         journalContextRows={brainDumpJournalContextRows}
                         onOpenJournalEntry={openLandingJournalTranscriptById}
                         onDeleteJournalEntry={isAnonymous ? undefined : deleteLandingJournalTranscriptById}
+                        onOpenReflectionMentor={openReflectionMentorFromQuickNote}
                         onSaved={(categories) => {
                           if (categories.some((c) => c === "reflection" || c === "nutrition" || c === "exercise")) {
                             refetchTranscripts();
@@ -15492,6 +15591,7 @@ export default function ChatPage() {
                           if (categories.some((c) => c === "concept")) refetchCustomConcepts();
                           if (categories.some((c) => c === "experiment")) refetchHabits();
                           if (categories.some((c) => c === "weight")) void fetchWeightTracker();
+                          if (categories.some((c) => c === "sleep")) void refetchSleepEntries();
                         }}
                       />
                       )}
@@ -16466,118 +16566,119 @@ export default function ChatPage() {
                       <div className="w-full flex gap-1.5 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible">
                         {transcriptModalNutritionSnapshot.mode === "exercise" ? (
                           <>
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
-                              <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-accent">
+                            <div className="min-w-[200px] sm:min-w-0 rounded-lg border border-accent/20 bg-accent/[0.06] p-2 text-left dark:border-accent/35 dark:bg-accent/[0.1]">
+                              <div className="flex items-center gap-1.5">
+                                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/12 dark:bg-accent/22">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
                                     <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
                                     <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
                                   </svg>
                                 </span>
-                                <p className="text-sm sm:text-base font-semibold text-foreground">Exercise burn</p>
+                                <p className="text-xs font-semibold text-foreground sm:text-[13px]">Exercise burn</p>
                               </div>
-                              <div className="mt-1">
+                              <div className="mt-1.5">
                                 {transcriptStatsEditing ? (
                                   <input
                                     type="number"
                                     inputMode="decimal"
+                                    aria-label="Calories burned (kcal)"
                                     value={transcriptStatsDraft?.caloriesExercise ?? ""}
                                     onChange={(e) =>
                                       setTranscriptStatsDraft((prev) =>
                                         prev ? { ...prev, caloriesExercise: e.target.value } : prev
                                       )
                                     }
-                                    className="w-full max-w-[140px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    className="w-full max-w-[132px] rounded-md border border-neutral-300 bg-background px-2 py-1 text-sm dark:border-neutral-600"
                                   />
                                 ) : (
-                                  <p className="text-2xl sm:text-3xl font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                  <p className="text-xl font-semibold tabular-nums leading-none tracking-tight text-foreground sm:text-2xl">
                                     {transcriptModalNutritionSnapshot.caloriesExercise}
                                   </p>
                                 )}
-                                <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Calories burned (kcal)</p>
                               </div>
                             </div>
 
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
-                              <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
-                                    <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
+                            <div className="min-w-[200px] sm:min-w-0 rounded-lg border border-accent/20 bg-accent/[0.06] p-2 text-left dark:border-accent/35 dark:bg-accent/[0.1]">
+                              <div className="flex items-center gap-1.5">
+                                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-fuchsia-500/10 dark:bg-fuchsia-400/15">
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                                    <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.2" strokeDasharray="8 4" strokeLinecap="round" />
                                   </svg>
                                 </span>
-                                <p className="text-sm sm:text-base font-semibold text-foreground">Estimated fuel used</p>
+                                <p className="text-xs font-semibold text-foreground sm:text-[13px]">Estimated fuel used</p>
                               </div>
-                              <div className="mt-1 grid grid-cols-3 gap-1">
+                              <div
+                                className="mt-1.5 grid grid-cols-3 gap-1.5"
+                                role="group"
+                                aria-label="Carbs used, fat used, protein delta (grams)"
+                              >
                                 <div className="min-w-0">
                                   {transcriptStatsEditing ? (
                                     <input
                                       type="number"
                                       inputMode="decimal"
+                                      aria-label="Carbs used (grams)"
                                       value={transcriptStatsDraft?.carbsUsedGrams ?? ""}
                                       onChange={(e) =>
                                         setTranscriptStatsDraft((prev) =>
                                           prev ? { ...prev, carbsUsedGrams: e.target.value } : prev
                                         )
                                       }
-                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                      className="w-full min-w-0 rounded-md border border-neutral-300 bg-background px-1.5 py-1 text-sm dark:border-neutral-600"
                                     />
                                   ) : (
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm font-semibold tabular-nums leading-none tracking-tight text-foreground sm:text-base">
                                       {transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams == null
-                                        ? "unknown"
+                                        ? "—"
                                         : `${transcriptModalNutritionSnapshot.estimatedCarbsUsedGrams}g`}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Carbs used</p>
                                 </div>
                                 <div className="min-w-0">
                                   {transcriptStatsEditing ? (
                                     <input
                                       type="number"
                                       inputMode="decimal"
+                                      aria-label="Fat used (grams)"
                                       value={transcriptStatsDraft?.fatUsedGrams ?? ""}
                                       onChange={(e) =>
                                         setTranscriptStatsDraft((prev) =>
                                           prev ? { ...prev, fatUsedGrams: e.target.value } : prev
                                         )
                                       }
-                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                      className="w-full min-w-0 rounded-md border border-neutral-300 bg-background px-1.5 py-1 text-sm dark:border-neutral-600"
                                     />
                                   ) : (
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm font-semibold tabular-nums leading-none tracking-tight text-foreground sm:text-base">
                                       {transcriptModalNutritionSnapshot.estimatedFatUsedGrams == null
-                                        ? "unknown"
+                                        ? "—"
                                         : `${transcriptModalNutritionSnapshot.estimatedFatUsedGrams}g`}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Fat used</p>
                                 </div>
                                 <div className="min-w-0">
                                   {transcriptStatsEditing ? (
                                     <input
                                       type="number"
                                       inputMode="decimal"
+                                      aria-label="Protein delta (grams)"
                                       value={transcriptStatsDraft?.proteinDeltaGrams ?? ""}
                                       onChange={(e) =>
                                         setTranscriptStatsDraft((prev) =>
                                           prev ? { ...prev, proteinDeltaGrams: e.target.value } : prev
                                         )
                                       }
-                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                      className="w-full min-w-0 rounded-md border border-neutral-300 bg-background px-1.5 py-1 text-sm dark:border-neutral-600"
                                     />
                                   ) : (
-                                    <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
+                                    <p className="text-sm font-semibold tabular-nums leading-none tracking-tight text-foreground sm:text-base">
                                       {transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams == null
-                                        ? "unknown"
+                                        ? "—"
                                         : `${transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams >= 0 ? "+" : ""}${transcriptModalNutritionSnapshot.estimatedProteinDeltaGrams}g`}
                                     </p>
                                   )}
-                                  <p className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">Protein delta</p>
                                 </div>
                               </div>
-                              <p className="mt-1 text-[10px] text-neutral-500 dark:text-neutral-400">
-                                Estimated from calories burned using blended carb/fat/protein energy assumptions.
-                              </p>
                             </div>
                           </>
                         ) : (
@@ -18146,48 +18247,6 @@ export default function ChatPage() {
                   </section>
                 )}
               </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {importModalOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-[52] bg-black/30 backdrop-blur-sm animate-fade-in"
-            onClick={() => setImportModalOpen(false)}
-            aria-hidden
-          />
-          <div
-            className="fixed inset-0 z-[53] flex items-center justify-center p-4 pointer-events-none"
-            aria-hidden
-          >
-            <div
-              className="pointer-events-auto w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col bg-background rounded-3xl shadow-xl border border-neutral-200 dark:border-neutral-800 animate-fade-in-up"
-              role="dialog"
-              aria-modal
-              aria-labelledby="import-modal-title"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200/80 dark:border-neutral-800 shrink-0">
-                <h2 id="import-modal-title" className="text-lg font-semibold text-foreground">
-                  Import data
-                </h2>
-            <button
-              type="button"
-                  onClick={() => setImportModalOpen(false)}
-                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors"
-                  aria-label="Close"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-            </button>
-          </div>
-              <div className="flex-1 overflow-y-auto p-4">
-                <ImportWizard onClose={() => setImportModalOpen(false)} />
-        </div>
             </div>
           </div>
         </>

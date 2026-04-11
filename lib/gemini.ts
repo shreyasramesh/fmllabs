@@ -6,6 +6,10 @@ import {
   EXTRACT_CONCEPTS_CHUNK_OVERLAP_CHARS,
   EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
 } from "@/lib/extract-concepts-constants";
+import {
+  combineQuickNoteHighlights,
+  type QuickNoteHighlightSegment,
+} from "@/lib/quick-note-highlights";
 
 const apiKey = process.env.GEMINI_API_KEY?.trim();
 if (!apiKey) {
@@ -414,6 +418,8 @@ export interface CalorieTrackingFinalizeResult {
   reasoning: string;
   nutritionItems: CalorieTrackingNutritionItem[];
   exerciseItems: CalorieTrackingExerciseItem[];
+  /** Merged regex + item names + model spans (regex wins on overlap). */
+  highlightSpans: QuickNoteHighlightSegment[];
   nutrition?: {
     calories: number | null;
     proteinGrams: number | null;
@@ -1291,7 +1297,10 @@ Return ONLY valid JSON with exactly this shape:
     "fatUsedGrams": number | null,
     "proteinDeltaGrams": number | null,
     "notes": "short note"
-  } | null
+  } | null,
+  "highlightSpans": [
+    { "start": number, "end": number, "kind": "temporal" | "duration" | "distance" | "nutrition" | "weight" | "sleep" | "spend" }
+  ]
 }
 
 Rules:
@@ -1305,6 +1314,7 @@ Rules:
 - Use null when unknown instead of inventing exact values.
 - For nutrition facts, provide your best realistic estimate per field when nutrition exists.
 - Keep assumptions concise and grounded.
+- highlightSpans: Identify salient fragments in the Original input only. Use 0-based start and end (end exclusive), JavaScript string indices (UTF-16 code units). Each kind must be one of: temporal, duration, distance, nutrition, weight, sleep, spend. Do not overlap spans. Prefer short meaningful phrases (times, durations, distances, food/drink mentions, activities, sleep, money). Omit if nothing clear.
 
 Original input:
 ${text}
@@ -1359,6 +1369,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
         proteinDeltaGrams?: unknown;
         notes?: unknown;
       } | null;
+      highlightSpans?: unknown;
     };
 
     const intent: CalorieTrackingIntent =
@@ -1432,7 +1443,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
           }
         : undefined;
 
-    const exercise =
+       const exercise =
       parsed.exercise && typeof parsed.exercise === "object"
         ? {
             caloriesBurned: toFiniteNumberOrNull(parsed.exercise.caloriesBurned),
@@ -1443,6 +1454,17 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
           }
         : undefined;
 
+    const highlightSpans = combineQuickNoteHighlights(
+      text,
+      {
+        nutritionItemNames: [
+          ...nutritionItems.map((i) => i.name),
+          ...exerciseItems.map((i) => i.name),
+        ],
+      },
+      parsed.highlightSpans
+    );
+
     return {
       intent,
       confidence,
@@ -1451,6 +1473,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       reasoning,
       nutritionItems,
       exerciseItems,
+      highlightSpans,
       nutrition,
       exercise,
     };
@@ -1463,6 +1486,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       reasoning: "",
       nutritionItems: [],
       exerciseItems: [],
+      highlightSpans: [],
       nutrition: {
         calories: null,
         proteinGrams: null,

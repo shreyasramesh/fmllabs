@@ -13,10 +13,11 @@ interface ScoreRingProps {
   trackColor?: string;
 }
 
+/** 0–100 day score: uniform color shifts smoothly (red → green); every point changes hue. */
 function defaultColor(score: number): string {
-  if (score >= 80) return "#16a34a";
-  if (score >= 60) return "#d97706";
-  return "#dc2626";
+  const t = Math.max(0, Math.min(1, score / 100));
+  const hue = 142 * t;
+  return `hsl(${hue} 70% 46%)`;
 }
 
 export function ScoreRing({

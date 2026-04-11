@@ -73,6 +73,7 @@ export async function POST(request: Request) {
       carbsGrams: result.nutrition?.carbsGrams ?? null,
       fatGrams: result.nutrition?.fatGrams ?? null,
       confidenceScore: result.confidenceScore,
+      highlightSpans: result.highlightSpans ?? [],
     });
   } catch (err) {
     console.error("nutrition-quick-estimate failed:", err);

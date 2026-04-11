@@ -40,6 +40,17 @@ export function parseSpendAmountFromJournalText(text: string): { amount: number;
   return { amount: num, currency: m[2]!.toUpperCase() };
 }
 
+/** Compact currency string for Quick Note / list rails (uses locale symbols when Intl supports the code). */
+export function formatSpendForQuickNoteDisplay(amount: number, currency: string): string {
+  const code = (currency || "USD").trim().toUpperCase();
+  try {
+    return new Intl.NumberFormat(undefined, { style: "currency", currency: code }).format(amount);
+  } catch {
+    const formatted = Math.abs(amount % 1) < 1e-9 ? String(amount) : amount.toFixed(2);
+    return `${code} ${formatted}`;
+  }
+}
+
 export function upsertSpendAmountLine(lines: string[], amount: number, currency: string): string[] {
   const nextLine = formatSpendAmountLine(amount, currency);
   const idx = lines.findIndex((l) => l.trimStart().toLowerCase().startsWith("- amount:"));

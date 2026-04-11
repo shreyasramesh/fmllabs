@@ -6,11 +6,16 @@ import {
   addSleepEntry,
   upsertReusableJournalItem,
 } from "@/lib/db";
-import { formatExerciseJournalText, formatNutritionJournalText } from "@/lib/calorie-journal-format";
+import {
+  formatExerciseJournalText,
+  formatMixedCalorieJournalText,
+  formatNutritionJournalText,
+} from "@/lib/calorie-journal-format";
 import type { BrainDumpCategory, BrainDumpResult } from "@/lib/gemini";
 import { completeExerciseFuelEstimate, finalizeCalorieTrackingEstimate } from "@/lib/gemini";
 import type { CalorieTrackingFinalizeResult } from "@/lib/gemini";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import type { ClientQuickCalorieSnapshot } from "@/lib/quick-calorie-snapshot";
 
 const VALID_CATEGORIES: BrainDumpCategory[] = [
   "reflection",
@@ -121,10 +126,177 @@ export function validateBrainDumpFields(fields: BrainDumpResult): string | null 
   return null;
 }
 
+function firstMeaningfulLine(raw: string): string {
+  return raw.trim().split(/\n/).map((s) => s.trim()).find(Boolean) ?? "";
+}
+
+/** Avoid storing generic Gemini titles as journal videoTitle (Quick Note / modals). */
+function resolveJournalVideoTitle(geminiTitle: string, bodyFallback: string): string {
+  const g = geminiTitle.trim();
+  if (g) {
+    const lower = g.toLowerCase();
+    if (lower !== "brain dump" && lower !== "voice note") {
+      return g.length > 120 ? `${g.slice(0, 117)}...` : g;
+    }
+  }
+  const line = firstMeaningfulLine(bodyFallback);
+  if (line) return line.length > 120 ? `${line.slice(0, 117)}...` : line;
+  return "Journal entry";
+}
+
+type JournalEntryDateParts = { day: number; month: number; year: number };
+
+/** When inline quick-estimate matches the saved line, skip a second finalizeCalorieTrackingEstimate call. */
+async function tryPersistNutritionWithClientSnapshot(
+  userId: string,
+  text: string,
+  journalTitle: string,
+  entryDate: JournalEntryDateParts,
+  snap: ClientQuickCalorieSnapshot
+): Promise<{ id: string; category: BrainDumpCategory } | null> {
+  if (snap.sourceText.trim() !== text.trim()) return null;
+
+  const intent = snap.intent.toLowerCase();
+  const assumptions = snap.assumptions.map((a) => a.trim()).filter(Boolean).slice(0, 8);
+  const nutritionCalories = snap.calories;
+  const isExerciseOnly =
+    intent === "exercise" &&
+    (nutritionCalories == null || !Number.isFinite(nutritionCalories) || nutritionCalories <= 0);
+
+  if (isExerciseOnly) {
+    const exerciseEstimate = {
+      caloriesBurned: snap.exerciseCaloriesBurned,
+      carbsUsedGrams: null as number | null,
+      fatUsedGrams: null as number | null,
+      proteinDeltaGrams: null as number | null,
+      notes: (snap.exerciseNotes || snap.reasoning || "").trim().slice(0, 500),
+    };
+    const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
+    const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+      journalCategory: "exercise",
+    });
+    await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
+    return { id: saved._id, category: "exercise" };
+  }
+
+  if (intent === "mixed") {
+    const hasN =
+      nutritionCalories != null && Number.isFinite(nutritionCalories) && nutritionCalories > 0;
+    const burn = snap.exerciseCaloriesBurned;
+    const hasE = burn != null && Number.isFinite(burn) && burn > 0;
+
+    if (hasN && hasE) {
+      const nutritionEstimate = {
+        calories: snap.calories,
+        proteinGrams: snap.proteinGrams,
+        carbsGrams: snap.carbsGrams,
+        fatGrams: snap.fatGrams,
+        notes: (snap.nutritionNotes || "").trim().slice(0, 500),
+      };
+      const exerciseEstimate = {
+        caloriesBurned: burn,
+        carbsUsedGrams: null as number | null,
+        fatUsedGrams: null as number | null,
+        proteinDeltaGrams: null as number | null,
+        notes: (snap.exerciseNotes || "").trim().slice(0, 500),
+      };
+      const journalText = formatMixedCalorieJournalText(
+        text,
+        nutritionEstimate,
+        exerciseEstimate,
+        assumptions
+      );
+      const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+        journalCategory: "nutrition",
+      });
+      await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
+      return { id: saved._id, category: "nutrition" };
+    }
+    if (!hasN && hasE) {
+      const exerciseEstimate = {
+        caloriesBurned: burn,
+        carbsUsedGrams: null as number | null,
+        fatUsedGrams: null as number | null,
+        proteinDeltaGrams: null as number | null,
+        notes: (snap.exerciseNotes || snap.reasoning || "").trim().slice(0, 500),
+      };
+      const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
+      const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+        journalCategory: "exercise",
+      });
+      await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
+      return { id: saved._id, category: "exercise" };
+    }
+  }
+
+  const nutritionEstimate = {
+    calories: snap.calories,
+    proteinGrams: snap.proteinGrams,
+    carbsGrams: snap.carbsGrams,
+    fatGrams: snap.fatGrams,
+    facts: defaultNutritionFacts(),
+    notes: (snap.nutritionNotes || snap.reasoning || "").trim().slice(0, 500),
+  };
+  const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
+  const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+    journalCategory: "nutrition",
+  });
+  await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
+  return { id: saved._id, category: "nutrition" };
+}
+
+async function tryPersistExerciseWithClientSnapshot(
+  userId: string,
+  text: string,
+  journalTitle: string,
+  entryDate: JournalEntryDateParts,
+  snap: ClientQuickCalorieSnapshot
+): Promise<{ id: string; category: BrainDumpCategory } | null> {
+  if (snap.sourceText.trim() !== text.trim()) return null;
+
+  const intent = snap.intent.toLowerCase();
+  const assumptions = snap.assumptions.map((a) => a.trim()).filter(Boolean).slice(0, 8);
+  const caloriesBurned = snap.exerciseCaloriesBurned;
+  const isNutritionOnly =
+    intent === "nutrition" &&
+    (caloriesBurned == null || !Number.isFinite(caloriesBurned) || caloriesBurned <= 0);
+
+  if (isNutritionOnly) {
+    const nutritionEstimate = {
+      calories: snap.calories,
+      proteinGrams: snap.proteinGrams,
+      carbsGrams: snap.carbsGrams,
+      fatGrams: snap.fatGrams,
+      facts: defaultNutritionFacts(),
+      notes: (snap.nutritionNotes || snap.reasoning || "").trim().slice(0, 500),
+    };
+    const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
+    const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+      journalCategory: "nutrition",
+    });
+    await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
+    return { id: saved._id, category: "nutrition" };
+  }
+
+  const exerciseEstimate = {
+    caloriesBurned: snap.exerciseCaloriesBurned,
+    carbsUsedGrams: null as number | null,
+    fatUsedGrams: null as number | null,
+    proteinDeltaGrams: null as number | null,
+    notes: (snap.exerciseNotes || snap.reasoning || "").trim().slice(0, 500),
+  };
+  const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
+  const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
+    journalCategory: "exercise",
+  });
+  await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
+  return { id: saved._id, category: "exercise" };
+}
+
 export async function persistBrainDumpFields(
   userId: string,
   fields: BrainDumpResult,
-  options?: { geminiEventSuffix?: string }
+  options?: { geminiEventSuffix?: string; clientQuickCalorie?: ClientQuickCalorieSnapshot }
 ): Promise<{ id: string; category: BrainDumpCategory }> {
   const err = validateBrainDumpFields(fields);
   if (err) throw new Error(err);
@@ -136,26 +308,31 @@ export async function persistBrainDumpFields(
 
   if (category === "reflection") {
     const text = fields.reflectionText!.trim();
-    const saved = await saveJournalTranscript(userId, text, title, entryDate);
+    const journalTitle = resolveJournalVideoTitle(title, text);
+    const saved = await saveJournalTranscript(userId, text, journalTitle, entryDate);
     return { id: saved._id, category };
   }
 
   if (category === "concept") {
+    const summary = fields.conceptSummary!.trim();
+    const conceptTitle = resolveJournalVideoTitle(title, summary);
     const saved = await createCustomConcept(
       userId,
-      title,
-      fields.conceptSummary!.trim(),
+      conceptTitle,
+      summary,
       fields.conceptEnrichmentPrompt!.trim()
     );
     return { id: saved._id, category };
   }
 
   if (category === "experiment") {
+    const desc = fields.experimentDescription!.trim();
+    const habitTitle = resolveJournalVideoTitle(title, desc);
     const saved = await createHabit(userId, {
       sourceType: "manual",
       sourceId: "",
       bucket: "wellbeing",
-      name: title,
+      name: habitTitle,
       description: fields.experimentDescription!.trim(),
       howToFollowThrough: fields.experimentHowTo!.trim(),
       tips: fields.experimentTips!.trim(),
@@ -165,6 +342,12 @@ export async function persistBrainDumpFields(
 
   if (category === "nutrition") {
     const text = fields.nutritionText!.trim();
+    const journalTitle = resolveJournalVideoTitle(title, text);
+    const snap = options?.clientQuickCalorie;
+    if (snap) {
+      const reused = await tryPersistNutritionWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
+      if (reused) return reused;
+    }
     const estimate = await finalizeCalorieTrackingEstimate(text, [], {
       userId,
       eventType: `brain_dump_nutrition_save${suffix}`,
@@ -203,7 +386,7 @@ export async function persistBrainDumpFields(
         };
       }
       const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
-      const saved = await saveJournalTranscript(userId, journalText, title, entryDate, {
+      const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "exercise",
       });
       await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
@@ -220,7 +403,7 @@ export async function persistBrainDumpFields(
         : fallbackNutritionEstimate(reasoning);
 
     const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
-    const saved = await saveJournalTranscript(userId, journalText, title, entryDate, {
+    const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "nutrition",
     });
     await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
@@ -229,6 +412,12 @@ export async function persistBrainDumpFields(
 
   if (category === "exercise") {
     const text = fields.exerciseText!.trim();
+    const journalTitle = resolveJournalVideoTitle(title, text);
+    const snap = options?.clientQuickCalorie;
+    if (snap) {
+      const reused = await tryPersistExerciseWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
+      if (reused) return reused;
+    }
     const estimate = await finalizeCalorieTrackingEstimate(text, [], {
       userId,
       eventType: `brain_dump_exercise_save${suffix}`,
@@ -251,7 +440,7 @@ export async function persistBrainDumpFields(
             }
           : fallbackNutritionEstimate(reasoning);
       const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
-      const saved = await saveJournalTranscript(userId, journalText, title, entryDate, {
+      const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "nutrition",
       });
       await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
@@ -283,7 +472,7 @@ export async function persistBrainDumpFields(
       };
     }
     const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
-    const saved = await saveJournalTranscript(userId, journalText, title, entryDate, {
+    const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "exercise",
     });
     await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});

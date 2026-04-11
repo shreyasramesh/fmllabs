@@ -12,7 +12,9 @@ import {
   type EntryEstimateModalMeta,
   type NutritionEstimateDetailItem,
 } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
-import { EstimateThinkingLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import { ThinkingEstimateLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
+import { validateHighlightSegments } from "@/lib/quick-note-highlights";
 
 type LineMeta = EntryEstimateModalMeta;
 
@@ -33,6 +35,10 @@ export const AMY_PERSISTED_ROW_GRID =
 /** Recents / journal list: tight two-row layout (badge + metrics on row 1, title + time on row 2). */
 export const AMY_JOURNAL_LIST_GRID =
   "grid w-full grid-cols-[minmax(0,1fr)_auto_auto] grid-rows-[auto_auto] gap-x-2 gap-y-0 items-start text-left";
+
+/** iOS Notes–style caret + selection tint for draft fields. */
+export const NOTES_LIKE_TEXTAREA =
+  "caret-[#007aff] selection:bg-[rgba(0,122,255,0.28)] dark:caret-[#0a84ff] dark:selection:bg-[rgba(10,132,255,0.35)]";
 
 function intentPillClass(intent: string): string {
   switch (intent) {
@@ -65,7 +71,7 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
   if (meta.status === "idle") return <span className="inline-block min-w-[4rem]" aria-hidden />;
 
   if (meta.status === "thinking") {
-    return <EstimateThinkingLabel message="Thinking" />;
+    return <ThinkingEstimateLabel />;
   }
 
   const { calories, sourceCount, exerciseCaloriesBurned } = meta;
@@ -153,6 +159,7 @@ function useNutritionLineEstimate(line: string, enabled: boolean): LineMeta {
             carbsGrams?: number | null;
             fatGrams?: number | null;
             confidenceScore?: number;
+            highlightSpans?: QuickNoteHighlightSegment[];
           };
           if (ac.signal.aborted) return;
 
@@ -183,6 +190,11 @@ function useNutritionLineEstimate(line: string, enabled: boolean): LineMeta {
 
           const exBurn = numOrNull(data.exerciseCaloriesBurned);
 
+          const highlightSpans = validateHighlightSegments(
+            line,
+            Array.isArray(data.highlightSpans) ? data.highlightSpans : []
+          );
+
           setMeta({
             status: "done",
             calories: data.calories,
@@ -202,6 +214,7 @@ function useNutritionLineEstimate(line: string, enabled: boolean): LineMeta {
               typeof data.confidenceScore === "number" && Number.isFinite(data.confidenceScore)
                 ? Math.round(data.confidenceScore)
                 : 0,
+            highlightSpans,
           });
         } catch {
           if (!ac.signal.aborted) setMeta({ status: "idle" });
@@ -255,7 +268,7 @@ export function looksLikeFoodLogCapture(text: string): boolean {
   return false;
 }
 
-/** Current line during capture: editable note text + estimate in the same row (no detail modal). */
+/** Current line during capture: editable note text + estimate in the same row. */
 export function CaptureDraftSentenceRow({
   draft,
   onDraftValue,
@@ -263,6 +276,8 @@ export function CaptureDraftSentenceRow({
   onMetaChange,
   disabled,
   textAreaRef,
+  variant = "compact",
+  showEstimateDetailTap = false,
 }: {
   draft: string;
   onDraftValue: (raw: string) => void;
@@ -271,8 +286,13 @@ export function CaptureDraftSentenceRow({
   onMetaChange?: (meta: EntryEstimateModalMeta) => void;
   disabled?: boolean;
   textAreaRef?: React.Ref<HTMLTextAreaElement>;
+  variant?: "compact" | "fullScreen";
+  /** When true, tap the estimate column to open details while still typing (Quick Note tab). */
+  showEstimateDetailTap?: boolean;
 }) {
+  const [detailOpen, setDetailOpen] = useState(false);
   const estimateLine = shouldRunQuickEstimate(draft);
+  /** Keep showing calories while textarea is disabled (save in flight); do not reset estimate to idle. */
   const meta = useNutritionLineEstimate(draft, estimateLine && Boolean(draft.trim()));
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -298,33 +318,81 @@ export function CaptureDraftSentenceRow({
     el.style.height = `${el.scrollHeight}px`;
   }, [draft]);
 
-  return (
-    <div className={`${AMY_ENTRY_ROW_GRID} py-1.5`}>
-      <textarea
-        ref={setRefs}
-        value={draft}
-        onChange={(e) => onDraftValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            onEnterCommit();
-          }
-        }}
-        disabled={disabled}
-        rows={1}
-        autoFocus
-        placeholder="Start typing, or use the mic below…"
-        className="min-h-[1.75rem] min-w-0 resize-none border-0 bg-transparent text-[17px] leading-snug text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500"
-        aria-label="Note draft"
-      />
-      <span className="justify-self-end self-start whitespace-nowrap pt-0.5 text-right" aria-live="polite">
-        {estimateLine || !draft.trim() ? <LineRightMeta meta={meta} /> : <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>}
-      </span>
-    </div>
+  const taMin =
+    variant === "fullScreen"
+      ? "min-h-[3.25rem]"
+      : "min-h-[1.75rem]";
+  const openDetailBtn =
+    variant === "fullScreen"
+      ? "appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-0.5 pt-0 text-right text-[13px] shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30"
+      : "appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-1 pt-0.5 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30";
+
+  const rightCol =
+    estimateLine || !draft.trim() ? (
+      <LineRightMeta meta={meta} />
+    ) : (
+      <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+    );
+
+   return (
+    <>
+      <div
+        className={`${AMY_ENTRY_ROW_GRID} min-h-0 flex-1 ${variant === "fullScreen" ? "items-start py-0.5" : "py-1.5"} ${
+          disabled ? "pointer-events-none select-none opacity-[0.52] transition-opacity duration-200" : ""
+        }`}
+        aria-busy={disabled || undefined}
+      >
+        <textarea
+          ref={setRefs}
+          value={draft}
+          onChange={(e) => onDraftValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              onEnterCommit();
+            }
+          }}
+          disabled={disabled}
+          rows={variant === "fullScreen" ? 2 : 1}
+          autoFocus
+          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing, or use the mic below…"}
+          className={`${taMin} min-w-0 w-full resize-none border-0 bg-transparent ${variant === "fullScreen" ? "text-[16px] leading-tight" : "text-[17px] leading-snug"} text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-100 ${NOTES_LIKE_TEXTAREA}`}
+          aria-label="Note draft"
+        />
+        {showEstimateDetailTap ? (
+          <button
+            type="button"
+            disabled={disabled || !draft.trim()}
+            onClick={() => setDetailOpen(true)}
+            className={openDetailBtn}
+            aria-label={draft.trim() ? "View estimate details for this line" : "Estimate details"}
+            aria-live="polite"
+          >
+            {rightCol}
+          </button>
+        ) : (
+          <span
+            className={`justify-self-end self-start whitespace-nowrap text-right ${variant === "fullScreen" ? "pt-0 text-[13px]" : "pt-0.5"}`}
+            aria-live="polite"
+          >
+            {rightCol}
+          </span>
+        )}
+      </div>
+      {showEstimateDetailTap ? (
+        <EntryEstimateDetailModal
+          open={detailOpen}
+          onClose={() => setDetailOpen(false)}
+          text={draft}
+          attemptedEstimate={estimateLine}
+          meta={meta}
+        />
+      ) : null}
+    </>
   );
 }
 
-export function DeleteEntryIcon() {
+export function DeleteEntryIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -332,7 +400,7 @@ export function DeleteEntryIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-5 w-5"
+      className={className}
       aria-hidden
     >
       <path

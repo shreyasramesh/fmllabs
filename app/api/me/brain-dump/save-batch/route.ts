@@ -7,6 +7,7 @@ import {
 } from "@/lib/brain-dump-persist";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import type { BrainDumpResult } from "@/lib/gemini";
+import { parseClientQuickCalorieSnapshot } from "@/lib/quick-calorie-snapshot";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 function itemToBrainDumpResult(raw: Record<string, unknown>): BrainDumpResult | null {
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
   if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
-    const body = await request.json().catch(() => ({})) as { entries?: unknown };
+    const body = await request.json().catch(() => ({})) as { entries?: unknown; clientQuickCalories?: unknown };
     if (!Array.isArray(body.entries) || body.entries.length === 0) {
       return NextResponse.json({ error: "entries array is required" }, { status: 400 });
     }
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
 
     const results: { id: string; category: BrainDumpCategory }[] = [];
     const errors: string[] = [];
+    const clientSnaps = Array.isArray(body.clientQuickCalories) ? body.clientQuickCalories : null;
 
     for (let i = 0; i < body.entries.length; i += 1) {
       const raw = body.entries[i];
@@ -73,7 +75,13 @@ export async function POST(request: Request) {
       }
       try {
         const suffix = `_batch_${i}`;
-        const saved = await persistBrainDumpFields(userId, fields, { geminiEventSuffix: suffix });
+        const clientQuickCalorie = clientSnaps
+          ? parseClientQuickCalorieSnapshot(clientSnaps[i])
+          : null;
+        const saved = await persistBrainDumpFields(userId, fields, {
+          geminiEventSuffix: suffix,
+          ...(clientQuickCalorie ? { clientQuickCalorie } : {}),
+        });
         results.push(saved);
       } catch (e) {
         errors.push(`Entry ${i + 1}: ${e instanceof Error ? e.message : "save failed"}`);

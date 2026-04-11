@@ -453,6 +453,8 @@ interface LandingShellProps {
   spendBudgetUsd: number | null;
   /** Scroll container for the dashboard (e.g. chat messages column) — powers section scroll-spy. */
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
+  /** Mobile first tab: full-screen quick capture (brain dump) UI. */
+  mobileQuickNote?: React.ReactNode;
 }
 
 export function LandingShell({
@@ -615,10 +617,11 @@ export function LandingShell({
   sleepHoursGoal,
   spendBudgetUsd,
   dashboardScrollRootRef,
+  mobileQuickNote,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
-  const [activeMobileTab, setActiveMobileTab] = useState<MobileBottomTab>("nutrition");
+  const [activeMobileTab, setActiveMobileTab] = useState<MobileBottomTab>("quickNote");
 
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -792,6 +795,8 @@ export function LandingShell({
 
   const mobileTabContent = (() => {
     switch (activeMobileTab) {
+      case "quickNote":
+        return mobileQuickNote ?? null;
       case "nutrition":
         return (
           <LandingMobileNutritionTab

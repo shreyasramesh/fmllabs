@@ -78,6 +78,52 @@ export function formatNutritionJournalText(
   return lines.join("\n").slice(0, EXTRACT_CONCEPTS_MAX_TOTAL_CHARS);
 }
 
+/** Single journal blob for inline quick-estimate "mixed" intent (intake + burn). */
+export function formatMixedCalorieJournalText(
+  entryText: string,
+  nutritionEstimate: {
+    calories: number | null;
+    proteinGrams: number | null;
+    carbsGrams: number | null;
+    fatGrams: number | null;
+    notes: string;
+  },
+  exerciseEstimate: {
+    caloriesBurned: number | null;
+    carbsUsedGrams: number | null;
+    fatUsedGrams: number | null;
+    proteinDeltaGrams: number | null;
+    notes: string;
+  },
+  assumptions: string[]
+): string {
+  const lines: string[] = [];
+  lines.push("Calorie Tracking Journal (Mixed nutrition + exercise)");
+  lines.push("");
+  lines.push("Enriched entry:");
+  lines.push(entryText.trim());
+  lines.push("");
+  lines.push("Nutrition estimate:");
+  lines.push(`- Calories: ${nutritionEstimate.calories ?? "unknown"} kcal`);
+  lines.push(`- Protein: ${nutritionEstimate.proteinGrams ?? "unknown"} g`);
+  lines.push(`- Carbs: ${nutritionEstimate.carbsGrams ?? "unknown"} g`);
+  lines.push(`- Fat: ${nutritionEstimate.fatGrams ?? "unknown"} g`);
+  if (nutritionEstimate.notes.trim()) lines.push(`- Notes: ${nutritionEstimate.notes.trim()}`);
+  lines.push("");
+  lines.push("Exercise estimate:");
+  lines.push(`- Calories burned: ${exerciseEstimate.caloriesBurned ?? "unknown"} kcal`);
+  lines.push(`- Carbs used: ${exerciseEstimate.carbsUsedGrams ?? "unknown"} g`);
+  lines.push(`- Fat used: ${exerciseEstimate.fatUsedGrams ?? "unknown"} g`);
+  lines.push(`- Protein delta: ${exerciseEstimate.proteinDeltaGrams ?? "unknown"} g`);
+  if (exerciseEstimate.notes.trim()) lines.push(`- Notes: ${exerciseEstimate.notes.trim()}`);
+  if (assumptions.length > 0) {
+    lines.push("");
+    lines.push("Assumptions:");
+    assumptions.forEach((a) => lines.push(`- ${a}`));
+  }
+  return lines.join("\n").slice(0, EXTRACT_CONCEPTS_MAX_TOTAL_CHARS);
+}
+
 export function formatExerciseJournalText(
   entryText: string,
   answers: string[],
