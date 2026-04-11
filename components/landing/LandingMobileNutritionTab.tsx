@@ -11,6 +11,9 @@ import type {
   LandingRecentFoodEntry,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
+import { journalTypeBadgeClass } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
+import { AMY_PERSISTED_ROW_GRID, DeleteEntryIcon } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import { SparklesIcon } from "@/components/SharedIcons";
 import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
 interface LandingMobileNutritionTabProps {
@@ -28,6 +31,8 @@ interface LandingMobileNutritionTabProps {
   inlineFoodSuggestionsLoading: boolean;
   onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: LandingRecentFoodEntry[];
+  onRecentFoodEntryClick?: (id: string) => void;
+  onRecentFoodEntryDelete?: (id: string) => void;
 }
 
 const MACRO_ICONS: Record<string, string> = {
@@ -52,6 +57,8 @@ export function LandingMobileNutritionTab({
   inlineFoodSuggestionsLoading,
   onInlineFoodSuggestionSelect,
   recentFoodEntries,
+  onRecentFoodEntryClick,
+  onRecentFoodEntryDelete,
 }: LandingMobileNutritionTabProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
@@ -239,22 +246,67 @@ export function LandingMobileNutritionTab({
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
             Recents
           </p>
-          <div className="landing-module-glass overflow-hidden rounded-2xl border">
-            {recentFoodEntries.map((entry, idx) => (
-              <div
-                key={entry.id}
-                className={`px-3.5 py-2.5 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`}
-              >
-                <p className="truncate text-[13px] font-medium text-foreground">{entry.label}</p>
-                <div className="mt-0.5 flex items-center gap-2 text-[11px] tabular-nums text-neutral-500 dark:text-neutral-400">
-                  <span>🔥 {entry.calories} cal</span>
-                  {entry.proteinGrams > 0 && <span>P: {entry.proteinGrams}g</span>}
-                  {entry.carbsGrams > 0 && <span>C: {entry.carbsGrams}g</span>}
-                  {entry.fatGrams > 0 && <span>F: {entry.fatGrams}g</span>}
-                  {entry.time && <span className="ml-auto">{entry.time}</span>}
+          <div className="landing-module-glass overflow-hidden rounded-2xl border bg-white/80 dark:bg-neutral-900/30">
+            {recentFoodEntries.map((entry, idx) => {
+              const chipCls = journalTypeBadgeClass("nutrition");
+              const open = () => onRecentFoodEntryClick?.(entry.id);
+              const calCol = (
+                <>
+                  {entry.calories > 0 ? (
+                    <span className="inline-flex items-center gap-1 text-[15px] font-medium tabular-nums text-blue-500 dark:text-blue-400">
+                      <SparklesIcon className="h-4 w-4 shrink-0" />
+                      {entry.calories} cal
+                    </span>
+                  ) : (
+                    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+                  )}
+                  {entry.time ? (
+                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">
+                      {entry.time}
+                    </span>
+                  ) : null}
+                </>
+              );
+              const cls = `w-full px-3.5 transition-colors hover:bg-neutral-50/90 dark:hover:bg-neutral-800/40 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`;
+              return (
+                <div key={entry.id} className={cls}>
+                  <div className={`${AMY_PERSISTED_ROW_GRID} py-3`}>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentFoodEntryClick}
+                      className="min-w-0 text-left disabled:cursor-default disabled:opacity-100"
+                    >
+                      <span
+                        className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${chipCls}`}
+                      >
+                        Nutrition
+                      </span>
+                      <p className="text-[17px] leading-snug text-foreground whitespace-pre-wrap break-words">
+                        {entry.label}
+                      </p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentFoodEntryClick}
+                      className="justify-self-end self-start flex flex-col items-end gap-0.5 whitespace-nowrap pt-0.5 text-right disabled:cursor-default disabled:opacity-100"
+                    >
+                      {calCol}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void onRecentFoodEntryDelete?.(entry.id)}
+                      disabled={!onRecentFoodEntryDelete}
+                      className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                      aria-label={`Delete food entry: ${entry.label.slice(0, 48)}${entry.label.length > 48 ? "…" : ""}`}
+                    >
+                      <DeleteEntryIcon />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

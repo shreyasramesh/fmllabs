@@ -3302,76 +3302,29 @@ export interface BrainDumpResult {
   hrvMs?: number | null;
 }
 
-export async function categorizeBrainDump(
-  transcript: string,
-  usageContext?: GeminiUsageContext
-): Promise<BrainDumpResult> {
-  const model = getModel();
-  const result = await model.generateContent(
-    `You are an AI assistant that categorizes a user's voice brain-dump into exactly one of seven types and generates structured data for it.
-
-Categories:
-1. "reflection" — The user is journaling, venting, processing emotions, reviewing their day, expressing gratitude, or reflecting on experiences.
-2. "concept" — The user is articulating an idea, principle, mental model, framework, or insight they want to remember and apply later.
-3. "experiment" — The user is describing a behavior change, daily practice, habit, or 30-day challenge they want to try.
-4. "nutrition" — The user is logging food they ate or drank (e.g. "I had oatmeal and a coffee for breakfast", "just ate a salad with chicken").
-5. "exercise" — The user is logging a workout or physical activity (e.g. "ran 5k this morning", "did 30 minutes of yoga").
-6. "weight" — The user is reporting their body weight (e.g. "I weigh 72 kilos today", "weight is 158 pounds").
-7. "sleep" — The user is reporting how they slept last night (e.g. "slept 7 hours", "got about 6 hours of sleep, HRV was 45").
-
-Return a JSON object with these keys:
-- "category": one of "reflection", "concept", "experiment", "nutrition", "exercise", "weight", "sleep"
-- "title": A concise 3-8 word title
-
-If category is "reflection":
-- "reflectionText": A cleaned-up, well-written version of the transcript as a journal entry (1-4 paragraphs). Preserve the user's voice and meaning.
-
-If category is "concept":
-- "conceptSummary": A 2-4 paragraph narrative expanding on the idea, its context, and why it matters.
-- "conceptEnrichmentPrompt": A 1-2 sentence summary (25-40 words) for an AI coach. State the core idea, then when it's relevant.
-
-If category is "experiment":
-- "experimentDescription": A 2-4 sentence description of the habit and why it matters.
-- "experimentHowTo": Step-by-step instructions (newline-separated lines, one step per line).
-- "experimentTips": Practical tips for sticking with it (newline-separated lines, one tip per line).
-
-If category is "nutrition":
-- "nutritionText": A clean description of what the user ate/drank, suitable for a nutrition log entry. Preserve specific foods, quantities, and timing if mentioned.
-
-If category is "exercise":
-- "exerciseText": A clean description of the workout/activity, suitable for an exercise log entry. Preserve exercise type, duration, intensity, and any metrics mentioned.
-
-If category is "weight":
-- "weightKg": The user's weight in kilograms as a number. If they said pounds, convert to kg (divide by 2.205). Round to 1 decimal.
-
-If category is "sleep":
-- "sleepHours": Number of hours slept as a number (can be decimal, e.g. 7.5).
-- "hrvMs": HRV in milliseconds as a number, or null if not mentioned.
-
-Return ONLY valid JSON, no markdown or extra text.
-
-User's brain dump transcript:
-${transcript}`
-  );
-  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
-  const text = result.response.text().trim();
-  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
-  const parsed = JSON.parse(cleaned) as Record<string, unknown>;
-
+function normalizeBrainDumpEntry(
+  parsed: Record<string, unknown>,
+  fallbackTitle: string
+): BrainDumpResult {
   const validCategories: BrainDumpCategory[] = [
-    "reflection", "concept", "experiment", "nutrition", "exercise", "weight", "sleep",
+    "reflection",
+    "concept",
+    "experiment",
+    "nutrition",
+    "exercise",
+    "weight",
+    "sleep",
   ];
   const category = validCategories.includes(parsed.category as BrainDumpCategory)
     ? (parsed.category as BrainDumpCategory)
     : "reflection";
 
   const toStr = (v: unknown) => (typeof v === "string" ? v.trim() : undefined);
-  const toNum = (v: unknown) =>
-    typeof v === "number" && Number.isFinite(v) ? v : undefined;
+  const toNum = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : undefined);
 
   return {
     category,
-    title: typeof parsed.title === "string" ? parsed.title.trim().slice(0, 120) : "Brain Dump",
+    title: typeof parsed.title === "string" ? parsed.title.trim().slice(0, 120) : fallbackTitle,
     reflectionText: toStr(parsed.reflectionText),
     conceptSummary: toStr(parsed.conceptSummary),
     conceptEnrichmentPrompt: toStr(parsed.conceptEnrichmentPrompt),
@@ -3384,6 +3337,103 @@ ${transcript}`
     sleepHours: toNum(parsed.sleepHours),
     hrvMs: parsed.hrvMs === null ? null : toNum(parsed.hrvMs),
   };
+}
+
+/**
+ * Categorizes a brain dump into one or more structured entries when the transcript mixes topics
+ * (e.g. a meal log and a workout in the same note). Returns at least one entry.
+ */
+export async function categorizeBrainDump(
+  transcript: string,
+  usageContext?: GeminiUsageContext
+): Promise<BrainDumpResult[]> {
+  const model = getModel();
+  const result = await model.generateContent(
+    `You are an AI assistant that categorizes a user's voice brain-dump into one or more structured entries.
+
+Categories (same rules apply as before):
+1. "reflection" — journaling, emotions, reviewing the day, gratitude, processing experiences.
+2. "concept" — idea, mental model, framework, insight to remember.
+3. "experiment" — behavior change, habit, practice, challenge to try.
+4. "nutrition" — food/drink logging.
+5. "exercise" — workout or physical activity logging.
+6. "weight" — body weight report.
+7. "sleep" — sleep duration/quality (and optional HRV).
+
+IMPORTANT — Multiple entries:
+- If the transcript clearly contains DISTINCT items that belong to DIFFERENT categories (e.g. "I had pizza for lunch" AND "ran 5 miles" AND "feeling grateful today"), return SEPARATE entries — one JSON object per distinct item.
+- If the whole transcript is one coherent note (even if long), return a SINGLE entry.
+- Do not split a single meal or single workout into multiple entries.
+- Maximum 8 entries. Merge minor fragments with the closest entry.
+- Each entry must include "category", "title", and ALL required fields for that category (same as below).
+
+Per-entry fields (match category):
+- "reflection": "reflectionText" (cleaned journal, 1-4 paragraphs, preserve voice).
+- "concept": "conceptSummary", "conceptEnrichmentPrompt" (25-40 words for coach).
+- "experiment": "experimentDescription", "experimentHowTo" (newline-separated steps), "experimentTips" (newline-separated tips).
+- "nutrition": "nutritionText" (clean food log line(s) for that item only).
+- "exercise": "exerciseText" (clean activity description for that item only).
+- "weight": "weightKg" (kg; convert lb via divide by 2.205, 1 decimal).
+- "sleep": "sleepHours", "hrvMs" (number or null).
+
+Return ONLY valid JSON:
+{ "entries": [ { ... }, ... ] }
+
+User's brain dump transcript:
+${transcript}`
+  );
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const text = result.response.text().trim();
+  const cleaned = text.replace(/^```json\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+  try {
+    const parsed = JSON.parse(cleaned) as Record<string, unknown>;
+    const rawEntries: unknown[] = Array.isArray(parsed.entries)
+      ? parsed.entries
+      : parsed.category        ? [parsed]
+        : [];
+
+    if (rawEntries.length === 0) {
+      return [
+        normalizeBrainDumpEntry(
+          {
+            category: "reflection",
+            title: "Voice note",
+            reflectionText: transcript.trim(),
+          },
+          "Voice note"
+        ),
+      ];
+    }
+
+    const out: BrainDumpResult[] = [];
+    for (const e of rawEntries.slice(0, 8)) {
+      if (e && typeof e === "object") {
+        out.push(normalizeBrainDumpEntry(e as Record<string, unknown>, "Brain Dump"));
+      }
+    }
+    return out.length > 0      ? out
+      : [
+          normalizeBrainDumpEntry(
+            {
+              category: "reflection",
+              title: "Voice note",
+              reflectionText: transcript.trim(),
+            },
+            "Voice note"
+          ),
+        ];
+  } catch {
+    return [
+      normalizeBrainDumpEntry(
+        {
+          category: "reflection",
+          title: "Voice note",
+          reflectionText: transcript.trim(),
+        },
+        "Voice note"
+      ),
+    ];
+  }
 }
 
 export async function generateTitle(

@@ -337,7 +337,11 @@ interface LandingShellProps {
   inlineFoodSuggestionsLoading: boolean;
   onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: Array<{ id: string; label: string; calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number; time: string }>;
+  onRecentFoodEntryClick?: (id: string) => void;
+  onRecentFoodEntryDelete?: (id: string) => void;
   recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; time: string }>;
+  onRecentExerciseEntryClick?: (id: string) => void;
+  onRecentExerciseEntryDelete?: (id: string) => void;
   inlineExerciseInput: string;
   onInlineExerciseInputChange: (value: string) => void;
   onInlineExerciseSubmit: () => void;
@@ -500,7 +504,11 @@ export function LandingShell({
   inlineFoodSuggestionsLoading,
   onInlineFoodSuggestionSelect,
   recentFoodEntries,
+  onRecentFoodEntryClick,
+  onRecentFoodEntryDelete,
   recentExerciseEntries,
+  onRecentExerciseEntryClick,
+  onRecentExerciseEntryDelete,
   inlineExerciseInput,
   onInlineExerciseInputChange,
   onInlineExerciseSubmit,
@@ -801,6 +809,8 @@ export function LandingShell({
             inlineFoodSuggestionsLoading={inlineFoodSuggestionsLoading}
             onInlineFoodSuggestionSelect={onInlineFoodSuggestionSelect}
             recentFoodEntries={recentFoodEntries}
+            onRecentFoodEntryClick={onRecentFoodEntryClick}
+            onRecentFoodEntryDelete={onRecentFoodEntryDelete}
           />
         );
       case "exercise":
@@ -809,6 +819,8 @@ export function LandingShell({
             caloriesBurned={nutrition?.caloriesExercise ?? 0}
             exerciseBurnGoalKcal={exerciseBurnGoalKcal}
             recentExerciseEntries={recentExerciseEntries}
+            onRecentExerciseEntryClick={onRecentExerciseEntryClick}
+            onRecentExerciseEntryDelete={onRecentExerciseEntryDelete}
             onOpenExercise={onOpenExercise}
             inlineExerciseInput={inlineExerciseInput}
             onInlineExerciseInputChange={onInlineExerciseInputChange}

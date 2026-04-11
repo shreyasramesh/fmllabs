@@ -25,8 +25,8 @@ export type BrainDumpCaptureEntry = {
 const AMY_ENTRY_ROW_GRID =
   "grid w-full grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 items-start text-left";
 
-/** Persisted capture row: text, estimate, delete (no per-row border). */
-const AMY_PERSISTED_ROW_GRID =
+/** Persisted capture row: text, estimate, delete (no per-row border). Reused for saved “today” rows in Quick note. */
+export const AMY_PERSISTED_ROW_GRID =
   "grid w-full grid-cols-[minmax(0,1fr)_auto_auto] gap-x-2 gap-y-1 items-start text-left";
 
 function intentPillClass(intent: string): string {
@@ -321,7 +321,7 @@ export function CaptureDraftSentenceRow({
   );
 }
 
-function DeleteEntryIcon() {
+export function DeleteEntryIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

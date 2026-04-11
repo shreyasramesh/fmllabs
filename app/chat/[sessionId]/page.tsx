@@ -2555,6 +2555,53 @@ function extractEstimatedNumber(text: string, pattern: RegExp): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+function isGenericBrainDumpTitle(title: string | undefined): boolean {
+  const t = (title ?? "").trim().toLowerCase();
+  return !t || t === "brain dump" || t === "voice note";
+}
+
+/** Primary line for Quick note "today" list — matches capture row wording, not the Gemini title. */
+function extractJournalQuickNoteBody(t: { transcriptText?: string; videoTitle?: string }): string {
+  const text = (t.transcriptText ?? "").trim();
+  const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(text);
+  if (enrichedMatch?.[1]) {
+    const block = enrichedMatch[1].trim();
+    const firstLine = block.split("\n").map((s) => s.trim()).find(Boolean) ?? block;
+    if (firstLine) return firstLine.slice(0, 500);
+  }
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    if (/^calorie tracking journal/i.test(line)) continue;
+    if (/^source:/i.test(line)) continue;
+    if (/^enriched entry:/i.test(line)) continue;
+    if (/^nutritional estimate:/i.test(line)) continue;
+    if (/^exercise estimate:/i.test(line)) continue;
+    if (/^assumptions:/i.test(line)) continue;
+    if (/^clarifications:/i.test(line)) continue;
+    if (/^- /.test(line)) continue;
+    return line.slice(0, 500);
+  }
+  const vt = (t.videoTitle ?? "").trim();
+  if (vt && !isGenericBrainDumpTitle(vt)) return vt.slice(0, 500);
+  return "Journal entry";
+}
+
+function journalQuickNoteCaloriesSummary(t: {
+  transcriptText?: string;
+  journalCategory?: "nutrition" | "exercise" | "spend";
+}): string | null {
+  const txt = t.transcriptText ?? "";
+  if (t.journalCategory === "nutrition") {
+    const cal = extractEstimatedNumber(txt, /- Calories:\s*([\d.]+)\s*kcal/i);
+    if (cal != null && cal > 0) return `${Math.round(cal)} cal`;
+  }
+  if (t.journalCategory === "exercise") {
+    const burned = extractEstimatedNumber(txt, /- Calories burned:\s*([\d.]+)\s*kcal/i);
+    if (burned != null && burned > 0) return `-${Math.round(burned)} cal`;
+  }
+  return null;
+}
+
 type NutritionFactsDaySummary = {
   calories: number | null;
   totalCarbohydratesGrams: number | null;
@@ -6436,9 +6483,14 @@ export default function ChatPage() {
       }
       if (itemDayKey !== selectedLandingDayKey) continue;
       const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(t.transcriptText);
-      const label = enrichedMatch?.[1]?.trim()
-        || t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim()
-        || "Food entry";
+      const enrichedBody = enrichedMatch?.[1]?.trim() ?? "";
+      const label =
+        enrichedBody
+          .split(/\n/)
+          .map((l) => l.trim())
+          .filter(Boolean)[0] ||
+        t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim() ||
+        "Food entry";
       const cal = extractEstimatedNumber(t.transcriptText, /- Calories:\s*([\d.]+)\s*kcal/i) ?? 0;
       const protein = extractEstimatedNumber(t.transcriptText, /- Protein:\s*([\d.]+)\s*g/i) ?? 0;
       const carbs = extractEstimatedNumber(t.transcriptText, /- Carbs:\s*([\d.]+)\s*g/i) ?? 0;
@@ -6470,9 +6522,14 @@ export default function ChatPage() {
       }
       if (itemDayKey !== selectedLandingDayKey) continue;
       const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(t.transcriptText);
-      const label = enrichedMatch?.[1]?.trim()
-        || t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim()
-        || "Exercise entry";
+      const enrichedBody = enrichedMatch?.[1]?.trim() ?? "";
+      const label =
+        enrichedBody
+          .split(/\n/)
+          .map((l) => l.trim())
+          .filter(Boolean)[0] ||
+        t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim() ||
+        "Exercise entry";
       const burned = extractEstimatedNumber(t.transcriptText, /- Calories burned:\s*([\d.]+)\s*kcal/i) ?? 0;
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
@@ -6487,6 +6544,49 @@ export default function ChatPage() {
       results.push({ id: t._id, label, caloriesBurned: Math.round(burned), time });
     }
     return results;
+  }, [journalEntriesSorted, selectedLandingDayKey]);
+  const brainDumpJournalContextRows = useMemo(() => {
+    const rows: {
+      id: string;
+      bodyText: string;
+      categoryLabel: string;
+      journalCategory: "nutrition" | "exercise" | "spend" | undefined;
+      time: string;
+      caloriesSummary: string | null;
+    }[] = [];
+    const byId = new Map(journalEntriesSorted.map((t) => [t._id, t]));
+    for (const t of journalEntriesSorted) {
+      if (!t.transcriptText) continue;
+      if (journalEntryDayKey(t) !== selectedLandingDayKey) continue;
+      const bodyText = extractJournalQuickNoteBody(t);
+      let time = "";
+      if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
+        const h = t.journalEntryHour;
+        const m = t.journalEntryMinute;
+        const ampm = h >= 12 ? "PM" : "AM";
+        time = `${h % 12 || 12}:${String(m).padStart(2, "0")} ${ampm}`;
+      } else if (t.createdAt) {
+        const d = new Date(t.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+        }
+      }
+      rows.push({
+        id: t._id,
+        bodyText,
+        categoryLabel: getJournalCategoryLabel(t.journalCategory) || "Journal",
+        journalCategory: t.journalCategory,
+        time,
+        caloriesSummary: journalQuickNoteCaloriesSummary(t),
+      });
+    }
+    rows.sort((a, b) => {
+      const ta = byId.get(a.id);
+      const tb = byId.get(b.id);
+      if (!ta || !tb) return 0;
+      return journalEntryTimestamp(tb) - journalEntryTimestamp(ta);
+    });
+    return rows;
   }, [journalEntriesSorted, selectedLandingDayKey]);
   const selectedLandingDaySpendTotals = useMemo(
     () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),
@@ -9432,6 +9532,52 @@ export default function ChatPage() {
     savedTranscripts,
     sleepEntries,
   ]);
+
+  const openLandingJournalTranscriptById = useCallback(
+    (transcriptId: string) => {
+      const row = savedTranscripts.find((t) => t._id === transcriptId);
+      if (!row || row.sourceType !== "journal" || !row.transcriptText) return;
+      setTranscriptModalTranscript({
+        id: row._id,
+        videoId: row.videoId,
+        videoTitle: row.videoTitle,
+        channel: row.channel,
+        sourceType: row.sourceType,
+        journalCategory: row.journalCategory,
+        journalBatchId: row.journalBatchId,
+        journalEntryDay: row.journalEntryDay,
+        journalEntryMonth: row.journalEntryMonth,
+        journalEntryYear: row.journalEntryYear,
+        journalEntryHour: row.journalEntryHour,
+        journalEntryMinute: row.journalEntryMinute,
+        transcriptText: row.transcriptText,
+        createdAt: row.createdAt,
+        extractedConcepts: row.extractedConcepts,
+        journalMentorReflections: row.journalMentorReflections,
+        journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
+        journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
+      });
+    },
+    [savedTranscripts]
+  );
+
+  const deleteLandingJournalTranscriptById = useCallback(
+    async (transcriptId: string) => {
+      if (isAnonymous || incognitoMode) return;
+      try {
+        const res = await fetch(`/api/me/transcripts/${encodeURIComponent(transcriptId)}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          refetchTranscripts();
+          setTranscriptModalTranscript((prev) => (prev?.id === transcriptId ? null : prev));
+        }
+      } catch {
+        /* silent */
+      }
+    },
+    [isAnonymous, incognitoMode, refetchTranscripts]
+  );
 
   const openLandingActivityGroupModal = useCallback(
     (group: { label: string; items: LandingDayActivityItem[] }) => {
@@ -15023,7 +15169,15 @@ export default function ChatPage() {
                           if (suggestion) void handleCalorieTrackerSuggestionSelect(suggestion);
                         }}
                         recentFoodEntries={selectedLandingDayRecentFood}
+                        onRecentFoodEntryClick={openLandingJournalTranscriptById}
+                        onRecentFoodEntryDelete={
+                          isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
+                        }
                         recentExerciseEntries={selectedLandingDayRecentExercise}
+                        onRecentExerciseEntryClick={openLandingJournalTranscriptById}
+                        onRecentExerciseEntryDelete={
+                          isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
+                        }
                         inlineExerciseInput={calorieTrackerInput}
                         onInlineExerciseInputChange={(value) => {
                           setSelectedLandingJournalChip("exercise");
@@ -15328,11 +15482,16 @@ export default function ChatPage() {
                 {!incognitoMode && (
                       <LandingBrainDump
                         language={language}
-                        onSaved={(category) => {
-                          if (category === "reflection" || category === "nutrition" || category === "exercise") refetchTranscripts();
-                          else if (category === "concept") refetchCustomConcepts();
-                          else if (category === "experiment") refetchHabits();
-                          else if (category === "weight") void fetchWeightTracker();
+                        journalContextRows={brainDumpJournalContextRows}
+                        onOpenJournalEntry={openLandingJournalTranscriptById}
+                        onDeleteJournalEntry={isAnonymous ? undefined : deleteLandingJournalTranscriptById}
+                        onSaved={(categories) => {
+                          if (categories.some((c) => c === "reflection" || c === "nutrition" || c === "exercise")) {
+                            refetchTranscripts();
+                          }
+                          if (categories.some((c) => c === "concept")) refetchCustomConcepts();
+                          if (categories.some((c) => c === "experiment")) refetchHabits();
+                          if (categories.some((c) => c === "weight")) void fetchWeightTracker();
                         }}
                       />
                       )}

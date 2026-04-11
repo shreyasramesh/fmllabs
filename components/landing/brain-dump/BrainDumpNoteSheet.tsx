@@ -8,8 +8,11 @@ import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
   CapturePersistedEntryRow,
+  AMY_PERSISTED_ROW_GRID,
+  DeleteEntryIcon,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
 
@@ -35,6 +38,18 @@ export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
   }
 }
 
+/** Chip for saved journal rows in Quick note (includes spend; uncategorized → reflection). */
+export function journalContextChipClass(
+  journalCategory: "nutrition" | "exercise" | "spend" | undefined
+): string {
+  if (journalCategory === "nutrition") return journalTypeBadgeClass("nutrition");
+  if (journalCategory === "exercise") return journalTypeBadgeClass("exercise");
+  if (journalCategory === "spend") {
+    return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
+  }
+  return journalTypeBadgeClass("reflection");
+}
+
 const NOTE_TITLE_CLS =
   "w-full border-0 border-b border-transparent bg-transparent pb-1.5 text-2xl font-semibold tracking-tight text-foreground placeholder:text-neutral-400 focus:border-neutral-200/80 focus:outline-none focus:ring-0 dark:focus:border-neutral-600";
 
@@ -47,7 +62,7 @@ const INSET_GROUP_CLS =
 const INSET_ROW_CLS =
   "flex items-center gap-3 border-b border-neutral-200/70 px-3 py-2.5 last:border-b-0 dark:border-neutral-700/60";
 
-type SheetPhase = "recording" | "categorizing" | "review" | "saving";
+type SheetPhase = "recording" | "categorizing" | "saving";
 
 export interface BrainDumpFields {
   category: BrainDumpCategory;
@@ -80,10 +95,6 @@ interface BrainDumpSheetFrameProps {
   onPrimaryCapture?: () => void;
   capturePrimaryDisabled?: boolean;
   capturePrimaryLabel?: string;
-  /** Review */
-  onSave?: () => void;
-  saveDisabled?: boolean;
-  saving?: boolean;
   children: React.ReactNode;
 }
 
@@ -95,14 +106,10 @@ export function BrainDumpSheetFrame({
   onPrimaryCapture,
   capturePrimaryDisabled,
   capturePrimaryLabel = "Done",
-  onSave,
-  saveDisabled,
-  saving,
   children,
 }: BrainDumpSheetFrameProps) {
   const isCapture = phase === "recording" || phase === "categorizing";
   const showCapturePrimary = isCapture && onPrimaryCapture && phase === "recording";
-  const showSave = (phase === "review" || phase === "saving") && onSave;
 
   return (
     <div
@@ -128,7 +135,7 @@ export function BrainDumpSheetFrame({
             Cancel
           </button>
           <h2 id="brain-dump-sheet-title" className="truncate text-center text-sm font-semibold text-neutral-500 dark:text-neutral-400">
-            {phase === "categorizing" ? "Sorting your note…" : isCapture ? "Quick note" : "Review"}
+            {phase === "categorizing" ? "Sorting your note…" : phase === "saving" ? "Saving…" : "Quick note"}
           </h2>
           <div className="flex w-[72px] justify-end">
             {showCapturePrimary ? (
@@ -139,15 +146,6 @@ export function BrainDumpSheetFrame({
                 className="rounded-lg px-3 py-2 text-[15px] font-semibold text-[#295a8a] disabled:opacity-40 dark:text-blue-300"
               >
                 {capturePrimaryLabel}
-              </button>
-            ) : showSave ? (
-              <button
-                type="button"
-                onClick={onSave}
-                disabled={saveDisabled || saving}
-                className="rounded-lg px-3 py-2 text-[15px] font-semibold text-[#295a8a] disabled:opacity-40 dark:text-blue-300"
-              >
-                {saving ? "…" : "Save"}
               </button>
             ) : (
               <span className="w-14" aria-hidden />
@@ -163,6 +161,17 @@ export function BrainDumpSheetFrame({
   );
 }
 
+export interface BrainDumpJournalContextRow {
+  id: string;
+  /** Same line(s) the user sees in capture — enriched entry or first journal line, not the Gemini title. */
+  bodyText: string;
+  categoryLabel: string;
+  journalCategory: "nutrition" | "exercise" | "spend" | undefined;
+  time: string;
+  /** e.g. "420 cal" intake or "-180 cal" burn; null if unknown */
+  caloriesSummary: string | null;
+}
+
 interface CaptureViewProps {
   captureEntries: BrainDumpCaptureEntry[];
   setCaptureEntries: React.Dispatch<React.SetStateAction<BrainDumpCaptureEntry[]>>;
@@ -171,6 +180,12 @@ interface CaptureViewProps {
   phase: "recording" | "categorizing";
   language: LanguageCode;
   onTranscription: (text: string) => void;
+  /** When the draft is empty, Enter runs categorize + save (same as Done). */
+  onRequestFinishNote?: () => void;
+  /** Journal rows already saved for the landing dashboard day (read-only context). */
+  journalContextRows?: BrainDumpJournalContextRow[];
+  onOpenJournalContextEntry?: (id: string) => void;
+  onDeleteJournalContextEntry?: (id: string) => void;
 }
 
 export function BrainDumpCaptureView({
@@ -181,6 +196,10 @@ export function BrainDumpCaptureView({
   phase,
   language,
   onTranscription,
+  onRequestFinishNote,
+  journalContextRows = [],
+  onOpenJournalContextEntry,
+  onDeleteJournalContextEntry,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const syncDraftMeta = useCallback((m: EntryEstimateModalMeta) => {
@@ -219,10 +238,13 @@ export function BrainDumpCaptureView({
 
   const commitDraftOnEnter = () => {
     const t = sentenceDraft.trim();
-    if (!t) return;
-    const snap = draftMetaRef.current;
-    setCaptureEntries((prev) => [...prev, { id: crypto.randomUUID(), text: t, frozenMeta: snap }]);
-    setSentenceDraft("");
+    if (t) {
+      const snap = draftMetaRef.current;
+      setCaptureEntries((prev) => [...prev, { id: crypto.randomUUID(), text: t, frozenMeta: snap }]);
+      setSentenceDraft("");
+      return;
+    }
+    onRequestFinishNote?.();
   };
 
   const removeEntry = (id: string) => {
@@ -232,12 +254,87 @@ export function BrainDumpCaptureView({
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-        Speak or type — we&apos;ll file it in the right journal. Enter saves the current line; Shift+Enter adds a line break.
+        Speak or type — we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done) saves
+        immediately — no review screen.
       </p>
       <div
         className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl border border-neutral-200/70 bg-white/60 px-3 py-2 dark:border-neutral-700/60 dark:bg-neutral-900/25"
         role="list"
       >
+        {journalContextRows.length > 0 ? (
+          <div className="border-b border-neutral-200/60 pb-2 dark:border-neutral-700/50">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
+              Today on your journal
+            </p>
+            {journalContextRows.map((row) => {
+              const chipCls = journalContextChipClass(row.journalCategory);
+              const burn = row.caloriesSummary?.startsWith("-");
+              const open = () => onOpenJournalContextEntry?.(row.id);
+              const calCol = (
+                <>
+                  {row.caloriesSummary ? (
+                    <span
+                      className={`inline-flex items-center gap-1 text-[15px] font-medium tabular-nums ${
+                        burn
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-blue-500 dark:text-blue-400"
+                      }`}
+                    >
+                      <SparklesIcon className="h-4 w-4 shrink-0" />
+                      {row.caloriesSummary}
+                    </span>
+                  ) : null}
+                  {row.time ? (
+                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
+                  ) : null}
+                  {!row.caloriesSummary && !row.time ? (
+                    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+                  ) : null}
+                </>
+              );
+              return (
+                <div
+                  key={row.id}
+                  className={`${AMY_PERSISTED_ROW_GRID} rounded-lg py-2 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
+                >
+                  <button
+                    type="button"
+                    onClick={open}
+                    disabled={!onOpenJournalContextEntry}
+                    className="min-w-0 text-left disabled:cursor-default disabled:opacity-100"
+                  >
+                    <span
+                      className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${chipCls}`}
+                    >
+                      {row.categoryLabel}
+                    </span>
+                    <p className="text-[17px] leading-snug text-foreground whitespace-pre-wrap break-words">
+                      {row.bodyText}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={open}
+                    disabled={!onOpenJournalContextEntry}
+                    className="justify-self-end self-start flex flex-col items-end gap-0.5 whitespace-nowrap pt-0.5 text-right disabled:cursor-default disabled:opacity-100"
+                    aria-live="polite"
+                  >
+                    {calCol}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void onDeleteJournalContextEntry?.(row.id)}
+                    disabled={!onDeleteJournalContextEntry}
+                    className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                    aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+                  >
+                    <DeleteEntryIcon />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
         {captureEntries.map((entry) => (
           <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} />
         ))}

@@ -26,11 +26,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await categorizeBrainDump(text, {
+    const entries = await categorizeBrainDump(text, {
       userId,
       eventType: "brain_dump_categorize",
     });
-    return NextResponse.json(result);
+    return NextResponse.json({ entries });
   } catch (err) {
     console.error("Brain dump categorize failed:", err);
     return NextResponse.json({ error: "Categorization failed" }, { status: 500 });

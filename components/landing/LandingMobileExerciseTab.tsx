@@ -5,6 +5,9 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import type { LandingWeeklySummaryPreview } from "@/components/landing/types";
+import { journalTypeBadgeClass } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
+import { AMY_PERSISTED_ROW_GRID, DeleteEntryIcon } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import { SparklesIcon } from "@/components/SharedIcons";
 import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
 
 interface RecentExerciseEntry {
@@ -18,6 +21,8 @@ interface LandingMobileExerciseTabProps {
   caloriesBurned: number;
   exerciseBurnGoalKcal: number;
   recentExerciseEntries: RecentExerciseEntry[];
+  onRecentExerciseEntryClick?: (id: string) => void;
+  onRecentExerciseEntryDelete?: (id: string) => void;
   onOpenExercise: () => void;
   inlineExerciseInput: string;
   onInlineExerciseInputChange: (value: string) => void;
@@ -30,6 +35,8 @@ export function LandingMobileExerciseTab({
   caloriesBurned,
   exerciseBurnGoalKcal,
   recentExerciseEntries,
+  onRecentExerciseEntryClick,
+  onRecentExerciseEntryDelete,
   onOpenExercise,
   inlineExerciseInput,
   onInlineExerciseInputChange,
@@ -169,23 +176,67 @@ export function LandingMobileExerciseTab({
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400 dark:text-neutral-500">
             Recents
           </p>
-          <div className="landing-module-glass overflow-hidden rounded-2xl border">
-            {recentExerciseEntries.map((entry, idx) => (
-              <div
-                key={entry.id}
-                className={`flex items-center justify-between px-3.5 py-2 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`}
-              >
-                <p className="min-w-0 flex-1 truncate text-[13px] text-foreground">{entry.label}</p>
-                <div className="ml-3 flex shrink-0 items-center gap-2">
-                  {entry.time && (
-                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">{entry.time}</span>
+          <div className="landing-module-glass overflow-hidden rounded-2xl border bg-white/80 dark:bg-neutral-900/30">
+            {recentExerciseEntries.map((entry, idx) => {
+              const chipCls = journalTypeBadgeClass("exercise");
+              const open = () => onRecentExerciseEntryClick?.(entry.id);
+              const calCol = (
+                <>
+                  {entry.caloriesBurned > 0 ? (
+                    <span className="inline-flex items-center gap-1 text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
+                      <SparklesIcon className="h-4 w-4 shrink-0" />
+                      −{entry.caloriesBurned} cal
+                    </span>
+                  ) : (
+                    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
                   )}
-                  <span className="text-[11px] font-medium tabular-nums text-neutral-500 dark:text-neutral-400">
-                    {entry.caloriesBurned} kcal
-                  </span>
+                  {entry.time ? (
+                    <span className="text-[11px] tabular-nums text-neutral-400 dark:text-neutral-500">
+                      {entry.time}
+                    </span>
+                  ) : null}
+                </>
+              );
+              const cls = `w-full px-3.5 transition-colors hover:bg-neutral-50/90 dark:hover:bg-neutral-800/40 ${idx > 0 ? "border-t border-neutral-100 dark:border-neutral-800" : ""}`;
+              return (
+                <div key={entry.id} className={cls}>
+                  <div className={`${AMY_PERSISTED_ROW_GRID} py-3`}>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentExerciseEntryClick}
+                      className="min-w-0 text-left disabled:cursor-default disabled:opacity-100"
+                    >
+                      <span
+                        className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${chipCls}`}
+                      >
+                        Exercise
+                      </span>
+                      <p className="text-[17px] leading-snug text-foreground whitespace-pre-wrap break-words">
+                        {entry.label}
+                      </p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={open}
+                      disabled={!onRecentExerciseEntryClick}
+                      className="justify-self-end self-start flex flex-col items-end gap-0.5 whitespace-nowrap pt-0.5 text-right disabled:cursor-default disabled:opacity-100"
+                    >
+                      {calCol}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void onRecentExerciseEntryDelete?.(entry.id)}
+                      disabled={!onRecentExerciseEntryDelete}
+                      className="justify-self-end self-start rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                      aria-label={`Delete exercise entry: ${entry.label.slice(0, 48)}${entry.label.length > 48 ? "…" : ""}`}
+                    >
+                      <DeleteEntryIcon />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
