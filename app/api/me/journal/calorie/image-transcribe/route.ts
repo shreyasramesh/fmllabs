@@ -38,7 +38,10 @@ export async function POST(request: Request) {
     const imageBase64 = typeof body.imageBase64 === "string" ? body.imageBase64.trim() : "";
     const mimeType = typeof body.mimeType === "string" ? body.mimeType.trim().toLowerCase() : "";
     const hintText = typeof body.hintText === "string" ? body.hintText : "";
-    const mode = body.mode === "exercise" ? "exercise" : "nutrition";
+    const mode =
+      body.mode === "exercise" || body.mode === "auto"
+        ? body.mode
+        : "nutrition";
 
     if (!imageBase64) {
       return NextResponse.json({ error: "Image is required" }, { status: 400 });

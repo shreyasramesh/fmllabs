@@ -174,6 +174,7 @@ async function tryPersistNutritionWithClientSnapshot(
     const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "exercise",
+      quickNoteHighlightSpans: snap.highlightSpans ?? [],
     });
     await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
     return { id: saved._id, category: "exercise" };
@@ -208,6 +209,7 @@ async function tryPersistNutritionWithClientSnapshot(
       );
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "nutrition",
+        quickNoteHighlightSpans: snap.highlightSpans ?? [],
       });
       await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
       return { id: saved._id, category: "nutrition" };
@@ -223,6 +225,7 @@ async function tryPersistNutritionWithClientSnapshot(
       const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "exercise",
+        quickNoteHighlightSpans: snap.highlightSpans ?? [],
       });
       await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
       return { id: saved._id, category: "exercise" };
@@ -240,6 +243,7 @@ async function tryPersistNutritionWithClientSnapshot(
   const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
   const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
     journalCategory: "nutrition",
+    quickNoteHighlightSpans: snap.highlightSpans ?? [],
   });
   await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
   return { id: saved._id, category: "nutrition" };
@@ -273,6 +277,7 @@ async function tryPersistExerciseWithClientSnapshot(
     const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "nutrition",
+      quickNoteHighlightSpans: snap.highlightSpans ?? [],
     });
     await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
     return { id: saved._id, category: "nutrition" };
@@ -288,6 +293,7 @@ async function tryPersistExerciseWithClientSnapshot(
   const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
   const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
     journalCategory: "exercise",
+    quickNoteHighlightSpans: snap.highlightSpans ?? [],
   });
   await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
   return { id: saved._id, category: "exercise" };
@@ -388,6 +394,7 @@ export async function persistBrainDumpFields(
       const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "exercise",
+        quickNoteHighlightSpans: estimate.highlightSpans ?? [],
       });
       await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
       return { id: saved._id, category: "exercise" };
@@ -405,6 +412,7 @@ export async function persistBrainDumpFields(
     const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "nutrition",
+      quickNoteHighlightSpans: estimate.highlightSpans ?? [],
     });
     await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
     return { id: saved._id, category };
@@ -442,6 +450,7 @@ export async function persistBrainDumpFields(
       const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "nutrition",
+        quickNoteHighlightSpans: estimate.highlightSpans ?? [],
       });
       await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
       return { id: saved._id, category: "nutrition" };
@@ -474,6 +483,7 @@ export async function persistBrainDumpFields(
     const journalText = formatExerciseJournalText(text, [], exerciseEstimate, assumptions);
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "exercise",
+      quickNoteHighlightSpans: estimate.highlightSpans ?? [],
     });
     await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
     return { id: saved._id, category };

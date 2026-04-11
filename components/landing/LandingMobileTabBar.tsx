@@ -19,13 +19,12 @@ interface LandingMobileTabBarProps {
 }
 
 const TABS: Array<{ key: MobileBottomTab; label: string }> = [
-  { key: "quickNote", label: "Quick Note" },
-  { key: "nutrition", label: "Nutrition" },
-  { key: "exercise", label: "Exercise" },
-  { key: "spend", label: "Spend" },
+  { key: "quickNote", label: "Quick Notes" },
   { key: "weight", label: "Weight" },
   { key: "sleep", label: "Sleep" },
   { key: "habits", label: "Habits" },
+  { key: "nutrition", label: "Nutrition" },
+  { key: "exercise", label: "Exercise" },
   { key: "metacognition", label: "Metacognition" },
 ];
 

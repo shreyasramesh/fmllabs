@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { addWeightEntry, getWeightEntries } from "@/lib/db";
+import { addWeightEntry, deleteWeightEntry, getWeightEntries } from "@/lib/db";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
@@ -103,5 +103,41 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("Weight tracker POST failed:", err);
     return NextResponse.json({ error: "Failed to save weight entry" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const rl = rateLimitByUser(userId, { max: 40, windowMs: 60_000 });
+  if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
+  recordMongoUsageRequest(userId).catch(() => {});
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = (searchParams.get("id") ?? "").trim();
+    if (!id) {
+      return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+    const deleted = await deleteWeightEntry(id, userId);
+    if (!deleted) {
+      return NextResponse.json({ error: "Weight entry not found" }, { status: 404 });
+    }
+    const rows = await getWeightEntries(userId, 1000);
+    const summary = summarizeWeight(rows);
+    return NextResponse.json({
+      ...summary,
+      entries: rows.map((row) => ({
+        id: row._id,
+        weightKg: row.weightKg,
+        targetWeightKg: row.targetWeightKg ?? null,
+        recordedAt: row.recordedAt,
+        createdAt: row.createdAt,
+      })),
+    });
+  } catch (err) {
+    console.error("Weight tracker DELETE failed:", err);
+    return NextResponse.json({ error: "Failed to delete weight entry" }, { status: 500 });
   }
 }

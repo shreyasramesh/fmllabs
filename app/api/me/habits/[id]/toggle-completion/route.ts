@@ -32,7 +32,12 @@ export async function POST(
     if (!habit) {
       return NextResponse.json({ error: "Habit not found" }, { status: 404 });
     }
-    const calorieImpact = habit.calorieImpact ?? null;
+    const calorieImpact = habit.calorieImpact
+      ? {
+          ...habit.calorieImpact,
+          label: habit.calorieImpact.label?.trim() || habit.name?.trim() || "Habit completion",
+        }
+      : null;
     const result = await toggleHabitCompletion(userId, habitId.trim(), dateKey, calorieImpact);
     return NextResponse.json(result);
   } catch (err) {

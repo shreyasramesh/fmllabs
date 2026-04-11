@@ -3,6 +3,9 @@
  * when the saved line text still matches (avoids a second finalize call).
  */
 
+import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
+import { validateHighlightSegments } from "@/lib/quick-note-highlights";
+
 const MAX_SOURCE = 2000;
 
 export type ClientQuickCalorieSnapshot = {
@@ -17,6 +20,7 @@ export type ClientQuickCalorieSnapshot = {
   carbsGrams: number | null;
   fatGrams: number | null;
   reasoning: string;
+  highlightSpans?: QuickNoteHighlightSegment[];
 };
 
 function toStr(v: unknown): string | undefined {
@@ -45,6 +49,10 @@ export function parseClientQuickCalorieSnapshot(raw: unknown): ClientQuickCalori
         .slice(0, 12)
     : [];
 
+  const highlightSpans = Array.isArray(o.highlightSpans)
+    ? validateHighlightSegments(sourceText, o.highlightSpans as QuickNoteHighlightSegment[])
+    : [];
+
   return {
     sourceText,
     intent,
@@ -57,5 +65,6 @@ export function parseClientQuickCalorieSnapshot(raw: unknown): ClientQuickCalori
     carbsGrams: o.carbsGrams === null ? null : toNum(o.carbsGrams),
     fatGrams: o.fatGrams === null ? null : toNum(o.fatGrams),
     reasoning: toStr(o.reasoning) ?? "",
+    highlightSpans,
   };
 }

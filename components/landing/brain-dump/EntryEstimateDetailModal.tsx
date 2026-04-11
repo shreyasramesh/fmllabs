@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ThinkingEstimateLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import {
-  buildQuickNoteHighlightSegments,
   validateHighlightSegments,
 } from "@/lib/quick-note-highlights";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
@@ -61,6 +60,8 @@ export function EntryEstimateDetailModal({
   attemptedEstimate: boolean;
   meta: EntryEstimateModalMeta;
 }) {
+  const [selectedHighlightReason, setSelectedHighlightReason] = useState<string | null>(null);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -70,17 +71,18 @@ export function EntryEstimateDetailModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  useEffect(() => {
+    if (!open) {
+      setSelectedHighlightReason(null);
+    }
+  }, [open]);
+
   const displayText = text.trim() || "—";
   const blockSegments = useMemo(() => {
     if (meta.status !== "done") return [];
     const t = text.trim();
     if (!t) return [];
-    if (meta.highlightSpans?.length) {
-      return validateHighlightSegments(t, meta.highlightSpans);
-    }
-    return buildQuickNoteHighlightSegments(t, {
-      nutritionItemNames: meta.nutritionItems.map((i) => i.name),
-    });
+    return validateHighlightSegments(t, meta.highlightSpans);
   }, [meta, text]);
 
   if (!open || typeof document === "undefined") return null;
@@ -124,11 +126,19 @@ export function EntryEstimateDetailModal({
                   segments={blockSegments}
                   as="p"
                   className="m-0 text-[17px] leading-snug text-foreground"
+                  onHighlightPress={(segment) => {
+                    setSelectedHighlightReason(segment.reason ?? null);
+                  }}
                 />
               ) : (
                 displayText
               )}
             </blockquote>
+            {selectedHighlightReason ? (
+              <p className="mb-4 rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-sm text-neutral-700 dark:border-neutral-700/70 dark:bg-neutral-900/60 dark:text-neutral-300">
+                {selectedHighlightReason}
+              </p>
+            ) : null}
 
             {!attemptedEstimate && (
               <p className="text-sm text-neutral-600 dark:text-neutral-400">

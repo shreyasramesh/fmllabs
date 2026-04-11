@@ -9,9 +9,10 @@ import { createPortal } from "react-dom";
  */
 const FILE_INPUT_VISUAL_CLASS = "sr-only";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
+import type { JournalImageAnalysis } from "@/lib/journal-image-analysis";
 
-/** Vision prompt tuned for meals; quick-estimate still classifies exercise from the resulting text. */
-const IMAGE_TRANSCRIBE_MODE = "nutrition" as const;
+/** Let Quick Note infer whether the photo is food or a workout screenshot. */
+const IMAGE_TRANSCRIBE_MODE = "auto" as const;
 
 type Thumb = { id: string; previewUrl: string };
 
@@ -59,12 +60,12 @@ function isProbablyImageFile(file: File): boolean {
 export function BrainDumpImageIngestBar({
   disabled,
   hintText,
-  onAppendText,
+  onAnalysesReady,
   layout = "inline",
 }: {
   disabled?: boolean;
   hintText: string;
-  onAppendText: (text: string) => void;
+  onAnalysesReady: (analyses: JournalImageAnalysis[]) => void;
   /** `floating`: fixed bottom-right above mobile tab bar. `inline`: slim row in modal sheet. */
   layout?: "inline" | "floating";
 }) {
@@ -76,16 +77,10 @@ export function BrainDumpImageIngestBar({
   const thumbsRef = useRef<Thumb[]>([]);
   /** Avoid hydration mismatch: SSR and first client paint must not use createPortal. */
   const [floatingPortalReady, setFloatingPortalReady] = useState(false);
-  const onAppendTextRef = useRef(onAppendText);
+  const onAnalysesReadyRef = useRef(onAnalysesReady);
   const hintTextRef = useRef(hintText);
-
-  useEffect(() => {
-    onAppendTextRef.current = onAppendText;
-  }, [onAppendText]);
-
-  useEffect(() => {
-    hintTextRef.current = hintText;
-  }, [hintText]);
+  onAnalysesReadyRef.current = onAnalysesReady;
+  hintTextRef.current = hintText;
 
   useEffect(() => {
     thumbsRef.current = thumbs;
@@ -120,6 +115,7 @@ export function BrainDumpImageIngestBar({
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         previewUrl: URL.createObjectURL(file),
       }));
+      const completedThumbIds = new Set<string>();
       setThumbs((prev) => [...prev, ...newThumbs]);
       try {
         for (let i = 0; i < list.length; i++) {
@@ -145,13 +141,19 @@ export function BrainDumpImageIngestBar({
           }
           const draft = (data.nutritionLogDraft ?? "").trim();
           if (draft) {
-            onAppendTextRef.current(draft);
+            const previewUrl = newThumbs[i]!.previewUrl;
+            onAnalysesReadyRef.current([
+              {
+                id: thumbId,
+                previewUrl,
+                extractedText: draft,
+              },
+            ]);
+            completedThumbIds.add(thumbId);
           } else {
             setError("No text could be extracted from this photo. Try a clearer image or type your note.");
           }
           setThumbs((prev) => {
-            const row = prev.find((t) => t.id === thumbId);
-            if (row) URL.revokeObjectURL(row.previewUrl);
             return prev.filter((t) => t.id !== thumbId);
           });
         }
@@ -159,9 +161,11 @@ export function BrainDumpImageIngestBar({
         setError(e instanceof Error ? e.message : "Image import failed.");
         setThumbs((prev) => {
           for (const t of newThumbs) {
-            if (prev.some((p) => p.id === t.id)) URL.revokeObjectURL(t.previewUrl);
+            if (!completedThumbIds.has(t.id) && prev.some((p) => p.id === t.id)) {
+              URL.revokeObjectURL(t.previewUrl);
+            }
           }
-          const drop = new Set(newThumbs.map((t) => t.id));
+          const drop = new Set(newThumbs.filter((t) => !completedThumbIds.has(t.id)).map((t) => t.id));
           return prev.filter((t) => !drop.has(t.id));
         });
       } finally {

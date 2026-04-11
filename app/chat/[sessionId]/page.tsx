@@ -33,6 +33,7 @@ import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJu
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
 import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
 import type { BrainDumpJournalContextRow } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
+import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
 import { UserMessageContent } from "@/components/UserMessageContent";
 import { useTheme } from "@/components/ThemeProvider";
@@ -107,7 +108,12 @@ import {
 } from "@/lib/native-pomodoro-live";
 import { syncWidgetAuth, refreshCalorieWidget } from "@/lib/native-widget-data";
 import { formatSpendForQuickNoteDisplay, parseSpendAmountFromJournalText } from "@/lib/spend-journal";
+import {
+  validateHighlightSegments,
+  type QuickNoteHighlightSegment,
+} from "@/lib/quick-note-highlights";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
+import { buildHydratedJournalImageText } from "@/lib/journal-image-analysis";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -2534,28 +2540,56 @@ function quickNoteCategoryLabel(t: {
 
 /** Primary line for Quick note "today" list — matches capture row wording, not the Gemini title. */
 function extractJournalQuickNoteBody(t: { transcriptText?: string; videoTitle?: string }): string {
+  const normalizeQuickNoteBody = (value: string): string =>
+    value
+      .replace(/\s*~\s*\d+(?:\.\d+)?\s*kcal(?:\s*burned)?\s*$/i, "")
+      .trim()
+      .slice(0, 500);
   const text = (t.transcriptText ?? "").trim();
+  const activityInlineMatch = /(?:^|\n)Activity:\s*(.+)$/im.exec(text);
+  if (activityInlineMatch?.[1]?.trim()) {
+    return normalizeQuickNoteBody(activityInlineMatch[1]);
+  }
+  const activityBlockMatch = /(?:^|\n)Activity:\s*([\s\S]*?)(?:\n\n|$)/i.exec(text);
+  if (activityBlockMatch?.[1]) {
+    const activityBlock = activityBlockMatch[1].trim();
+    const firstActivityLine = activityBlock.split("\n").map((s) => s.trim()).find(Boolean) ?? "";
+    if (firstActivityLine) return normalizeQuickNoteBody(firstActivityLine);
+  }
   const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(text);
   if (enrichedMatch?.[1]) {
     const block = enrichedMatch[1].trim();
     const firstLine = block.split("\n").map((s) => s.trim()).find(Boolean) ?? block;
-    if (firstLine) return firstLine.slice(0, 500);
+    if (firstLine) return normalizeQuickNoteBody(firstLine);
   }
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
   for (const line of lines) {
     if (/^calorie tracking journal/i.test(line)) continue;
     if (/^source:/i.test(line)) continue;
     if (/^enriched entry:/i.test(line)) continue;
+    if (/^activity:\s*$/i.test(line)) continue;
+    const activityLine = /^activity:\s*(.+)$/i.exec(line);
+    if (activityLine?.[1]?.trim()) return activityLine[1].trim().slice(0, 500);
     if (/^nutritional estimate:/i.test(line)) continue;
     if (/^exercise estimate:/i.test(line)) continue;
     if (/^assumptions:/i.test(line)) continue;
     if (/^clarifications:/i.test(line)) continue;
     if (/^- /.test(line)) continue;
-    return line.slice(0, 500);
+    return normalizeQuickNoteBody(line);
   }
   const vt = (t.videoTitle ?? "").trim();
-  if (vt && !isGenericBrainDumpTitle(vt)) return vt.slice(0, 500);
+  if (vt && !isGenericBrainDumpTitle(vt)) {
+    return normalizeQuickNoteBody(vt.replace(/^Habit:\s*/i, "").trim()) || vt.slice(0, 500);
+  }
   return "Journal entry";
+}
+
+function extractJournalQuickNoteHighlightSegments(
+  t: { quickNoteHighlightSpans?: QuickNoteHighlightSegment[]; transcriptText?: string; videoTitle?: string },
+  bodyText: string
+): QuickNoteHighlightSegment[] {
+  if (!bodyText.trim()) return [];
+  return validateHighlightSegments(bodyText, t.quickNoteHighlightSpans);
 }
 
 function journalQuickNoteCaloriesSummary(t: {
@@ -3171,6 +3205,11 @@ function parseCaffeineMgFromJournalText(text: string): number | null {
   if (/\bblack\s*tea\b/.test(lower)) return 47;
   if (/\btea\b/.test(lower)) return 47;
   return null;
+}
+
+function isCoffeeRelatedJournalText(text: string): boolean {
+  const lower = text.toLowerCase();
+  return /\b(coffee|espresso|latte|cappuccino|americano|mocha|macchiato)\b/.test(lower) || /\bcold\s*brew\b/.test(lower);
 }
 
 function computeCaffeineAtMinute(
@@ -4155,6 +4194,7 @@ export default function ChatPage() {
     journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
     journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
     journalMentorReflectionsUpdatedAt?: string | Date;
+    quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
   }[]>([]);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgFrameworkSummarizing, setCgFrameworkSummarizing] = useState(false);
@@ -4186,7 +4226,9 @@ export default function ChatPage() {
     journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
     journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
     journalMentorReflectionsUpdatedAt?: string | Date;
+    quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
   } | null>(null);
+  const [transcriptModalHighlightReason, setTranscriptModalHighlightReason] = useState<string | null>(null);
   const [transcriptExtractedConceptOpen, setTranscriptExtractedConceptOpen] = useState<{ gi: number; ci: number } | null>(null);
   const [mentorReflectionsRegenerateLoading, setMentorReflectionsRegenerateLoading] = useState(false);
   const [transcriptStatsEditing, setTranscriptStatsEditing] = useState(false);
@@ -5148,6 +5190,7 @@ export default function ChatPage() {
       hrvMs: number | null;
       sleepScore: number | null;
       dayKey: string;
+      createdAt?: string;
     }>
   >([]);
   const [sleepSaving, setSleepSaving] = useState(false);
@@ -5666,15 +5709,7 @@ export default function ChatPage() {
   );
 
   const buildCalorieTrackerHydratedInput = useCallback(() => {
-    const extracted = calorieTrackerImageAnalyses
-      .map((item, idx) => `Photo ${idx + 1} analysis:\n${item.extractedText.trim()}`)
-      .filter((chunk) => chunk.trim().length > 0)
-      .join("\n\n");
-    const context = calorieTrackerInputRef.current.trim();
-    if (extracted && context) {
-      return `${extracted}\n\nAdditional user context:\n${context}`;
-    }
-    return extracted || context;
+    return buildHydratedJournalImageText(calorieTrackerImageAnalyses, calorieTrackerInputRef.current);
   }, [calorieTrackerImageAnalyses]);
 
   const finalizeCalorieTracker = useCallback(
@@ -6545,15 +6580,7 @@ export default function ChatPage() {
         if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
       }
       if (itemDayKey !== selectedLandingDayKey) continue;
-      const enrichedMatch = /Enriched entry:\s*([\s\S]*?)(?:\n\n|$)/i.exec(t.transcriptText);
-      const enrichedBody = enrichedMatch?.[1]?.trim() ?? "";
-      const label =
-        enrichedBody
-          .split(/\n/)
-          .map((l) => l.trim())
-          .filter(Boolean)[0] ||
-        t.transcriptText.split("\n").find((l) => l.trim() && !l.startsWith("-"))?.trim() ||
-        "Exercise entry";
+      const label = extractJournalQuickNoteBody(t) || "Exercise entry";
       const burned = extractEstimatedNumber(t.transcriptText, /- Calories burned:\s*([\d.]+)\s*kcal/i) ?? 0;
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
@@ -6584,8 +6611,26 @@ export default function ChatPage() {
       const idb = typeof b._id === "string" ? b._id : String(b._id ?? "");
       return ida.localeCompare(idb);
     });
+    const coffeeIntakesForDay = forDay
+      .map((entry) => {
+        const text = entry.transcriptText ?? "";
+        if (!isCoffeeRelatedJournalText(text)) return null;
+        const mg = parseCaffeineMgFromJournalText(text);
+        if (mg == null || mg <= 0) return null;
+        const timestampMs = transcriptCreatedAtMs(entry);
+        if (!Number.isFinite(timestampMs) || timestampMs <= 0) return null;
+        const date = new Date(timestampMs);
+        if (Number.isNaN(date.getTime())) return null;
+        return {
+          minuteOfDay: Math.max(0, Math.min(1439, date.getHours() * 60 + date.getMinutes())),
+          mg,
+        };
+      })
+      .filter(isNonNull);
+    const coffeeFocusWindow = computePeakFocusWindow(coffeeIntakesForDay);
     const transcriptRows = forDay.map((t) => {
       const bodyText = extractJournalQuickNoteBody(t);
+      const highlightSegments = extractJournalQuickNoteHighlightSegments(t, bodyText);
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
         const h = t.journalEntryHour;
@@ -6605,10 +6650,16 @@ export default function ChatPage() {
       const spendMetric = journalQuickNoteSpendSummary(t);
       const calSummary = jc === "nutrition" || jc === "exercise" ? journalQuickNoteCaloriesSummary(t) : null;
       const habitDone = (t.transcriptText ?? "").includes("Source: Habit completion");
+      const coffeeRelated = jc === "nutrition" && isCoffeeRelatedJournalText(t.transcriptText ?? "");
       return {
         id: t._id,
         rowSource: "transcript" as const,
         bodyText,
+        secondaryText:
+          coffeeRelated && coffeeFocusWindow
+            ? `Peak focus: ${formatMinuteOfDay(coffeeFocusWindow.startMinute)}-${formatMinuteOfDay(coffeeFocusWindow.endMinute)}`
+            : undefined,
+        highlightSegments,
         categoryLabel: quickNoteCategoryLabel(t),
         journalCategory: chipCategory,
         time,
@@ -6657,13 +6708,20 @@ export default function ChatPage() {
     })();
     const sleepRows = sleepForDay.map((e, idx) => {
       const hoursRounded = Math.round(e.sleepHours * 10) / 10;
+      let time = "";
+      if (e.createdAt) {
+        const d = new Date(e.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+        }
+      }
       return {
         id: `landing-sleep-${e.id}`,
         rowSource: "sleep" as const,
         bodyText: "Sleep",
         categoryLabel: "Sleep",
         journalCategory: "sleep" as const,
-        time: "",
+        time,
         caloriesSummary: null,
         metricSummary: `${hoursRounded} h`,
         sortAtMs: sleepAnchor + idx * 60_000,
@@ -6957,6 +7015,9 @@ export default function ChatPage() {
     if (!transcriptModalDayKey) return null;
     return summarizeNutritionFactsForDay(journalEntriesSorted, transcriptModalDayKey);
   }, [journalEntriesSorted, transcriptModalDayKey]);
+  useEffect(() => {
+    setTranscriptModalHighlightReason(null);
+  }, [transcriptModalTranscript?.id]);
   const transcriptModalNutritionSnapshot = useMemo(() => {
     if (!transcriptModalTranscript) return null;
     if (transcriptModalTranscript.sourceType !== "journal") return null;
@@ -7049,6 +7110,13 @@ export default function ChatPage() {
   const transcriptModalSpendSnapshot = useMemo(() => {
     if (!transcriptModalTranscript || transcriptModalTranscript.journalCategory !== "spend") return null;
     return parseSpendAmountFromJournalText(transcriptModalTranscript.transcriptText ?? "");
+  }, [transcriptModalTranscript]);
+  const transcriptModalEnrichedEntryHighlightSegments = useMemo(() => {
+    if (!transcriptModalTranscript) return [];
+    const sections = extractCalorieJournalDisplaySections(transcriptModalTranscript.transcriptText ?? "");
+    const enrichedEntry = sections.enrichedEntry?.trim() ?? "";
+    if (!enrichedEntry) return [];
+    return validateHighlightSegments(enrichedEntry, transcriptModalTranscript.quickNoteHighlightSpans);
   }, [transcriptModalTranscript]);
   const showTranscriptMentorReflections =
     transcriptModalTranscript?.sourceType === "journal" &&
@@ -7702,7 +7770,7 @@ export default function ChatPage() {
               };
               if (parsed && typeof parsed === "object") {
                 if (typeof parsed.plain === "boolean") {
-                  plainHandoff = parsed.plain;
+                plainHandoff = parsed.plain;
                 }
                 if (typeof parsed.seedUserMessage === "string" && parsed.seedUserMessage.trim()) {
                   seedUserMessage = parsed.seedUserMessage.trim();
@@ -8006,14 +8074,14 @@ export default function ChatPage() {
       if (hasCallerBridge && journalBridge) {
         clearReflectionQuickNoteBridge();
         bridgePayload = {
-          journalText: truncateMentorJournalBridgeText(
-            journalBridge.journalText,
-            MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL
-          ),
-          reflectionText: truncateMentorJournalBridgeText(
-            journalBridge.reflectionText,
-            MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION
-          ),
+            journalText: truncateMentorJournalBridgeText(
+              journalBridge.journalText,
+              MENTOR_JOURNAL_BRIDGE_MAX_JOURNAL
+            ),
+            reflectionText: truncateMentorJournalBridgeText(
+              journalBridge.reflectionText,
+              MENTOR_JOURNAL_BRIDGE_MAX_REFLECTION
+            ),
         };
       } else {
         const pending = takeReflectionQuickNoteBridgeForHandoff();
@@ -8149,8 +8217,8 @@ export default function ChatPage() {
       if (seedTrimmed.length > 0) {
         queueJournalBridgeAutoSend(seedTrimmed);
       } else {
-        inputRef.current?.focus();
-      }
+      inputRef.current?.focus();
+    }
     }
   }, [router, sessionId, language, takeReflectionQuickNoteBridgeForHandoff, queueJournalBridgeAutoSend]);
 
@@ -9598,6 +9666,7 @@ export default function ChatPage() {
         transcriptText: row.transcriptText,
         createdAt: row.createdAt,
         extractedConcepts: row.extractedConcepts,
+        quickNoteHighlightSpans: row.quickNoteHighlightSpans,
         journalMentorReflections: row.journalMentorReflections,
         journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
         journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
@@ -9735,6 +9804,7 @@ export default function ChatPage() {
         transcriptText: row.transcriptText,
         createdAt: row.createdAt,
         extractedConcepts: row.extractedConcepts,
+        quickNoteHighlightSpans: row.quickNoteHighlightSpans,
         journalMentorReflections: row.journalMentorReflections,
         journalMentorReflectionsStatus: row.journalMentorReflectionsStatus,
         journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
@@ -9743,11 +9813,33 @@ export default function ChatPage() {
     [savedTranscripts, sleepEntries]
   );
 
+  const fetchWeightTrackerRef = useRef<() => Promise<void>>(async () => {});
+  const refetchSleepEntriesRef = useRef<() => void>(() => {});
+
   const deleteLandingJournalTranscriptById = useCallback(
     async (transcriptId: string) => {
       if (isAnonymous || incognitoMode) return;
-      if (transcriptId.startsWith("landing-weight-") || transcriptId.startsWith("landing-sleep-")) return;
       try {
+        if (transcriptId.startsWith("landing-weight-")) {
+          const rawId = transcriptId.slice("landing-weight-".length);
+          const res = await fetch(`/api/me/journal/weight?id=${encodeURIComponent(rawId)}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            void fetchWeightTrackerRef.current();
+          }
+          return;
+        }
+        if (transcriptId.startsWith("landing-sleep-")) {
+          const rawId = transcriptId.slice("landing-sleep-".length);
+          const res = await fetch(`/api/me/sleep?id=${encodeURIComponent(rawId)}`, {
+            method: "DELETE",
+          });
+          if (res.ok) {
+            refetchSleepEntriesRef.current();
+          }
+          return;
+        }
         const res = await fetch(`/api/me/transcripts/${encodeURIComponent(transcriptId)}`, {
           method: "DELETE",
         });
@@ -9945,6 +10037,7 @@ export default function ChatPage() {
       setWeightTrackerLoading(false);
     }
   }, []);
+  fetchWeightTrackerRef.current = fetchWeightTracker;
 
   const openWeightTrackerModal = useCallback(() => {
     playSelectionChime();
@@ -10739,6 +10832,7 @@ export default function ChatPage() {
         hrvMs: e.hrvMs != null ? Number(e.hrvMs) : null,
         sleepScore: e.sleepScore != null ? Number(e.sleepScore) : null,
         dayKey: typeof e.dayKey === "string" ? e.dayKey : "",
+        createdAt: typeof e.createdAt === "string" ? e.createdAt : undefined,
       }))
     );
   }, []);
@@ -10753,6 +10847,7 @@ export default function ChatPage() {
       })
       .catch(() => {});
   }, [isAnonymous, incognitoMode, userId, applySleepEntriesFromApi]);
+  refetchSleepEntriesRef.current = refetchSleepEntries;
 
   useEffect(() => {
     if (isAnonymous || incognitoMode || !userId) return;
@@ -14510,6 +14605,7 @@ export default function ChatPage() {
                                       figureName: string;
                                       reflection: string;
                                     }[];
+                                    quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
                                     journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
                                     journalMentorReflectionsUpdatedAt?: string | Date;
                                     createdAt?: string | Date;
@@ -14529,6 +14625,8 @@ export default function ChatPage() {
                                       journalEntryHour: data.journalEntryHour ?? t.journalEntryHour,
                                       journalEntryMinute: data.journalEntryMinute ?? t.journalEntryMinute,
                                       extractedConcepts: data.extractedConcepts,
+                                      quickNoteHighlightSpans:
+                                        data.quickNoteHighlightSpans ?? t.quickNoteHighlightSpans,
                                       journalMentorReflections: data.journalMentorReflections,
                                       journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
                                       journalMentorReflectionsUpdatedAt: data.journalMentorReflectionsUpdatedAt,
@@ -14925,6 +15023,7 @@ export default function ChatPage() {
                                     figureName: string;
                                     reflection: string;
                                   }[];
+                                  quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
                                   journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
                                   journalMentorReflectionsUpdatedAt?: string | Date;
                                   createdAt?: string | Date;
@@ -14944,6 +15043,8 @@ export default function ChatPage() {
                                     journalEntryHour: data.journalEntryHour ?? t.journalEntryHour,
                                     journalEntryMinute: data.journalEntryMinute ?? t.journalEntryMinute,
                                     extractedConcepts: data.extractedConcepts,
+                                    quickNoteHighlightSpans:
+                                      data.quickNoteHighlightSpans ?? t.quickNoteHighlightSpans,
                                     journalMentorReflections: data.journalMentorReflections,
                                     journalMentorReflectionsStatus: data.journalMentorReflectionsStatus,
                                     journalMentorReflectionsUpdatedAt: data.journalMentorReflectionsUpdatedAt,
@@ -17042,11 +17143,24 @@ export default function ChatPage() {
                         return (
                           <div className="space-y-4">
                             {sections.enrichedEntry && (
-                              <p>
+                              <div>
                                 <span className="font-medium">Enriched entry:</span>{" "}
-                                {sections.enrichedEntry}
-                              </p>
+                                <HighlightedQuickNoteText
+                                  text={sections.enrichedEntry}
+                                  segments={transcriptModalEnrichedEntryHighlightSegments}
+                                  as="span"
+                                  className="inline text-inherit"
+                                  onHighlightPress={(segment) => {
+                                    setTranscriptModalHighlightReason(segment.reason ?? null);
+                                  }}
+                                />
+                              </div>
                             )}
+                            {transcriptModalHighlightReason ? (
+                              <p className="rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-sm text-neutral-700 dark:border-neutral-700/70 dark:bg-neutral-900/60 dark:text-neutral-300">
+                                {transcriptModalHighlightReason}
+                              </p>
+                            ) : null}
                             {sections.assumptions.length > 0 && (
                               <div>
                                 <p className="font-medium">Assumptions:</p>
@@ -18405,7 +18519,7 @@ export default function ChatPage() {
                     </div>
                   </section>
                 )}
-              </div>
+        </div>
             </div>
           </div>
         </>

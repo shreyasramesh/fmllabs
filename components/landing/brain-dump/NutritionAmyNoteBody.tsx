@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { SparklesIcon } from "@/components/SharedIcons";
 import {
   flushSentencesFromTyping,
@@ -352,10 +352,11 @@ export function CaptureDraftSentenceRow({
     [textAreaRef]
   );
 
-  useEffect(() => {
+  /** `height: 0` before measure breaks scrollHeight on some WebViews after programmatic value updates (e.g. photo transcribe). */
+  useLayoutEffect(() => {
     const el = taRef.current;
     if (!el) return;
-    el.style.height = "0px";
+    el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   }, [draft]);
 

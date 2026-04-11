@@ -16,6 +16,8 @@ export interface QuickNoteHighlightSegment {
   start: number;
   end: number;
   kind: QuickNoteHighlightKind;
+  /** Short Gemini-authored explanation for hover / tap affordances. */
+  reason?: string;
 }
 
 export interface QuickNoteHighlightHints {
@@ -164,6 +166,13 @@ export const QUICK_NOTE_HIGHLIGHT_KINDS = new Set<string>([
   "spend",
 ]);
 
+function normalizeHighlightReason(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  const trimmed = raw.trim().replace(/\s+/g, " ");
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, 160);
+}
+
 export function normalizeApiHighlightSpans(
   text: string,
   raw: unknown
@@ -180,7 +189,12 @@ export function normalizeApiHighlightSpans(
     if (start < 0 || end <= start || end > n || !QUICK_NOTE_HIGHLIGHT_KINDS.has(kindRaw)) continue;
     const slice = text.slice(start, end);
     if (!slice.trim()) continue;
-    out.push({ start, end, kind: kindRaw as QuickNoteHighlightKind });
+    out.push({
+      start,
+      end,
+      kind: kindRaw as QuickNoteHighlightKind,
+      reason: normalizeHighlightReason(o.reason),
+    });
   }
   return mergeNonOverlappingHighlightSegments(out);
 }
@@ -196,15 +210,13 @@ export function buildQuickNoteHighlightSegments(
   return mergeNonOverlappingHighlightSegments([...fromRegex, ...fromNames]);
 }
 
-/** Gemini/API spans merged with regex + item names; regex wins on overlaps. */
+/** Gemini/API spans only. Journal-row highlights should come from Gemini, not local regex guesses. */
 export function combineQuickNoteHighlights(
   text: string,
-  hints: QuickNoteHighlightHints | undefined,
+  _hints: QuickNoteHighlightHints | undefined,
   apiRaw: unknown
 ): QuickNoteHighlightSegment[] {
-  const base = buildQuickNoteHighlightSegments(text, hints);
-  const api = normalizeApiHighlightSpans(text, apiRaw);
-  return mergeRegexPreferredOverApi(base, api);
+  return normalizeApiHighlightSpans(text, apiRaw);
 }
 
 /** Client-side validation for merged spans returned from the API. */
@@ -214,8 +226,9 @@ export function validateHighlightSegments(
 ): QuickNoteHighlightSegment[] {
   if (!segments?.length) return [];
   const n = text.length;
-  const filtered = segments.filter(
-    (s) =>
+  const filtered = segments
+    .filter(
+      (s) =>
       typeof s.start === "number" &&
       typeof s.end === "number" &&
       s.start >= 0 &&
@@ -223,6 +236,10 @@ export function validateHighlightSegments(
       s.end > s.start &&
       QUICK_NOTE_HIGHLIGHT_KINDS.has(s.kind) &&
       text.slice(s.start, s.end).trim().length > 0
-  );
+    )
+    .map((s) => ({
+      ...s,
+      reason: normalizeHighlightReason(s.reason),
+    }));
   return mergeNonOverlappingHighlightSegments(filtered);
 }

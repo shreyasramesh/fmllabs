@@ -7,7 +7,7 @@ import {
   EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
 } from "@/lib/extract-concepts-constants";
 import {
-  combineQuickNoteHighlights,
+  normalizeApiHighlightSpans,
   type QuickNoteHighlightSegment,
 } from "@/lib/quick-note-highlights";
 
@@ -917,13 +917,16 @@ export async function transcribeNutritionImage(
     imageBase64: string;
     mimeType: string;
     hintText?: string;
-    mode?: "nutrition" | "exercise";
+    mode?: "nutrition" | "exercise" | "auto";
   },
   usageContext?: GeminiUsageContext
 ): Promise<NutritionImageTranscriptionResult> {
   const cleanBase64 = input.imageBase64.trim();
   const hintText = (input.hintText ?? "").trim().slice(0, 600);
-  const mode = input.mode === "exercise" ? "exercise" : "nutrition";
+  const mode =
+    input.mode === "exercise" || input.mode === "auto"
+      ? input.mode
+      : "nutrition";
   const imageModel = genAI.getGenerativeModel({
     model: "gemini-3.1-flash-image-preview",
   });
@@ -950,6 +953,34 @@ Rules:
 - Focus only on exercise/workout information visible in the screenshot.
 - Do NOT mention nutrition guidance or say this is a nutrition box.
 - Be concrete and practical.
+- If uncertain, say "likely" and include assumptions.
+- Keep foodsDetected to max 8 items.
+- Keep portionAssumptions to max 6 items.
+- No markdown, no extra keys, no surrounding text.
+
+Optional user hint:
+${hintText || "(none)"}`
+                : mode === "auto"
+                  ? `You are helping users log either nutrition or exercise from photos and screenshots.
+
+Analyze the image and decide whether it is primarily:
+- a nutrition / food image, or
+- an exercise / workout screenshot or photo
+
+Return ONLY valid JSON in this exact shape:
+{
+  "dishName": "short label for the meal or workout",
+  "foodsDetected": ["key visible food item or workout metric", "..."],
+  "portionAssumptions": ["short assumption", "..."],
+  "nutritionLogDraft": "1-4 sentence plain-text draft that matches the image type",
+  "confidence": "low" | "medium" | "high"
+}
+
+Rules:
+- If it is food/nutrition: describe foods, likely portions, prep method, and uncertainty notes.
+- If it is exercise/workout: describe activity type, duration, intensity, distance/pace/heart rate/calories when visible.
+- Do NOT mention both domains unless the image genuinely contains both.
+- Make the draft read like something the user could save directly into Quick Note.
 - If uncertain, say "likely" and include assumptions.
 - Keep foodsDetected to max 8 items.
 - Keep portionAssumptions to max 6 items.
@@ -1094,7 +1125,9 @@ ${hintText || "(none)"}`,
       nutritionLogDraft:
         mode === "exercise"
           ? "Could not confidently parse the workout screenshot. Please describe your activity details in text."
-          : "Could not confidently parse the image. Please describe what you ate in text.",
+          : mode === "auto"
+            ? "Could not confidently parse the image. Please describe the food or workout details in text."
+            : "Could not confidently parse the image. Please describe what you ate in text.",
       confidence: "low",
     };
   }
@@ -1299,7 +1332,12 @@ Return ONLY valid JSON with exactly this shape:
     "notes": "short note"
   } | null,
   "highlightSpans": [
-    { "start": number, "end": number, "kind": "temporal" | "duration" | "distance" | "nutrition" | "weight" | "sleep" | "spend" }
+    {
+      "start": number,
+      "end": number,
+      "kind": "temporal" | "duration" | "distance" | "nutrition" | "weight" | "sleep" | "spend",
+      "reason": "very short explanation of why this phrase matters"
+    }
   ]
 }
 
@@ -1314,7 +1352,7 @@ Rules:
 - Use null when unknown instead of inventing exact values.
 - For nutrition facts, provide your best realistic estimate per field when nutrition exists.
 - Keep assumptions concise and grounded.
-- highlightSpans: Identify salient fragments in the Original input only. Use 0-based start and end (end exclusive), JavaScript string indices (UTF-16 code units). Each kind must be one of: temporal, duration, distance, nutrition, weight, sleep, spend. Do not overlap spans. Prefer short meaningful phrases (times, durations, distances, food/drink mentions, activities, sleep, money). Omit if nothing clear.
+- highlightSpans: Identify salient fragments in the Original input only. Use 0-based start and end (end exclusive), JavaScript string indices (UTF-16 code units). Each kind must be one of: temporal, duration, distance, nutrition, weight, sleep, spend. Do not overlap spans. Prefer short meaningful phrases (times, durations, distances, food/drink mentions, activities, sleep, money). Each span must include a concise plain-English "reason" suitable for a hover tooltip or mobile tap explanation. Omit if nothing clear.
 
 Original input:
 ${text}
@@ -1454,16 +1492,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
           }
         : undefined;
 
-    const highlightSpans = combineQuickNoteHighlights(
-      text,
-      {
-        nutritionItemNames: [
-          ...nutritionItems.map((i) => i.name),
-          ...exerciseItems.map((i) => i.name),
-        ],
-      },
-      parsed.highlightSpans
-    );
+    const highlightSpans = normalizeApiHighlightSpans(text, parsed.highlightSpans);
 
     return {
       intent,

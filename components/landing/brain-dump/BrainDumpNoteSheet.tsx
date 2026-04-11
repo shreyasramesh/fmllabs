@@ -11,12 +11,11 @@ import {
   NOTES_LIKE_TEXTAREA,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
-import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
-import { buildQuickNoteHighlightSegments } from "@/lib/quick-note-highlights";
+import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 import {
   JOURNAL_CATEGORY_DOT_BASE,
@@ -61,6 +60,8 @@ export interface BrainDumpJournalContextRow {
   rowSource?: BrainDumpJournalContextRowSource;
   /** Same line(s) the user sees in capture — enriched entry or first journal line, not the Gemini title. */
   bodyText: string;
+  /** Optional inline detail shown directly on the row. */
+  secondaryText?: string;
   categoryLabel: string;
   journalCategory: "nutrition" | "exercise" | "spend" | "weight" | "sleep" | "reflection" | undefined;
   time: string;
@@ -70,6 +71,8 @@ export interface BrainDumpJournalContextRow {
   metricSummary: string | null;
   /** Habit completion auto-journal: show a check on the right. */
   habitCompletionCheck?: boolean;
+  /** Gemini-authored highlight spans for `bodyText`. */
+  highlightSegments?: QuickNoteHighlightSegment[];
   /** Reflection / brain-dump transcript: show 1:1 mentor control. */
   showMentorCta?: boolean;
   /** For ordering in Quick Note stream (oldest → newest). */
@@ -229,6 +232,9 @@ export function BrainDumpSheetFrame({
 const GHOST_OPEN_BTN =
   "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
 
+const JOURNAL_SECONDARY_TEXT_CLASS =
+  "mt-0.5 block text-[11px] leading-snug text-emerald-700 dark:text-emerald-300";
+
 function journalContextRowMetricToneClass(cat: BrainDumpJournalContextRow["journalCategory"]): string {
   if (cat === "spend") return "text-amber-700 dark:text-amber-300";
   if (cat === "sleep") return "text-indigo-600 dark:text-indigo-400";
@@ -237,16 +243,49 @@ function journalContextRowMetricToneClass(cat: BrainDumpJournalContextRow["journ
 }
 
 function isJournalContextRowDeletable(row: BrainDumpJournalContextRow): boolean {
-  return row.rowSource === undefined || row.rowSource === "transcript";
+  return (
+    row.rowSource === undefined ||
+    row.rowSource === "transcript" ||
+    row.rowSource === "weight" ||
+    row.rowSource === "sleep"
+  );
 }
 
 const REFLECTION_NEW_CONV_BTN_BASE =
   "inline-flex items-center gap-1 rounded-full border border-[#B87B51]/45 bg-[#B87B51]/12 font-semibold text-[#7C522D] dark:border-[#D6A67E]/50 dark:bg-[#D6A67E]/15 dark:text-[#F3D6B7]";
 
+function ReflectionBrainIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className ?? "h-3.5 w-3.5"}
+      aria-hidden
+    >
+      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+      <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+      <path d="M12 18v-3" />
+    </svg>
+  );
+}
+
 /** Minimal sparkline for Quick Note weight (kg) or sleep (h) trend, oldest → newest. */
-function MiniTrendSparkline({ values, className }: { values: number[]; className?: string }) {
+function MiniTrendSparkline({
+  values,
+  className,
+  width = 52,
+}: {
+  values: number[];
+  className?: string;
+  width?: number;
+}) {
   if (values.length === 0) return null;
-  const w = 52;
+  const w = width;
   const h = 18;
   const pad = 1.5;
   const vals = values.length === 1 ? [values[0]!, values[0]!] : values;
@@ -299,10 +338,7 @@ function JournalContextRowSheet({
   /** Recent sleep hours for inline sparkline on sleep rows (oldest → newest). */
   sleepTrendSparklineHours?: number[];
 }) {
-  const sheetHighlightSegments = useMemo(
-    () => buildQuickNoteHighlightSegments(row.bodyText),
-    [row.bodyText]
-  );
+  const sheetHighlightSegments = row.highlightSegments ?? [];
   const dotCls = journalContextDotClass(row.journalCategory);
   const burn = row.caloriesSummary?.startsWith("-");
   const open = () => onOpenJournalContextEntry?.(row.id);
@@ -336,11 +372,10 @@ function JournalContextRowSheet({
               e.stopPropagation();
               onOpenReflectionConversationChooser({ reflectionText: row.bodyText });
             }}
-            className={`${REFLECTION_NEW_CONV_BTN_BASE} px-2 py-0.5 text-[11px]`}
+            className={`${REFLECTION_NEW_CONV_BTN_BASE} h-7 w-7 justify-center p-0`}
             aria-label="Deep insights — choose session style and metacognition"
           >
-            <SparklesIcon className="h-3.5 w-3.5 shrink-0 opacity-90" />
-            <span>Deep Insights</span>
+            <ReflectionBrainIcon className="h-3.5 w-3.5 shrink-0 opacity-90" />
           </button>
         ) : null}
         {onOpenReflectionMentor ? (
@@ -405,21 +440,24 @@ function JournalContextRowSheet({
           >
             <span className="flex items-start gap-2">
               <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-              <span className="flex min-w-0 flex-1 items-start gap-1.5">
-                <HighlightedQuickNoteText
-                  text={row.bodyText}
-                  segments={sheetHighlightSegments}
-                  as="span"
-                  className="min-w-0 flex-1 text-[17px] leading-tight text-foreground"
-                />
-                {row.habitCompletionCheck ? (
-                  <span
-                    className="mt-[0.2rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
-                    title="Habit completed"
-                  >
-                    <HabitDoneCheckIcon className="h-4 w-4" />
-                  </span>
-                ) : null}
+              <span className="min-w-0 flex-1">
+                <span className="flex min-w-0 items-start gap-1.5">
+                  <HighlightedQuickNoteText
+                    text={row.bodyText}
+                    segments={sheetHighlightSegments}
+                    as="span"
+                    className="min-w-0 flex-1 text-[17px] leading-tight text-foreground"
+                  />
+                  {row.habitCompletionCheck ? (
+                    <span
+                      className="mt-[0.2rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
+                      title="Habit completed"
+                    >
+                      <HabitDoneCheckIcon className="h-4 w-4" />
+                    </span>
+                  ) : null}
+                </span>
+                {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
               </span>
             </span>
           </button>
@@ -453,33 +491,37 @@ function JournalContextRowSheet({
           onClick={open}
           disabled={!onOpenJournalContextEntry}
           title={row.categoryLabel}
-          className={`min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+          className={`min-w-0 flex-1 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
         >
-          <span className="inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-0.5">
-            <span className={`inline-flex items-center gap-2`}>
-              <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-              <HighlightedQuickNoteText
-                text={row.bodyText}
-                segments={sheetHighlightSegments}
-                as="span"
-                className="min-w-0 shrink text-[17px] leading-tight text-foreground"
-              />
-              {metricOnLeft ? (
-                <span
-                  className={`shrink-0 text-[15px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                >
-                  {row.metricSummary}
-                </span>
-              ) : null}
-              {row.habitCompletionCheck ? (
-                <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
-                  <HabitDoneCheckIcon className="h-4 w-4" />
-                </span>
-              ) : null}
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="min-w-0 flex-1">
+              <span className="inline-flex min-w-0 shrink-0 items-center gap-2">
+                <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+                <HighlightedQuickNoteText
+                  text={row.bodyText}
+                  segments={sheetHighlightSegments}
+                  as="span"
+                  className="min-w-0 shrink text-[17px] leading-tight text-foreground"
+                />
+                {metricOnLeft ? (
+                  <span
+                    className={`shrink-0 text-[13px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                  >
+                    {row.metricSummary}
+                  </span>
+                ) : null}
+                {row.habitCompletionCheck ? (
+                  <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
+                    <HabitDoneCheckIcon className="h-4 w-4" />
+                  </span>
+                ) : null}
+              </span>
+              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
             </span>
             {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
               <MiniTrendSparkline
                 values={leftRailTrendValues}
+                width={132}
                 className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
               />
             ) : null}
@@ -513,32 +555,38 @@ function JournalContextRowSheet({
         <span className="flex items-start gap-2">
           <span className={`mt-[0.4rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
           {metricOnLeft ? (
-            <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
+            <span className="min-w-0 flex-1">
+              <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
+                <HighlightedQuickNoteText
+                  text={row.bodyText}
+                  segments={sheetHighlightSegments}
+                  as="span"
+                  className="shrink-0 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
+                />
+                <span
+                  className={`shrink-0 text-[15px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                >
+                  {row.metricSummary}
+                </span>
+                {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
+                  <MiniTrendSparkline
+                    values={leftRailTrendValues}
+                    className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                  />
+                ) : null}
+              </span>
+              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
+            </span>
+          ) : (
+            <span className="min-w-0 flex-1">
               <HighlightedQuickNoteText
                 text={row.bodyText}
                 segments={sheetHighlightSegments}
                 as="span"
-                className="shrink-0 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
+                className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
               />
-              <span
-                className={`shrink-0 text-[15px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
-              >
-                {row.metricSummary}
-              </span>
-              {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-                <MiniTrendSparkline
-                  values={leftRailTrendValues}
-                  className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                />
-              ) : null}
+              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
             </span>
-          ) : (
-            <HighlightedQuickNoteText
-              text={row.bodyText}
-              segments={sheetHighlightSegments}
-              as="span"
-              className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
-            />
           )}
         </span>
       </button>
@@ -651,11 +699,10 @@ function JournalContextRowNoteStream({
               e.stopPropagation();
               onOpenReflectionConversationChooser({ reflectionText: row.bodyText });
             }}
-            className={`${REFLECTION_NEW_CONV_BTN_BASE} shrink-0 px-1.5 py-px text-[10px] max-w-[9.5rem] text-center leading-tight`}
+            className={`${REFLECTION_NEW_CONV_BTN_BASE} h-6 w-6 shrink-0 justify-center p-0`}
             aria-label="Deep insights — choose session style and metacognition"
           >
-            <SparklesIcon className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
-            Deep Insights
+            <ReflectionBrainIcon className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
           </button>
         ) : null}
         {onOpenReflectionMentor ? (
@@ -679,10 +726,7 @@ function JournalContextRowNoteStream({
   const rawDisplay = row.bodyText.trim();
   const singleLineForHighlights = rawDisplay.replace(/\s+/g, " ").trim();
   const canHighlight = rawDisplay.length > 0 && !/[\r\n]/.test(rawDisplay);
-  const highlightSegments = useMemo(
-    () => (canHighlight ? buildQuickNoteHighlightSegments(singleLineForHighlights) : []),
-    [singleLineForHighlights, canHighlight]
-  );
+  const highlightSegments = canHighlight ? (row.highlightSegments ?? []) : [];
 
   const compactPrimaryStream =
     !row.showMentorCta && (metricOnLeft || caloriesOnLeft);
@@ -700,24 +744,27 @@ function JournalContextRowNoteStream({
             >
               <span className="flex items-start gap-2 text-[16px] leading-snug">
                 <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                <span className="flex min-w-0 flex-1 items-start gap-1.5">
-                  {canHighlight ? (
-                    <HighlightedQuickNoteText
-                      text={singleLineForHighlights}
-                      segments={highlightSegments}
-                      className="min-w-0 flex-1 whitespace-normal break-words text-[16px] leading-snug text-foreground"
-                    />
-                  ) : (
-                    <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">{rawDisplay}</span>
-                  )}
-                  {row.habitCompletionCheck ? (
-                    <span
-                      className="mt-[0.15rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
-                      title="Habit completed"
-                    >
-                      <HabitDoneCheckIcon className="h-3.5 w-3.5" />
-                    </span>
-                  ) : null}
+                <span className="min-w-0 flex-1">
+                  <span className="flex min-w-0 items-start gap-1.5">
+                    {canHighlight ? (
+                      <HighlightedQuickNoteText
+                        text={singleLineForHighlights}
+                        segments={highlightSegments}
+                        className="min-w-0 flex-1 whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                      />
+                    ) : (
+                      <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">{rawDisplay}</span>
+                    )}
+                    {row.habitCompletionCheck ? (
+                      <span
+                        className="mt-[0.15rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
+                        title="Habit completed"
+                      >
+                        <HabitDoneCheckIcon className="h-3.5 w-3.5" />
+                      </span>
+                    ) : null}
+                  </span>
+                  {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
                 </span>
               </span>
             </button>
@@ -758,36 +805,40 @@ function JournalContextRowNoteStream({
             onClick={open}
             disabled={!onOpenJournalContextEntry}
             title={`${row.categoryLabel}: ${row.bodyText}`}
-            className={`min-w-0 text-left disabled:cursor-default ${GHOST_OPEN_BTN}`}
+            className={`min-w-0 flex-1 text-left disabled:cursor-default ${GHOST_OPEN_BTN}`}
           >
-            <span className="inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-0.5 text-[16px] leading-snug">
-              <span className="inline-flex items-center gap-2">
-                <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                {canHighlight ? (
-                  <HighlightedQuickNoteText
-                    text={singleLineForHighlights}
-                    segments={highlightSegments}
-                    className="min-w-0 shrink whitespace-normal break-words text-[16px] leading-snug text-foreground"
-                  />
-                ) : (
-                  <span className="min-w-0 shrink whitespace-pre-wrap break-words">{rawDisplay}</span>
-                )}
-                {metricOnLeft ? (
-                  <span
-                    className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                  >
-                    {row.metricSummary}
-                  </span>
-                ) : null}
-                {row.habitCompletionCheck ? (
-                  <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
-                    <HabitDoneCheckIcon className="h-3.5 w-3.5" />
-                  </span>
-                ) : null}
+            <span className="flex min-w-0 items-center gap-2 text-[16px] leading-snug">
+              <span className="min-w-0 flex-1">
+                <span className="inline-flex min-w-0 shrink-0 items-center gap-2">
+                  <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+                  {canHighlight ? (
+                    <HighlightedQuickNoteText
+                      text={singleLineForHighlights}
+                      segments={highlightSegments}
+                      className="min-w-0 shrink whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                    />
+                  ) : (
+                    <span className="min-w-0 shrink whitespace-pre-wrap break-words">{rawDisplay}</span>
+                  )}
+                  {metricOnLeft ? (
+                    <span
+                      className={`shrink-0 text-[12px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                    >
+                      {row.metricSummary}
+                    </span>
+                  ) : null}
+                  {row.habitCompletionCheck ? (
+                    <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
+                      <HabitDoneCheckIcon className="h-3.5 w-3.5" />
+                    </span>
+                  ) : null}
+                </span>
+                {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
               </span>
               {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
                 <MiniTrendSparkline
                   values={leftRailTrendValues}
+                  width={144}
                   className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
                 />
               ) : null}
@@ -825,38 +876,44 @@ function JournalContextRowNoteStream({
         <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
         <span className="min-w-0 flex-1">
           {metricOnLeft && rawDisplay ? (
-            <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <>
+              <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                {canHighlight ? (
+                  <HighlightedQuickNoteText
+                    text={singleLineForHighlights}
+                    segments={highlightSegments}
+                    className="shrink-0 whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                  />
+                ) : (
+                  <span className="shrink-0 whitespace-pre-wrap break-words text-[16px] leading-snug">{rawDisplay}</span>
+                )}
+                <span
+                  className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                >
+                  {row.metricSummary}
+                </span>
+                {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
+                  <MiniTrendSparkline
+                    values={leftRailTrendValues}
+                    className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
+                  />
+                ) : null}
+              </span>
+              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
+            </>
+          ) : rawDisplay ? (
+            <>
               {canHighlight ? (
                 <HighlightedQuickNoteText
                   text={singleLineForHighlights}
                   segments={highlightSegments}
-                  className="shrink-0 whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                  className="whitespace-normal break-words text-[16px] leading-snug text-foreground"
                 />
               ) : (
-                <span className="shrink-0 whitespace-pre-wrap break-words text-[16px] leading-snug">{rawDisplay}</span>
+                <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
               )}
-              <span
-                className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
-              >
-                {row.metricSummary}
-              </span>
-              {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-                <MiniTrendSparkline
-                  values={leftRailTrendValues}
-                  className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                />
-              ) : null}
-            </span>
-          ) : rawDisplay ? (
-            canHighlight ? (
-              <HighlightedQuickNoteText
-                text={singleLineForHighlights}
-                segments={highlightSegments}
-                className="whitespace-normal break-words text-[16px] leading-snug text-foreground"
-              />
-            ) : (
-              <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
-            )
+              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
+            </>
           ) : (
             "—"
           )}
@@ -950,30 +1007,14 @@ export function BrainDumpCaptureView({
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
 }: CaptureViewProps) {
-   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
+  const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
+  const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
   const syncDraftMeta = useCallback((m: EntryEstimateModalMeta) => {
     draftMetaRef.current = m;
   }, []);
 
   const full = layout === "fullScreen";
   const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
-
-  const appendTranscribedToDraft = useCallback(
-    (text: string) => {
-      const t = text.trim();
-      if (!t) return;
-      setSentenceDraft((prev) => {
-        const p = prev.trim();
-        return p ? `${p}\n\n${t}` : t;
-      });
-      if (full) {
-        requestAnimationFrame(() => {
-          quickNoteStreamEndRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-        });
-      }
-    },
-    [setSentenceDraft, full]
-  );
   const prevJournalCountRef = useRef<number | null>(null);
 
   const journalRowsOrdered = React.useMemo(() => {
@@ -1074,8 +1115,6 @@ export function BrainDumpCaptureView({
       </div>
     ) : null;
 
-  const ingestDisabled = lineSaveBusy || (phase === "categorizing" && !saveLineOnEnter);
-
   if (full) {
     return (
       <>
@@ -1115,17 +1154,12 @@ export function BrainDumpCaptureView({
                 disabled={lineSaveBusy}
                 variant="fullScreen"
                 showEstimateDetailTap
+                textAreaRef={draftTextareaRef}
               />
             </div>
             <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
         </div>
-        <BrainDumpImageIngestBar
-          disabled={ingestDisabled}
-          hintText={sentenceDraft}
-          onAppendText={appendTranscribedToDraft}
-          layout="floating"
-        />
       </>
     );
   }
@@ -1133,8 +1167,8 @@ export function BrainDumpCaptureView({
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-        Type or add photos — we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done)
-        saves immediately — no review screen.
+        Type and we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done) saves
+        immediately — no review screen.
       </p>
       <div
         className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl bg-white/60 px-3 py-2 pb-24 dark:bg-neutral-900/25"
@@ -1149,14 +1183,9 @@ export function BrainDumpCaptureView({
           onDraftValue={handleDraftValue}
           onEnterCommit={commitDraftOnEnter}
           onMetaChange={syncDraftMeta}
+          textAreaRef={draftTextareaRef}
         />
       </div>
-      <BrainDumpImageIngestBar
-        disabled={ingestDisabled}
-        hintText={sentenceDraft}
-        onAppendText={appendTranscribedToDraft}
-        layout="floating"
-      />
     </div>
   );
 }

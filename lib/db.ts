@@ -25,6 +25,7 @@ import {
   encryptUserSettingsFields,
 } from "./crypto-fields";
 import { getPacificTimeParts } from "./journal-entry-time";
+import type { QuickNoteHighlightSegment } from "./quick-note-highlights";
 import type { HabitBucket } from "./habit-buckets";
 export type { HabitBucket } from "./habit-buckets";
 export { HABIT_BUCKET_IDS, isHabitBucket } from "./habit-buckets";
@@ -294,6 +295,8 @@ export interface SavedTranscript {
   journalMentorReflections?: JournalMentorReflectionItem[];
   journalMentorReflectionsStatus?: JournalMentorReflectionsStatus;
   journalMentorReflectionsUpdatedAt?: Date;
+  /** Gemini-authored spans for the entry text shown in Quick Note / transcript modals. */
+  quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1673,6 +1676,7 @@ export async function toggleHabitCompletion(
 
   let journalTranscriptId: string | undefined;
   if (calorieImpact && calorieImpact.calories > 0) {
+    const normalizedImpactLabel = calorieImpact.label.trim() || "Habit completion";
     const [yearStr, monthStr, dayStr] = dateKey.split("-");
     const entryDate = {
       day: parseInt(dayStr, 10),
@@ -1686,7 +1690,7 @@ export async function toggleHabitCompletion(
         "Calorie Tracking Journal (Nutrition)",
         "",
         `Enriched entry:`,
-        calorieImpact.label,
+        normalizedImpactLabel,
         "",
         "Nutritional estimate:",
         `- Calories: ${calorieImpact.calories} kcal`,
@@ -1701,7 +1705,7 @@ export async function toggleHabitCompletion(
         "Calorie Tracking Journal (Exercise)",
         "",
         `Activity:`,
-        calorieImpact.label,
+        normalizedImpactLabel,
         "",
         "Exercise estimate:",
         `- Calories burned: ${calorieImpact.calories} kcal`,
@@ -1716,7 +1720,7 @@ export async function toggleHabitCompletion(
     const journalEntry = await saveJournalTranscript(
       userId,
       transcriptText,
-      `Habit: ${calorieImpact.label}`,
+      `Habit: ${normalizedImpactLabel}`,
       entryDate,
       { journalCategory: calorieImpact.type === "intake" ? "nutrition" : "exercise" }
     );
@@ -2133,6 +2137,7 @@ export async function saveJournalTranscript(
     journalCategory?: "nutrition" | "exercise" | "spend";
     journalBatchId?: string;
     journalEntryTime?: { hour: number; minute: number };
+    quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
   }
 ): Promise<SavedTranscript & { _id: string }> {
   transcriptsCache.invalidate(userId);
@@ -2149,6 +2154,9 @@ export async function saveJournalTranscript(
     sourceType: "journal",
     ...(options?.journalCategory ? { journalCategory: options.journalCategory } : {}),
     ...(options?.journalBatchId ? { journalBatchId: options.journalBatchId } : {}),
+    ...(options?.quickNoteHighlightSpans?.length
+      ? { quickNoteHighlightSpans: options.quickNoteHighlightSpans }
+      : {}),
     transcriptText,
     ...(journalEntryDate && {
       journalEntryDay: journalEntryDate.day,
@@ -2460,6 +2468,21 @@ export async function getWeightEntries(
   }));
   weightCache.set(userId, result, TTL_3M);
   return result;
+}
+
+export async function deleteWeightEntry(id: string, userId: string): Promise<boolean> {
+  weightCache.invalidate(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<WeightEntryDoc>("user_weight_entries")
+    .deleteOne({ _id: oid, userId });
+  return result.deletedCount > 0;
 }
 
 export async function addFocusEntry(

@@ -27,6 +27,7 @@ function doneMetaToQuickSnapshot(line: string, meta: EntryEstimateModalMeta): Cl
     carbsGrams: meta.carbsGrams,
     fatGrams: meta.fatGrams,
     reasoning: meta.reasoning,
+    highlightSpans: meta.highlightSpans ?? [],
   };
 }
 
