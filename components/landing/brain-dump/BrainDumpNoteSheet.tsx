@@ -18,9 +18,18 @@ import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/Highli
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
 import { buildQuickNoteHighlightSegments } from "@/lib/quick-note-highlights";
 import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
-import { JOURNAL_CATEGORY_TAG_PILL_CLASS } from "@/components/landing/brain-dump/journal-category-tag-styles";
+import {
+  JOURNAL_CATEGORY_DOT_BASE,
+  journalContextDotClass,
+  journalTypeDotClass,
+} from "@/components/landing/brain-dump/journal-category-tag-styles";
 
-export { JOURNAL_CATEGORY_TAG_PILL_CLASS };
+export {
+  JOURNAL_CATEGORY_DOT_BASE,
+  JOURNAL_CATEGORY_TAG_PILL_CLASS,
+  journalContextDotClass,
+  journalTypeDotClass,
+} from "@/components/landing/brain-dump/journal-category-tag-styles";
 
 /** Matches journal list chips in app/chat/journal/new/page.tsx */
 export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
@@ -65,20 +74,6 @@ export interface BrainDumpJournalContextRow {
   showMentorCta?: boolean;
   /** For ordering in Quick Note stream (oldest → newest). */
   sortAtMs?: number;
-}
-
-/** Chip for saved journal rows in Quick note (includes spend; uncategorized → reflection). */
-export function journalContextChipClass(
-  journalCategory: BrainDumpJournalContextRow["journalCategory"]
-): string {
-  if (journalCategory === "nutrition") return journalTypeBadgeClass("nutrition");
-  if (journalCategory === "exercise") return journalTypeBadgeClass("exercise");
-  if (journalCategory === "spend") {
-    return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200";
-  }
-  if (journalCategory === "weight") return journalTypeBadgeClass("weight");
-  if (journalCategory === "sleep") return journalTypeBadgeClass("sleep");
-  return journalTypeBadgeClass("reflection");
 }
 
 function MentorHumansIcon({ className }: { className?: string }) {
@@ -260,7 +255,7 @@ function JournalContextRowSheet({
     () => buildQuickNoteHighlightSegments(row.bodyText),
     [row.bodyText]
   );
-  const chipCls = journalContextChipClass(row.journalCategory);
+  const dotCls = journalContextDotClass(row.journalCategory);
   const burn = row.caloriesSummary?.startsWith("-");
   const open = () => onOpenJournalContextEntry?.(row.id);
   const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
@@ -317,10 +312,17 @@ function JournalContextRowSheet({
         type="button"
         onClick={open}
         disabled={!onOpenJournalContextEntry}
-        className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+        title={row.categoryLabel}
+        className={`col-start-1 row-start-1 row-span-2 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
       >
-        <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
-          {row.categoryLabel}
+        <span className="flex items-start gap-2">
+          <span className={`mt-[0.4rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+          <HighlightedQuickNoteText
+            text={row.bodyText}
+            segments={sheetHighlightSegments}
+            as="span"
+            className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
+          />
         </span>
       </button>
       <div className="col-start-2 row-start-1 flex justify-end self-center text-right" aria-live="polite">
@@ -337,19 +339,6 @@ function JournalContextRowSheet({
           </button>
         )}
       </div>
-      <button
-        type="button"
-        onClick={open}
-        disabled={!onOpenJournalContextEntry}
-        className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
-      >
-        <HighlightedQuickNoteText
-          text={row.bodyText}
-          segments={sheetHighlightSegments}
-          as="p"
-          className="m-0 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
-        />
-      </button>
       {timeOnly ? (
         <button
           type="button"
@@ -387,7 +376,7 @@ function JournalContextRowNoteStream({
   onDeleteJournalContextEntry?: (id: string) => void;
   onOpenReflectionMentor?: () => void;
 }) {
-  const chipCls = journalContextChipClass(row.journalCategory);
+  const dotCls = journalContextDotClass(row.journalCategory);
   const burn = row.caloriesSummary?.startsWith("-");
   const open = () => onOpenJournalContextEntry?.(row.id);
   const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
@@ -445,34 +434,27 @@ function JournalContextRowNoteStream({
         type="button"
         onClick={open}
         disabled={!onOpenJournalContextEntry}
-        title={rawDisplay ? row.bodyText : undefined}
-        className={`w-full text-left text-[16px] leading-snug text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
+        title={rawDisplay ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
+        className={`flex w-full items-start gap-2 text-left text-[16px] leading-snug text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
       >
-        {rawDisplay ? (
-          canHighlight ? (
-            <HighlightedQuickNoteText
-              text={singleLineForHighlights}
-              segments={highlightSegments}
-              className="whitespace-normal break-words text-[16px] leading-snug text-foreground"
-            />
+        <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+        <span className="min-w-0 flex-1">
+          {rawDisplay ? (
+            canHighlight ? (
+              <HighlightedQuickNoteText
+                text={singleLineForHighlights}
+                segments={highlightSegments}
+                className="whitespace-normal break-words text-[16px] leading-snug text-foreground"
+              />
+            ) : (
+              <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
+            )
           ) : (
-            <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
-          )
-        ) : (
-          "—"
-        )}
+            "—"
+          )}
+        </span>
       </button>
       <div className="mt-1.5 flex min-w-0 flex-wrap items-center justify-end gap-1.5">
-        <button
-          type="button"
-          onClick={open}
-          disabled={!onOpenJournalContextEntry}
-          className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
-        >
-          <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
-            {row.categoryLabel}
-          </span>
-        </button>
         {mentorBtn}
         {cal ? (
           <button
@@ -605,12 +587,7 @@ export function BrainDumpCaptureView({
   }, [full, journalContextRows.length]);
 
   if (phase === "categorizing" && !saveLineOnEnter) {
-    return (
-      <EstimateThinkingHero
-        message="Analyzing with Gemini"
-        subMessage="Sorting your note into the right journal."
-      />
-    );
+    return <EstimateThinkingHero />;
   }
 
   const handleDraftValue = (raw: string) => {
@@ -792,15 +769,15 @@ export function BrainDumpReviewView({
   }, []);
 
   const cat = fields.category;
-  const badgeCls = journalTypeBadgeClass(cat);
 
   return (
     <div className="flex flex-col gap-4 pb-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className={`shrink-0 ${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${badgeCls}`}>
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground">
+          <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${journalTypeDotClass(cat)}`} aria-hidden />
           {categoryMeta[cat].label}
         </span>
-        <span className="text-xs text-neutral-400 dark:text-neutral-500">Tap to change type</span>
+        <span className="text-[11px] text-neutral-400 dark:text-neutral-500">Tap below to change type</span>
       </div>
 
       <div className="-mx-1 flex gap-1 overflow-x-auto pb-1 scrollbar-thin">
@@ -815,10 +792,11 @@ export function BrainDumpReviewView({
               onClick={() => onSwitchCategory(c)}
               className={`flex shrink-0 items-center gap-1 rounded-full text-[10px] font-medium transition-colors ${
                 active
-                  ? `px-2 py-1 ${journalTypeBadgeClass(c)} ring-2 ring-offset-1 ring-offset-[var(--background)] ring-neutral-400/50 dark:ring-neutral-500`
+                  ? "px-2 py-1 bg-neutral-100 text-foreground ring-2 ring-offset-1 ring-offset-[var(--background)] ring-neutral-400/50 dark:bg-neutral-800 dark:ring-neutral-500"
                   : "bg-neutral-100/90 px-2.5 py-1 text-[11px] text-neutral-600 hover:bg-neutral-200/90 dark:bg-neutral-800/80 dark:text-neutral-300 dark:hover:bg-neutral-700/80"
               }`}
             >
+              <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${journalTypeDotClass(c)}`} aria-hidden />
               {meta.icon}
               {meta.label}
             </button>

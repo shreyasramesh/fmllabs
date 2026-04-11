@@ -10,7 +10,7 @@ import {
   shouldShowQuickNoteEstimateColumn,
   splitIntoSentences,
 } from "@/components/landing/brain-dump/sentence-entries";
-import { JOURNAL_CATEGORY_TAG_PILL_CLASS } from "@/components/landing/brain-dump/journal-category-tag-styles";
+import { JOURNAL_CATEGORY_DOT_BASE, quickNoteIntentDotClass } from "@/components/landing/brain-dump/journal-category-tag-styles";
 import {
   EntryEstimateDetailModal,
   type EntryEstimateModalMeta,
@@ -43,19 +43,6 @@ export const AMY_JOURNAL_LIST_GRID =
 /** iOS Notes–style caret + selection tint for draft fields. */
 export const NOTES_LIKE_TEXTAREA =
   "caret-[#007aff] selection:bg-[rgba(0,122,255,0.28)] dark:caret-[#0a84ff] dark:selection:bg-[rgba(10,132,255,0.35)]";
-
-function intentPillClass(intent: string): string {
-  switch (intent) {
-    case "exercise":
-      return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200";
-    case "mixed":
-      return "bg-amber-100 text-amber-900 dark:bg-amber-900/35 dark:text-amber-200";
-    case "sleep":
-      return "bg-indigo-100 text-indigo-900 dark:bg-indigo-900/35 dark:text-indigo-200";
-    default:
-      return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200";
-  }
-}
 
 function intentPillLabel(intent: string): string {
   if (intent === "exercise") return "Exercise";
@@ -494,14 +481,16 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
           className={`min-w-0 text-left ${openDetailBtn}`}
           aria-label={`View estimate details: ${entry.text.slice(0, 48)}${entry.text.length > 48 ? "…" : ""}`}
         >
-          {meta.status === "done" ? (
-            <span
-              className={`mb-0.5 ${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${intentPillClass(meta.intent)}`}
-            >
-              {intentPillLabel(meta.intent)}
-            </span>
-          ) : null}
-          <p className="text-[17px] leading-tight text-foreground">{entry.text}</p>
+          <div className="flex min-w-0 items-start gap-2">
+            {meta.status === "done" ? (
+              <span
+                className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${quickNoteIntentDotClass(meta.intent)}`}
+                title={intentPillLabel(meta.intent)}
+                aria-hidden
+              />
+            ) : null}
+            <p className="min-w-0 flex-1 text-[17px] leading-tight text-foreground">{entry.text}</p>
+          </div>
         </button>
         <button
           type="button"

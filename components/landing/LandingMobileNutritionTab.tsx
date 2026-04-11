@@ -11,10 +11,7 @@ import type {
   LandingRecentFoodEntry,
   LandingWeeklySummaryPreview,
 } from "@/components/landing/types";
-import {
-  journalTypeBadgeClass,
-  JOURNAL_CATEGORY_TAG_PILL_CLASS,
-} from "@/components/landing/brain-dump/BrainDumpNoteSheet";
+import { journalTypeDotClass, JOURNAL_CATEGORY_DOT_BASE } from "@/components/landing/brain-dump/journal-category-tag-styles";
 import {
   AMY_JOURNAL_LIST_GRID,
   DeleteEntryIcon,
@@ -254,7 +251,6 @@ export function LandingMobileNutritionTab({
           </p>
           <div className="landing-module-glass overflow-hidden rounded-2xl bg-white/80 !shadow-none dark:bg-neutral-900/30">
             {recentFoodEntries.map((entry) => {
-              const chipCls = journalTypeBadgeClass("nutrition");
               const open = () => onRecentFoodEntryClick?.(entry.id);
               const ghostOpenBtn =
                 "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
@@ -279,16 +275,6 @@ export function LandingMobileNutritionTab({
                       type="button"
                       onClick={open}
                       disabled={!onRecentFoodEntryClick}
-                      className={`col-start-1 row-start-1 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
-                    >
-                      <span className={`${JOURNAL_CATEGORY_TAG_PILL_CLASS} ${chipCls}`}>
-                        Nutrition
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={open}
-                      disabled={!onRecentFoodEntryClick}
                       className={`col-start-2 row-start-1 justify-self-end self-center text-right disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                     >
                       {calOnly}
@@ -299,9 +285,15 @@ export function LandingMobileNutritionTab({
                       disabled={!onRecentFoodEntryClick}
                       className={`col-start-1 row-start-2 min-w-0 text-left disabled:cursor-default disabled:opacity-100 ${ghostOpenBtn}`}
                     >
-                      <p className="text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
-                        {entry.label}
-                      </p>
+                      <span className="flex items-start gap-2">
+                        <span
+                          className={`mt-[0.4rem] ${JOURNAL_CATEGORY_DOT_BASE} ${journalTypeDotClass("nutrition")}`}
+                          aria-hidden
+                        />
+                        <p className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
+                          {entry.label}
+                        </p>
+                      </span>
                     </button>
                     {timeOnly ? (
                       <button
