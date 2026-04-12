@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
 import type {
   FocusDurationSuggestion,
   LandingSleepEntry,
 } from "@/components/landing/types";
-import { LandingMobileSleepGoalPanel } from "@/components/landing/LandingMobileSleepGoalPanel";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
 
@@ -19,6 +19,7 @@ interface LandingMobileSleepTabProps {
   onSaveSleepEntry: (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => void;
   onViewSleepInsights?: () => void;
   sleepHoursGoal: number;
+  onOpenGoals: () => void;
 }
 
 export function LandingMobileSleepTab({
@@ -30,10 +31,12 @@ export function LandingMobileSleepTab({
   onSaveSleepEntry,
   onViewSleepInsights,
   sleepHoursGoal,
+  onOpenGoals,
 }: LandingMobileSleepTabProps) {
   const [sleepHoursInput, setSleepHoursInput] = useState(7.5);
   const [hrvInput, setHrvInput] = useState("");
   const [sleepScoreInput, setSleepScoreInput] = useState("");
+  const [optionalDetailsOpen, setOptionalDetailsOpen] = useState(false);
 
   const sleepForSelectedDay = useMemo(() => {
     const rows = sleepEntries.filter((e) => e.dayKey === sleepEntryDayKey);
@@ -51,6 +54,7 @@ export function LandingMobileSleepTab({
       setHrvInput("");
       setSleepScoreInput("");
     }
+    setOptionalDetailsOpen(Boolean(sleepForSelectedDay?.hrvMs != null || sleepForSelectedDay?.sleepScore != null));
   }, [
     sleepEntryDayKey,
     sleepForSelectedDay?.id,
@@ -75,20 +79,31 @@ export function LandingMobileSleepTab({
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
-      <LandingMobileSleepGoalPanel
-        loggedHours={sleepForSelectedDay != null ? sleepForSelectedDay.sleepHours : null}
-        sleepHoursGoal={sleepHoursGoal}
-        selectedDayLabel={selectedDayLabel}
-      />
+      <div className="space-y-3">
+        <div className="flex justify-center">
+          <GoalConfigPill
+            label={`Goal: ${sleepHoursGoal}h/night`}
+            onClick={onOpenGoals}
+          />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">
+          Sleep · {selectedDayLabel}
+        </h2>
+      </div>
 
-      <h2 className="text-xl font-bold text-foreground">
-        Sleep · {selectedDayLabel}
-      </h2>
+      {/* Recovery chart */}
+      <LandingSleepRecoveryChart
+        entries={sleepEntries}
+        focusSuggestion={sleepFocusSuggestion}
+        onViewSleepInsights={onViewSleepInsights}
+        targetHours={sleepHoursGoal}
+        chartsOnly
+      />
 
       {/* Entry form */}
       <div className="landing-module-glass space-y-3 rounded-2xl border p-4">
         <div>
-          <label className="block text-sm font-medium text-neutral-600 dark:text-neutral-300">
+          <label className="block text-sm font-medium text-neutral-500 dark:text-neutral-400">
             Sleep duration
           </label>
           <div className="mt-1 rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800">
@@ -103,38 +118,48 @@ export function LandingMobileSleepTab({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium text-neutral-600 dark:text-neutral-300">
-              HRV (ms)
-            </label>
-            <input
-              type="number"
-              step="1"
-              min="1"
-              max="300"
-              placeholder="Optional"
-              value={hrvInput}
-              onChange={(e) => setHrvInput(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
-            />
+        <button
+          type="button"
+          onClick={() => setOptionalDetailsOpen((prev) => !prev)}
+          className="text-sm font-medium text-neutral-500 transition-colors hover:text-foreground dark:text-neutral-400 dark:hover:text-neutral-200"
+        >
+          {optionalDetailsOpen ? "Hide optional details" : "Add HRV or score"}
+        </button>
+
+        {optionalDetailsOpen ? (
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                HRV (ms)
+              </label>
+              <input
+                type="number"
+                step="1"
+                min="1"
+                max="300"
+                placeholder="Optional"
+                value={hrvInput}
+                onChange={(e) => setHrvInput(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                Score (1-100)
+              </label>
+              <input
+                type="number"
+                step="1"
+                min="1"
+                max="100"
+                placeholder="Optional"
+                value={sleepScoreInput}
+                onChange={(e) => setSleepScoreInput(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-neutral-600 dark:text-neutral-300">
-              Score (1–100)
-            </label>
-            <input
-              type="number"
-              step="1"
-              min="1"
-              max="100"
-              placeholder="Optional"
-              value={sleepScoreInput}
-              onChange={(e) => setSleepScoreInput(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
-            />
-          </div>
-        </div>
+        ) : null}
 
         <button
           type="button"
@@ -147,24 +172,17 @@ export function LandingMobileSleepTab({
 
         {/* Status line */}
         {sleepForSelectedDay ? (
-          <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
-            Logged: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
+          <p className="text-center text-[13px] text-neutral-500 dark:text-neutral-400">
+            Logged today: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
             {sleepForSelectedDay.hrvMs != null ? ` · ${sleepForSelectedDay.hrvMs} ms HRV` : ""}
             {sleepForSelectedDay.sleepScore != null ? ` · ${sleepForSelectedDay.sleepScore}/100` : ""}
           </p>
         ) : (
-          <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
+          <p className="text-center text-[13px] text-neutral-500 dark:text-neutral-400">
             No sleep logged for this day yet.
           </p>
         )}
       </div>
-
-      {/* Recovery chart */}
-      <LandingSleepRecoveryChart
-        entries={sleepEntries}
-        focusSuggestion={sleepFocusSuggestion}
-        onViewSleepInsights={onViewSleepInsights}
-      />
     </div>
   );
 }

@@ -4,8 +4,8 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useTheme } from "@/components/ThemeProvider";
+import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 import type { LandingWeightPoint } from "@/components/landing/types";
-import { LandingMobileWeightTargetPanel } from "@/components/landing/LandingMobileWeightTargetPanel";
 
 interface LandingMobileWeightTabProps {
   weightCurrentKg: number | null;
@@ -19,6 +19,7 @@ interface LandingMobileWeightTabProps {
   noTargetYetLabel: string;
   openLabel: string;
   onOpenWeight: () => void;
+  onOpenGoals: () => void;
 }
 
 const WeightChart = React.memo(function WeightChart({
@@ -147,6 +148,7 @@ export function LandingMobileWeightTab({
   noTargetYetLabel,
   openLabel,
   onOpenWeight,
+  onOpenGoals,
 }: LandingMobileWeightTabProps) {
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -155,16 +157,14 @@ export function LandingMobileWeightTab({
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
-      <LandingMobileWeightTargetPanel
-        weightCurrentKg={weightCurrentKg}
-        weightTargetKg={weightTargetKg}
-        emptyHint="Log your current weight and a target in the weight tracker to see how close you are."
-        openLabel={openLabel}
-        onOpenWeight={onOpenWeight}
-      />
-
       {/* Header */}
-      <div>
+      <div className="space-y-3">
+        <div className="flex justify-center">
+          <GoalConfigPill
+            label={weightTargetKg != null ? `Goal: ${weightTargetKg.toFixed(1)} kg` : "Set weight goal"}
+            onClick={onOpenGoals}
+          />
+        </div>
         <h2 className="text-xl font-bold text-foreground">{weightTitle}</h2>
         {weightDescription && (
           <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">

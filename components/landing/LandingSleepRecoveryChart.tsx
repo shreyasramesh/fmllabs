@@ -20,6 +20,8 @@ interface LandingSleepRecoveryChartProps {
   focusSuggestion: FocusDurationSuggestion | null;
   /** Opens Gemini sleep insights (parent handles auth + API). */
   onViewSleepInsights?: () => void;
+  chartsOnly?: boolean;
+  targetHours?: number;
 }
 
 const SLEEP_PURPLE = "#7c5cbf";
@@ -29,6 +31,8 @@ export function LandingSleepRecoveryChart({
   entries,
   focusSuggestion,
   onViewSleepInsights,
+  chartsOnly = false,
+  targetHours = 8,
 }: LandingSleepRecoveryChartProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
@@ -43,7 +47,7 @@ export function LandingSleepRecoveryChart({
     ? computeSleepScore(latestEntry.sleepHours, latestEntry.hrvMs, latestEntry.sleepScore)
     : null;
   const insight = useMemo(() => computeSleepInsight(entries), [entries]);
-  const sleepBank = useMemo(() => computeSleepBank(entries), [entries]);
+  const sleepBank = useMemo(() => computeSleepBank(entries, targetHours), [entries, targetHours]);
 
   const chartOptions = useMemo<Highcharts.Options>(() => {
     if (last7.length === 0) return {};
@@ -214,16 +218,18 @@ export function LandingSleepRecoveryChart({
   return (
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div className="flex flex-col gap-5">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
-            Sleep &amp; Recovery
-          </p>
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
-            Dial In Your Sleep
-          </h2>
-        </div>
+        {!chartsOnly ? (
+          <div className="flex flex-col items-center gap-1 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+              Sleep &amp; Recovery
+            </p>
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
+              Dial In Your Sleep
+            </h2>
+          </div>
+        ) : null}
 
-        {sleepScore && (
+        {!chartsOnly && sleepScore && (
           <div className="flex justify-center">
             <ScoreRing
               score={sleepScore.score}
@@ -236,7 +242,7 @@ export function LandingSleepRecoveryChart({
           </div>
         )}
 
-        {latestEntry && (
+        {!chartsOnly && latestEntry && (
           <div className="flex justify-center gap-4">
             <div className={`flex flex-col items-center ${innerCard}`}>
               <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
@@ -269,7 +275,7 @@ export function LandingSleepRecoveryChart({
           </div>
         )}
 
-        {insight && (
+        {!chartsOnly && insight && (
           <div className={innerCardMuted}>
             <p className="text-[12px] leading-relaxed text-neutral-600 dark:text-neutral-300">{insight.message}</p>
           </div>
@@ -324,8 +330,7 @@ export function LandingSleepRecoveryChart({
               <path d="M10.75 10.818a.75.75 0 01-1.5 0V6.29L7.836 7.704a.75.75 0 01-1.061-1.06l2.828-2.83a.749.749 0 011.061 0l2.829 2.83a.75.75 0 01-1.061 1.06L11 6.54v4.278z" style={sleepBank.type === "deficit" ? { transform: "rotate(180deg)", transformOrigin: "center" } : undefined} />
               <path d="M3.5 13.5a.75.75 0 01.75-.75h11.5a.75.75 0 010 1.5H4.25a.75.75 0 01-.75-.75zM3.5 16.25a.75.75 0 01.75-.75h11.5a.75.75 0 010 1.5H4.25a.75.75 0 01-.75-.75z" />
             </svg>
-            <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Sleep Bank</span>
-            <span className="text-sm font-bold tabular-nums" style={{ color: bankColor }}>
+            <span className="text-center text-[12px] font-medium" style={{ color: bankColor }}>
               {sleepBank.label}
             </span>
           </div>

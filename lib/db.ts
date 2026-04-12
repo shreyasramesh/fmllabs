@@ -551,6 +551,14 @@ export interface UserSettings {
   goalFatGrams?: number;
   /** Optional daily spend cap in USD for dashboard spend goals (mobile). */
   goalDailySpendUsd?: number;
+  /** Nightly sleep target used for weekly sleep bank copy and sleep tab goals. */
+  goalSleepHours?: number;
+  /** Target duration for each exercise session. */
+  goalExerciseSessionMinutes?: number;
+  /** Exercise cadence target: active days before an off day. */
+  goalExerciseDaysOn?: number;
+  /** Exercise cadence target: rest days after an active streak. */
+  goalExerciseDaysOff?: number;
   /** Primary fat-loss approach selected in daily goals calculator. */
   nutritionFatLossMethod?: NutritionFatLossMethod;
   /** Multi-select fat-loss approaches selected in daily goals calculator. */
@@ -2928,6 +2936,10 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     goalProteinGrams: doc.goalProteinGrams,
     goalFatGrams: doc.goalFatGrams,
     goalDailySpendUsd: doc.goalDailySpendUsd,
+    goalSleepHours: doc.goalSleepHours,
+    goalExerciseSessionMinutes: doc.goalExerciseSessionMinutes,
+    goalExerciseDaysOn: doc.goalExerciseDaysOn,
+    goalExerciseDaysOff: doc.goalExerciseDaysOff,
     nutritionFatLossMethod,
     nutritionFatLossMethods:
       nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],
@@ -2946,7 +2958,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();
@@ -2993,6 +3005,10 @@ export async function upsertUserSettings(
     goalProteinGrams: result.goalProteinGrams,
     goalFatGrams: result.goalFatGrams,
     goalDailySpendUsd: result.goalDailySpendUsd,
+    goalSleepHours: result.goalSleepHours,
+    goalExerciseSessionMinutes: result.goalExerciseSessionMinutes,
+    goalExerciseDaysOn: result.goalExerciseDaysOn,
+    goalExerciseDaysOff: result.goalExerciseDaysOff,
     nutritionFatLossMethod,
     nutritionFatLossMethods:
       nutritionFatLossMethods.length > 0 ? nutritionFatLossMethods : [nutritionFatLossMethod],

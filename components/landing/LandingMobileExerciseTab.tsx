@@ -12,17 +12,22 @@ import {
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { SparklesIcon } from "@/components/SharedIcons";
 import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
+import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 
 interface RecentExerciseEntry {
   id: string;
   label: string;
   caloriesBurned: number;
+  durationMinutes: number;
   time: string;
 }
 
 interface LandingMobileExerciseTabProps {
   caloriesBurned: number;
   exerciseBurnGoalKcal: number;
+  exerciseSessionGoalMinutes: number;
+  exerciseGoalDaysOn: number;
+  exerciseGoalDaysOff: number;
   recentExerciseEntries: RecentExerciseEntry[];
   onRecentExerciseEntryClick?: (id: string) => void;
   onRecentExerciseEntryDelete?: (id: string) => void;
@@ -32,11 +37,15 @@ interface LandingMobileExerciseTabProps {
   onInlineExerciseSubmit: () => void;
   inlineExerciseLoading: boolean;
   weeklySummary: LandingWeeklySummaryPreview | null;
+  onOpenGoals: () => void;
 }
 
 export function LandingMobileExerciseTab({
   caloriesBurned,
   exerciseBurnGoalKcal,
+  exerciseSessionGoalMinutes,
+  exerciseGoalDaysOn,
+  exerciseGoalDaysOff,
   recentExerciseEntries,
   onRecentExerciseEntryClick,
   onRecentExerciseEntryDelete,
@@ -46,9 +55,22 @@ export function LandingMobileExerciseTab({
   onInlineExerciseSubmit,
   inlineExerciseLoading,
   weeklySummary,
+  onOpenGoals,
 }: LandingMobileExerciseTabProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
+  const averageSessionMinutes = useMemo(() => {
+    if (recentExerciseEntries.length === 0) return 0;
+    const totalMinutes = recentExerciseEntries.reduce((sum, entry) => sum + Math.max(0, entry.durationMinutes || 0), 0);
+    return Math.round(totalMinutes / recentExerciseEntries.length);
+  }, [recentExerciseEntries]);
+  const activeCycleDays = useMemo(() => {
+    const cycleLength = Math.max(1, exerciseGoalDaysOn + exerciseGoalDaysOff);
+    const rows = weeklySummary?.rows ?? [];
+    return rows
+      .slice(-cycleLength)
+      .reduce((sum, row) => sum + (row.exerciseEntries > 0 ? 1 : 0), 0);
+  }, [exerciseGoalDaysOff, exerciseGoalDaysOn, weeklySummary]);
 
   const trendOptions = useMemo<Highcharts.Options | null>(() => {
     if (!weeklySummary || weeklySummary.rows.length === 0) return null;
@@ -113,6 +135,13 @@ export function LandingMobileExerciseTab({
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-4">
+      <div className="flex justify-center">
+        <GoalConfigPill
+          label={`Goal: ${exerciseBurnGoalKcal.toLocaleString()} kcal · ${exerciseSessionGoalMinutes}m · ${exerciseGoalDaysOn} on / ${exerciseGoalDaysOff} off`}
+          onClick={onOpenGoals}
+        />
+      </div>
+
       <LandingMobileGoalsCard
         rows={[
           {
@@ -124,9 +153,31 @@ export function LandingMobileExerciseTab({
             unit: " kcal",
             mode: "higherBetter",
           },
+          {
+            key: "session",
+            label: "Avg session",
+            icon: "⏱",
+            current: averageSessionMinutes,
+            target: exerciseSessionGoalMinutes,
+            unit: " min",
+            mode: "higherBetter",
+          },
+          {
+            key: "cadence",
+            label: "Active days in cycle",
+            icon: "🗓",
+            current: activeCycleDays,
+            target: exerciseGoalDaysOn,
+            unit: " days",
+            mode: "higherBetter",
+          },
         ]}
         onViewDetails={onOpenExercise}
       />
+      <p className="-mt-2 text-[12px] text-neutral-500 dark:text-neutral-400">
+        Consistency target: {exerciseGoalDaysOn} days on, {exerciseGoalDaysOff} day
+        {exerciseGoalDaysOff === 1 ? "" : "s"} off.
+      </p>
 
       {/* Calories burned summary */}
       <div className="flex flex-col items-center gap-2 pt-2">

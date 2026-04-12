@@ -18,6 +18,7 @@ import {
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { SparklesIcon } from "@/components/SharedIcons";
 import { LandingMobileGoalsCard } from "@/components/landing/LandingMobileGoalsCard";
+import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 
 interface LandingMobileNutritionTabProps {
   nutrition: LandingNutritionSummary;
@@ -36,6 +37,7 @@ interface LandingMobileNutritionTabProps {
   recentFoodEntries: LandingRecentFoodEntry[];
   onRecentFoodEntryClick?: (id: string) => void;
   onRecentFoodEntryDelete?: (id: string) => void;
+  onOpenGoals: () => void;
 }
 
 const MACRO_ICONS: Record<string, string> = {
@@ -62,6 +64,7 @@ export function LandingMobileNutritionTab({
   recentFoodEntries,
   onRecentFoodEntryClick,
   onRecentFoodEntryDelete,
+  onOpenGoals,
 }: LandingMobileNutritionTabProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
@@ -150,6 +153,13 @@ export function LandingMobileNutritionTab({
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-4">
+      <div className="flex justify-center">
+        <GoalConfigPill
+          label={`Goal: ${nutritionGoals.caloriesTarget.toLocaleString()} kcal`}
+          onClick={onOpenGoals}
+        />
+      </div>
+
       <LandingMobileGoalsCard rows={goalRows} onViewDetails={onOpenNutrition} />
 
       {/* Inline food input */}

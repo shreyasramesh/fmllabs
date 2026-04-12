@@ -2325,8 +2325,17 @@ const GOAL_PERCENT_MIN = 5;
 const GOAL_PERCENT_MAX = 85;
 const GOAL_SPEND_USD_MIN = 1;
 const GOAL_SPEND_USD_MAX = 100_000;
-/** Nightly sleep hours shown on the mobile Sleep tab until a user setting exists. */
-const MOBILE_SLEEP_HOURS_GOAL = 8;
+const GOAL_SLEEP_HOURS_MIN = 4;
+const GOAL_SLEEP_HOURS_MAX = 12;
+const GOAL_EXERCISE_SESSION_MINUTES_MIN = 10;
+const GOAL_EXERCISE_SESSION_MINUTES_MAX = 240;
+const GOAL_EXERCISE_DAYS_MIN = 1;
+const GOAL_EXERCISE_DAYS_MAX = 7;
+/** Default nightly sleep target used until a user setting exists. */
+const DEFAULT_SLEEP_HOURS_GOAL = 8;
+const DEFAULT_EXERCISE_SESSION_GOAL_MINUTES = 60;
+const DEFAULT_EXERCISE_GOAL_DAYS_ON = 3;
+const DEFAULT_EXERCISE_GOAL_DAYS_OFF = 1;
 const DEFAULT_NUTRITION_FAT_LOSS_METHOD = "calorie_counting" as const;
 const DEFAULT_FASTING_EATING_WINDOW_HOURS = 8;
 const DEFAULT_DIET_BASED_TEMPLATE = "balanced" as const;
@@ -4092,8 +4101,16 @@ export default function ChatPage() {
     proteinGrams: String(DEFAULT_NUTRITION_GOALS.proteinGrams),
     fatGrams: String(DEFAULT_NUTRITION_GOALS.fatGrams),
     dailySpendUsd: "",
+    sleepHoursGoal: String(DEFAULT_SLEEP_HOURS_GOAL),
+    exerciseSessionMinutes: String(DEFAULT_EXERCISE_SESSION_GOAL_MINUTES),
+    exerciseDaysOn: String(DEFAULT_EXERCISE_GOAL_DAYS_ON),
+    exerciseDaysOff: String(DEFAULT_EXERCISE_GOAL_DAYS_OFF),
   }));
   const [spendBudgetUsd, setSpendBudgetUsd] = useState<number | null>(null);
+  const [sleepHoursGoal, setSleepHoursGoal] = useState(DEFAULT_SLEEP_HOURS_GOAL);
+  const [exerciseSessionGoalMinutes, setExerciseSessionGoalMinutes] = useState(DEFAULT_EXERCISE_SESSION_GOAL_MINUTES);
+  const [exerciseGoalDaysOn, setExerciseGoalDaysOn] = useState(DEFAULT_EXERCISE_GOAL_DAYS_ON);
+  const [exerciseGoalDaysOff, setExerciseGoalDaysOff] = useState(DEFAULT_EXERCISE_GOAL_DAYS_OFF);
   const [goalsSaving, setGoalsSaving] = useState(false);
   const [goalsSaveError, setGoalsSaveError] = useState<string | null>(null);
   const [goalsWizardActive, setGoalsWizardActive] = useState(false);
@@ -6571,7 +6588,7 @@ export default function ChatPage() {
     return results;
   }, [journalEntriesSorted, selectedLandingDayKey]);
   const selectedLandingDayRecentExercise = useMemo(() => {
-    const results: { id: string; label: string; caloriesBurned: number; time: string }[] = [];
+    const results: { id: string; label: string; caloriesBurned: number; durationMinutes: number; time: string }[] = [];
     for (const t of journalEntriesSorted) {
       if (t.sourceType !== "journal" || t.journalCategory !== "exercise" || !t.transcriptText) continue;
       let itemDayKey: string | null = null;
@@ -6584,6 +6601,7 @@ export default function ChatPage() {
       if (itemDayKey !== selectedLandingDayKey) continue;
       const label = extractJournalQuickNoteBody(t) || "Exercise entry";
       const burned = extractEstimatedNumber(t.transcriptText, /- Calories burned:\s*([\d.]+)\s*kcal/i) ?? 0;
+      const durationMinutes = parseExerciseDurationMinutesFromText(t.transcriptText);
       let time = "";
       if (typeof t.journalEntryHour === "number" && typeof t.journalEntryMinute === "number") {
         const h = t.journalEntryHour;
@@ -6594,7 +6612,7 @@ export default function ChatPage() {
         const d = new Date(t.createdAt);
         if (!Number.isNaN(d.getTime())) time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
       }
-      results.push({ id: t._id, label, caloriesBurned: Math.round(burned), time });
+      results.push({ id: t._id, label, caloriesBurned: Math.round(burned), durationMinutes, time });
     }
     return results;
   }, [journalEntriesSorted, selectedLandingDayKey]);
@@ -8970,13 +8988,45 @@ export default function ChatPage() {
           rawSpend >= GOAL_SPEND_USD_MIN
             ? Math.round(Math.min(GOAL_SPEND_USD_MAX, rawSpend) * 100) / 100
             : null;
+        const nextSleepHoursGoal = normalizeGoalValue(
+          data?.goalSleepHours,
+          DEFAULT_SLEEP_HOURS_GOAL,
+          GOAL_SLEEP_HOURS_MIN,
+          GOAL_SLEEP_HOURS_MAX
+        );
+        const nextExerciseSessionGoalMinutes = normalizeGoalValue(
+          data?.goalExerciseSessionMinutes,
+          DEFAULT_EXERCISE_SESSION_GOAL_MINUTES,
+          GOAL_EXERCISE_SESSION_MINUTES_MIN,
+          GOAL_EXERCISE_SESSION_MINUTES_MAX
+        );
+        const nextExerciseGoalDaysOn = normalizeGoalValue(
+          data?.goalExerciseDaysOn,
+          DEFAULT_EXERCISE_GOAL_DAYS_ON,
+          GOAL_EXERCISE_DAYS_MIN,
+          GOAL_EXERCISE_DAYS_MAX
+        );
+        const nextExerciseGoalDaysOff = normalizeGoalValue(
+          data?.goalExerciseDaysOff,
+          DEFAULT_EXERCISE_GOAL_DAYS_OFF,
+          GOAL_EXERCISE_DAYS_MIN,
+          GOAL_EXERCISE_DAYS_MAX
+        );
         setSpendBudgetUsd(nextSpend);
+        setSleepHoursGoal(nextSleepHoursGoal);
+        setExerciseSessionGoalMinutes(nextExerciseSessionGoalMinutes);
+        setExerciseGoalDaysOn(nextExerciseGoalDaysOn);
+        setExerciseGoalDaysOff(nextExerciseGoalDaysOff);
         setGoalsDraft({
           caloriesTarget: String(nextGoals.caloriesTarget),
           carbsGrams: String(nextGoals.carbsGrams),
           proteinGrams: String(nextGoals.proteinGrams),
           fatGrams: String(nextGoals.fatGrams),
           dailySpendUsd: nextSpend != null ? String(nextSpend) : "",
+          sleepHoursGoal: String(nextSleepHoursGoal),
+          exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
+          exerciseDaysOn: String(nextExerciseGoalDaysOn),
+          exerciseDaysOff: String(nextExerciseGoalDaysOff),
         });
         const nextNutritionGoalIntent =
           typeof data?.nutritionGoalIntent === "string"
@@ -9160,6 +9210,10 @@ export default function ChatPage() {
       proteinGrams: String(nutritionGoals.proteinGrams),
       fatGrams: String(nutritionGoals.fatGrams),
       dailySpendUsd: spendBudgetUsd != null ? String(spendBudgetUsd) : "",
+      sleepHoursGoal: String(sleepHoursGoal),
+      exerciseSessionMinutes: String(exerciseSessionGoalMinutes),
+      exerciseDaysOn: String(exerciseGoalDaysOn),
+      exerciseDaysOff: String(exerciseGoalDaysOff),
     });
     const derivedPercents = deriveMacroPercentsFromGoals(nutritionGoals);
     skipGoalsMacroRecalculateRef.current = true;
@@ -9188,6 +9242,10 @@ export default function ChatPage() {
     nutritionGoals,
     replaceGoalsCoachIntentDraft,
     router,
+    exerciseGoalDaysOff,
+    exerciseGoalDaysOn,
+    exerciseSessionGoalMinutes,
+    sleepHoursGoal,
     spendBudgetUsd,
   ]);
 
@@ -9220,6 +9278,30 @@ export default function ChatPage() {
       ),
     };
     const nextNutritionGoalIntent = goalsCoachIntentDraftRef.current.trim().slice(0, 500);
+    const nextSleepHoursGoal = normalizeGoalValue(
+      goalsDraft.sleepHoursGoal,
+      sleepHoursGoal,
+      GOAL_SLEEP_HOURS_MIN,
+      GOAL_SLEEP_HOURS_MAX
+    );
+    const nextExerciseSessionGoalMinutes = normalizeGoalValue(
+      goalsDraft.exerciseSessionMinutes,
+      exerciseSessionGoalMinutes,
+      GOAL_EXERCISE_SESSION_MINUTES_MIN,
+      GOAL_EXERCISE_SESSION_MINUTES_MAX
+    );
+    const nextExerciseGoalDaysOn = normalizeGoalValue(
+      goalsDraft.exerciseDaysOn,
+      exerciseGoalDaysOn,
+      GOAL_EXERCISE_DAYS_MIN,
+      GOAL_EXERCISE_DAYS_MAX
+    );
+    const nextExerciseGoalDaysOff = normalizeGoalValue(
+      goalsDraft.exerciseDaysOff,
+      exerciseGoalDaysOff,
+      GOAL_EXERCISE_DAYS_MIN,
+      GOAL_EXERCISE_DAYS_MAX
+    );
     const spendTrim = goalsDraft.dailySpendUsd.trim();
     const spendPatch: { goalDailySpendUsd?: number } = {};
     if (spendTrim !== "") {
@@ -9240,6 +9322,10 @@ export default function ChatPage() {
           goalCarbsGrams: nextGoals.carbsGrams,
           goalProteinGrams: nextGoals.proteinGrams,
           goalFatGrams: nextGoals.fatGrams,
+          goalSleepHours: nextSleepHoursGoal,
+          goalExerciseSessionMinutes: nextExerciseSessionGoalMinutes,
+          goalExerciseDaysOn: nextExerciseGoalDaysOn,
+          goalExerciseDaysOff: nextExerciseGoalDaysOff,
           ...spendPatch,
           nutritionFatLossMethods,
           nutritionFatLossMethod,
@@ -9252,6 +9338,10 @@ export default function ChatPage() {
         throw new Error(j.error || "Could not save goals.");
       }
       setNutritionGoals(nextGoals);
+      setSleepHoursGoal(nextSleepHoursGoal);
+      setExerciseSessionGoalMinutes(nextExerciseSessionGoalMinutes);
+      setExerciseGoalDaysOn(nextExerciseGoalDaysOn);
+      setExerciseGoalDaysOff(nextExerciseGoalDaysOff);
       if (spendPatch.goalDailySpendUsd !== undefined) {
         setSpendBudgetUsd(spendPatch.goalDailySpendUsd);
       }
@@ -9264,6 +9354,10 @@ export default function ChatPage() {
           spendPatch.goalDailySpendUsd !== undefined
             ? String(spendPatch.goalDailySpendUsd)
             : goalsDraft.dailySpendUsd,
+        sleepHoursGoal: String(nextSleepHoursGoal),
+        exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
+        exerciseDaysOn: String(nextExerciseGoalDaysOn),
+        exerciseDaysOff: String(nextExerciseGoalDaysOff),
       });
       setNutritionGoalIntent(nextNutritionGoalIntent);
       setGoalsModalOpen(false);
@@ -9281,6 +9375,10 @@ export default function ChatPage() {
     nutritionFatLossMethod,
     nutritionGoals,
     nutritionMethodConfig,
+    exerciseGoalDaysOff,
+    exerciseGoalDaysOn,
+    exerciseSessionGoalMinutes,
+    sleepHoursGoal,
     userId,
   ]);
 
@@ -13000,11 +13098,11 @@ export default function ChatPage() {
               aria-label="Refresh app"
               title="Refresh app"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M23 4v6h-6" />
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-                <path d="M1 20v-6h6" />
-                <path d="M3.51 9a9 9 0 0 0 2.12 9.36L1 14" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <path d="M16.023 9.348h4.992V4.356" />
+                <path d="M2.985 19.644v-4.992h4.992" />
+                <path d="M4.929 7.5A9 9 0 0 1 18.62 6.76l2.395 2.588" />
+                <path d="M19.071 16.5A9 9 0 0 1 5.38 17.24l-2.395-2.588" />
               </svg>
             </button>
             <button
@@ -15817,7 +15915,10 @@ export default function ChatPage() {
                           setLibraryPanelOpen("habits");
                         }}
                         exerciseBurnGoalKcal={mobileExerciseBurnGoalKcal}
-                        sleepHoursGoal={MOBILE_SLEEP_HOURS_GOAL}
+                        exerciseSessionGoalMinutes={exerciseSessionGoalMinutes}
+                        exerciseGoalDaysOn={exerciseGoalDaysOn}
+                        exerciseGoalDaysOff={exerciseGoalDaysOff}
+                        sleepHoursGoal={sleepHoursGoal}
                         spendBudgetUsd={spendBudgetUsd}
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
@@ -19044,6 +19145,89 @@ export default function ChatPage() {
                       budget unchanged.
                     </p>
                   </div>
+                  <div>
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                      Nightly sleep goal (hours)
+                    </label>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min={GOAL_SLEEP_HOURS_MIN}
+                      max={GOAL_SLEEP_HOURS_MAX}
+                      step={1}
+                      value={goalsDraft.sleepHoursGoal}
+                      onChange={(e) =>
+                        setGoalsDraft((prev) => ({ ...prev, sleepHoursGoal: e.target.value }))
+                      }
+                      disabled={goalsSaving || goalsRecalculateLoading}
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                    <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Used for the 7-day sleep bank summary and the Sleep tab goal pill.
+                    </p>
+                  </div>
+                  <div className="space-y-3 rounded-xl border border-neutral-200 dark:border-neutral-700 p-3">
+                    <p className="text-sm font-semibold text-foreground">Exercise goals</p>
+                    <div>
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                        Time per session (minutes)
+                      </label>
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={GOAL_EXERCISE_SESSION_MINUTES_MIN}
+                        max={GOAL_EXERCISE_SESSION_MINUTES_MAX}
+                        step={5}
+                        value={goalsDraft.exerciseSessionMinutes}
+                        onChange={(e) =>
+                          setGoalsDraft((prev) => ({ ...prev, exerciseSessionMinutes: e.target.value }))
+                        }
+                        disabled={goalsSaving || goalsRecalculateLoading}
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Days on
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={GOAL_EXERCISE_DAYS_MIN}
+                          max={GOAL_EXERCISE_DAYS_MAX}
+                          step={1}
+                          value={goalsDraft.exerciseDaysOn}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, exerciseDaysOn: e.target.value }))
+                          }
+                          disabled={goalsSaving || goalsRecalculateLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Days off
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={GOAL_EXERCISE_DAYS_MIN}
+                          max={GOAL_EXERCISE_DAYS_MAX}
+                          step={1}
+                          value={goalsDraft.exerciseDaysOff}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, exerciseDaysOff: e.target.value }))
+                          }
+                          disabled={goalsSaving || goalsRecalculateLoading}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Exercise tab will use these alongside your calorie-burn goal.
+                    </p>
+                  </div>
                   {goalsCalculatorRationale && (
                     <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>
                   )}
@@ -21067,7 +21251,7 @@ export default function ChatPage() {
 
       {newConversationChooserModalOpen && (
         <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
+          className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
           onClick={() => {
             clearReflectionQuickNoteBridge();
             setNewConversationChooserModalOpen(false);
@@ -21077,12 +21261,12 @@ export default function ChatPage() {
           aria-label={getLandingTranslations(language).conversationChooserTitle}
         >
           <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,520px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
+            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
-              <h2 className="text-lg font-semibold text-foreground pr-2">
-                {getLandingTranslations(language).conversationChooserTitle}
+              <h2 className="text-lg font-semibold text-foreground">
+                New Conversation
               </h2>
               <button
                 type="button"
@@ -21099,216 +21283,134 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3">
-              <div className="px-0.5 py-0">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
-                  {getLandingTranslations(language).conversationResponseStyleLabel}
-                </p>
-                <div className="mt-1 inline-flex items-center gap-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => setNewConversationResponseVerbosity("compact")}
-                    className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                      newConversationResponseVerbosity === "compact"
-                        ? "bg-accent text-white"
-                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200/70 dark:hover:bg-neutral-800"
-                    }`}
-                  >
-                    {getLandingTranslations(language).conversationResponseStyleCompact}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setNewConversationResponseVerbosity("detailed")}
-                    className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                      newConversationResponseVerbosity === "detailed"
-                        ? "bg-accent text-white"
-                        : "text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200/70 dark:hover:bg-neutral-800"
-                    }`}
-                  >
-                    {getLandingTranslations(language).conversationResponseStyleDetailed}
-                  </button>
-                </div>
-              </div>
-              <div className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background overflow-hidden flex flex-col">
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                    activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                    startSecondOrderConversation(!secondOrderCitationsEnabled);
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-accent/10 dark:hover:bg-accent/20 transition-colors active:scale-[0.98]"
-                >
-                  <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-accent">
-                      <path d="M5 19h2l2.2-12H7.2Z" fill="currentColor" />
-                      <rect x="11" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
-                      <rect x="15" y="7" width="2" height="12" rx="0.45" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <div className="min-w-0">
-                    <p className="font-medium text-foreground">{getLandingTranslations(language).secondOrderThinkingTitle}</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).secondOrderThinkingSubtitle}</p>
+            <div className="px-4 py-4 flex-1 min-h-0 overflow-y-auto">
+              <div className="rounded-3xl border border-neutral-200 dark:border-neutral-700 bg-background p-5">
+                  <div className="text-center">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#B87B51] dark:text-[#D6A67E]">
+                      New Conversation
+                    </p>
+                    <p className="mt-2 text-[15px] text-neutral-600 dark:text-neutral-400">
+                      Start a metacognition session with optional settings.
+                    </p>
                   </div>
-                </button>
-                <div
-                  className="px-4 py-2.5 border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1.5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                      {getLandingTranslations(language).secondOrderCitationsToggleLabel}
-                    </span>
+
+                  <div className="mt-6 divide-y divide-neutral-200 dark:divide-neutral-700">
+                    <div className="flex items-center justify-between gap-4 py-4">
+                      <span className="text-[15px] font-medium text-foreground">Show citations</span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={secondOrderCitationsEnabled}
+                        aria-label="Show citations"
+                        onClick={() => setSecondOrderCitationsEnabled((v) => !v)}
+                        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
+                          secondOrderCitationsEnabled ? "bg-[#D1833C]" : "bg-neutral-300 dark:bg-neutral-600"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
+                            secondOrderCitationsEnabled ? "translate-x-7" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 py-4">
+                      <span className="text-[15px] font-medium text-foreground">Detailed responses</span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={newConversationResponseVerbosity === "detailed"}
+                        aria-label="Detailed responses"
+                        onClick={() => {
+                          const next = newConversationResponseVerbosity === "detailed" ? "compact" : "detailed";
+                          setNewConversationResponseVerbosity(next);
+                          if (next === "detailed" && cavemanMode) setCavemanMode(false);
+                        }}
+                        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
+                          newConversationResponseVerbosity === "detailed"
+                            ? "bg-[#D1833C]"
+                            : "bg-neutral-300 dark:bg-neutral-600"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
+                            newConversationResponseVerbosity === "detailed" ? "translate-x-7" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 py-4">
+                      <span className="text-[15px] font-medium text-foreground">Caveman mode</span>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={cavemanMode}
+                        aria-label="Caveman mode"
+                        onClick={() => {
+                          const next = !cavemanMode;
+                          setCavemanMode(next);
+                          if (next && newConversationResponseVerbosity === "detailed") {
+                            setNewConversationResponseVerbosity("compact");
+                          }
+                          fetch("/api/me/settings", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ cavemanMode: next }),
+                          }).catch(() => {});
+                        }}
+                        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
+                          cavemanMode ? "bg-[#D1833C]" : "bg-neutral-300 dark:bg-neutral-600"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
+                            cavemanMode ? "translate-x-7" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSelectionChime();
+                      activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+                      startSecondOrderConversation(
+                        !secondOrderCitationsEnabled,
+                        newConversationResponseVerbosity
+                      );
+                    }}
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#B87B51] bg-[#FBF4EC] px-4 py-3 text-[15px] font-semibold text-[#8A5A2D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  >
+                    <span>Start conversation</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                      <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+
+                  {sessions.length > 0 ? (
                     <button
                       type="button"
-                      role="switch"
-                      aria-checked={secondOrderCitationsEnabled}
-                      aria-label={getLandingTranslations(language).secondOrderCitationsToggleLabel}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSecondOrderCitationsEnabled((v) => !v);
+                      onClick={() => {
+                        playSelectionChime();
+                        clearReflectionQuickNoteBridge();
+                        setNewConversationChooserModalOpen(false);
+                        setLibraryPanelOpen("conversations");
                       }}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                        secondOrderCitationsEnabled ? "bg-accent" : "bg-neutral-300 dark:bg-neutral-600"
-                      }`}
+                      className="mt-4 flex w-full items-center justify-between gap-3 text-left text-neutral-600 transition-colors hover:text-foreground dark:text-neutral-400 dark:hover:text-neutral-200"
                     >
-                      <span
-                        className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                          secondOrderCitationsEnabled ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
+                      <span className="text-[15px]">
+                        {sessions.length} past conversation{sessions.length === 1 ? "" : "s"}
+                      </span>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
+                        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                      </svg>
                     </button>
-                  </div>
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                    {secondOrderCitationsEnabled
-                      ? getLandingTranslations(language).secondOrderCitationsHelpOn
-                      : getLandingTranslations(language).secondOrderCitationsHelpOff}
-                  </p>
+                  ) : null}
                 </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  playSelectionChime();
-                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                  setNewConversationChooserModalOpen(false);
-                  if (sessionId !== "new" && sessionId !== "incognito") {
-                    try {
-                      sessionStorage.setItem(
-                        RESPONSE_VERBOSITY_START_KEY,
-                        newConversationResponseVerbosity
-                      );
-                      sessionStorage.setItem(MENTOR_PICKER_FROM_CHOOSER_KEY, "1");
-                    } catch {
-                      /* ignore */
-                    }
-                    router.push("/chat/new");
-                  } else {
-                    setMentorCatalogSearch("");
-                    setMentorCatalogCategoryId(null);
-                    setMentorOneOnOneModalOpen(true);
-                  }
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getLandingTranslations(language).mentorOneOnOneTitle}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).mentorOneOnOneSubtitle}</p>
-                </div>
-              </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    playSelectionChime();
-                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                  clearReflectionQuickNoteBridge();
-                  setNewConversationChooserModalOpen(false);
-                  void handleTeachMeClick();
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                    <path d="M12 3v18" />
-                    </svg>
-                  </span>
-                  <div className="min-w-0">
-                  <p className="font-medium text-foreground">Learn a New Mental Model</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Discover a fresh framework to apply right now.</p>
-                  </div>
-                </button>
-                  <button
-                    type="button"
-                onClick={() => {
-                  playSelectionChime();
-                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
-                  clearReflectionQuickNoteBridge();
-                  setNewConversationChooserModalOpen(false);
-                  setLibraryPanelOpen(null);
-                  setWaysOfLookingAtModalOpen(true);
-                  setWaysOfLookingAtDrawMode(false);
-                  setWaysOfLookingAtCategory(null);
-                  setWaysOfLookingAtCity(null);
-                  setWaysOfLookingAtCuisine(null);
-                  setWaysOfLookingAtMicrocosm(null);
-                  setWaysOfLookingAtHuman(null);
-                  setWaysOfLookingAtDigital(null);
-                  if (sessionId !== "new" && sessionId !== "incognito") {
-                    try {
-                      sessionStorage.setItem(
-                        RESPONSE_VERBOSITY_START_KEY,
-                        newConversationResponseVerbosity
-                      );
-                    } catch {
-                      /* ignore */
-                    }
-                  }
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-accent/10 dark:hover:bg-accent/20 hover:border-accent/50 dark:hover:border-accent/60 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-accent/15 dark:bg-accent/20 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent">
-                    <rect width="18" height="14" x="3" y="3" rx="2" />
-                    <path d="M3 9h18" />
-                    <path d="M3 15h18" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getUiTranslations(language).promptGames}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">Use card-style lenses to rethink your situation.</p>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  clearReflectionQuickNoteBridge();
-                  setNewConversationChooserModalOpen(false);
-                  openJournalTypeChooser();
-                }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-background hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 text-left transition-all duration-200 active:scale-[0.98]"
-              >
-                <span className="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
-                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                    <path d="M8 7h8" />
-                    <path d="M8 11h6" />
-                  </svg>
-                </span>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground">{getLandingTranslations(language).journalEntryButtonLabel}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{getLandingTranslations(language).journalEntryButtonSubtitle}</p>
-                </div>
-              </button>
             </div>
           </div>
         </div>

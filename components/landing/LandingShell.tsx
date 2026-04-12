@@ -341,7 +341,7 @@ interface LandingShellProps {
   recentFoodEntries: Array<{ id: string; label: string; calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number; time: string }>;
   onRecentFoodEntryClick?: (id: string) => void;
   onRecentFoodEntryDelete?: (id: string) => void;
-  recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; time: string }>;
+  recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; durationMinutes: number; time: string }>;
   onRecentExerciseEntryClick?: (id: string) => void;
   onRecentExerciseEntryDelete?: (id: string) => void;
   inlineExerciseInput: string;
@@ -449,6 +449,12 @@ interface LandingShellProps {
   onFindNewHabit: (bucket: HabitBucket) => void;
   /** Mobile exercise tab: daily calorie burn target (derived from nutrition intake goal). */
   exerciseBurnGoalKcal: number;
+  /** Mobile exercise tab: target duration for each exercise session. */
+  exerciseSessionGoalMinutes: number;
+  /** Mobile exercise tab: cadence target active days before rest. */
+  exerciseGoalDaysOn: number;
+  /** Mobile exercise tab: cadence target rest days after active streak. */
+  exerciseGoalDaysOff: number;
   /** Mobile sleep tab: nightly sleep hour target (e.g. 8). */
   sleepHoursGoal: number;
   /** Mobile spend tab: optional USD daily cap from settings; null shows hint to set in Goals. */
@@ -616,6 +622,9 @@ export function LandingShell({
   onReorderHeroHabits,
   onFindNewHabit,
   exerciseBurnGoalKcal,
+  exerciseSessionGoalMinutes,
+  exerciseGoalDaysOn,
+  exerciseGoalDaysOff,
   sleepHoursGoal,
   spendBudgetUsd,
   dashboardScrollRootRef,
@@ -806,6 +815,7 @@ export function LandingShell({
             nutritionGoals={nutritionGoals}
             weeklySummary={weeklySummary}
             onOpenNutrition={onOpenNutrition}
+            onOpenGoals={onOpenGoals}
             onSearchFood={onSearchFood}
             onCaptureFood={onCaptureFood}
             inlineFoodInput={inlineFoodInput}
@@ -825,10 +835,14 @@ export function LandingShell({
           <LandingMobileExerciseTab
             caloriesBurned={nutrition?.caloriesExercise ?? 0}
             exerciseBurnGoalKcal={exerciseBurnGoalKcal}
+            exerciseSessionGoalMinutes={exerciseSessionGoalMinutes}
+            exerciseGoalDaysOn={exerciseGoalDaysOn}
+            exerciseGoalDaysOff={exerciseGoalDaysOff}
             recentExerciseEntries={recentExerciseEntries}
             onRecentExerciseEntryClick={onRecentExerciseEntryClick}
             onRecentExerciseEntryDelete={onRecentExerciseEntryDelete}
             onOpenExercise={onOpenExercise}
+            onOpenGoals={onOpenGoals}
             inlineExerciseInput={inlineExerciseInput}
             onInlineExerciseInputChange={onInlineExerciseInputChange}
             onInlineExerciseSubmit={onInlineExerciseSubmit}
@@ -860,6 +874,7 @@ export function LandingShell({
             noTargetYetLabel={noTargetYetLabel}
             openLabel={openLabel}
             onOpenWeight={onOpenWeight}
+            onOpenGoals={onOpenGoals}
           />
         );
       case "sleep":
@@ -873,6 +888,7 @@ export function LandingShell({
             onSaveSleepEntry={onSaveSleepEntry}
             onViewSleepInsights={onViewSleepInsights}
             sleepHoursGoal={sleepHoursGoal}
+            onOpenGoals={onOpenGoals}
           />
         );
       case "habits":
@@ -971,6 +987,64 @@ export function LandingShell({
                         </button>
                       )}
                     </div>
+                  </div>
+
+                  <div className="module-nested p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                      New Conversation
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Start a metacognition session with optional settings.
+                    </p>
+                    <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+                      <ToggleRow
+                        label="Show citations"
+                        checked={secondOrderCitationsEnabled}
+                        onChange={onToggleSecondOrderCitations}
+                      />
+                      <ToggleRow
+                        label="Detailed responses"
+                        checked={responseVerbosity === "detailed"}
+                        onChange={() => {
+                          const next = responseVerbosity === "detailed" ? "compact" : "detailed";
+                          onResponseVerbosityChange(next);
+                          if (next === "detailed" && cavemanMode) onCavemanModeChange(false);
+                        }}
+                      />
+                      <ToggleRow
+                        label="Caveman mode"
+                        checked={cavemanMode}
+                        onChange={() => {
+                          const next = !cavemanMode;
+                          onCavemanModeChange(next);
+                          if (next && responseVerbosity === "detailed") onResponseVerbosityChange("compact");
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onStartMindLabConversation}
+                      className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                    >
+                      Start conversation
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                    {conversationCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={onOpenConversations}
+                        className="mt-2 flex w-full items-center justify-between text-left transition-colors hover:opacity-70"
+                      >
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                          {conversationCount} past conversation{conversationCount !== 1 ? "s" : ""}
+                        </p>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
+                          <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    )}
                   </div>
 
                   <div className="module-nested p-3">
@@ -1558,6 +1632,7 @@ export function LandingShell({
           entries={sleepEntries}
           focusSuggestion={sleepFocusSuggestion}
           onViewSleepInsights={onViewSleepInsights}
+          targetHours={sleepHoursGoal}
         />
       </div>
 

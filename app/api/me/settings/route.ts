@@ -14,6 +14,12 @@ const GOAL_MACRO_MIN = 10;
 const GOAL_MACRO_MAX = 1000;
 const GOAL_SPEND_USD_MIN = 1;
 const GOAL_SPEND_USD_MAX = 100_000;
+const GOAL_SLEEP_HOURS_MIN = 4;
+const GOAL_SLEEP_HOURS_MAX = 12;
+const GOAL_EXERCISE_SESSION_MINUTES_MIN = 10;
+const GOAL_EXERCISE_SESSION_MINUTES_MAX = 240;
+const GOAL_EXERCISE_DAYS_MIN = 1;
+const GOAL_EXERCISE_DAYS_MAX = 7;
 const BACKGROUND_ELEMENTS = ["default", "air", "water", "earth", "fire"] as const;
 const PREFERRED_NAME_MAX = 80;
 const NUTRITION_GOAL_INTENT_MAX = 500;
@@ -43,6 +49,20 @@ function clampGoalMacro(v: number): number {
 
 function clampGoalSpendUsd(v: number): number {
   return Math.round(Math.max(GOAL_SPEND_USD_MIN, Math.min(GOAL_SPEND_USD_MAX, v)) * 100) / 100;
+}
+
+function clampGoalSleepHours(v: number): number {
+  return Math.round(Math.max(GOAL_SLEEP_HOURS_MIN, Math.min(GOAL_SLEEP_HOURS_MAX, v)));
+}
+
+function clampGoalExerciseSessionMinutes(v: number): number {
+  return Math.round(
+    Math.max(GOAL_EXERCISE_SESSION_MINUTES_MIN, Math.min(GOAL_EXERCISE_SESSION_MINUTES_MAX, v))
+  );
+}
+
+function clampGoalExerciseDays(v: number): number {
+  return Math.round(Math.max(GOAL_EXERCISE_DAYS_MIN, Math.min(GOAL_EXERCISE_DAYS_MAX, v)));
 }
 
 function isValidBackground(b: unknown): b is "default" | "air" | "water" | "earth" | "fire" {
@@ -161,6 +181,30 @@ export async function PATCH(request: Request) {
       const v = parseNumberish(body.goalDailySpendUsd);
       if (v !== null) {
         updates.goalDailySpendUsd = clampGoalSpendUsd(v);
+      }
+    }
+    if (body.goalSleepHours !== undefined) {
+      const v = parseNumberish(body.goalSleepHours);
+      if (v !== null) {
+        updates.goalSleepHours = clampGoalSleepHours(v);
+      }
+    }
+    if (body.goalExerciseSessionMinutes !== undefined) {
+      const v = parseNumberish(body.goalExerciseSessionMinutes);
+      if (v !== null) {
+        updates.goalExerciseSessionMinutes = clampGoalExerciseSessionMinutes(v);
+      }
+    }
+    if (body.goalExerciseDaysOn !== undefined) {
+      const v = parseNumberish(body.goalExerciseDaysOn);
+      if (v !== null) {
+        updates.goalExerciseDaysOn = clampGoalExerciseDays(v);
+      }
+    }
+    if (body.goalExerciseDaysOff !== undefined) {
+      const v = parseNumberish(body.goalExerciseDaysOff);
+      if (v !== null) {
+        updates.goalExerciseDaysOff = clampGoalExerciseDays(v);
       }
     }
     if (body.nutritionFatLossMethod !== undefined && isNutritionFatLossMethod(body.nutritionFatLossMethod)) {

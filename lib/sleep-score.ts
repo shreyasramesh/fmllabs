@@ -90,6 +90,10 @@ export interface SleepBankResult {
   type: "surplus" | "deficit" | "balanced";
 }
 
+function formatGoalHours(targetHours: number): string {
+  return Number.isInteger(targetHours) ? String(targetHours) : targetHours.toFixed(1).replace(/\.0$/, "");
+}
+
 export function computeSleepBank(entries: LandingSleepEntry[], targetHours = 8): SleepBankResult {
   const sorted = [...entries].sort((a, b) => a.dayKey.localeCompare(b.dayKey));
   const last7 = sorted.slice(-7);
@@ -100,12 +104,26 @@ export function computeSleepBank(entries: LandingSleepEntry[], targetHours = 8):
   const mins = totalMinutes % 60;
   const hLabel = hours > 0 ? `${hours}h ` : "";
   const mLabel = `${mins}m`;
+  const targetLabel = formatGoalHours(targetHours);
+  const durationLabel = `${hLabel}${mLabel}`;
 
   if (Math.abs(totalDiff) < 0.15) {
-    return { totalMinutes: 0, label: "Balanced", type: "balanced" };
+    return {
+      totalMinutes: 0,
+      label: `Past 7 days: on target for your ${targetLabel}h/night goal`,
+      type: "balanced",
+    };
   }
   if (totalDiff > 0) {
-    return { totalMinutes, label: `${hLabel}${mLabel} Surplus`, type: "surplus" };
+    return {
+      totalMinutes,
+      label: `Past 7 days: ${durationLabel} above your ${targetLabel}h/night goal`,
+      type: "surplus",
+    };
   }
-  return { totalMinutes, label: `${hLabel}${mLabel} Deficit`, type: "deficit" };
+  return {
+    totalMinutes,
+    label: `Past 7 days: ${durationLabel} below your ${targetLabel}h/night goal`,
+    type: "deficit",
+  };
 }
