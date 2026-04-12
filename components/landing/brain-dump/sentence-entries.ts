@@ -51,7 +51,7 @@ export function looksLikeFoodSentence(s: string): boolean {
   return foodish.test(t) || /\d/.test(t);
 }
 
-/** Sleep / rest logging — handled locally (no nutrition-quick-estimate). */
+/** Sleep / rest preview — handled locally (no nutrition-quick-estimate call). */
 export function looksLikeSleepSentence(s: string): boolean {
   const t = s.trim();
   if (t.length < 2 || t.length > 280) return false;

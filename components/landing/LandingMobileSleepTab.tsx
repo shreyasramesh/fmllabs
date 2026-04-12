@@ -7,6 +7,8 @@ import type {
   LandingSleepEntry,
 } from "@/components/landing/types";
 import { LandingMobileSleepGoalPanel } from "@/components/landing/LandingMobileSleepGoalPanel";
+import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
+import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
 
 interface LandingMobileSleepTabProps {
   selectedDayLabel: string;
@@ -29,7 +31,7 @@ export function LandingMobileSleepTab({
   onViewSleepInsights,
   sleepHoursGoal,
 }: LandingMobileSleepTabProps) {
-  const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
+  const [sleepHoursInput, setSleepHoursInput] = useState(7.5);
   const [hrvInput, setHrvInput] = useState("");
   const [sleepScoreInput, setSleepScoreInput] = useState("");
 
@@ -41,11 +43,11 @@ export function LandingMobileSleepTab({
 
   useEffect(() => {
     if (sleepForSelectedDay) {
-      setSleepHoursInput(String(sleepForSelectedDay.sleepHours));
+      setSleepHoursInput(roundSleepHoursToMinute(sleepForSelectedDay.sleepHours));
       setHrvInput(sleepForSelectedDay.hrvMs != null ? String(sleepForSelectedDay.hrvMs) : "");
       setSleepScoreInput(sleepForSelectedDay.sleepScore != null ? String(sleepForSelectedDay.sleepScore) : "");
     } else {
-      setSleepHoursInput("7.5");
+      setSleepHoursInput(7.5);
       setHrvInput("");
       setSleepScoreInput("");
     }
@@ -58,14 +60,14 @@ export function LandingMobileSleepTab({
   ]);
 
   function handleSave() {
-    const hours = parseFloat(sleepHoursInput);
-    if (isNaN(hours) || hours < 0.5 || hours > 24) return;
+    const hours = sleepHoursInput;
+    if (!Number.isFinite(hours) || hours < 0.5 || hours > 24) return;
     const hrv = hrvInput.trim() ? parseFloat(hrvInput) : null;
     if (hrv != null && (isNaN(hrv) || hrv < 1 || hrv > 300)) return;
     const score = sleepScoreInput.trim() ? parseFloat(sleepScoreInput) : null;
     if (score != null && (isNaN(score) || score < 1 || score > 100)) return;
     onSaveSleepEntry(
-      Math.round(hours * 10) / 10,
+      roundSleepHoursToMinute(hours),
       hrv != null ? Math.round(hrv) : null,
       score != null ? Math.round(score) : null,
     );
@@ -87,17 +89,18 @@ export function LandingMobileSleepTab({
       <div className="landing-module-glass space-y-3 rounded-2xl border p-4">
         <div>
           <label className="block text-sm font-medium text-neutral-600 dark:text-neutral-300">
-            Sleep duration (hours)
+            Sleep duration
           </label>
-          <input
-            type="number"
-            step="0.5"
-            min="0.5"
-            max="24"
-            value={sleepHoursInput}
-            onChange={(e) => setSleepHoursInput(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
-          />
+          <div className="mt-1 rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 dark:border-neutral-600 dark:bg-neutral-800">
+            <SleepDurationPicker
+              valueHours={sleepHoursInput}
+              onChangeHours={setSleepHoursInput}
+              disabled={sleepSaving}
+              className="w-full justify-center"
+              selectClassName="min-w-[4.5rem] appearance-none bg-transparent text-center text-base font-medium tabular-nums text-foreground outline-none"
+              separatorClassName="text-base font-medium tabular-nums text-neutral-500 dark:text-neutral-400"
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -145,7 +148,7 @@ export function LandingMobileSleepTab({
         {/* Status line */}
         {sleepForSelectedDay ? (
           <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
-            Logged: {sleepForSelectedDay.sleepHours}h sleep
+            Logged: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
             {sleepForSelectedDay.hrvMs != null ? ` · ${sleepForSelectedDay.hrvMs} ms HRV` : ""}
             {sleepForSelectedDay.sleepScore != null ? ` · ${sleepForSelectedDay.sleepScore}/100` : ""}
           </p>

@@ -397,7 +397,7 @@ export function CaptureDraftSentenceRow({
           disabled={disabled}
           rows={variant === "fullScreen" ? 2 : 1}
           autoFocus
-          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing or add photos below…"}
+          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing…"}
           className={`${taMin} min-w-0 w-full resize-none border-0 bg-transparent ${variant === "fullScreen" ? "text-[16px] leading-tight" : "text-[17px] leading-snug"} text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-100 ${NOTES_LIKE_TEXTAREA}`}
           aria-label="Note draft"
         />

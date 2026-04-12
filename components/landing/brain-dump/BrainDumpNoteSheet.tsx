@@ -17,6 +17,8 @@ import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/Highli
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
+import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
+import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
 import {
   JOURNAL_CATEGORY_DOT_BASE,
   journalContextDotClass,
@@ -249,6 +251,10 @@ function isJournalContextRowDeletable(row: BrainDumpJournalContextRow): boolean 
     row.rowSource === "weight" ||
     row.rowSource === "sleep"
   );
+}
+
+function shouldKeepJournalContextTitleInline(cat: BrainDumpJournalContextRow["journalCategory"]): boolean {
+  return cat === "weight" || cat === "sleep";
 }
 
 const REFLECTION_NEW_CONV_BTN_BASE =
@@ -501,7 +507,11 @@ function JournalContextRowSheet({
                   text={row.bodyText}
                   segments={sheetHighlightSegments}
                   as="span"
-                  className="min-w-0 shrink text-[17px] leading-tight text-foreground"
+                  className={`min-w-0 text-[17px] leading-tight text-foreground ${
+                    shouldKeepJournalContextTitleInline(row.journalCategory)
+                      ? "shrink-0 whitespace-nowrap"
+                      : "shrink"
+                  }`}
                 />
                 {metricOnLeft ? (
                   <span
@@ -561,7 +571,9 @@ function JournalContextRowSheet({
                   text={row.bodyText}
                   segments={sheetHighlightSegments}
                   as="span"
-                  className="shrink-0 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words"
+                  className={`shrink-0 text-[17px] leading-tight text-foreground ${
+                    shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
+                  }`}
                 />
                 <span
                   className={`shrink-0 text-[15px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
@@ -750,10 +762,18 @@ function JournalContextRowNoteStream({
                       <HighlightedQuickNoteText
                         text={singleLineForHighlights}
                         segments={highlightSegments}
-                        className="min-w-0 flex-1 whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                      className={`min-w-0 flex-1 text-[16px] leading-snug text-foreground ${
+                        shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-normal break-words"
+                      }`}
                       />
                     ) : (
-                      <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">{rawDisplay}</span>
+                      <span
+                        className={`min-w-0 flex-1 ${
+                          shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
+                        }`}
+                      >
+                        {rawDisplay}
+                      </span>
                     )}
                     {row.habitCompletionCheck ? (
                       <span
@@ -815,10 +835,22 @@ function JournalContextRowNoteStream({
                     <HighlightedQuickNoteText
                       text={singleLineForHighlights}
                       segments={highlightSegments}
-                      className="min-w-0 shrink whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                      className={`min-w-0 text-[16px] leading-snug text-foreground ${
+                        shouldKeepJournalContextTitleInline(row.journalCategory)
+                          ? "shrink-0 whitespace-nowrap"
+                          : "shrink whitespace-normal break-words"
+                      }`}
                     />
                   ) : (
-                    <span className="min-w-0 shrink whitespace-pre-wrap break-words">{rawDisplay}</span>
+                    <span
+                      className={`min-w-0 ${
+                        shouldKeepJournalContextTitleInline(row.journalCategory)
+                          ? "shrink-0 whitespace-nowrap"
+                          : "shrink whitespace-pre-wrap break-words"
+                      }`}
+                    >
+                      {rawDisplay}
+                    </span>
                   )}
                   {metricOnLeft ? (
                     <span
@@ -882,10 +914,18 @@ function JournalContextRowNoteStream({
                   <HighlightedQuickNoteText
                     text={singleLineForHighlights}
                     segments={highlightSegments}
-                    className="shrink-0 whitespace-normal break-words text-[16px] leading-snug text-foreground"
+                    className={`shrink-0 text-[16px] leading-snug text-foreground ${
+                      shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-normal break-words"
+                    }`}
                   />
                 ) : (
-                  <span className="shrink-0 whitespace-pre-wrap break-words text-[16px] leading-snug">{rawDisplay}</span>
+                  <span
+                    className={`shrink-0 text-[16px] leading-snug ${
+                      shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
+                    }`}
+                  >
+                    {rawDisplay}
+                  </span>
                 )}
                 <span
                   className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
@@ -1398,21 +1438,19 @@ export function BrainDumpReviewView({
       {cat === "sleep" && (
         <div className={INSET_GROUP_CLS}>
           <label className={INSET_ROW_CLS}>
-            <span className="flex-1 text-sm text-neutral-600 dark:text-neutral-300">Hours slept</span>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              max="24"
-              value={fields.sleepHours ?? ""}
-              onChange={(e) =>
+            <span className="flex-1 text-sm text-neutral-600 dark:text-neutral-300">Sleep duration</span>
+            <SleepDurationPicker
+              valueHours={fields.sleepHours ?? 7.5}
+              onChangeHours={(hours) =>
                 setFields({
                   ...fields,
-                  sleepHours: e.target.value ? parseFloat(e.target.value) : undefined,
+                  sleepHours: roundSleepHoursToMinute(hours),
                 })
               }
               disabled={disabled}
-              className="w-24 border-0 bg-transparent text-right text-[17px] font-medium tabular-nums focus:outline-none"
+              className="justify-end"
+              selectClassName="min-w-[3.5rem] appearance-none border-0 bg-transparent text-right text-[17px] font-medium tabular-nums text-foreground focus:outline-none"
+              separatorClassName="text-[17px] font-medium tabular-nums text-neutral-400"
             />
           </label>
           <label className={INSET_ROW_CLS}>

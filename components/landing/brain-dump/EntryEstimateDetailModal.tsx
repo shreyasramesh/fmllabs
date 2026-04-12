@@ -27,7 +27,7 @@ export type EntryEstimateModalMeta =
       sourceCount: number;
       confidence: string;
       intent: string;
-      /** Set for local sleep summary (no nutrition API). */
+      /** Set for local sleep preview metadata (no nutrition API). */
       sleepHours?: number | null;
       reasoning: string;
       assumptions: string[];
@@ -56,7 +56,7 @@ export function EntryEstimateDetailModal({
   open: boolean;
   onClose: () => void;
   text: string;
-  /** True when this line matched food, exercise, or sleep heuristics (estimate or local summary). */
+  /** True when this line matched preview heuristics for an inline estimate or sleep summary. */
   attemptedEstimate: boolean;
   meta: EntryEstimateModalMeta;
 }) {
@@ -142,8 +142,8 @@ export function EntryEstimateDetailModal({
 
             {!attemptedEstimate && (
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                This line didn&apos;t match food, activity, or sleep wording, so no summary was shown. You can still edit
-                it in your note.
+                No inline preview is available for this line yet. Saving still uses Gemini categorization for the final
+                entry type.
               </p>
             )}
 
@@ -155,7 +155,7 @@ export function EntryEstimateDetailModal({
 
             {attemptedEstimate && meta.status === "idle" && (
               <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                No estimate yet. Try again in a moment.
+                Preview unavailable right now. Saving still uses Gemini categorization for the final entry type.
               </p>
             )}
 
@@ -168,8 +168,8 @@ export function EntryEstimateDetailModal({
                 </p>
                 <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {meta.sleepHours != null && meta.sleepHours > 0
-                    ? "This line is summarized as sleep from the duration in your note (not a calorie estimate)."
-                    : "This line looks like sleep. Add a duration (for example 7 hours) to log time asleep more clearly."}
+                    ? "This inline preview reads the duration in your note as sleep time. Saving still uses Gemini categorization."
+                    : "This line looks like sleep for preview purposes. Add a duration (for example 7 hours) to show a clearer sleep preview."}
                 </p>
               </div>
             ) : null}

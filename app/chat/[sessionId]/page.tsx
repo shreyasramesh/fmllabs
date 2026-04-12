@@ -114,6 +114,8 @@ import {
 } from "@/lib/quick-note-highlights";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 import { buildHydratedJournalImageText } from "@/lib/journal-image-analysis";
+import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
+import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -5202,7 +5204,7 @@ export default function ChatPage() {
     sleepScore: number | null;
   }>(null);
   const [sleepEditSaving, setSleepEditSaving] = useState(false);
-  const [sleepEditHoursInput, setSleepEditHoursInput] = useState("7.5");
+  const [sleepEditHoursInput, setSleepEditHoursInput] = useState(7.5);
   const [sleepEditHrvInput, setSleepEditHrvInput] = useState("");
   const [sleepEditScoreInput, setSleepEditScoreInput] = useState("");
   const [weightTrackerModalOpen, setWeightTrackerModalOpen] = useState(false);
@@ -6700,7 +6702,15 @@ export default function ChatPage() {
         };
       });
 
-    const sleepForDay = sleepEntries.filter((e) => e.dayKey === selectedLandingDayKey);
+    const sleepForDay = sleepEntries
+      .filter((e) => e.dayKey === selectedLandingDayKey)
+      .slice()
+      .sort((a, b) => {
+        const aMs = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bMs = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (aMs !== bMs) return aMs - bMs;
+        return a.id.localeCompare(b.id);
+      });
     const sleepAnchor = (() => {
       const [y, m, d] = selectedLandingDayKey.split("-").map((s) => parseInt(s, 10));
       if (!y || !m || !d) return 0;
@@ -6724,7 +6734,9 @@ export default function ChatPage() {
         time,
         caloriesSummary: null,
         metricSummary: `${hoursRounded} h`,
-        sortAtMs: sleepAnchor + idx * 60_000,
+        sortAtMs: e.createdAt && !Number.isNaN(new Date(e.createdAt).getTime())
+          ? new Date(e.createdAt).getTime()
+          : sleepAnchor + idx * 60_000,
       };
     });
 
@@ -10880,7 +10892,7 @@ export default function ChatPage() {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 id: existing.id,
-                sleepHours: Math.round(sleepHours * 10) / 10,
+                sleepHours: roundSleepHoursToMinute(sleepHours),
                 hrvMs,
                 sleepScore,
               }),
@@ -10910,8 +10922,8 @@ export default function ChatPage() {
 
   const saveSleepEntryEdit = useCallback(async () => {
     if (!sleepEntryEditModal) return;
-    const hours = parseFloat(sleepEditHoursInput);
-    if (Number.isNaN(hours) || hours < 0.5 || hours > 24) return;
+    const hours = sleepEditHoursInput;
+    if (!Number.isFinite(hours) || hours < 0.5 || hours > 24) return;
     const hrvRaw = sleepEditHrvInput.trim();
     let hrvMs: number | null = null;
     if (hrvRaw) {
@@ -10933,7 +10945,7 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: sleepEntryEditModal.id,
-          sleepHours: Math.round(hours * 10) / 10,
+          sleepHours: roundSleepHoursToMinute(hours),
           hrvMs,
           sleepScore,
         }),
@@ -10978,7 +10990,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!sleepEntryEditModal) return;
-    setSleepEditHoursInput(String(sleepEntryEditModal.sleepHours));
+    setSleepEditHoursInput(roundSleepHoursToMinute(sleepEntryEditModal.sleepHours));
     setSleepEditHrvInput(sleepEntryEditModal.hrvMs != null ? String(sleepEntryEditModal.hrvMs) : "");
     setSleepEditScoreInput(sleepEntryEditModal.sleepScore != null ? String(sleepEntryEditModal.sleepScore) : "");
   }, [sleepEntryEditModal]);
@@ -19982,17 +19994,17 @@ export default function ChatPage() {
             </div>
             <div className="p-4 space-y-3">
               <label className="block">
-                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Hours</span>
-                <input
-                  type="number"
-                  step="0.1"
-                  min={0.5}
-                  max={24}
-                  value={sleepEditHoursInput}
-                  onChange={(e) => setSleepEditHoursInput(e.target.value)}
-                  disabled={sleepEditSaving}
-                  className="mt-1 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm"
-                />
+                <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">Sleep duration</span>
+                <div className="mt-1 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950">
+                  <SleepDurationPicker
+                    valueHours={sleepEditHoursInput}
+                    onChangeHours={setSleepEditHoursInput}
+                    disabled={sleepEditSaving}
+                    className="w-full justify-center"
+                    selectClassName="min-w-[4rem] appearance-none bg-transparent text-center text-sm font-medium tabular-nums text-foreground outline-none"
+                    separatorClassName="text-sm font-medium tabular-nums text-neutral-500 dark:text-neutral-400"
+                  />
+                </div>
               </label>
               <label className="block">
                 <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">HRV (ms, optional)</span>

@@ -4,6 +4,7 @@ import { addSleepEntry, deleteSleepEntry, getSleepEntries, updateSleepEntry } fr
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
+import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
 
 function parseFiniteNumber(value: unknown): number | null {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -102,7 +103,7 @@ export async function POST(request: Request) {
     const { day, month, year } = normalizeDatePartsFromBody(body, new Date());
 
     await addSleepEntry(userId, {
-      sleepHours: Math.round(sleepHours * 10) / 10,
+      sleepHours: roundSleepHoursToMinute(sleepHours),
       hrvMs,
       sleepScore,
       entryDay: day,
@@ -167,7 +168,7 @@ export async function PATCH(request: Request) {
       if (parsed == null || parsed < 0.5 || parsed > 24) {
         return NextResponse.json({ error: "sleepHours must be between 0.5 and 24" }, { status: 400 });
       }
-      updates.sleepHours = Math.round(parsed * 10) / 10;
+      updates.sleepHours = roundSleepHoursToMinute(parsed);
     }
 
     if (Object.keys(updates).length === 0) {

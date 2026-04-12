@@ -7,7 +7,6 @@ import type { BrainDumpCaptureEntry } from "@/components/landing/brain-dump/Nutr
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping, shouldRunQuickEstimate } from "@/components/landing/brain-dump/sentence-entries";
 import type { ClientQuickCalorieSnapshot } from "@/lib/quick-calorie-snapshot";
-import { brainDumpResultFromQuickEstimateLine } from "@/lib/brain-dump-quick-note-fields";
 
 export type BrainDumpModalPhase = "idle" | "recording" | "categorizing" | "saving";
 
@@ -114,16 +113,7 @@ export function useBrainDumpCapture(options: {
           frozenMeta.status === "done" && shouldRunQuickEstimate(text)
             ? doneMetaToQuickSnapshot(text, frozenMeta)
             : null;
-
-        /** Inline estimate already ran; avoid categorizeBrainDump + second finalize when intent maps cleanly. */
-        const fromEstimate =
-          frozenMeta.status === "done" &&
-          (shouldRunQuickEstimate(text) || frozenMeta.intent === "sleep")
-            ? brainDumpResultFromQuickEstimateLine(text, frozenMeta.intent, frozenMeta.sleepHours)
-            : null;
-
-        const entries =
-          fromEstimate != null ? [fromEstimate] : await categorizeText(text);
+        const entries = await categorizeText(text);
 
         const quickCals =
           snap && entries.length === 1 ? ([snap] satisfies ClientQuickCalorieSnapshot[]) : undefined;

@@ -18,6 +18,8 @@ import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeight
 import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
 import { LandingMobileHabitsTab } from "@/components/landing/LandingMobileHabitsTab";
 import { LandingMobileSpendTab } from "@/components/landing/LandingMobileSpendTab";
+import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
+import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
 import { useTheme } from "@/components/ThemeProvider";
 import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
@@ -628,7 +630,7 @@ export function LandingShell({
       ? Math.abs(weightCurrentKg - weightTargetKg).toFixed(1)
       : null;
 
-  const [sleepHoursInput, setSleepHoursInput] = useState("7.5");
+  const [sleepHoursInput, setSleepHoursInput] = useState(7.5);
   const [hrvInput, setHrvInput] = useState("");
   const [sleepScoreInput, setSleepScoreInput] = useState("");
   const [sleepFormOpen, setSleepFormOpen] = useState(false);
@@ -650,11 +652,11 @@ export function LandingShell({
 
   useEffect(() => {
     if (sleepForSelectedDay) {
-      setSleepHoursInput(String(sleepForSelectedDay.sleepHours));
+      setSleepHoursInput(roundSleepHoursToMinute(sleepForSelectedDay.sleepHours));
       setHrvInput(sleepForSelectedDay.hrvMs != null ? String(sleepForSelectedDay.hrvMs) : "");
       setSleepScoreInput(sleepForSelectedDay.sleepScore != null ? String(sleepForSelectedDay.sleepScore) : "");
     } else {
-      setSleepHoursInput("7.5");
+      setSleepHoursInput(7.5);
       setHrvInput("");
       setSleepScoreInput("");
     }
@@ -667,14 +669,14 @@ export function LandingShell({
   ]);
 
   function handleSaveSleep() {
-    const hours = parseFloat(sleepHoursInput);
-    if (isNaN(hours) || hours < 0.5 || hours > 24) return;
+    const hours = sleepHoursInput;
+    if (!Number.isFinite(hours) || hours < 0.5 || hours > 24) return;
     const hrv = hrvInput.trim() ? parseFloat(hrvInput) : null;
     if (hrv != null && (isNaN(hrv) || hrv < 1 || hrv > 300)) return;
     const score = sleepScoreInput.trim() ? parseFloat(sleepScoreInput) : null;
     if (score != null && (isNaN(score) || score < 1 || score > 100)) return;
     onSaveSleepEntry(
-      Math.round(hours * 10) / 10,
+      roundSleepHoursToMinute(hours),
       hrv != null ? Math.round(hrv) : null,
       score != null ? Math.round(score) : null,
     );
@@ -1079,17 +1081,18 @@ export function LandingShell({
                 <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                      Sleep (hours)
+                      Sleep duration
                     </label>
-                    <input
-                      type="number"
-                      step="0.5"
-                      min="0.5"
-                      max="24"
-                      value={sleepHoursInput}
-                      onChange={(e) => setSleepHoursInput(e.target.value)}
-                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
-                    />
+                    <div className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 dark:border-neutral-500/55 dark:bg-neutral-800">
+                      <SleepDurationPicker
+                        valueHours={sleepHoursInput}
+                        onChangeHours={setSleepHoursInput}
+                        disabled={sleepSaving}
+                        className="w-full justify-center"
+                        selectClassName="min-w-[3.5rem] appearance-none bg-transparent text-center text-[13px] font-medium tabular-nums text-foreground outline-none"
+                        separatorClassName="text-[13px] font-medium tabular-nums text-neutral-500 dark:text-neutral-400"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
@@ -1132,7 +1135,7 @@ export function LandingShell({
                 </button>
                 {sleepForSelectedDay ? (
                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                    Logged: {sleepForSelectedDay.sleepHours}h sleep
+                    Logged: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
                     {sleepForSelectedDay.hrvMs != null ? ` · ${sleepForSelectedDay.hrvMs} ms HRV` : ""}
                     {sleepForSelectedDay.sleepScore != null ? ` · ${sleepForSelectedDay.sleepScore}/100` : ""}
                   </p>
