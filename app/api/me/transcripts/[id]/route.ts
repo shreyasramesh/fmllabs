@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText, updateTranscriptHabitTags, updateTranscriptSortOverride } from "@/lib/db";
+import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText, updateTranscriptHabitTags, updateTranscriptSortOverride, updateTranscriptTime } from "@/lib/db";
 import { upsertSpendAmountLine } from "@/lib/spend-journal";
 import { estimateNutritionFactsFromMacros } from "@/lib/gemini";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
@@ -156,6 +156,8 @@ export async function PATCH(
       habitTags?: unknown;
       plainText?: unknown;
       sortOverrideMs?: unknown;
+      journalEntryHour?: unknown;
+      journalEntryMinute?: unknown;
       calories?: unknown;
       proteinGrams?: unknown;
       carbsGrams?: unknown;
@@ -191,6 +193,26 @@ export async function PATCH(
       const ok = await updateTranscriptSortOverride(id, userId, Math.round(sortMs));
       if (!ok) return NextResponse.json({ error: "Failed to update sort order" }, { status: 500 });
       return NextResponse.json({ ok: true, sortOverrideMs: Math.round(sortMs) });
+    }
+
+    // journalEntryHour/Minute update — time editing
+    if (body.journalEntryHour !== undefined || body.journalEntryMinute !== undefined) {
+      const hour = typeof body.journalEntryHour === "number" ? Math.round(body.journalEntryHour) : null;
+      const minute = typeof body.journalEntryMinute === "number" ? Math.round(body.journalEntryMinute) : null;
+      if (hour == null || minute == null || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+        return NextResponse.json({ error: "journalEntryHour (0-23) and journalEntryMinute (0-59) are required" }, { status: 400 });
+      }
+      // Compute new sortOverrideMs from the existing entry date + new hour/minute
+      const { journalEntryDay, journalEntryMonth, journalEntryYear } = transcript;
+      const newMs =
+        typeof journalEntryYear === "number" &&
+        typeof journalEntryMonth === "number" &&
+        typeof journalEntryDay === "number"
+          ? new Date(journalEntryYear, journalEntryMonth - 1, journalEntryDay, hour, minute, 0, 0).getTime()
+          : Date.now();
+      const ok = await updateTranscriptTime(id, userId, hour, minute, newMs);
+      if (!ok) return NextResponse.json({ error: "Failed to update time" }, { status: 500 });
+      return NextResponse.json({ ok: true, journalEntryHour: hour, journalEntryMinute: minute, sortOverrideMs: newMs });
     }
 
     // plainText update — for reflection entries and free-text edits on any journal entry

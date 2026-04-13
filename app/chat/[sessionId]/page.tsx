@@ -6726,6 +6726,8 @@ export default function ChatPage() {
         categoryLabel: quickNoteCategoryLabel(t),
         journalCategory: chipCategory,
         time,
+        entryHour: typeof t.journalEntryHour === "number" ? t.journalEntryHour : undefined,
+        entryMinute: typeof t.journalEntryMinute === "number" ? t.journalEntryMinute : undefined,
         caloriesSummary: calSummary,
         metricSummary: spendMetric,
         habitCompletionCheck: habitDone && (jc === "nutrition" || jc === "exercise"),
@@ -10144,12 +10146,26 @@ export default function ChatPage() {
     }
   }, [habitTaggingRowId, habitTaggingSelected, habitTaggingSaving, refetchJournalTranscripts]);
 
-  const editJournalEntryText = useCallback(async (rowId: string, newText: string) => {
-    await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plainText: newText }),
-    });
+  const editJournalEntryText = useCallback(async (
+    rowId: string,
+    newText: string,
+    opts?: { hour?: number; minute?: number }
+  ) => {
+    if (opts?.hour !== undefined && opts?.minute !== undefined) {
+      // Save time change first (also updates sortOverrideMs)
+      await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ journalEntryHour: opts.hour, journalEntryMinute: opts.minute }),
+      });
+    }
+    if (newText) {
+      await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plainText: newText }),
+      });
+    }
     refetchJournalTranscripts();
   }, [refetchJournalTranscripts]);
 

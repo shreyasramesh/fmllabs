@@ -88,6 +88,10 @@ export interface BrainDumpJournalContextRow {
   showMentorCta?: boolean;
   /** For ordering in Quick Note stream (oldest → newest). */
   sortAtMs?: number;
+  /** Raw hour (0-23) from journalEntryHour — used to pre-populate the time editor. */
+  entryHour?: number;
+  /** Raw minute (0-59) from journalEntryMinute — used to pre-populate the time editor. */
+  entryMinute?: number;
 }
 
 function MentorHumansIcon({ className }: { className?: string }) {
@@ -412,7 +416,7 @@ function JournalContextRowSheet({
   sleepTrendSparklineHours?: number[];
   onTagContextEntry?: (id: string) => void;
   habitsById?: Record<string, string>;
-  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  onEditContextEntry?: (rowId: string, newText: string, opts?: { hour?: number; minute?: number }) => Promise<void>;
 }) {
   const [editing, setEditing] = React.useState(false);
   const [editDraft, setEditDraft] = React.useState("");
@@ -747,7 +751,7 @@ function JournalContextRowNoteStream({
   sleepTrendSparklineHours?: number[];
   onTagContextEntry?: (id: string) => void;
   habitsById?: Record<string, string>;
-  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  onEditContextEntry?: (rowId: string, newText: string, opts?: { hour?: number; minute?: number }) => Promise<void>;
   isNew?: boolean;
   prevDayWeightKg?: number | null;
   prevDaySleepH?: number | null;
@@ -757,30 +761,63 @@ function JournalContextRowNoteStream({
 }) {
   const [nsEditing, setNsEditing] = React.useState(false);
   const [nsEditDraft, setNsEditDraft] = React.useState("");
+  const [nsEditTimeDraft, setNsEditTimeDraft] = React.useState(""); // "HH:MM" 24-h for <input type="time">
   const [nsEditSaving, setNsEditSaving] = React.useState(false);
   const nsEditTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
-  // Swipe-to-delete
+  // Swipe-to-delete — latch-open pattern:
+  // • Swipe left past SWIPE_THRESHOLD → row latches open, delete button stays visible
+  // • Tap delete button → confirms deletion
+  // • Swipe right while open → snaps closed
   const swipeTouchStartXRef = React.useRef<number | null>(null);
   const [swipeX, setSwipeX] = React.useState(0);
+  const [swipeLatchOpen, setSwipeLatchOpen] = React.useState(false);
   const SWIPE_THRESHOLD = 80;
+  // Width the row sits at when latched open (just enough to show the delete button)
+  const LATCH_X = -SWIPE_THRESHOLD;
   const canDelete = !!onDeleteJournalContextEntry && isJournalContextRowDeletable(row);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!canDelete) return;
     swipeTouchStartXRef.current = e.touches[0]?.clientX ?? null;
-    setSwipeX(0);
   };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (swipeTouchStartXRef.current === null || !canDelete) return;
     const dx = (e.touches[0]?.clientX ?? 0) - swipeTouchStartXRef.current;
-    if (dx < 0) setSwipeX(Math.max(dx, -SWIPE_THRESHOLD - 20));
+    if (swipeLatchOpen) {
+      // When already latched, let the user drag from the latched position
+      const next = LATCH_X + dx;
+      if (next <= 0) setSwipeX(Math.max(next, LATCH_X - 20));
+    } else {
+      if (dx < 0) setSwipeX(Math.max(dx, LATCH_X - 20));
+    }
   };
   const handleTouchEnd = () => {
-    if (swipeX <= -SWIPE_THRESHOLD && canDelete) {
-      void onDeleteJournalContextEntry!(row.id);
-    }
-    setSwipeX(0);
     swipeTouchStartXRef.current = null;
+    if (!canDelete) return;
+    if (swipeLatchOpen) {
+      // If dragged noticeably rightward from latched position, close; otherwise stay open
+      if (swipeX > LATCH_X / 2) {
+        setSwipeX(0);
+        setSwipeLatchOpen(false);
+      } else {
+        setSwipeX(LATCH_X);
+      }
+    } else {
+      if (swipeX <= -SWIPE_THRESHOLD) {
+        // Latch open instead of immediately deleting
+        setSwipeX(LATCH_X);
+        setSwipeLatchOpen(true);
+      } else {
+        setSwipeX(0);
+      }
+    }
+  };
+
+  const handleSwipedDeleteClick = () => {
+    setSwipeX(0);
+    setSwipeLatchOpen(false);
+    void onDeleteJournalContextEntry!(row.id);
   };
 
   const nsCanEdit = !!onEditContextEntry && row.rowSource === "transcript" &&
@@ -789,6 +826,29 @@ function JournalContextRowNoteStream({
 
   const nsStartEdit = () => {
     setNsEditDraft(row.bodyText);
+    // Pre-populate time from raw hour/minute; fall back to parsing the display string
+    const h = row.entryHour;
+    const m = row.entryMinute;
+    if (typeof h === "number" && typeof m === "number") {
+      setNsEditTimeDraft(
+        `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+      );
+    } else if (row.time) {
+      // Parse display string like "9:19 AM"
+      const match = /(\d+):(\d+)\s*(AM|PM)?/i.exec(row.time);
+      if (match) {
+        let hh = parseInt(match[1]!, 10);
+        const mm = parseInt(match[2]!, 10);
+        const period = match[3]?.toUpperCase();
+        if (period === "PM" && hh !== 12) hh += 12;
+        if (period === "AM" && hh === 12) hh = 0;
+        setNsEditTimeDraft(`${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`);
+      } else {
+        setNsEditTimeDraft("");
+      }
+    } else {
+      setNsEditTimeDraft("");
+    }
     setNsEditing(true);
     requestAnimationFrame(() => { nsEditTextareaRef.current?.focus(); });
   };
@@ -797,10 +857,24 @@ function JournalContextRowNoteStream({
 
   const nsSaveEdit = async () => {
     const trimmed = nsEditDraft.trim();
-    if (!trimmed || !onEditContextEntry || nsEditSaving) return;
+    if (!onEditContextEntry || nsEditSaving) return;
     setNsEditSaving(true);
     try {
-      await onEditContextEntry(row.id, trimmed);
+      // Parse time draft into hour/minute if changed
+      let timeOpts: { hour: number; minute: number } | undefined;
+      const timeMatch = /^(\d{1,2}):(\d{2})$/.exec(nsEditTimeDraft);
+      if (timeMatch) {
+        const h = parseInt(timeMatch[1]!, 10);
+        const m = parseInt(timeMatch[2]!, 10);
+        if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+          const origH = row.entryHour;
+          const origM = row.entryMinute;
+          if (h !== origH || m !== origM) {
+            timeOpts = { hour: h, minute: m };
+          }
+        }
+      }
+      await onEditContextEntry(row.id, trimmed, timeOpts);
       setNsEditing(false);
     } catch { /* silent */ } finally {
       setNsEditSaving(false);
@@ -943,23 +1017,38 @@ function JournalContextRowNoteStream({
         className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[15px] leading-snug text-foreground focus:border-[#295a8a]/40 focus:outline-none focus:ring-2 focus:ring-[#295a8a]/20 disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-800/60 dark:focus:border-blue-500/40 dark:focus:ring-blue-500/20"
         aria-label="Edit entry text"
       />
-      <div className="flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={nsCancelEdit}
-          disabled={nsEditSaving}
-          className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          disabled={!nsEditDraft.trim() || nsEditSaving}
-          onClick={() => void nsSaveEdit()}
-          className="rounded-lg bg-neutral-900 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
-        >
-          {nsEditSaving ? "Saving…" : "Save"}
-        </button>
+      <div className="flex items-center gap-2">
+        <label className="flex shrink-0 items-center gap-1.5 text-[12px] text-neutral-500 dark:text-neutral-400">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden>
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clipRule="evenodd" />
+          </svg>
+          <input
+            type="time"
+            value={nsEditTimeDraft}
+            onChange={(e) => setNsEditTimeDraft(e.target.value)}
+            disabled={nsEditSaving}
+            className="rounded-lg border border-neutral-200 bg-white px-2 py-1 text-[12px] text-foreground focus:border-[#295a8a]/40 focus:outline-none focus:ring-2 focus:ring-[#295a8a]/20 disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-800/60"
+            aria-label="Entry time"
+          />
+        </label>
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={nsCancelEdit}
+            disabled={nsEditSaving}
+            className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={nsEditSaving}
+            onClick={() => void nsSaveEdit()}
+            className="rounded-lg bg-neutral-900 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+          >
+            {nsEditSaving ? "Saving…" : "Save"}
+          </button>
+        </div>
       </div>
     </div>
   ) : null;
@@ -1053,21 +1142,27 @@ function JournalContextRowNoteStream({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Red delete affordance revealed during swipe */}
+      {/* Red delete affordance revealed by swipe — tappable when latched open */}
       {canDelete && swipeX < 0 ? (
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-end pr-3"
-          style={{ opacity: swipeProgress }}
+          className="absolute inset-y-0 right-0 flex items-center justify-end pr-3"
+          style={{ opacity: swipeLatchOpen ? 1 : swipeProgress }}
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white">
+          <button
+            type="button"
+            onClick={swipeLatchOpen ? handleSwipedDeleteClick : undefined}
+            className={`flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white transition-transform ${swipeLatchOpen ? "scale-100" : "scale-90"}`}
+            aria-label="Delete entry"
+            tabIndex={swipeLatchOpen ? 0 : -1}
+          >
             <DeleteEntryIcon className="h-4 w-4" />
-          </span>
+          </button>
         </div>
       ) : null}
       <div
         style={{
           transform: `translateX(${swipeX}px)`,
-          transition: swipeX === 0 ? "transform 0.2s ease" : "none",
+          transition: (swipeX === 0 || swipeLatchOpen) ? "transform 0.2s ease" : "none",
         }}
       >
         {nsInlineEditForm}
@@ -1271,7 +1366,7 @@ interface CaptureViewProps {
   /** habitsById lookup for displaying names on saved rows. */
   habitsById?: Record<string, string>;
   /** Called when user saves edited text for a saved row. Returns promise that resolves on server success. */
-  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  onEditContextEntry?: (rowId: string, newText: string, opts?: { hour?: number; minute?: number }) => Promise<void>;
   /** Aggregated stats for the selected day (summary bar + footer). */
   daySummary?: QuickNoteDaySummary;
   /** Consecutive days with at least one journal entry. */

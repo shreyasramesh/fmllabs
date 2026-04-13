@@ -2935,6 +2935,28 @@ export async function updateSavedTranscriptText(
   } as SavedTranscript & { _id: string });
 }
 
+export async function updateTranscriptTime(
+  id: string,
+  userId: string,
+  hour: number,
+  minute: number,
+  sortOverrideMs: number,
+): Promise<boolean> {
+  transcriptsCache.invalidatePrefix(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database.collection("transcripts").updateOne(
+    { _id: oid, userId },
+    { $set: { journalEntryHour: hour, journalEntryMinute: minute, sortOverrideMs, updatedAt: new Date() } }
+  );
+  return result.modifiedCount > 0;
+}
+
 export async function updateTranscriptHabitTags(
   id: string,
   userId: string,
