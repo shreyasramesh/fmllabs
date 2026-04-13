@@ -650,11 +650,11 @@ function JournalContextRowSheet({
   ) : null;
 
   return (
-    <div className="py-1.5">
+    <div className="border-b border-neutral-100 py-2.5 dark:border-neutral-800/60">
       {inlineEditForm}
       {!editing && (
         <div className="flex items-start gap-2 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40">
-          {/* LEFT: text + edit + tag + time inline, secondary/mentor/pills below */}
+          {/* LEFT: text + edit + tag inline, secondary/mentor/pills below */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
               <button
@@ -679,7 +679,6 @@ function JournalContextRowSheet({
               </button>
               {editPencilBtn}
               {tagBtn}
-              {timeOnly}
             </div>
             {row.secondaryText ? (
               <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
@@ -689,18 +688,21 @@ function JournalContextRowSheet({
             ) : null}
             {habitPills}
           </div>
-          {/* RIGHT: analysis + delete */}
-          <div className="shrink-0 flex items-center gap-1.5 self-start pt-[2px]">
-            {sheetRightAnalysis}
-            <button
-              type="button"
-              onClick={() => void onDeleteJournalContextEntry?.(row.id)}
-              disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
-              className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
-              aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-            >
-              <DeleteEntryIcon />
-            </button>
+          {/* RIGHT: analysis+delete on top, time below */}
+          <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
+            <div className="flex items-center gap-1.5">
+              {sheetRightAnalysis}
+              <button
+                type="button"
+                onClick={() => void onDeleteJournalContextEntry?.(row.id)}
+                disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
+                className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+                aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+              >
+                <DeleteEntryIcon />
+              </button>
+            </div>
+            {timeOnly}
           </div>
         </div>
       )}
@@ -940,11 +942,11 @@ function JournalContextRowNoteStream({
   ) : cal ?? metric ?? null;
 
   return (
-    <article className="mb-3 min-w-0">
+    <article className="min-w-0 border-b border-neutral-100 pb-3 pt-2 dark:border-neutral-800/60">
       {nsInlineEditForm}
       {!nsEditing && (
         <div className="flex items-start gap-2">
-          {/* LEFT: text + edit + tag + time inline, secondary/pills below */}
+          {/* LEFT: text + edit + tag inline, secondary/pills below */}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
               <button
@@ -965,7 +967,6 @@ function JournalContextRowNoteStream({
               </button>
               {nsEditPencilBtn}
               {nsTagBtn}
-              {nsTimeEl}
             </div>
             {row.secondaryText ? (
               <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
@@ -975,18 +976,23 @@ function JournalContextRowNoteStream({
             ) : null}
             {nsHabitPills}
           </div>
-          {/* RIGHT: analysis + delete */}
-          <div className="shrink-0 flex items-center gap-1.5 self-start pt-[2px]">
-            {nsRightAnalysis}
-            {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
-              <button
-                type="button"
-                onClick={() => void onDeleteJournalContextEntry(row.id)}
-                className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
-                aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-              >
-                <DeleteEntryIcon className="h-4 w-4" />
-              </button>
+          {/* RIGHT: analysis+delete on top, time below */}
+          <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
+            <div className="flex items-center gap-1.5">
+              {nsRightAnalysis}
+              {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
+                <button
+                  type="button"
+                  onClick={() => void onDeleteJournalContextEntry(row.id)}
+                  className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+                  aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+                >
+                  <DeleteEntryIcon className="h-4 w-4" />
+                </button>
+              ) : null}
+            </div>
+            {row.time ? (
+              <span className="text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
             ) : null}
           </div>
         </div>
