@@ -4837,15 +4837,19 @@ export default function ChatPage() {
       .finally(() => setCgLoaded(true));
   }, [isAnonymous]);
 
+  const [transcriptsLoaded, setTranscriptsLoaded] = useState(false);
+
   const refetchTranscripts = useCallback(() => {
     if (isAnonymous) {
       setSavedTranscripts([]);
+      setTranscriptsLoaded(true);
       return;
     }
     fetch(`/api/me/transcripts?_t=${Date.now()}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
-      .catch(() => setSavedTranscripts([]));
+      .catch(() => setSavedTranscripts([]))
+      .finally(() => setTranscriptsLoaded(true));
   }, [isAnonymous]);
 
   const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
@@ -5198,6 +5202,7 @@ export default function ChatPage() {
       createdAt?: string;
     }>
   >([]);
+  const [sleepEntriesLoaded, setSleepEntriesLoaded] = useState(false);
   const [sleepSaving, setSleepSaving] = useState(false);
   const [sleepSaveError, setSleepSaveError] = useState<string | null>(null);
   const [sleepEntryEditModal, setSleepEntryEditModal] = useState<null | {
@@ -5217,6 +5222,7 @@ export default function ChatPage() {
   const [weightTrackerSaving, setWeightTrackerSaving] = useState(false);
   const [weightTrackerError, setWeightTrackerError] = useState<string | null>(null);
   const [weightTrackerEntries, setWeightTrackerEntries] = useState<WeightTrackerEntry[]>([]);
+  const [weightInitialLoaded, setWeightInitialLoaded] = useState(false);
   const [weightTrackerRange, setWeightTrackerRange] = useState<"week" | "month" | "year">("week");
   const [weightTrackerWeightInput, setWeightTrackerWeightInput] = useState("");
   const [weightTrackerTargetInput, setWeightTrackerTargetInput] = useState("");
@@ -7584,12 +7590,6 @@ export default function ChatPage() {
 
   // Letter modal: only show when user clicks "Crafted with Intention" (no longer auto-show for first-time; that's now in onboarding step 3)
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      refetchSavedConcepts();
-    }, 180);
-    return () => window.clearTimeout(timer);
-  }, [refetchSavedConcepts]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -7619,11 +7619,10 @@ export default function ChatPage() {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       refetchHabits();
-      refetchSavedPerspectiveCards();
       fetchHabitCompletions();
     }, 340);
     return () => window.clearTimeout(timer);
-  }, [refetchHabits, refetchSavedPerspectiveCards, fetchHabitCompletions]);
+  }, [refetchHabits, fetchHabitCompletions]);
 
   useEffect(() => {
     if (language === "en" || isAnonymous) {
@@ -10223,9 +10222,15 @@ export default function ChatPage() {
   }, [fetchWeightTracker, incognitoMode, isAnonymous, userId, weightTrackerModalOpen]);
 
   useEffect(() => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    if (weightTrackerEntries.length > 0 || weightTrackerLoading || weightTrackerModalOpen) return;
-    void fetchWeightTracker();
+    if (isAnonymous || incognitoMode || !userId) {
+      setWeightInitialLoaded(true);
+      return;
+    }
+    if (weightTrackerEntries.length > 0 || weightTrackerLoading || weightTrackerModalOpen) {
+      setWeightInitialLoaded(true);
+      return;
+    }
+    void fetchWeightTracker().finally(() => setWeightInitialLoaded(true));
   }, [
     fetchWeightTracker,
     incognitoMode,
@@ -11016,7 +11021,10 @@ export default function ChatPage() {
   refetchSleepEntriesRef.current = refetchSleepEntries;
 
   useEffect(() => {
-    if (isAnonymous || incognitoMode || !userId) return;
+    if (isAnonymous || incognitoMode || !userId) {
+      setSleepEntriesLoaded(true);
+      return;
+    }
     let cancelled = false;
     fetch("/api/me/sleep?limit=30")
       .then(async (res) => {
@@ -11025,7 +11033,8 @@ export default function ChatPage() {
         if (!res.ok || !Array.isArray(data.entries)) return;
         applySleepEntriesFromApi(data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setSleepEntriesLoaded(true); });
     return () => { cancelled = true; };
   }, [isAnonymous, incognitoMode, userId, applySleepEntriesFromApi]);
 
@@ -12540,6 +12549,10 @@ export default function ChatPage() {
       })
       .catch(() => setConceptPreviewMap(new Map()));
   }, [savedConcepts, language]);
+
+  useEffect(() => {
+    if (libraryPanelOpen === "concepts") refetchSavedConcepts();
+  }, [libraryPanelOpen, refetchSavedConcepts]);
 
   useEffect(() => {
     if (libraryPanelOpen !== "concepts") return;
@@ -16017,6 +16030,12 @@ export default function ChatPage() {
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
                             journalContextRows={brainDumpJournalContextRows}
+                            isLoading={!transcriptsLoaded || !sleepEntriesLoaded || !weightInitialLoaded}
+                            loadingLabel={
+                              !transcriptsLoaded ? "Loading Journal Entries" :
+                              !sleepEntriesLoaded ? "Loading Sleep Data" :
+                              "Loading Weight Data"
+                            }
                             onOpenJournalEntry={openLandingJournalTranscriptById}
                             onDeleteJournalEntry={
                               isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
@@ -19881,7 +19900,8 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
+            <div className="p-4 space-y-4 overflow-y-auto">
+              {/* Current Weight + Goal Weight */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Current Weight</p>
@@ -19890,132 +19910,82 @@ export default function ChatPage() {
                   </p>
                 </div>
                 <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Target Weight</p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">Goal Weight</p>
                   <p className="mt-1 text-3xl font-semibold text-foreground">
                     {typeof weightTrackerTargetKg === "number" ? `${weightTrackerTargetKg} kg` : "--"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                {[
-                  { key: "week", label: "Week" },
-                  { key: "month", label: "Month" },
-                  { key: "year", label: "Year" },
-                ].map((opt) => {
-                  const selected = weightTrackerRange === opt.key;
-                  return (
-                <button
-                      key={opt.key}
-                  type="button"
-                      onClick={() => setWeightTrackerRange(opt.key as "week" | "month" | "year")}
-                      className={`px-3 py-1.5 rounded-lg border text-sm transition-colors ${
-                        selected
-                          ? "bg-accent text-white border-accent"
-                          : "border-neutral-200 dark:border-neutral-700 text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  );
-                })}
-                <button
-                  type="button"
-                  onClick={() => setWeightTrackerAddOpen((v) => !v)}
-                  disabled={weightTrackerSaving}
-                  className="shrink-0 h-11 w-11 sm:h-9 sm:w-9 rounded-lg border border-neutral-200 dark:border-neutral-700 text-lg leading-none font-medium text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-label="Add weight entry"
-                >
-                  +
-                </button>
-              </div>
-
-              {weightTrackerAddOpen && (
-                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Current weight (kg)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        value={weightTrackerWeightInput}
-                        onChange={(e) => setWeightTrackerWeightInput(e.target.value)}
-                        disabled={weightTrackerSaving}
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Target weight (kg)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        value={weightTrackerTargetInput}
-                        onChange={(e) => setWeightTrackerTargetInput(e.target.value)}
-                        disabled={weightTrackerSaving}
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setWeightTrackerAddOpen(false)}
+              {/* Create button / form */}
+              {weightTrackerAddOpen ? (
+                <div className="flex items-end gap-2">
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Current (kg)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={weightTrackerWeightInput}
+                      onChange={(e) => setWeightTrackerWeightInput(e.target.value)}
                       disabled={weightTrackerSaving}
-                      className="px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-600 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void saveWeightTrackerEntry()}
-                      disabled={weightTrackerSaving || !weightTrackerWeightInput.trim()}
-                      className="px-3 py-1.5 rounded-lg bg-foreground text-background text-sm hover:opacity-90 transition-opacity disabled:opacity-50"
-                    >
-                      {weightTrackerSaving ? "Saving..." : "Save entry"}
-                    </button>
+                      placeholder="e.g. 72.5"
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Goal (kg)</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={weightTrackerTargetInput}
+                      onChange={(e) => setWeightTrackerTargetInput(e.target.value)}
+                      disabled={weightTrackerSaving}
+                      placeholder="e.g. 68"
+                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void saveWeightTrackerEntry()}
+                    disabled={weightTrackerSaving || !weightTrackerWeightInput.trim()}
+                    className="shrink-0 px-4 py-2 rounded-xl bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                  >
+                    {weightTrackerSaving ? "…" : "Save"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWeightTrackerAddOpen(false)}
+                    disabled={weightTrackerSaving}
+                    className="shrink-0 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                  >
+                    ✕
+                  </button>
                 </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setWeightTrackerAddOpen(true)}
+                  disabled={weightTrackerSaving}
+                  className="w-full rounded-2xl border border-orange-400 dark:border-orange-500 py-2.5 text-sm font-medium text-orange-500 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors disabled:opacity-50"
+                >
+                  Add Entry
+                </button>
               )}
 
-              {weightTrackerError && (
-                <p className="text-sm text-red-600 dark:text-red-400">{weightTrackerError}</p>
-              )}
 
+              {/* Chart */}
               {weightTrackerLoading ? (
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading weight tracker...</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</p>
               ) : (
                 <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-2">
                   <HighchartsReact highcharts={Highcharts} options={weightTrackerChartOptions} />
                 </div>
               )}
 
-              <div className="space-y-2">
-                <h3 className="text-2xl font-semibold text-foreground">Weight Entries</h3>
-                {weightTrackerEntries.length === 0 ? (
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    No weight entries yet. Add your first entry to see your trend.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {weightTrackerEntries.map((entry) => (
-                      <div key={entry.id} className="rounded-xl border border-neutral-200 dark:border-neutral-700 px-3 py-2">
-                        <p className="text-3xl font-semibold text-foreground">{entry.weightKg} kg</p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          {new Date(entry.recordedAt || entry.createdAt).toLocaleString(undefined, {
-                            weekday: "long",
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                      </div>
-              ))}
-                  </div>
-                )}
-              </div>
-                       </div>
+              {weightTrackerError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{weightTrackerError}</p>
+              )}
+            </div>
           </div>
         </div>
       )}

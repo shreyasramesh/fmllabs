@@ -650,7 +650,7 @@ function JournalContextRowSheet({
   ) : null;
 
   return (
-    <div className="border-b border-neutral-100 py-2.5 dark:border-neutral-800/60">
+    <div className="border-b border-neutral-200 py-2.5 dark:border-white/[.15]">
       {inlineEditForm}
       {!editing && (
         <div className="flex items-start gap-2 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40">
@@ -942,7 +942,7 @@ function JournalContextRowNoteStream({
   ) : cal ?? metric ?? null;
 
   return (
-    <article className="min-w-0 border-b border-neutral-100 pb-3 pt-2 dark:border-neutral-800/60">
+    <article className="min-w-0 border-b border-neutral-200 pb-3 pt-2 dark:border-white/[.15]">
       {nsInlineEditForm}
       {!nsEditing && (
         <div className="flex items-start gap-2">
