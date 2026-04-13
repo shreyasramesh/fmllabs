@@ -25,7 +25,7 @@ import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
-  FocusDurationSuggestion,
+
   LandingActivityGroupSummary,
   LandingDateItem,
   LandingFigureSummary,
@@ -431,8 +431,10 @@ interface LandingShellProps {
   sleepEntries: LandingSleepEntry[];
   /** Calendar day (YYYY-MM-DD) for sleep quick capture — matches the date strip selection. */
   sleepEntryDayKey: string;
-  sleepFocusSuggestion: FocusDurationSuggestion | null;
+  sleepHabitInsight: string | null;
+  sleepHabitInsightLoading?: boolean;
   sleepSaving: boolean;
+  sleepSaveError: string | null;
   onSaveSleepEntry: (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => void;
   onViewSleepInsights?: () => void;
   thoughtOfTheDay: LandingThoughtOfTheDay | null;
@@ -605,8 +607,10 @@ export function LandingShell({
   weeklySummary,
   sleepEntries,
   sleepEntryDayKey,
-  sleepFocusSuggestion,
+  sleepHabitInsight,
+  sleepHabitInsightLoading = false,
   sleepSaving,
+  sleepSaveError,
   onSaveSleepEntry,
   onViewSleepInsights,
   thoughtOfTheDay,
@@ -883,8 +887,10 @@ export function LandingShell({
             selectedDayLabel={selectedDayLabel}
             sleepEntries={sleepEntries}
             sleepEntryDayKey={sleepEntryDayKey}
-            sleepFocusSuggestion={sleepFocusSuggestion}
+            sleepHabitInsight={sleepHabitInsight}
+            sleepHabitInsightLoading={sleepHabitInsightLoading}
             sleepSaving={sleepSaving}
+            sleepSaveError={sleepSaveError}
             onSaveSleepEntry={onSaveSleepEntry}
             onViewSleepInsights={onViewSleepInsights}
             sleepHoursGoal={sleepHoursGoal}
@@ -1148,7 +1154,7 @@ export function LandingShell({
             </div>
 
             {sleepFormOpen && (
-              <div className="module-nested-muted mt-2 space-y-2 p-2.5">
+              <div className={`module-nested-muted mt-2 space-y-2 p-2.5 transition-opacity ${sleepSaving ? "opacity-[0.72]" : ""}`}>
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                   Sleep · {selectedDayLabel}
                 </p>
@@ -1180,6 +1186,7 @@ export function LandingShell({
                       placeholder="—"
                       value={hrvInput}
                       onChange={(e) => setHrvInput(e.target.value)}
+                      disabled={sleepSaving}
                       className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
                     />
                   </div>
@@ -1195,6 +1202,7 @@ export function LandingShell({
                       placeholder="—"
                       value={sleepScoreInput}
                       onChange={(e) => setSleepScoreInput(e.target.value)}
+                      disabled={sleepSaving}
                       className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
                     />
                   </div>
@@ -1207,6 +1215,9 @@ export function LandingShell({
                 >
                   {sleepSaving ? "Saving…" : sleepForSelectedDay ? "Update sleep" : "Save sleep"}
                 </button>
+                {sleepSaveError ? (
+                  <p className="text-[11px] text-red-600 dark:text-red-400">{sleepSaveError}</p>
+                ) : null}
                 {sleepForSelectedDay ? (
                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                     Logged: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
@@ -1630,7 +1641,8 @@ export function LandingShell({
       <div id="sec-sleep" className={SECTION_SCROLL_MARGIN}>
         <LandingSleepRecoveryChart
           entries={sleepEntries}
-          focusSuggestion={sleepFocusSuggestion}
+          habitInsight={sleepHabitInsight}
+          habitInsightLoading={sleepHabitInsightLoading}
           onViewSleepInsights={onViewSleepInsights}
           targetHours={sleepHoursGoal}
         />

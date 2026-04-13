@@ -7,7 +7,7 @@ import HighchartsReact from "highcharts-react-official";
 import { ScoreRing } from "@/components/landing/ScoreRing";
 import { useTheme } from "@/components/ThemeProvider";
 import { computeSleepScore, computeSleepInsight, computeSleepBank } from "@/lib/sleep-score";
-import type { FocusDurationSuggestion, LandingSleepEntry } from "@/components/landing/types";
+import type { LandingSleepEntry } from "@/components/landing/types";
 
 function formatHoursMinutes(hours: number): string {
   const h = Math.floor(hours);
@@ -17,7 +17,9 @@ function formatHoursMinutes(hours: number): string {
 
 interface LandingSleepRecoveryChartProps {
   entries: LandingSleepEntry[];
-  focusSuggestion: FocusDurationSuggestion | null;
+  /** AI-generated habit recommendation for improving sleep. */
+  habitInsight: string | null;
+  habitInsightLoading?: boolean;
   /** Opens Gemini sleep insights (parent handles auth + API). */
   onViewSleepInsights?: () => void;
   chartsOnly?: boolean;
@@ -29,7 +31,8 @@ const SLEEP_PURPLE_DIM = "#a78bfa";
 
 export function LandingSleepRecoveryChart({
   entries,
-  focusSuggestion,
+  habitInsight,
+  habitInsightLoading = false,
   onViewSleepInsights,
   chartsOnly = false,
   targetHours = 8,
@@ -336,9 +339,14 @@ export function LandingSleepRecoveryChart({
           </div>
         )}
 
-        {focusSuggestion && (
+        {habitInsightLoading && (
+          <p className="text-center text-[11px] text-neutral-400 dark:text-neutral-500 animate-pulse">
+            ✦ Generating habit insight…
+          </p>
+        )}
+        {!habitInsightLoading && habitInsight && (
           <p className="text-center text-[11px] text-violet-600/90 dark:text-violet-300/80">
-            ✦ Suggested focus session: {focusSuggestion.minutes} min — {focusSuggestion.reason}
+            ✦ {habitInsight}
           </p>
         )}
       </div>

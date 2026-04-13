@@ -615,13 +615,39 @@ html::before {
 
 /* All themes: keep modal close buttons visibly bordered. */
 [role="dialog"] button[aria-label="Close"] {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border-radius: 0.75rem !important;
   border-width: 1px !important;
   border-style: solid !important;
   border-color: var(--neutral-300) !important;
+  line-height: 1 !important;
+  font-size: 1.125rem !important;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease !important;
+}
+
+[role="dialog"] button[aria-label="Close"] svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+[role="dialog"] button[aria-label="Close"]:hover {
+  background-color: color-mix(in srgb, var(--neutral-100) 88%, transparent) !important;
 }
 
 :root.dark [role="dialog"] button[aria-label="Close"] {
   border-color: var(--neutral-600) !important;
+}
+
+:root.dark [role="dialog"] button[aria-label="Close"]:hover {
+  background-color: color-mix(in srgb, var(--neutral-800) 90%, transparent) !important;
 }
 
 /* Keep line-height comfortable on mobile without increasing font size */

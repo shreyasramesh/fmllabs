@@ -57,7 +57,7 @@ export function LandingMobileQuickNoteTab({
         setCaptureEntries={setCaptureEntries}
         sentenceDraft={captureDraft}
         setSentenceDraft={setCaptureDraft}
-        phase={phase === "categorizing" ? "categorizing" : "recording"}
+        phase={phase === "recording" ? "recording" : phase === "saving" ? "saving" : "categorizing"}
         journalContextRows={journalContextRows}
         onOpenJournalContextEntry={onOpenJournalEntry}
         onDeleteJournalContextEntry={onDeleteJournalEntry}

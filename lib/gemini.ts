@@ -3559,3 +3559,64 @@ Write a helpful insights note in **Markdown**:
   return text || "Could not generate insights. Please try again.";
 }
 
+export interface SleepHabitTipHabit {
+  name: string;
+  description?: string;
+  isHero: boolean;
+}
+
+/**
+ * Generate a single concise habit-based recommendation to improve sleep score,
+ * HRV, or duration, personalised to the user's existing habits.
+ */
+export async function generateSleepHabitTip(
+  entries: SleepInsightsEntry[],
+  habits: SleepHabitTipHabit[],
+  usageContext?: GeminiUsageContext
+): Promise<string> {
+  const sorted = [...entries].sort((a, b) => b.dayKey.localeCompare(a.dayKey));
+  const recent = sorted.slice(0, 7);
+
+  const sleepLines = recent.map((e) => {
+    const hrv = e.hrvMs != null ? `HRV ${Math.round(e.hrvMs)} ms` : "HRV not logged";
+    const score = e.sleepScore != null ? `sleep score ${Math.round(e.sleepScore)}/100` : "no sleep score";
+    return `  ${e.dayKey}: ${e.sleepHours.toFixed(1)}h, ${hrv}, ${score}`;
+  });
+
+  const heroHabits = habits.filter((h) => h.isHero);
+  const experimentHabits = habits.filter((h) => !h.isHero);
+
+  const habitLines = (list: SleepHabitTipHabit[]) =>
+    list.length > 0
+      ? list.map((h) => `  - ${h.name}${h.description ? `: ${h.description}` : ""}`).join("\n")
+      : "  (none)";
+
+  const prompt = `You are a concise, evidence-based sleep and recovery coach. The user tracks sleep and follows personal habits.
+
+SLEEP DATA (most recent nights first):
+${sleepLines.join("\n") || "  (no nights logged yet)"}
+
+HERO HABITS (performed consistently every day):
+${habitLines(heroHabits)}
+
+CURRENT 30-DAY EXPERIMENT HABITS:
+${habitLines(experimentHabits)}
+
+YOUR TASK:
+Write exactly ONE recommendation (1–2 sentences, max 25 words total). Choose the most impactful option:
+  A) Suggest a specific, concrete tweak to an EXISTING habit to improve sleep score, HRV, or duration.
+  B) Suggest a NEW habit the user doesn't have yet that could meaningfully improve one of those metrics.
+
+Rules:
+- Be specific (name the habit, name the change, name the metric).
+- Do not start with "I", bullet points, or labels like "Recommendation:".
+- Do not repeat the user's current habit names verbatim unless you are suggesting a change to them.
+- Output only the recommendation sentence(s). Nothing else.`;
+
+  const model = getModel();
+  const result = await model.generateContent(prompt);
+  if (usageContext) recordGeminiUsageFromResult(result, usageContext);
+  const text = result.response.text().trim();
+  return text || "Try keeping a consistent bedtime — even on weekends — to stabilise your circadian rhythm and improve HRV.";
+}
+

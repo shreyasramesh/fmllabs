@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import { getPacificDateParts, resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { getPacificTimeParts, parseJournalEntryTimeFromBody } from "@/lib/journal-entry-time";
 import { saveJournalTranscript } from "@/lib/db";
 import {
@@ -31,10 +31,11 @@ function normalizeDatePartsFromBody(body: Record<string, unknown>, fallback: Dat
       day: parseInt(ds, 10),
     });
   }
+  const pacificFallback = getPacificDateParts(fallback);
   return resolveJournalEntryDateParts({
-    day: body.day ?? fallback.getDate(),
-    month: body.month ?? fallback.getMonth() + 1,
-    year: body.year ?? fallback.getFullYear(),
+    day: body.day ?? pacificFallback.day,
+    month: body.month ?? pacificFallback.month,
+    year: body.year ?? pacificFallback.year,
   });
 }
 

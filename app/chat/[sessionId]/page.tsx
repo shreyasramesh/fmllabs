@@ -116,6 +116,7 @@ import { compressImageForUpload } from "@/lib/compress-image-for-upload";
 import { buildHydratedJournalImageText } from "@/lib/journal-image-analysis";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
+import { getPacificDayKey } from "@/lib/journal-entry-date";
 
 /** Library / inline panels: cards fill the row; min width ~17.5rem so more columns appear on wide screens. */
 const LIBRARY_RESPONSIVE_CARD_GRID =
@@ -2474,18 +2475,14 @@ function toDayKey(d: Date): string {
 }
 
 function getTodayDateInputValue(): string {
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
-  const dd = String(now.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+  return getPacificDayKey(new Date());
 }
 
 function dayKeyFromIso(iso?: string): string | null {
   if (!iso) return null;
   const parsed = new Date(iso);
   if (Number.isNaN(parsed.getTime())) return null;
-  return toDayKey(parsed);
+  return getPacificDayKey(parsed);
 }
 
 function dateFromDayKey(dayKey: string): Date | null {
@@ -3260,18 +3257,6 @@ function computePeakFocusWindow(
   return { startMinute: bestStart, endMinute: Math.min(1440, bestStart + 60) };
 }
 
-function computeSuggestedFocusMinutes(
-  sleepHours: number,
-  hrvMs: number | null
-): { minutes: number; reason: string } {
-  if (sleepHours >= 7 && hrvMs != null && hrvMs >= 50)
-    return { minutes: 90, reason: "Well recovered — deep work" };
-  if (sleepHours >= 7)
-    return { minutes: 60, reason: "Good sleep — steady focus" };
-  if (sleepHours >= 5)
-    return { minutes: 30, reason: "Light sleep — shorter sprints" };
-  return { minutes: 15, reason: "Low recovery — micro sessions" };
-}
 
 function normalizeNutritionMethodConfigInput(
   value: unknown
@@ -3934,8 +3919,8 @@ export default function ChatPage() {
   const sessionId = params.sessionId as string;
   const isNew = sessionId === "new";
   const incognitoMode = sessionId === "incognito";
-  const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => toDayKey(new Date()));
-  const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => toDayKey(new Date()));
+  const [selectedLandingDayKey, setSelectedLandingDayKey] = useState(() => getPacificDayKey(new Date()));
+  const [journalPanelSelectedDayKey, setJournalPanelSelectedDayKey] = useState(() => getPacificDayKey(new Date()));
   const [brandLogoParty, setBrandLogoParty] = useState(false);
   const brandLogoPartyTimeoutRef = useRef<number | null>(null);
   const [headerCalendarOpen, setHeaderCalendarOpen] = useState(false);
@@ -4927,7 +4912,7 @@ export default function ChatPage() {
     return [...map.values()].sort((a, b) => a.monthStart - b.monthStart);
   }, [journalEntriesSorted, language]);
   const journalPanelLast7Days = useMemo(() => {
-    const today = new Date();
+    const today = dateFromDayKey(getPacificDayKey(new Date())) ?? new Date();
     const days: { key: string; date: Date }[] = [];
     for (let offset = 6; offset >= 0; offset -= 1) {
       const d = new Date(today);
@@ -5213,6 +5198,7 @@ export default function ChatPage() {
     }>
   >([]);
   const [sleepSaving, setSleepSaving] = useState(false);
+  const [sleepSaveError, setSleepSaveError] = useState<string | null>(null);
   const [sleepEntryEditModal, setSleepEntryEditModal] = useState<null | {
     id: string;
     dayKey: string;
@@ -5221,6 +5207,7 @@ export default function ChatPage() {
     sleepScore: number | null;
   }>(null);
   const [sleepEditSaving, setSleepEditSaving] = useState(false);
+  const [sleepEditError, setSleepEditError] = useState<string | null>(null);
   const [sleepEditHoursInput, setSleepEditHoursInput] = useState(7.5);
   const [sleepEditHrvInput, setSleepEditHrvInput] = useState("");
   const [sleepEditScoreInput, setSleepEditScoreInput] = useState("");
@@ -5956,13 +5943,13 @@ export default function ChatPage() {
 
   const runCalorieTrackerAnalyze = useCallback(async () => {
     const hydratedText = buildCalorieTrackerHydratedInput();
-    if (!hydratedText) return;
+    if (!hydratedText) return false;
     if (selectedLandingJournalChip === "nutrition") {
-      await finalizeCalorieTracker([], { persist: true, sourceText: hydratedText });
-      return;
+      const result = await finalizeCalorieTracker([], { persist: true, sourceText: hydratedText });
+      return result != null;
     }
     const text = hydratedText;
-    if (!text.trim()) return;
+    if (!text.trim()) return false;
     setCalorieTrackerLoading(true);
     setCalorieTrackerError(null);
     try {
@@ -5986,13 +5973,16 @@ export default function ChatPage() {
         setCalorieTrackerQuestions(questions);
         setCalorieTrackerAnswers(Array(questions.length).fill(""));
         setCalorieTrackerStep("questions");
+        return false;
       } else {
-        await finalizeCalorieTracker([], { persist: true });
+        const result = await finalizeCalorieTracker([], { persist: true });
+        return result != null;
       }
     } catch (err) {
       setCalorieTrackerError(
         err instanceof Error ? err.message : "Could not analyze this entry."
       );
+      return false;
     } finally {
       setCalorieTrackerLoading(false);
     }
@@ -6382,7 +6372,7 @@ export default function ChatPage() {
   ]);
 
   const landingCalendarDays = useMemo(() => {
-    const today = new Date();
+    const today = dateFromDayKey(getPacificDayKey(new Date())) ?? new Date();
     const days: { key: string; date: Date }[] = [];
     for (let offset = 6; offset >= 0; offset--) {
       const d = new Date(today);
@@ -6457,7 +6447,7 @@ export default function ChatPage() {
     return () => window.clearInterval(timer);
   }, []);
   const headerCalendarLabel = useMemo(() => {
-    const todayKey = toDayKey(new Date());
+    const todayKey = getPacificDayKey(new Date());
     if (selectedLandingDayKey === todayKey) return "Today";
     return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(
       selectedLandingDayDate
@@ -6965,7 +6955,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!selectedLandingDayCaffeineFocusWindow) return;
-    if (selectedLandingDayKey !== toDayKey(new Date())) return;
+    if (selectedLandingDayKey !== getPacificDayKey(new Date())) return;
     scheduleCaffeineFocusNotification(selectedLandingDayCaffeineFocusWindow.startMinute).catch(() => {});
   }, [selectedLandingDayCaffeineFocusWindow, selectedLandingDayKey]);
 
@@ -6986,7 +6976,7 @@ export default function ChatPage() {
     return { minutes, sessions, rows };
   }, [focusTrackerEntries, localMinuteTick, selectedLandingDayKey]);
   const todayFocusSummary = useMemo(() => {
-    const todayKey = toDayKey(new Date());
+    const todayKey = getPacificDayKey(new Date());
     let minutes = 0;
     let sessions = 0;
     const rows: FocusTrackerEntry[] = [];
@@ -9092,7 +9082,7 @@ export default function ChatPage() {
 
   const reminderNotificationContext = useMemo((): ReminderNotificationContext | undefined => {
     if (!userId || isAnonymous || incognitoMode) return undefined;
-    const todayKey = toDayKey(new Date());
+    const todayKey = getPacificDayKey(new Date());
     const todayWeekday = new Date().getDay();
     const hasWeightEntryToday = weightTrackerEntries.some((e) => {
       const dk = dayKeyFromIso(e.recordedAt || e.createdAt);
@@ -10983,6 +10973,7 @@ export default function ChatPage() {
           : null;
 
       setSleepSaving(true);
+      setSleepSaveError(null);
       try {
         const res = existing
           ? await fetch("/api/me/sleep", {
@@ -11006,11 +10997,14 @@ export default function ChatPage() {
               }),
             });
         const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-        if (res.ok && Array.isArray(data.entries)) {
-          applySleepEntriesFromApi(data);
+        if (!res.ok || !Array.isArray(data.entries)) {
+          throw new Error(
+            typeof data.error === "string" ? data.error : "Could not save sleep entry."
+          );
         }
-      } catch {
-        // silently ignore
+        applySleepEntriesFromApi(data);
+      } catch (err) {
+        setSleepSaveError(err instanceof Error ? err.message : "Could not save sleep entry.");
       } finally {
         setSleepSaving(false);
       }
@@ -11037,6 +11031,7 @@ export default function ChatPage() {
       sleepScore = Math.round(s);
     }
     setSleepEditSaving(true);
+    setSleepEditError(null);
     try {
       const res = await fetch("/api/me/sleep", {
         method: "PATCH",
@@ -11049,12 +11044,15 @@ export default function ChatPage() {
         }),
       });
       const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-      if (res.ok && Array.isArray(data.entries)) {
-        applySleepEntriesFromApi(data);
-        setSleepEntryEditModal(null);
+      if (!res.ok || !Array.isArray(data.entries)) {
+        throw new Error(
+          typeof data.error === "string" ? data.error : "Could not update sleep entry."
+        );
       }
-    } catch {
-      // ignore
+      applySleepEntriesFromApi(data);
+      setSleepEntryEditModal(null);
+    } catch (err) {
+      setSleepEditError(err instanceof Error ? err.message : "Could not update sleep entry.");
     } finally {
       setSleepEditSaving(false);
     }
@@ -11070,17 +11068,21 @@ export default function ChatPage() {
     if (!sleepEntryEditModal) return;
     if (!window.confirm("Delete this sleep entry?")) return;
     setSleepEditSaving(true);
+    setSleepEditError(null);
     try {
       const res = await fetch(`/api/me/sleep?id=${encodeURIComponent(sleepEntryEditModal.id)}`, {
         method: "DELETE",
       });
       const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-      if (res.ok && Array.isArray(data.entries)) {
-        applySleepEntriesFromApi(data);
-        setSleepEntryEditModal(null);
+      if (!res.ok || !Array.isArray(data.entries)) {
+        throw new Error(
+          typeof data.error === "string" ? data.error : "Could not delete sleep entry."
+        );
       }
-    } catch {
-      // ignore
+      applySleepEntriesFromApi(data);
+      setSleepEntryEditModal(null);
+    } catch (err) {
+      setSleepEditError(err instanceof Error ? err.message : "Could not delete sleep entry.");
     } finally {
       setSleepEditSaving(false);
     }
@@ -11088,6 +11090,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!sleepEntryEditModal) return;
+    setSleepEditError(null);
     setSleepEditHoursInput(roundSleepHoursToMinute(sleepEntryEditModal.sleepHours));
     setSleepEditHrvInput(sleepEntryEditModal.hrvMs != null ? String(sleepEntryEditModal.hrvMs) : "");
     setSleepEditScoreInput(sleepEntryEditModal.sleepScore != null ? String(sleepEntryEditModal.sleepScore) : "");
@@ -11112,12 +11115,31 @@ export default function ChatPage() {
     [sleepEntries]
   );
 
-  const sleepFocusSuggestion = useMemo(() => {
-    if (sleepEntries.length === 0) return null;
-    const forSelectedDay = sleepEntries.find((e) => e.dayKey === selectedLandingDayKey);
-    const latest = forSelectedDay ?? sleepEntries[0];
-    return computeSuggestedFocusMinutes(latest.sleepHours, latest.hrvMs);
-  }, [sleepEntries, selectedLandingDayKey]);
+  const [sleepHabitInsight, setSleepHabitInsight] = useState<string | null>(null);
+  const [sleepHabitInsightLoading, setSleepHabitInsightLoading] = useState(false);
+  // Track which fetch is current to avoid stale updates
+  const sleepHabitInsightFetchedRef = useRef<string>("");
+
+  useEffect(() => {
+    // Only fetch when we have sleep data and habits loaded, and user is not anonymous
+    if (isAnonymous || incognitoMode || !userId) return;
+    if (sleepEntries.length === 0) return;
+    // Use a cache key based on the latest sleep entry day to avoid re-fetching every render
+    const latestDayKey = [...sleepEntries].sort((a, b) => b.dayKey.localeCompare(a.dayKey))[0]?.dayKey ?? "";
+    const cacheKey = latestDayKey;
+    if (sleepHabitInsightFetchedRef.current === cacheKey) return;
+    sleepHabitInsightFetchedRef.current = cacheKey;
+    setSleepHabitInsightLoading(true);
+    fetch("/api/me/sleep/habit-tip", { method: "POST" })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as { tip?: string; error?: string };
+        if (res.ok && typeof data.tip === "string") {
+          setSleepHabitInsight(data.tip);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setSleepHabitInsightLoading(false));
+  }, [sleepEntries, isAnonymous, incognitoMode, userId]);
 
   const [thoughtOfTheDay, setThoughtOfTheDay] = useState<{
     conceptId: string;
@@ -11724,7 +11746,7 @@ export default function ChatPage() {
       journalPanelDaysAutoScrolledRef.current = false;
       return;
     }
-    setJournalPanelSelectedDayKey(toDayKey(new Date()));
+    setJournalPanelSelectedDayKey(getPacificDayKey(new Date()));
     if (journalPanelDaysAutoScrolledRef.current) return;
     const el = journalPanelDaysScrollerRef.current;
     if (!el) return;
@@ -12983,7 +13005,7 @@ export default function ChatPage() {
                             }
                             const dayKey = toDayKey(cellDate);
                             const isSelected = dayKey === selectedLandingDayKey;
-                            const isToday = dayKey === toDayKey(new Date());
+                            const isToday = dayKey === getPacificDayKey(new Date());
                             const hasActivity = (landingDayActivityCountForTab.get(dayKey) ?? 0) > 0;
                             const showStrike = hasActivity && !isSelected;
                             return (
@@ -15588,9 +15610,11 @@ export default function ChatPage() {
                         }}
                         onInlineFoodSubmit={async () => {
                           setSelectedLandingJournalChip("nutrition");
-                          await runCalorieTrackerAnalyze();
-                          replaceCalorieTrackerInput("");
-                          setCalorieTrackerStep("input");
+                          const saved = await runCalorieTrackerAnalyze();
+                          if (saved) {
+                            replaceCalorieTrackerInput("");
+                            setCalorieTrackerStep("input");
+                          }
                         }}
                         inlineFoodLoading={calorieTrackerLoading}
                         inlineFoodSuggestions={calorieTrackerSuggestions.map((s) => ({
@@ -15624,9 +15648,11 @@ export default function ChatPage() {
                         }}
                         onInlineExerciseSubmit={async () => {
                           setSelectedLandingJournalChip("exercise");
-                          await runCalorieTrackerAnalyze();
-                          replaceCalorieTrackerInput("");
-                          setCalorieTrackerStep("input");
+                          const saved = await runCalorieTrackerAnalyze();
+                          if (saved) {
+                            replaceCalorieTrackerInput("");
+                            setCalorieTrackerStep("input");
+                          }
                         }}
                         inlineExerciseLoading={calorieTrackerLoading}
                         spendDaySummary={{
@@ -15879,8 +15905,10 @@ export default function ChatPage() {
                         weeklySummary={landingWeeklySummary}
                         sleepEntries={sleepEntries}
                         sleepEntryDayKey={selectedLandingDayKey}
-                        sleepFocusSuggestion={sleepFocusSuggestion}
+                        sleepHabitInsight={sleepHabitInsight}
+                        sleepHabitInsightLoading={sleepHabitInsightLoading}
                         sleepSaving={sleepSaving}
+                        sleepSaveError={sleepSaveError}
                         onSaveSleepEntry={saveSleepEntry}
                         onViewSleepInsights={openSleepInsightsModal}
                         thoughtOfTheDay={thoughtOfTheDay}
@@ -16903,7 +16931,13 @@ export default function ChatPage() {
                   {transcriptModalNutritionSnapshot && (
                     <div className="w-full mb-4">
                       {transcriptModalNutritionSnapshot.mode === "nutrition" && (
-                        <div className="mb-2 inline-flex items-center rounded-lg p-0.5 bg-neutral-50 dark:bg-neutral-900/50">
+                        <div
+                          className={`mb-2 inline-flex items-center rounded-lg p-0.5 ${
+                            chartDark
+                              ? "border border-[#2a2a2a] bg-[#161616]"
+                              : "border border-neutral-200 bg-neutral-50"
+                          }`}
+                        >
                           <button
                             type="button"
                             onClick={() => {
@@ -16911,8 +16945,12 @@ export default function ChatPage() {
                             }}
                             className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                               transcriptNutritionHeader === "entry"
-                                ? "bg-background text-foreground"
-                                : "text-neutral-600 dark:text-neutral-400"
+                                ? chartDark
+                                  ? "bg-[#0F0F0F] text-neutral-100"
+                                  : "bg-background text-foreground"
+                                : chartDark
+                                  ? "text-neutral-500"
+                                  : "text-neutral-600"
                             }`}
                           >
                             Macros nutrition
@@ -16926,8 +16964,12 @@ export default function ChatPage() {
                             }}
                             className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                               transcriptNutritionHeader === "daily"
-                                ? "bg-background text-foreground"
-                                : "text-neutral-600 dark:text-neutral-400"
+                                ? chartDark
+                                  ? "bg-[#0F0F0F] text-neutral-100"
+                                  : "bg-background text-foreground"
+                                : chartDark
+                                  ? "text-neutral-500"
+                                  : "text-neutral-600"
                             }`}
                           >
                             Daily nutrition
@@ -17056,9 +17098,19 @@ export default function ChatPage() {
                           </>
                         ) : (
                           <>
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
+                            <div
+                              className={`min-w-[210px] sm:min-w-0 rounded-lg p-1.5 text-left ${
+                                chartDark
+                                  ? "border border-[#222] bg-[#111]"
+                                  : "border border-accent/25 bg-accent/10"
+                              }`}
+                            >
                               <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-accent/15 dark:bg-accent/30">
+                                <span
+                                  className={`inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full ${
+                                    chartDark ? "bg-[#1c1410]" : "bg-accent/15"
+                                  }`}
+                                >
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-accent">
                                     <path d="M12 3s2.5 2.2 2.5 5c0 1.6-1.3 2.7-2.5 3.9-1.2-1.2-2.5-2.3-2.5-3.9 0-2.8 2.5-5 2.5-5Z" />
                                     <path d="M7 13a5 5 0 0 0 10 0c0-3.4-2.7-5.4-5-7.6-2.3 2.2-5 4.2-5 7.6Z" />
@@ -17077,7 +17129,7 @@ export default function ChatPage() {
                                         prev ? { ...prev, caloriesFood: e.target.value } : prev
                                       )
                                     }
-                                    className="w-full max-w-[140px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                    className="w-full max-w-[140px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-white/10 bg-background dark:bg-[#161616] text-sm"
                                   />
                                 ) : (
                                   <p className="text-2xl sm:text-3xl font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
@@ -17088,9 +17140,19 @@ export default function ChatPage() {
                               </div>
                             </div>
 
-                            <div className="min-w-[210px] sm:min-w-0 rounded-lg border border-accent/25 dark:border-accent/40 bg-accent/10 dark:bg-accent/15 p-1.5 text-left">
+                            <div
+                              className={`min-w-[210px] sm:min-w-0 rounded-lg p-1.5 text-left ${
+                                chartDark
+                                  ? "border border-[#222] bg-[#111]"
+                                  : "border border-accent/25 bg-accent/10"
+                              }`}
+                            >
                               <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30">
+                                <span
+                                  className={`inline-flex items-center justify-center w-6 h-6 sm:w-5 sm:h-5 rounded-full ${
+                                    chartDark ? "bg-[#1a1020]" : "bg-fuchsia-100"
+                                  }`}
+                                >
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="w-4 h-4">
                                     <circle cx="12" cy="12" r="8" stroke="#D946EF" strokeWidth="2.4" strokeDasharray="9 4" strokeLinecap="round" />
                                   </svg>
@@ -17109,7 +17171,7 @@ export default function ChatPage() {
                                           prev ? { ...prev, carbsGrams: e.target.value } : prev
                                         )
                                       }
-                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                                      className="w-full max-w-[96px] px-2 py-1 rounded-lg border border-neutral-300 dark:border-white/10 bg-background dark:bg-[#121212] text-sm"
                                     />
                                   ) : (
                                     <p className="text-base sm:text-lg font-semibold text-foreground leading-none tracking-tight whitespace-nowrap">
@@ -17270,7 +17332,11 @@ export default function ChatPage() {
                               </div>
                             )}
                             {transcriptModalHighlightReason ? (
-                              <p className="rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-sm text-neutral-700 dark:border-neutral-700/70 dark:bg-neutral-900/60 dark:text-neutral-300">
+                              <p className={`rounded-xl border px-3 py-2 text-sm ${
+                                chartDark
+                                  ? "border-neutral-700/60 bg-[#161616] text-neutral-300"
+                                  : "border-neutral-200/80 bg-white text-neutral-700"
+                              }`}>
                                 {transcriptModalHighlightReason}
                               </p>
                             ) : null}
@@ -20218,6 +20284,9 @@ export default function ChatPage() {
                   className="mt-1 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm"
                 />
               </label>
+              {sleepEditError ? (
+                <p className="text-sm text-red-600 dark:text-red-400">{sleepEditError}</p>
+              ) : null}
               <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
                 <button
                   type="button"

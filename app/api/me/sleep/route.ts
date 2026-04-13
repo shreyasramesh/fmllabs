@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { addSleepEntry, deleteSleepEntry, getSleepEntries, updateSleepEntry } from "@/lib/db";
-import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
+import { getPacificDateParts, resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import { recordMongoUsageRequest } from "@/lib/usage";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
@@ -25,10 +25,11 @@ function normalizeDatePartsFromBody(body: Record<string, unknown>, fallback: Dat
       day: parseInt(ds, 10),
     });
   }
+  const pacificFallback = getPacificDateParts(fallback);
   return resolveJournalEntryDateParts({
-    day: body.day ?? fallback.getDate(),
-    month: body.month ?? fallback.getMonth() + 1,
-    year: body.year ?? fallback.getFullYear(),
+    day: body.day ?? pacificFallback.day,
+    month: body.month ?? pacificFallback.month,
+    year: body.year ?? pacificFallback.year,
   });
 }
 

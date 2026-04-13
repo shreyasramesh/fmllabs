@@ -40,6 +40,17 @@ export function useBrainDumpCapture(options: {
   const [captureDraft, setCaptureDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const buildCaptureEntry = useCallback(
+    (text: string, frozenMeta: EntryEstimateModalMeta, saveState: BrainDumpCaptureEntry["saveState"] = "local") => ({
+      id: crypto.randomUUID(),
+      text,
+      frozenMeta,
+      saveState,
+      createdAtMs: Date.now(),
+    }),
+    []
+  );
+
   const transcript = useMemo(
     () => [...captureEntries.map((e) => e.text), captureDraft].map((s) => s.trim()).filter(Boolean).join(" "),
     [captureEntries, captureDraft]
@@ -109,6 +120,12 @@ export function useBrainDumpCapture(options: {
       setPhase("categorizing");
       setError(null);
       try {
+        const pendingEntry = buildCaptureEntry(
+          text,
+          frozenMeta.status === "done" ? frozenMeta : { status: "idle" as const },
+          "pending"
+        );
+        setCaptureEntries((prev) => [...prev, pendingEntry]);
         const snap =
           frozenMeta.status === "done" && shouldRunQuickEstimate(text)
             ? doneMetaToQuickSnapshot(text, frozenMeta)
@@ -120,13 +137,15 @@ export function useBrainDumpCapture(options: {
         await persistEntries(entries, quickCals);
         setPhase("recording");
       } catch (err) {
+        setCaptureEntries((prev) => prev.filter((entry) => entry.text !== text || entry.saveState !== "pending"));
+        setCaptureDraft(text);
         setError(err instanceof Error ? err.message : "Something went wrong");
         setPhase("recording");
       } finally {
         quickNoteSaveInFlightRef.current = false;
       }
     },
-    [categorizeText, persistEntries]
+    [buildCaptureEntry, categorizeText, persistEntries]
   );
 
   /** Modal Done / empty-line commit: full transcript. */
@@ -156,17 +175,13 @@ export function useBrainDumpCapture(options: {
       if (commits.length > 0) {
         setCaptureEntries((e) => [
           ...e,
-          ...commits.map((t) => ({
-            id: crypto.randomUUID(),
-            text: t,
-            frozenMeta: { status: "idle" as const },
-          })),
+          ...commits.map((t) => buildCaptureEntry(t, { status: "idle" as const })),
         ]);
         return rest;
       }
       return merged;
     });
-  }, []);
+  }, [buildCaptureEntry]);
 
   /** Quick Note tab: voice only extends the draft (Enter saves). */
   const handleTranscriptionToDraft = useCallback((text: string) => {

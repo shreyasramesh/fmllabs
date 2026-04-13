@@ -94,7 +94,6 @@ export function LandingBrainDump({
           </div>
         )}
 
-        {(phase === "recording" || phase === "categorizing") && (
         <BrainDumpCaptureView
           captureEntries={captureEntries}
           setCaptureEntries={setCaptureEntries}
@@ -111,17 +110,6 @@ export function LandingBrainDump({
           weightTrendSparklineKg={weightTrendSparklineKg}
           sleepTrendSparklineHours={sleepTrendSparklineHours}
         />
-      )}
-
-      {phase === "saving" && (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16">
-          <span
-            className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-[#295a8a] dark:border-neutral-600 dark:border-t-blue-400"
-            aria-hidden
-          />
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">Saving your note…</p>
-          </div>
-        )}
     </BrainDumpSheetFrame>,
     document.body
   );

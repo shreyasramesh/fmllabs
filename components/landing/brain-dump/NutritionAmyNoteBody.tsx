@@ -26,6 +26,8 @@ export type BrainDumpCaptureEntry = {
   id: string;
   text: string;
   frozenMeta: EntryEstimateModalMeta;
+  saveState?: "local" | "pending";
+  createdAtMs?: number;
 };
 
 /** Entry text fills the row; estimate stays in a dedicated right column (no wrap under text). */
@@ -455,11 +457,24 @@ export function DeleteEntryIcon({ className = "h-5 w-5" }: { className?: string 
 }
 
 /** Persisted capture line: frozen analysis when done (no second request); tap text or estimate to open detail modal. */
-export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDumpCaptureEntry; onDelete: (id: string) => void }) {
+export function CapturePersistedEntryRow({
+  entry,
+  onDelete,
+  disabled = false,
+}: {
+  entry: BrainDumpCaptureEntry;
+  onDelete: (id: string) => void;
+  disabled?: boolean;
+}) {
   const [detailOpen, setDetailOpen] = useState(false);
   const trimmed = entry.text.trim();
+  const isPending = entry.saveState === "pending";
+  const rowDisabled = disabled || isPending;
   const useLive =
-    entry.frozenMeta.status !== "done" && shouldShowQuickNoteEstimateColumn(entry.text) && Boolean(trimmed);
+    !rowDisabled &&
+    entry.frozenMeta.status !== "done" &&
+    shouldShowQuickNoteEstimateColumn(entry.text) &&
+    Boolean(trimmed);
   const liveMeta = useNutritionLineEstimate(
     entry.text,
     useLive && shouldRunQuickEstimate(entry.text),
@@ -475,11 +490,15 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
 
   return (
     <>
-      <div className={`${AMY_PERSISTED_ROW_GRID} py-1.5`}>
+      <div
+        className={`${AMY_PERSISTED_ROW_GRID} py-1.5 ${rowDisabled ? "opacity-[0.52] transition-opacity duration-200" : ""}`}
+        aria-busy={rowDisabled || undefined}
+      >
         <button
           type="button"
-          onClick={() => setDetailOpen(true)}
-          className={`min-w-0 text-left ${openDetailBtn}`}
+          onClick={() => !rowDisabled && setDetailOpen(true)}
+          disabled={rowDisabled}
+          className={`min-w-0 text-left ${openDetailBtn} ${rowDisabled ? "cursor-default" : ""}`}
           aria-label={`View estimate details: ${entry.text.slice(0, 48)}${entry.text.length > 48 ? "…" : ""}`}
         >
           <div className="flex min-w-0 items-start gap-2">
@@ -495,12 +514,15 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
         </button>
         <button
           type="button"
-          onClick={() => setDetailOpen(true)}
-          className={`justify-self-end self-start whitespace-nowrap text-right ${openDetailBtn}`}
+          onClick={() => !rowDisabled && setDetailOpen(true)}
+          disabled={rowDisabled}
+          className={`justify-self-end self-start whitespace-nowrap text-right ${openDetailBtn} ${rowDisabled ? "cursor-default" : ""}`}
           aria-live="polite"
           aria-label="View estimate details for this line"
         >
-          {showEstimateColumn ? (
+          {isPending ? (
+            <span className="text-[15px] font-medium text-neutral-400 dark:text-neutral-500">Saving…</span>
+          ) : showEstimateColumn ? (
             <LineRightMeta meta={meta} />
           ) : (
             <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
@@ -509,6 +531,7 @@ export function CapturePersistedEntryRow({ entry, onDelete }: { entry: BrainDump
         <button
           type="button"
           onClick={() => onDelete(entry.id)}
+          disabled={rowDisabled}
           className="appearance-none justify-self-end self-start rounded-lg border-0 bg-transparent p-1.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
           aria-label={`Remove entry: ${entry.text.slice(0, 40)}${entry.text.length > 40 ? "…" : ""}`}
         >

@@ -3,10 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 import { LandingSleepRecoveryChart } from "@/components/landing/LandingSleepRecoveryChart";
-import type {
-  FocusDurationSuggestion,
-  LandingSleepEntry,
-} from "@/components/landing/types";
+import type { LandingSleepEntry } from "@/components/landing/types";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
 
@@ -14,8 +11,10 @@ interface LandingMobileSleepTabProps {
   selectedDayLabel: string;
   sleepEntries: LandingSleepEntry[];
   sleepEntryDayKey: string;
-  sleepFocusSuggestion: FocusDurationSuggestion | null;
+  sleepHabitInsight: string | null;
+  sleepHabitInsightLoading?: boolean;
   sleepSaving: boolean;
+  sleepSaveError: string | null;
   onSaveSleepEntry: (sleepHours: number, hrvMs: number | null, sleepScore: number | null) => void;
   onViewSleepInsights?: () => void;
   sleepHoursGoal: number;
@@ -26,8 +25,10 @@ export function LandingMobileSleepTab({
   selectedDayLabel,
   sleepEntries,
   sleepEntryDayKey,
-  sleepFocusSuggestion,
+  sleepHabitInsight,
+  sleepHabitInsightLoading = false,
   sleepSaving,
+  sleepSaveError,
   onSaveSleepEntry,
   onViewSleepInsights,
   sleepHoursGoal,
@@ -94,14 +95,15 @@ export function LandingMobileSleepTab({
       {/* Recovery chart */}
       <LandingSleepRecoveryChart
         entries={sleepEntries}
-        focusSuggestion={sleepFocusSuggestion}
+        habitInsight={sleepHabitInsight}
+        habitInsightLoading={sleepHabitInsightLoading}
         onViewSleepInsights={onViewSleepInsights}
         targetHours={sleepHoursGoal}
         chartsOnly
       />
 
       {/* Entry form */}
-      <div className="landing-module-glass space-y-3 rounded-2xl border p-4">
+      <div className={`landing-module-glass space-y-3 rounded-2xl border p-4 transition-opacity ${sleepSaving ? "opacity-[0.72]" : ""}`}>
         <div>
           <label className="block text-sm font-medium text-neutral-500 dark:text-neutral-400">
             Sleep duration
@@ -120,8 +122,9 @@ export function LandingMobileSleepTab({
 
         <button
           type="button"
+          disabled={sleepSaving}
           onClick={() => setOptionalDetailsOpen((prev) => !prev)}
-          className="text-sm font-medium text-neutral-500 transition-colors hover:text-foreground dark:text-neutral-400 dark:hover:text-neutral-200"
+          className="text-sm font-medium text-neutral-500 transition-colors hover:text-foreground disabled:opacity-50 dark:text-neutral-400 dark:hover:text-neutral-200"
         >
           {optionalDetailsOpen ? "Hide optional details" : "Add HRV or score"}
         </button>
@@ -140,6 +143,7 @@ export function LandingMobileSleepTab({
                 placeholder="Optional"
                 value={hrvInput}
                 onChange={(e) => setHrvInput(e.target.value)}
+                disabled={sleepSaving}
                 className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
               />
             </div>
@@ -155,6 +159,7 @@ export function LandingMobileSleepTab({
                 placeholder="Optional"
                 value={sleepScoreInput}
                 onChange={(e) => setSleepScoreInput(e.target.value)}
+                disabled={sleepSaving}
                 className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
               />
             </div>
@@ -169,6 +174,10 @@ export function LandingMobileSleepTab({
         >
           {sleepSaving ? "Saving…" : sleepForSelectedDay ? "Update sleep" : "Save sleep"}
         </button>
+
+        {sleepSaveError ? (
+          <p className="text-center text-[13px] text-red-600 dark:text-red-400">{sleepSaveError}</p>
+        ) : null}
 
         {/* Status line */}
         {sleepForSelectedDay ? (

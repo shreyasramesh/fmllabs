@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { useLanguage } from "@/components/LanguageProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { getLandingTranslations } from "@/lib/landing-translations";
+import { getPacificDayKey } from "@/lib/journal-entry-date";
 
 function toDayKey(d: Date): string {
   const year = d.getFullYear();
@@ -55,6 +56,7 @@ function toJournalItem(row: {
 }): JournalListItem | null {
   if (row.sourceType !== "journal") return null;
   let date: Date | null = null;
+  let dayKey: string | null = null;
   if (
     typeof row.journalEntryYear === "number" &&
     typeof row.journalEntryMonth === "number" &&
@@ -63,15 +65,17 @@ function toJournalItem(row: {
     const hour = typeof row.journalEntryHour === "number" ? row.journalEntryHour : 0;
     const minute = typeof row.journalEntryMinute === "number" ? row.journalEntryMinute : 0;
     date = new Date(row.journalEntryYear, row.journalEntryMonth - 1, row.journalEntryDay, hour, minute, 0, 0);
+    dayKey = `${String(row.journalEntryYear).padStart(4, "0")}-${String(row.journalEntryMonth).padStart(2, "0")}-${String(row.journalEntryDay).padStart(2, "0")}`;
   } else if (row.createdAt) {
     date = new Date(row.createdAt);
+    if (!Number.isNaN(date.getTime())) dayKey = getPacificDayKey(date);
   }
-  if (!date || Number.isNaN(date.getTime())) return null;
+  if (!date || Number.isNaN(date.getTime()) || !dayKey) return null;
   const title = (row.videoTitle || "Journal entry").trim() || "Journal entry";
   const preview = truncatePreview(row.transcriptText, 120);
   return {
     id: row._id,
-    dayKey: toDayKey(date),
+    dayKey,
     timestamp: date.getTime(),
     title,
     preview,
@@ -90,12 +94,14 @@ export default function JournalNewPage() {
   const [loadingEntries, setLoadingEntries] = useState(false);
   const [entriesError, setEntriesError] = useState<string | null>(null);
   const [entries, setEntries] = useState<JournalListItem[]>([]);
-  const [selectedDayKey, setSelectedDayKey] = useState(() => toDayKey(new Date()));
+  const [selectedDayKey, setSelectedDayKey] = useState(() => getPacificDayKey(new Date()));
   const daysScrollerRef = useRef<HTMLDivElement | null>(null);
   const daysAutoScrolledRef = useRef(false);
 
   const last7Days = useMemo(() => {
-    const today = new Date();
+    const todayKey = getPacificDayKey(new Date());
+    const [year, month, day] = todayKey.split("-").map((part) => Number(part));
+    const today = new Date(year, month - 1, day);
     const days: { key: string; date: Date }[] = [];
     for (let offset = 6; offset >= 0; offset -= 1) {
       const d = new Date(today);

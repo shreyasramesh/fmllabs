@@ -15,7 +15,6 @@ import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
-import { EstimateThinkingHero } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
 import {
@@ -1012,7 +1011,7 @@ interface CaptureViewProps {
   setCaptureEntries: React.Dispatch<React.SetStateAction<BrainDumpCaptureEntry[]>>;
   sentenceDraft: string;
   setSentenceDraft: React.Dispatch<React.SetStateAction<string>>;
-  phase: "recording" | "categorizing";
+  phase: "recording" | "categorizing" | "saving";
   /** When the draft is empty, Enter runs categorize + save (same as Done). */
   onRequestFinishNote?: () => void;
   /** Journal rows already saved for the landing dashboard day (read-only context). */
@@ -1063,6 +1062,8 @@ export function BrainDumpCaptureView({
   const full = layout === "fullScreen";
   const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
   const prevJournalCountRef = useRef<number | null>(null);
+  const captureBusy = phase === "categorizing";
+  const draftDisabled = phase === "categorizing" || (!saveLineOnEnter && phase === "saving");
 
   const journalRowsOrdered = React.useMemo(() => {
     if (journalContextRows.length === 0) return journalContextRows;
@@ -1091,10 +1092,6 @@ export function BrainDumpCaptureView({
     prevJournalCountRef.current = journalContextRows.length;
   }, [full, journalContextRows.length]);
 
-  if (phase === "categorizing" && !saveLineOnEnter) {
-    return <EstimateThinkingHero />;
-  }
-
   const handleDraftValue = (raw: string) => {
     if (saveLineOnEnter) {
       setSentenceDraft(raw);
@@ -1121,9 +1118,10 @@ export function BrainDumpCaptureView({
     void (async () => {
       const t = sentenceDraft.trim();
       if (saveLineOnEnter) {
+        if (lineSaveBusy) return;
         if (t && onSaveLine) {
-          await onSaveLine(t, draftMetaRef.current);
           setSentenceDraft("");
+          await onSaveLine(t, draftMetaRef.current);
         }
         return;
       }
@@ -1140,6 +1138,24 @@ export function BrainDumpCaptureView({
   const removeEntry = (id: string) => {
     setCaptureEntries((prev) => prev.filter((e) => e.id !== id));
   };
+
+  useEffect(() => {
+    if (captureEntries.length === 0 || journalRowsOrdered.length === 0) return;
+    setCaptureEntries((prev) => {
+      const next = prev.filter(
+        (entry) =>
+          !(
+            entry.saveState === "pending" &&
+            journalRowsOrdered.some((row) => {
+              if (row.bodyText.trim() !== entry.text.trim()) return false;
+              if (!entry.createdAtMs) return true;
+              return (row.sortAtMs ?? 0) >= entry.createdAtMs - 120000;
+            })
+          )
+      );
+      return next.length === prev.length ? prev : next;
+    });
+  }, [captureEntries.length, journalRowsOrdered, setCaptureEntries]);
 
   const journalRowsSheet =
     journalRowsOrdered.length > 0 ? (
@@ -1179,16 +1195,14 @@ export function BrainDumpCaptureView({
                 sleepTrendSparklineHours={sleepTrendSparklineHours}
               />
             ))}
-            {!saveLineOnEnter
-              ? captureEntries.map((entry) => (
-                  <div key={entry.id} className="mb-3">
-                    <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} />
-                  </div>
-                ))
-              : null}
+            {captureEntries.map((entry) => (
+              <div key={entry.id} className="mb-3">
+                <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} />
+              </div>
+            ))}
             <div
               className={
-                journalRowsOrdered.length > 0 || (!saveLineOnEnter && captureEntries.length > 0)
+                journalRowsOrdered.length > 0 || captureEntries.length > 0
                   ? "mt-2"
                   : undefined
               }
@@ -1198,12 +1212,17 @@ export function BrainDumpCaptureView({
                 onDraftValue={handleDraftValue}
                 onEnterCommit={commitDraftOnEnter}
                 onMetaChange={syncDraftMeta}
-                disabled={lineSaveBusy}
+                disabled={draftDisabled}
                 variant="fullScreen"
                 showEstimateDetailTap
                 textAreaRef={draftTextareaRef}
               />
             </div>
+            {phase !== "recording" ? (
+              <p className="mt-2 px-1 text-[12px] font-medium text-neutral-400 dark:text-neutral-500">
+                {phase === "saving" ? "Saving your note…" : "Categorizing your note…"}
+              </p>
+            ) : null}
             <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
         </div>
@@ -1223,15 +1242,21 @@ export function BrainDumpCaptureView({
       >
         {journalRowsSheet}
         {captureEntries.map((entry) => (
-          <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} />
+          <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} disabled={captureBusy} />
         ))}
         <CaptureDraftSentenceRow
           draft={sentenceDraft}
           onDraftValue={handleDraftValue}
           onEnterCommit={commitDraftOnEnter}
           onMetaChange={syncDraftMeta}
+          disabled={draftDisabled}
           textAreaRef={draftTextareaRef}
         />
+        {phase !== "recording" ? (
+          <p className="px-1 pt-2 text-[12px] font-medium text-neutral-400 dark:text-neutral-500">
+            {phase === "saving" ? "Saving your note…" : "Categorizing your note…"}
+          </p>
+        ) : null}
       </div>
     </div>
   );
