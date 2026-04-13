@@ -33,7 +33,7 @@ function normalizeDatePartsFromBody(body: Record<string, unknown>, fallback: Dat
   });
 }
 
-function mapEntry(e: { _id: string; sleepHours: number; hrvMs: number | null; sleepScore?: number | null; entryDay: number; entryMonth: number; entryYear: number; createdAt: Date }) {
+function mapEntry(e: { _id: string; sleepHours: number; hrvMs: number | null; sleepScore?: number | null; entryDay: number; entryMonth: number; entryYear: number; createdAt: Date; sortOverrideMs?: number }) {
   return {
     id: e._id,
     sleepHours: e.sleepHours,
@@ -44,6 +44,7 @@ function mapEntry(e: { _id: string; sleepHours: number; hrvMs: number | null; sl
     year: e.entryYear,
     dayKey: `${String(e.entryYear).padStart(4, "0")}-${String(e.entryMonth).padStart(2, "0")}-${String(e.entryDay).padStart(2, "0")}`,
     createdAt: e.createdAt,
+    sortOverrideMs: e.sortOverrideMs,
   };
 }
 
@@ -136,6 +137,17 @@ export async function PATCH(request: Request) {
     const id = typeof body.id === "string" ? body.id.trim() : "";
     if (!id) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    // sortOverrideMs — drag-to-reorder position
+    if (body.sortOverrideMs !== undefined) {
+      const sortMs = typeof body.sortOverrideMs === "number" ? body.sortOverrideMs : Number(body.sortOverrideMs);
+      if (!Number.isFinite(sortMs) || sortMs <= 0) {
+        return NextResponse.json({ error: "sortOverrideMs must be a positive number" }, { status: 400 });
+      }
+      const ok = await updateSleepEntry(id, userId, { sortOverrideMs: Math.round(sortMs) });
+      if (!ok) return NextResponse.json({ error: "Sleep entry not found" }, { status: 404 });
+      return NextResponse.json({ ok: true, sortOverrideMs: Math.round(sortMs) });
     }
 
     const updates: { sleepScore?: number | null; hrvMs?: number | null; sleepHours?: number } = {};

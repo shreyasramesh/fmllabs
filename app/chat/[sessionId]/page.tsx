@@ -3638,6 +3638,7 @@ type WeightTrackerEntry = {
   targetWeightKg: number | null;
   recordedAt: string;
   createdAt: string;
+  sortOverrideMs?: number;
 };
 
 type FocusTrackerEntry = {
@@ -4176,6 +4177,7 @@ export default function ChatPage() {
   const [habits, setHabits] = useState<HabitItem[]>([]);
   const [habitCompletions, setHabitCompletions] = useState<Record<string, string[]>>({});
   const [translatedTitles, setTranslatedTitles] = useState<Record<string, string>>({});
+  /** All transcripts (YouTube + journal) — lazy-loaded for YouTube library, transcript modals, mentions. */
   const [savedTranscripts, setSavedTranscripts] = useState<{
     _id: string;
     videoId: string;
@@ -4201,6 +4203,36 @@ export default function ChatPage() {
     journalMentorReflectionsUpdatedAt?: string | Date;
     quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
     habitTags?: string[];
+    sortOverrideMs?: number;
+  }[]>([]);
+
+  /** Journal-only transcripts (sourceType=journal, slim projection) — eagerly loaded for Quick Notes. */
+  const [savedJournalTranscripts, setSavedJournalTranscripts] = useState<{
+    _id: string;
+    videoId: string;
+    videoTitle?: string;
+    channel?: string;
+    sourceType?: "youtube" | "journal";
+    journalCategory?: "nutrition" | "exercise" | "spend";
+    journalBatchId?: string;
+    journalEntryDay?: number;
+    journalEntryMonth?: number;
+    journalEntryYear?: number;
+    journalEntryHour?: number;
+    journalEntryMinute?: number;
+    transcriptText?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    extractedConcepts?: {
+      domain: string;
+      concepts: { title: string; summary: string; enrichmentPrompt: string }[];
+    }[];
+    journalMentorReflections?: { figureId: string; figureName: string; reflection: string }[];
+    journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
+    journalMentorReflectionsUpdatedAt?: string | Date;
+    quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
+    habitTags?: string[];
+    sortOverrideMs?: number;
   }[]>([]);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgFrameworkSummarizing, setCgFrameworkSummarizing] = useState(false);
@@ -4840,32 +4872,44 @@ export default function ChatPage() {
 
   const [transcriptsLoaded, setTranscriptsLoaded] = useState(false);
 
+  /** Fast journal-only fetch — powers Quick Notes, streak, journal library. */
+  const refetchJournalTranscripts = useCallback(() => {
+    if (isAnonymous) {
+      setSavedJournalTranscripts([]);
+      setTranscriptsLoaded(true);
+      return;
+    }
+    fetch(`/api/me/transcripts?sourceType=journal&slim=1&_t=${Date.now()}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setSavedJournalTranscripts(Array.isArray(data) ? data : []))
+      .catch(() => setSavedJournalTranscripts([]))
+      .finally(() => setTranscriptsLoaded(true));
+  }, [isAnonymous]);
+
+  /** Full fetch (all types) — for YouTube library panel, transcript modals, mentions. */
   const refetchTranscripts = useCallback(() => {
     if (isAnonymous) {
       setSavedTranscripts([]);
-      setTranscriptsLoaded(true);
       return;
     }
     fetch(`/api/me/transcripts?_t=${Date.now()}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
-      .catch(() => setSavedTranscripts([]))
-      .finally(() => setTranscriptsLoaded(true));
+      .catch(() => setSavedTranscripts([]));
   }, [isAnonymous]);
 
   const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
 
   const journalEntriesSorted = useMemo(() => {
-    const sortKey = (t: (typeof savedTranscripts)[number]) => journalEntryTimestamp(t);
-    return savedTranscripts
-      .filter((t) => t.sourceType === "journal")
+    const sortKey = (t: (typeof savedJournalTranscripts)[number]) => journalEntryTimestamp(t);
+    return savedJournalTranscripts
       .slice()
       .sort((a, b) => sortKey(a) - sortKey(b));
-  }, [savedTranscripts]);
+  }, [savedJournalTranscripts]);
 
   /** Month/year sections, ascending (oldest month first); entries within each month ascending by day. */
   const journalEntriesGroupedByMonthYear = useMemo(() => {
-    type T = (typeof savedTranscripts)[number];
+    type T = (typeof savedJournalTranscripts)[number];
     const getMonthBucket = (t: T) => {
       if (
         typeof t.journalEntryYear === "number" &&
@@ -5201,6 +5245,7 @@ export default function ChatPage() {
       sleepScore: number | null;
       dayKey: string;
       createdAt?: string;
+      sortOverrideMs?: number;
     }>
   >([]);
   const [sleepEntriesLoaded, setSleepEntriesLoaded] = useState(false);
@@ -5403,7 +5448,7 @@ export default function ChatPage() {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(j.error || "save failed");
       }
-      refetchTranscripts();
+      refetchJournalTranscripts();
       setJournalEntryJustSaved(true);
       if (typeof window !== "undefined") {
         window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
@@ -5414,7 +5459,7 @@ export default function ChatPage() {
     } finally {
       setJournalEntrySaving(false);
     }
-  }, [journalEntryDate, language, refetchTranscripts, resetJournalEntryModal]);
+  }, [journalEntryDate, language, refetchJournalTranscripts, resetJournalEntryModal]);
 
   const refineJournalEntryFromModal = useCallback(async () => {
     const body = journalEntryTextRef.current.trim();
@@ -5563,7 +5608,7 @@ export default function ChatPage() {
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Could not save spend entry.");
-      refetchTranscripts();
+      refetchJournalTranscripts();
       resetSpendTrackerModal();
     } catch (err) {
       setSpendTrackerError(err instanceof Error ? err.message : "Could not save spend entry.");
@@ -5571,7 +5616,7 @@ export default function ChatPage() {
       setSpendTrackerSaving(false);
     }
   }, [
-    refetchTranscripts,
+    refetchJournalTranscripts,
     resetSpendTrackerModal,
     selectedLandingDayKey,
     spendTrackerAmount,
@@ -5856,7 +5901,7 @@ export default function ChatPage() {
         setCalorieTrackerResult(nextResult);
         if (persist) {
         setCalorieTrackerStep("result");
-        refetchTranscripts();
+        refetchJournalTranscripts();
         setJournalEntryJustSaved(true);
         if (typeof window !== "undefined") {
           window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
@@ -5873,7 +5918,7 @@ export default function ChatPage() {
         setCalorieTrackerLoading(false);
       }
     },
-    [buildCalorieTrackerHydratedInput, calorieTrackerCustomTag, calorieTrackerEntryDate, refetchTranscripts]
+    [buildCalorieTrackerHydratedInput, calorieTrackerCustomTag, calorieTrackerEntryDate, refetchJournalTranscripts]
   );
 
   const buildCalorieTrackerReviewDraftFromNutrition = useCallback(
@@ -6022,7 +6067,7 @@ export default function ChatPage() {
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Could not reuse this nutrition entry.");
-      refetchTranscripts();
+      refetchJournalTranscripts();
       setJournalEntryJustSaved(true);
       if (typeof window !== "undefined") {
         window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
@@ -6057,7 +6102,7 @@ export default function ChatPage() {
     calorieTrackerEntryDate,
     calorieTrackerImageProcessing,
     calorieTrackerLoading,
-    refetchTranscripts,
+    refetchJournalTranscripts,
     selectedLandingJournalChip,
   ]);
 
@@ -6700,7 +6745,10 @@ export default function ChatPage() {
       .sort((a, b) => new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime())
       .map((e) => {
         const d = new Date(e.recordedAt);
-        const sortAtMs = d.getTime();
+        const recordedAtMs = d.getTime();
+        const sortAtMs = typeof e.sortOverrideMs === "number" && e.sortOverrideMs > 0
+          ? e.sortOverrideMs
+          : recordedAtMs;
         let time = "";
         if (!Number.isNaN(d.getTime())) {
           time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
@@ -6742,6 +6790,9 @@ export default function ChatPage() {
           time = d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
         }
       }
+      const naturalMs = e.createdAt && !Number.isNaN(new Date(e.createdAt).getTime())
+        ? new Date(e.createdAt).getTime()
+        : sleepAnchor + idx * 60_000;
       return {
         id: `landing-sleep-${e.id}`,
         rowSource: "sleep" as const,
@@ -6751,9 +6802,9 @@ export default function ChatPage() {
         time,
         caloriesSummary: null,
         metricSummary: `${hoursRounded} h`,
-        sortAtMs: e.createdAt && !Number.isNaN(new Date(e.createdAt).getTime())
-          ? new Date(e.createdAt).getTime()
-          : sleepAnchor + idx * 60_000,
+        sortAtMs: typeof e.sortOverrideMs === "number" && e.sortOverrideMs > 0
+          ? e.sortOverrideMs
+          : naturalMs,
       };
     });
 
@@ -6802,7 +6853,7 @@ export default function ChatPage() {
 
   const journalStreak = useMemo(() => {
     const dayKeys = new Set(
-      savedTranscripts
+      savedJournalTranscripts
         .map((t) => journalEntryDayKey(t))
         .filter((k): k is string => !!k)
     );
@@ -6819,7 +6870,7 @@ export default function ChatPage() {
       day = prevKey(day);
     }
     return streak;
-  }, [savedTranscripts]);
+  }, [savedJournalTranscripts]);
 
   const prevLandingDayKey = useMemo(() => {
     const d = dateFromDayKey(selectedLandingDayKey);
@@ -7454,13 +7505,13 @@ export default function ChatPage() {
       }
       setTranscriptStatsEditing(false);
       setTranscriptStatsDraft(null);
-      refetchTranscripts();
+      refetchJournalTranscripts();
     } catch (err) {
       setTranscriptStatsError(err instanceof Error ? err.message : "Failed to update journal stats.");
     } finally {
       setTranscriptStatsSaving(false);
     }
-  }, [refetchTranscripts, transcriptModalTranscript, transcriptStatsDraft]);
+  }, [refetchJournalTranscripts, transcriptModalTranscript, transcriptStatsDraft]);
 
   useEffect(() => {
     if (!transcriptModalTranscript) {
@@ -7480,11 +7531,11 @@ export default function ChatPage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("journalSaved") !== "1") return;
     setJournalEntryJustSaved(true);
-    refetchTranscripts();
+    refetchJournalTranscripts();
     router.replace("/chat/new", { scroll: false });
     const tid = window.setTimeout(() => setJournalEntryJustSaved(false), 4000);
     return () => clearTimeout(tid);
-  }, [isNew, incognitoMode, router, refetchTranscripts]);
+  }, [isNew, incognitoMode, router, refetchJournalTranscripts]);
 
   useEffect(() => {
     setJournalMentorBubbleOpenId(null);
@@ -7492,7 +7543,10 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!transcriptModalTranscript?.id) return;
-    const row = savedTranscripts.find((s) => s._id === transcriptModalTranscript.id);
+    // Check both states: journal transcripts (eagerly loaded) and full transcripts (lazy)
+    const row =
+      savedJournalTranscripts.find((s) => s._id === transcriptModalTranscript.id) ??
+      savedTranscripts.find((s) => s._id === transcriptModalTranscript.id);
     if (!row) return;
     setTranscriptModalTranscript((prev) => {
       if (!prev || prev.id !== row._id) return prev;
@@ -7504,30 +7558,30 @@ export default function ChatPage() {
         journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
       };
     });
-  }, [savedTranscripts, transcriptModalTranscript?.id]);
+  }, [savedJournalTranscripts, savedTranscripts, transcriptModalTranscript?.id]);
 
   useEffect(() => {
     if (isAnonymous || incognitoMode) return;
-    const hasPending = savedTranscripts.some(
-      (t) => t.sourceType === "journal" && t.journalMentorReflectionsStatus === "pending"
+    const hasPending = savedJournalTranscripts.some(
+      (t) => t.journalMentorReflectionsStatus === "pending"
     );
     const modalPending =
       transcriptModalTranscript?.sourceType === "journal" &&
       transcriptModalTranscript?.journalMentorReflectionsStatus === "pending";
     if (!hasPending && !modalPending && !journalEntryJustSaved) return;
     const timer = window.setInterval(() => {
-      refetchTranscripts();
+      refetchJournalTranscripts();
     }, 3500);
     return () => window.clearInterval(timer);
   }, [
-    savedTranscripts,
+    savedJournalTranscripts,
     transcriptModalTranscript?.id,
     transcriptModalTranscript?.sourceType,
     transcriptModalTranscript?.journalMentorReflectionsStatus,
     journalEntryJustSaved,
     isAnonymous,
     incognitoMode,
-    refetchTranscripts,
+    refetchJournalTranscripts,
   ]);
 
   /** Opens the video/journal concept extraction modal for a saved transcript (re-extract). */
@@ -7673,8 +7727,8 @@ export default function ChatPage() {
   }, [refetchLongTermMemories]);
 
   useEffect(() => {
-    refetchTranscripts();
-  }, [refetchTranscripts]);
+    refetchJournalTranscripts();
+  }, [refetchJournalTranscripts]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -9851,7 +9905,9 @@ export default function ChatPage() {
       return;
     }
     if (item.kind === "journal") {
-      const row = savedTranscripts.find((t) => t._id === item.entityId);
+      const row =
+        savedJournalTranscripts.find((t) => t._id === item.entityId) ??
+        savedTranscripts.find((t) => t._id === item.entityId);
       if (!row || !row.transcriptText) return;
       setTranscriptModalTranscript({
         id: row._id,
@@ -9989,7 +10045,9 @@ export default function ChatPage() {
         });
         return;
       }
-      const row = savedTranscripts.find((t) => t._id === transcriptId);
+      const row =
+        savedJournalTranscripts.find((t) => t._id === transcriptId) ??
+        savedTranscripts.find((t) => t._id === transcriptId);
       if (!row || row.sourceType !== "journal" || !row.transcriptText) return;
       setTranscriptModalTranscript({
         id: row._id,
@@ -10047,14 +10105,14 @@ export default function ChatPage() {
           method: "DELETE",
         });
         if (res.ok) {
-          refetchTranscripts();
+          refetchJournalTranscripts();
           setTranscriptModalTranscript((prev) => (prev?.id === transcriptId ? null : prev));
         }
       } catch {
         /* silent */
       }
     },
-    [isAnonymous, incognitoMode, refetchTranscripts]
+    [isAnonymous, incognitoMode, refetchJournalTranscripts]
   );
 
   const [habitTaggingRowId, setHabitTaggingRowId] = useState<string | null>(null);
@@ -10063,10 +10121,12 @@ export default function ChatPage() {
 
   const openHabitTaggingForRow = useCallback((rowId: string) => {
     // Pre-populate with existing tags for this row (find in journal entries)
-    const transcript = savedTranscripts.find((t) => t._id === rowId);
+    const transcript =
+      savedJournalTranscripts.find((t) => t._id === rowId) ??
+      savedTranscripts.find((t) => t._id === rowId);
     setHabitTaggingSelected(transcript?.habitTags ?? []);
     setHabitTaggingRowId(rowId);
-  }, [savedTranscripts]);
+  }, [savedJournalTranscripts, savedTranscripts]);
 
   const saveHabitTags = useCallback(async () => {
     if (!habitTaggingRowId || habitTaggingSaving) return;
@@ -10077,12 +10137,12 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ habitTags: habitTaggingSelected }),
       });
-      refetchTranscripts();
+      refetchJournalTranscripts();
     } catch { /* silent */ } finally {
       setHabitTaggingSaving(false);
       setHabitTaggingRowId(null);
     }
-  }, [habitTaggingRowId, habitTaggingSelected, habitTaggingSaving, refetchTranscripts]);
+  }, [habitTaggingRowId, habitTaggingSelected, habitTaggingSaving, refetchJournalTranscripts]);
 
   const editJournalEntryText = useCallback(async (rowId: string, newText: string) => {
     await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
@@ -10090,17 +10150,43 @@ export default function ChatPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ plainText: newText }),
     });
-    refetchTranscripts();
-  }, [refetchTranscripts]);
+    refetchJournalTranscripts();
+  }, [refetchJournalTranscripts]);
 
   const reorderJournalEntry = useCallback(async (rowId: string, newSortMs: number) => {
-    await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sortOverrideMs: newSortMs }),
-    });
-    refetchTranscripts();
-  }, [refetchTranscripts]);
+    // Route to the correct API based on the row ID prefix set by brainDumpJournalContextRows
+    if (rowId.startsWith("landing-sleep-")) {
+      const realId = rowId.slice("landing-sleep-".length);
+      await fetch("/api/me/sleep", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: realId, sortOverrideMs: newSortMs }),
+      });
+      // refetchSleepEntries is declared later; trigger via event to avoid hoisting issue
+      fetch("/api/me/sleep?limit=200", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((data) => { if (Array.isArray(data?.entries)) setSleepEntries(data.entries as typeof sleepEntries); })
+        .catch(() => {});
+    } else if (rowId.startsWith("landing-weight-")) {
+      const realId = rowId.slice("landing-weight-".length);
+      await fetch("/api/me/journal/weight", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: realId, sortOverrideMs: newSortMs }),
+      });
+      fetch("/api/me/journal/weight", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((data) => { if (Array.isArray(data?.entries)) setWeightTrackerEntries(data.entries as WeightTrackerEntry[]); })
+        .catch(() => {});
+    } else {
+      await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sortOverrideMs: newSortMs }),
+      });
+      refetchJournalTranscripts();
+    }
+  }, [refetchJournalTranscripts, setSleepEntries, setWeightTrackerEntries]);
 
   const openReflectionMentorFromQuickNote = useCallback(
     (ctx?: { reflectionText?: string }) => {
@@ -10360,14 +10446,14 @@ export default function ChatPage() {
         entries.length > 0 && Number.isFinite(entries[0]!.weightKg) ? String(entries[0]!.weightKg) : ""
       );
       setWeightTrackerAddOpen(false);
-      refetchTranscripts();
+      refetchJournalTranscripts();
     } catch (err) {
       setWeightTrackerError(err instanceof Error ? err.message : "Could not save weight entry.");
     } finally {
       setWeightTrackerSaving(false);
     }
   }, [
-    refetchTranscripts,
+    refetchJournalTranscripts,
     weightTrackerSaving,
     weightTrackerTargetInput,
     weightTrackerWeightInput,
@@ -10496,19 +10582,6 @@ export default function ChatPage() {
     if (isAnonymous || incognitoMode || !userId) return;
     void fetchFocusTrackerEntries();
   }, [fetchFocusTrackerEntries, incognitoMode, isAnonymous, userId]);
-
-  useEffect(() => {
-    if (isAnonymous || incognitoMode || !userId) return;
-    if (focusTrackerEntries.length > 0 || focusTrackerLoading) return;
-    void fetchFocusTrackerEntries();
-  }, [
-    fetchFocusTrackerEntries,
-    focusTrackerEntries.length,
-    focusTrackerLoading,
-    incognitoMode,
-    isAnonymous,
-    userId,
-  ]);
 
   useEffect(() => {
     if (pomodoroRunning || pomodoroSessionStartIso) return;
@@ -11075,7 +11148,7 @@ export default function ChatPage() {
       })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [isAnonymous, incognitoMode, userId, journalEntryJustSaved, savedTranscripts.length]);
+  }, [isAnonymous, incognitoMode, userId, journalEntryJustSaved, savedJournalTranscripts.length]);
 
   const applySleepEntriesFromApi = useCallback((data: Record<string, unknown>) => {
     if (!Array.isArray(data.entries)) return;
@@ -11897,8 +11970,11 @@ export default function ChatPage() {
   }, [isAnonymous, user]);
 
   useEffect(() => {
-    if (libraryPanelOpen === "cg" || libraryPanelOpen === "journal") refetchTranscripts();
-  }, [libraryPanelOpen, refetchTranscripts]);
+    // "journal" tab uses savedJournalTranscripts (already eagerly loaded); only refetch the full
+    // set when the concept-group panel opens (needs extractedConcepts) or YouTube tab.
+    if (libraryPanelOpen === "cg") refetchTranscripts();
+    if (libraryPanelOpen === "journal") refetchJournalTranscripts();
+  }, [libraryPanelOpen, refetchTranscripts, refetchJournalTranscripts]);
   useEffect(() => {
     if (libraryPanelOpen !== "journal") {
       journalPanelDaysAutoScrolledRef.current = false;
@@ -14999,7 +15075,7 @@ export default function ChatPage() {
                               )}
                               <button
                                 type="button"
-                                onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())}
+                                onClick={() => fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => { refetchTranscripts(); refetchJournalTranscripts(); })}
                                 className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                                 aria-label={`Delete transcript ${t.videoTitle || t.videoId}`}
                               >
@@ -15395,7 +15471,7 @@ export default function ChatPage() {
                             <button
                               type="button"
                               onClick={() =>
-                                fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchTranscripts())
+                                fetch(`/api/me/transcripts/${t._id}`, { method: "DELETE" }).then(() => refetchJournalTranscripts())
                               }
                               className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
                               aria-label={`Delete journal ${t.videoTitle || t._id}`}
@@ -16142,7 +16218,7 @@ export default function ChatPage() {
                                   (c) => c === "reflection" || c === "nutrition" || c === "exercise"
                                 )
                               ) {
-                                refetchTranscripts();
+                                refetchJournalTranscripts();
                               }
                               if (categories.some((c) => c === "concept")) refetchCustomConcepts();
                               if (categories.some((c) => c === "experiment")) refetchHabits();
@@ -16168,7 +16244,7 @@ export default function ChatPage() {
                         onEditContextEntry={isAnonymous || incognitoMode ? undefined : editJournalEntryText}
                         onSaved={(categories) => {
                           if (categories.some((c) => c === "reflection" || c === "nutrition" || c === "exercise")) {
-                            refetchTranscripts();
+                            refetchJournalTranscripts();
                           }
                           if (categories.some((c) => c === "concept")) refetchCustomConcepts();
                           if (categories.some((c) => c === "experiment")) refetchHabits();
@@ -17579,7 +17655,7 @@ export default function ChatPage() {
                           method: "POST",
                         })
                           .then((r) => {
-                            if (r.ok) refetchTranscripts();
+                            if (r.ok) refetchJournalTranscripts();
                           })
                           .finally(() => setMentorReflectionsRegenerateLoading(false));
                       }}
@@ -17729,7 +17805,7 @@ export default function ChatPage() {
                                 ? { ...prev, journalMentorReflectionsStatus: "pending" }
                                 : prev
                             );
-                            refetchTranscripts();
+                            refetchJournalTranscripts();
                           }
                         })
                         .finally(() => setMentorReflectionsRegenerateLoading(false));
@@ -17773,7 +17849,7 @@ export default function ChatPage() {
                 type="button"
                 onClick={() => {
                   fetch(`/api/me/transcripts/${transcriptModalTranscript.id}`, { method: "DELETE" })
-                    .then(() => refetchTranscripts())
+                    .then(() => refetchJournalTranscripts())
                     .then(() => {
                       setTranscriptModalTranscript(null);
                       setTranscriptExtractedConceptOpen(null);

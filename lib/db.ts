@@ -39,7 +39,7 @@ let db: Db | null = null;
 // Short TTLs for mutation-heavy data that must feel instant after writes.
 // Longer TTLs for rarely-mutated reference data (mental models, settings).
 const TTL_1M  = 30_000;        // 30s — habit completions
-const TTL_2M  = 45_000;        // 45s — sessions, habits, focus, transcripts
+const TTL_2M  = 120_000;       // 2 min — sessions, habits, focus, transcripts
 const TTL_3M  = 2 * 60_000;    // 2m  — sleep, weight, custom concepts, memories
 const TTL_5M  = 10 * 60_000;   // 10m — settings, mental models, saved concepts, perspective cards
 
@@ -87,6 +87,7 @@ async function ensureIndexes(database: Db): Promise<void> {
       database.collection("sessions").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
       database.collection("messages").createIndex({ sessionId: 1, createdAt: 1 }, { background: true }),
       database.collection("transcripts").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
+      database.collection("transcripts").createIndex({ userId: 1, sourceType: 1, updatedAt: -1 }, { background: true }),
       database.collection("habits").createIndex({ userId: 1 }, { background: true }),
       database.collection("habit_completions").createIndex({ userId: 1, habitId: 1, dateKey: 1 }, { background: true }),
       database.collection("user_settings").createIndex({ userId: 1 }, { unique: true, background: true }),
@@ -389,6 +390,8 @@ export interface WeightEntry {
   recordedAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  /** Manual sort position override (ms epoch) set via drag-to-reorder. */
+  sortOverrideMs?: number;
 }
 
 interface WeightEntryDoc extends Omit<WeightEntry, "_id"> {
@@ -425,6 +428,8 @@ export interface SleepEntry {
   entryYear: number;
   createdAt: Date;
   updatedAt: Date;
+  /** Manual sort position override (ms epoch) set via drag-to-reorder. */
+  sortOverrideMs?: number;
 }
 
 interface SleepEntryDoc extends Omit<SleepEntry, "_id"> {
@@ -2033,20 +2038,29 @@ export async function deleteSession(
 }
 
 export async function getSavedTranscripts(
-  userId: string
+  userId: string,
+  opts?: { sourceType?: "journal" | "youtube"; slim?: boolean }
 ): Promise<(SavedTranscript & { _id: string })[]> {
-  const cached = transcriptsCache.get<(SavedTranscript & { _id: string })[]>(userId);
+  const cacheKey = opts?.sourceType ? `${userId}:${opts.sourceType}` : userId;
+  const cached = transcriptsCache.get<(SavedTranscript & { _id: string })[]>(cacheKey);
   if (cached !== undefined) return cached;
   const database = await getDb();
-  const docs = await database
+  const filter: Record<string, unknown> = { userId };
+  if (opts?.sourceType) filter.sourceType = opts.sourceType;
+  // slim excludes only extractedConcepts (large concept-group arrays not needed for list views)
+  const projection = opts?.slim
+    ? { extractedConcepts: 0 }
+    : undefined;
+  const query = database
     .collection<SavedTranscriptDoc>("transcripts")
-    .find({ userId })
-    .sort({ updatedAt: -1 })
-    .toArray();
+    .find(filter)
+    .sort({ updatedAt: -1 });
+  if (projection) query.project(projection);
+  const docs = await query.toArray();
   const result = docs.map((d) =>
     decryptTranscriptFields({ ...d, _id: d._id.toString() } as SavedTranscript & { _id: string })
   ) as (SavedTranscript & { _id: string })[];
-  transcriptsCache.set(userId, result, TTL_2M);
+  transcriptsCache.set(cacheKey, result, TTL_2M);
   return result;
 }
 
@@ -2093,7 +2107,7 @@ export async function saveTranscript(
   videoTitle?: string,
   channel?: string
 ): Promise<SavedTranscript & { _id: string }> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   const now = new Date();
   const existing = await getSavedTranscriptByVideoId(videoId, userId);
@@ -2153,7 +2167,7 @@ export async function saveJournalTranscript(
     habitTags?: string[];
   }
 ): Promise<SavedTranscript & { _id: string }> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   const now = new Date();
   const videoId = `journal_${new ObjectId().toHexString()}`;
@@ -2645,7 +2659,7 @@ export async function getSleepEntries(
 export async function updateSleepEntry(
   id: string,
   userId: string,
-  updates: { sleepScore?: number | null; hrvMs?: number | null; sleepHours?: number },
+  updates: { sleepScore?: number | null; hrvMs?: number | null; sleepHours?: number; sortOverrideMs?: number },
 ): Promise<boolean> {
   sleepCache.invalidate(userId);
   const database = await getDb();
@@ -2659,9 +2673,29 @@ export async function updateSleepEntry(
   if (updates.sleepScore !== undefined) $set.sleepScore = updates.sleepScore;
   if (updates.hrvMs !== undefined) $set.hrvMs = updates.hrvMs;
   if (updates.sleepHours !== undefined) $set.sleepHours = updates.sleepHours;
+  if (updates.sortOverrideMs !== undefined) $set.sortOverrideMs = updates.sortOverrideMs;
   const result = await database
     .collection<SleepEntryDoc>("user_sleep_entries")
     .updateOne({ _id: oid, userId }, { $set });
+  return result.modifiedCount > 0;
+}
+
+export async function updateWeightEntrySortOverride(
+  id: string,
+  userId: string,
+  sortOverrideMs: number,
+): Promise<boolean> {
+  weightCache.invalidate(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database
+    .collection<WeightEntryDoc>("user_weight_entries")
+    .updateOne({ _id: oid, userId }, { $set: { sortOverrideMs, updatedAt: new Date() } });
   return result.modifiedCount > 0;
 }
 
@@ -2801,7 +2835,7 @@ export async function upsertDailyLifeReport(
 }
 
 export async function deleteSavedTranscript(id: string, userId: string): Promise<boolean> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2820,7 +2854,7 @@ export async function updateTranscriptExtractedConcepts(
   userId: string,
   groups: ExtractedConceptGroup[]
 ): Promise<boolean> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2848,7 +2882,7 @@ export async function updateJournalMentorReflections(
     reflections?: JournalMentorReflectionItem[];
   }
 ): Promise<boolean> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2880,7 +2914,7 @@ export async function updateSavedTranscriptText(
   userId: string,
   transcriptText: string
 ): Promise<(SavedTranscript & { _id: string }) | null> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2906,7 +2940,7 @@ export async function updateTranscriptHabitTags(
   userId: string,
   habitTags: string[]
 ): Promise<boolean> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -2926,7 +2960,7 @@ export async function updateTranscriptSortOverride(
   userId: string,
   sortOverrideMs: number
 ): Promise<boolean> {
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   const database = await getDb();
   let oid: ObjectId;
   try {
@@ -3139,7 +3173,7 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   sleepCache.invalidate(userId);
   weightCache.invalidate(userId);
   focusCache.invalidate(userId);
-  transcriptsCache.invalidate(userId);
+  transcriptsCache.invalidatePrefix(userId);
   mentalModelsCache.invalidate(userId);
   savedConceptsCache.invalidate(userId);
   customConceptsCache.invalidate(userId);

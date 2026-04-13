@@ -705,7 +705,7 @@ function JournalContextRowSheet({
                 type="button"
                 onClick={() => void onDeleteJournalContextEntry?.(row.id)}
                 disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
-                className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+                className="hidden shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 disabled:cursor-not-allowed disabled:opacity-35 sm:inline-flex dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
                 aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
               >
                 <DeleteEntryIcon />
@@ -1025,7 +1025,8 @@ function JournalContextRowNoteStream({
   const swipeProgress = Math.min(Math.abs(swipeX) / SWIPE_THRESHOLD, 1);
 
   // Drag handle — only for reorderable transcript rows
-  const isDraggable = !!onDragHandleTouchStart && row.rowSource === "transcript";
+  const isDraggable = !!onDragHandleTouchStart &&
+    (row.rowSource === "transcript" || row.rowSource === "sleep" || row.rowSource === "weight");
   const dragHandle = isDraggable ? (
     <button
       type="button"
@@ -1073,7 +1074,7 @@ function JournalContextRowNoteStream({
         {!nsEditing && (
           <div className="flex items-start gap-1.5">
             {dragHandle}
-            {/* LEFT: text + edit + tag inline, secondary/pills below */}
+            {/* LEFT: text + edit + tag inline; sparkline below for sleep/weight rows */}
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
                 <button
@@ -1102,16 +1103,20 @@ function JournalContextRowNoteStream({
                 <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{reflectionMentorActions}</div>
               ) : null}
               {nsHabitPills}
+              {/* Sparkline chart sits below the text for sleep/weight rows so the row stays compact */}
+              {metricOnLeft && nsRightAnalysis ? (
+                <div className="mt-1.5 pl-[14px]">{nsRightAnalysis}</div>
+              ) : null}
             </div>
-            {/* RIGHT: analysis+delete on top, delta + time below */}
+            {/* RIGHT: analysis (non-sparkline rows) + delete, delta, time */}
             <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
               <div className="flex items-center gap-1.5">
-                {nsRightAnalysis}
+                {!metricOnLeft ? nsRightAnalysis : null}
                 {canDelete ? (
                   <button
                     type="button"
                     onClick={() => void onDeleteJournalContextEntry!(row.id)}
-                    className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+                    className="hidden shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 sm:inline-flex dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
                     aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
                   >
                     <DeleteEntryIcon className="h-4 w-4" />
@@ -1575,42 +1580,6 @@ export function BrainDumpCaptureView({
     ) : null;
 
   if (full) {
-    // ── Daily summary bar ──────────────────────────────────────────────────
-    const hasSummaryBar =
-      daySummary &&
-      (daySummary.hasCalories || daySummary.latestWeightKg !== null || daySummary.totalSleepH !== null);
-
-    const summaryBar = hasSummaryBar && daySummary ? (
-      <div className="flex shrink-0 flex-wrap items-center gap-1.5 border-b border-neutral-200 pb-2.5 pt-0.5 dark:border-white/[.15]">
-        {daySummary.hasCalories ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
-            <span aria-hidden>☕</span>
-            <span className="tabular-nums">
-              {daySummary.netCal >= 0 ? `+${daySummary.netCal.toLocaleString()}` : daySummary.netCal.toLocaleString()} cal net
-            </span>
-          </span>
-        ) : null}
-        {daySummary.totalSleepH !== null ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
-            <span aria-hidden>💤</span>
-            <span className="tabular-nums">{daySummary.totalSleepH.toFixed(1)} h</span>
-          </span>
-        ) : null}
-        {daySummary.latestWeightKg !== null ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
-            <span aria-hidden>⚖️</span>
-            <span className="tabular-nums">{daySummary.latestWeightKg} kg</span>
-          </span>
-        ) : null}
-        {journalStreak && journalStreak >= 2 ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-[11px] font-medium text-orange-600 dark:border-orange-700/40 dark:bg-orange-950/30 dark:text-orange-300">
-            <span aria-hidden>🔥</span>
-            <span className="tabular-nums">{journalStreak}d</span>
-          </span>
-        ) : null}
-      </div>
-    ) : null;
-
     // ── Category filter pills ──────────────────────────────────────────────
     const filterPills = distinctCategories.length >= 2 ? (
       <div className="flex shrink-0 gap-1.5 overflow-x-auto pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -1619,7 +1588,7 @@ export function BrainDumpCaptureView({
           onClick={() => setFilterCategory(null)}
           className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
             !filterCategory
-              ? "border-neutral-400 bg-neutral-900 text-white dark:border-neutral-500 dark:bg-neutral-100 dark:text-neutral-900"
+              ? "border-orange-400 bg-transparent text-orange-600 dark:border-transparent dark:bg-neutral-700 dark:text-neutral-100"
               : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
           }`}
         >
@@ -1632,7 +1601,7 @@ export function BrainDumpCaptureView({
             onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}
             className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize transition-colors ${
               filterCategory === cat
-                ? "border-neutral-400 bg-neutral-900 text-white dark:border-neutral-500 dark:bg-neutral-100 dark:text-neutral-900"
+                ? "border-orange-400 bg-transparent text-orange-600 dark:border-transparent dark:bg-neutral-700 dark:text-neutral-100"
                 : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
             }`}
           >
@@ -1642,26 +1611,9 @@ export function BrainDumpCaptureView({
       </div>
     ) : null;
 
-    // ── Net calorie footer ─────────────────────────────────────────────────
-    const netCalFooter =
-      daySummary?.hasCalories ? (
-        <div className="shrink-0 border-t border-neutral-200/60 py-2 text-[11px] tabular-nums text-neutral-500 dark:border-white/[.1] dark:text-neutral-400">
-          <span className="text-red-500 dark:text-red-400">+{daySummary.intakeCal.toLocaleString()} in</span>
-          {daySummary.burnCal > 0 ? (
-            <>
-              <span className="mx-1.5 text-neutral-300 dark:text-neutral-600">·</span>
-              <span className="text-emerald-600 dark:text-emerald-400">−{daySummary.burnCal.toLocaleString()} burned</span>
-            </>
-          ) : null}
-          <span className="mx-1.5 text-neutral-300 dark:text-neutral-600">=</span>
-          <span className="font-semibold text-neutral-600 dark:text-neutral-300">{daySummary.netCal.toLocaleString()} net</span>
-        </div>
-      ) : null;
-
     return (
       <>
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
-          {summaryBar}
           {filterPills}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
             {displayRows.length === 0 && captureEntries.length === 0 ? (
@@ -1702,7 +1654,6 @@ export function BrainDumpCaptureView({
                 <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} habitsById={habitsById} />
               </div>
             ))}
-            {netCalFooter}
             <div
               className={
                 journalRowsOrdered.length > 0 || captureEntries.length > 0
