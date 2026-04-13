@@ -2298,7 +2298,8 @@ function journalEntryTimestamp(t: JournalEntryDateFields): number {
 }
 
 /** Server save time (order the user logged entries), not journal meal/workout clock. */
-function transcriptCreatedAtMs(t: { createdAt?: string }): number {
+function transcriptCreatedAtMs(t: { createdAt?: string; sortOverrideMs?: number }): number {
+  if (typeof t.sortOverrideMs === "number" && t.sortOverrideMs > 0) return t.sortOverrideMs;
   if (!t.createdAt) return 0;
   const d = new Date(t.createdAt);
   return Number.isNaN(d.getTime()) ? 0 : d.getTime();
@@ -6766,6 +6767,79 @@ export default function ChatPage() {
     return merged;
   }, [journalEntriesSorted, selectedLandingDayKey, weightTrackerEntries, sleepEntries]);
 
+  // ── Quick Notes summary stats ────────────────────────────────────────────
+  const quickNoteDaySummary = useMemo(() => {
+    let intakeCal = 0, burnCal = 0;
+    let latestWeightKg: number | null = null;
+    let totalSleepH: number | null = null;
+    for (const row of brainDumpJournalContextRows) {
+      if (row.caloriesSummary?.startsWith("+")) {
+        const n = parseInt(row.caloriesSummary.replace(/[^0-9]/g, ""), 10);
+        if (!Number.isNaN(n)) intakeCal += n;
+      } else if (row.caloriesSummary?.startsWith("-")) {
+        const n = parseInt(row.caloriesSummary.replace(/[^0-9]/g, ""), 10);
+        if (!Number.isNaN(n)) burnCal += n;
+      }
+      if (row.journalCategory === "weight" && row.metricSummary) {
+        const n = parseFloat(row.metricSummary);
+        if (!Number.isNaN(n)) latestWeightKg = n;
+      }
+      if (row.journalCategory === "sleep" && row.metricSummary) {
+        const n = parseFloat(row.metricSummary);
+        if (!Number.isNaN(n)) totalSleepH = (totalSleepH ?? 0) + n;
+      }
+    }
+    const netCal = intakeCal - burnCal;
+    return {
+      intakeCal,
+      burnCal,
+      netCal,
+      latestWeightKg,
+      totalSleepH,
+      hasCalories: intakeCal > 0 || burnCal > 0,
+    };
+  }, [brainDumpJournalContextRows]);
+
+  const journalStreak = useMemo(() => {
+    const dayKeys = new Set(
+      savedTranscripts
+        .map((t) => journalEntryDayKey(t))
+        .filter((k): k is string => !!k)
+    );
+    const prevKey = (k: string) => {
+      const d = dateFromDayKey(k);
+      if (!d) return null;
+      d.setDate(d.getDate() - 1);
+      return toDayKey(d);
+    };
+    let streak = 0;
+    let day: string | null = getPacificDayKey(new Date());
+    while (day && dayKeys.has(day)) {
+      streak++;
+      day = prevKey(day);
+    }
+    return streak;
+  }, [savedTranscripts]);
+
+  const prevLandingDayKey = useMemo(() => {
+    const d = dateFromDayKey(selectedLandingDayKey);
+    if (!d) return null;
+    d.setDate(d.getDate() - 1);
+    return toDayKey(d);
+  }, [selectedLandingDayKey]);
+
+  const prevDayWeightKg = useMemo(() => {
+    if (!prevLandingDayKey) return null;
+    const entry = weightTrackerEntries.find((e) => toDayKey(new Date(e.recordedAt)) === prevLandingDayKey);
+    return entry ? entry.weightKg : null;
+  }, [prevLandingDayKey, weightTrackerEntries]);
+
+  const prevDaySleepH = useMemo(() => {
+    if (!prevLandingDayKey) return null;
+    const entry = sleepEntries.find((e) => e.dayKey === prevLandingDayKey);
+    return entry ? entry.sleepHours : null;
+  }, [prevLandingDayKey, sleepEntries]);
+
   // Hero habits + current-month 30-day experiment habits available for tagging
   const availableHabitsForTagging = useMemo(() => {
     const now = new Date();
@@ -10015,6 +10089,15 @@ export default function ChatPage() {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ plainText: newText }),
+    });
+    refetchTranscripts();
+  }, [refetchTranscripts]);
+
+  const reorderJournalEntry = useCallback(async (rowId: string, newSortMs: number) => {
+    await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sortOverrideMs: newSortMs }),
     });
     refetchTranscripts();
   }, [refetchTranscripts]);
@@ -16036,6 +16119,10 @@ export default function ChatPage() {
                               !sleepEntriesLoaded ? "Loading Sleep Data" :
                               "Loading Weight Data"
                             }
+                            daySummary={quickNoteDaySummary}
+                            journalStreak={journalStreak}
+                            prevDayWeightKg={prevDayWeightKg}
+                            prevDaySleepH={prevDaySleepH}
                             onOpenJournalEntry={openLandingJournalTranscriptById}
                             onDeleteJournalEntry={
                               isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
@@ -16048,6 +16135,7 @@ export default function ChatPage() {
                             onTagContextEntry={isAnonymous || incognitoMode ? undefined : openHabitTaggingForRow}
                             habitsById={habitsByIdForTagging}
                             onEditContextEntry={isAnonymous || incognitoMode ? undefined : editJournalEntryText}
+                            onReorderContextEntry={isAnonymous || incognitoMode ? undefined : reorderJournalEntry}
                             onSaved={(categories) => {
                               if (
                                 categories.some(

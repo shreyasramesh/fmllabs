@@ -52,6 +52,15 @@ export function journalTypeBadgeClass(cat: BrainDumpCategory): string {
   }
 }
 
+export interface QuickNoteDaySummary {
+  intakeCal: number;
+  burnCal: number;
+  netCal: number;
+  latestWeightKg: number | null;
+  totalSleepH: number | null;
+  hasCalories: boolean;
+}
+
 export type BrainDumpJournalContextRowSource = "transcript" | "weight" | "sleep";
 
 export interface BrainDumpJournalContextRow {
@@ -722,6 +731,12 @@ function JournalContextRowNoteStream({
   onTagContextEntry,
   habitsById = {},
   onEditContextEntry,
+  isNew = false,
+  prevDayWeightKg = null,
+  prevDaySleepH = null,
+  isDragging = false,
+  isDragTarget = false,
+  onDragHandleTouchStart,
 }: {
   row: BrainDumpJournalContextRow;
   onOpenJournalContextEntry?: (id: string) => void;
@@ -733,11 +748,40 @@ function JournalContextRowNoteStream({
   onTagContextEntry?: (id: string) => void;
   habitsById?: Record<string, string>;
   onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  isNew?: boolean;
+  prevDayWeightKg?: number | null;
+  prevDaySleepH?: number | null;
+  isDragging?: boolean;
+  isDragTarget?: boolean;
+  onDragHandleTouchStart?: (e: React.TouchEvent) => void;
 }) {
   const [nsEditing, setNsEditing] = React.useState(false);
   const [nsEditDraft, setNsEditDraft] = React.useState("");
   const [nsEditSaving, setNsEditSaving] = React.useState(false);
   const nsEditTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  // Swipe-to-delete
+  const swipeTouchStartXRef = React.useRef<number | null>(null);
+  const [swipeX, setSwipeX] = React.useState(0);
+  const SWIPE_THRESHOLD = 80;
+  const canDelete = !!onDeleteJournalContextEntry && isJournalContextRowDeletable(row);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!canDelete) return;
+    swipeTouchStartXRef.current = e.touches[0]?.clientX ?? null;
+    setSwipeX(0);
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (swipeTouchStartXRef.current === null || !canDelete) return;
+    const dx = (e.touches[0]?.clientX ?? 0) - swipeTouchStartXRef.current;
+    if (dx < 0) setSwipeX(Math.max(dx, -SWIPE_THRESHOLD - 20));
+  };
+  const handleTouchEnd = () => {
+    if (swipeX <= -SWIPE_THRESHOLD && canDelete) {
+      void onDeleteJournalContextEntry!(row.id);
+    }
+    setSwipeX(0);
+    swipeTouchStartXRef.current = null;
+  };
 
   const nsCanEdit = !!onEditContextEntry && row.rowSource === "transcript" &&
     (row.journalCategory === "reflection" || row.journalCategory === "nutrition" ||
@@ -922,6 +966,43 @@ function JournalContextRowNoteStream({
 
   const rawDisplay = row.bodyText.trim();
 
+  // Day-over-day delta badge for weight and sleep rows
+  const deltaBadge: React.ReactNode = (() => {
+    if (row.journalCategory === "weight" && prevDayWeightKg !== null && row.metricSummary) {
+      const todayKg = parseFloat(row.metricSummary);
+      if (!Number.isNaN(todayKg)) {
+        const diff = todayKg - prevDayWeightKg;
+        if (Math.abs(diff) >= 0.05) {
+          const improved = diff < 0; // weight loss is improvement
+          const sign = diff > 0 ? "↑" : "↓";
+          return (
+            <span className={`text-[10px] tabular-nums font-medium ${improved ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
+              {sign} {Math.abs(diff).toFixed(1)} kg
+            </span>
+          );
+        }
+      }
+    }
+    if (row.journalCategory === "sleep" && prevDaySleepH !== null && row.metricSummary) {
+      const todayH = parseFloat(row.metricSummary);
+      if (!Number.isNaN(todayH)) {
+        const diffH = todayH - prevDaySleepH;
+        if (Math.abs(diffH) >= 0.1) {
+          const improved = diffH > 0; // more sleep is improvement
+          const sign = diffH > 0 ? "↑" : "↓";
+          const diffMin = Math.round(Math.abs(diffH) * 60);
+          const label = diffMin >= 60 ? `${(Math.abs(diffH)).toFixed(1)} h` : `${diffMin} min`;
+          return (
+            <span className={`text-[10px] tabular-nums font-medium ${improved ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
+              {sign} {label}
+            </span>
+          );
+        }
+      }
+    }
+    return null;
+  })();
+
   // Right-rail analysis: calories for nutrition/exercise, sparkline for weight/sleep,
   // otherwise any leftover cal/metric value for entries that don't use the compact paths.
   const nsRightAnalysis = caloriesOnLeft ? (
@@ -941,62 +1022,110 @@ function JournalContextRowNoteStream({
     />
   ) : cal ?? metric ?? null;
 
+  const swipeProgress = Math.min(Math.abs(swipeX) / SWIPE_THRESHOLD, 1);
+
+  // Drag handle — only for reorderable transcript rows
+  const isDraggable = !!onDragHandleTouchStart && row.rowSource === "transcript";
+  const dragHandle = isDraggable ? (
+    <button
+      type="button"
+      className="touch-none shrink-0 cursor-grab p-0.5 text-neutral-300 active:cursor-grabbing dark:text-neutral-600"
+      aria-label="Drag to reorder"
+      tabIndex={-1}
+      onTouchStart={onDragHandleTouchStart}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+        <circle cx="5" cy="3" r="1.2" />
+        <circle cx="11" cy="3" r="1.2" />
+        <circle cx="5" cy="8" r="1.2" />
+        <circle cx="11" cy="8" r="1.2" />
+        <circle cx="5" cy="13" r="1.2" />
+        <circle cx="11" cy="13" r="1.2" />
+      </svg>
+    </button>
+  ) : null;
+
   return (
-    <article className="min-w-0 border-b border-neutral-200 pb-3 pt-2 dark:border-white/[.15]">
-      {nsInlineEditForm}
-      {!nsEditing && (
-        <div className="flex items-start gap-2">
-          {/* LEFT: text + edit + tag inline, secondary/pills below */}
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
-              <button
-                type="button"
-                onClick={open}
-                disabled={!onOpenJournalContextEntry}
-                title={rawDisplay ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
-                className={`inline-flex min-w-0 shrink items-baseline gap-1.5 text-left text-[16px] leading-snug disabled:cursor-default ${GHOST_OPEN_BTN}`}
-              >
-                <span className={`mt-[0.25rem] shrink-0 ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                <span className="min-w-0 whitespace-pre-wrap break-words">{rawDisplay || "—"}</span>
-                {metricOnLeft ? (
-                  <span className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}>
-                    {row.metricSummary}
-                  </span>
-                ) : null}
-                {habitCheck}
-              </button>
-              {nsEditPencilBtn}
-              {nsTagBtn}
-            </div>
-            {row.secondaryText ? (
-              <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
-            ) : null}
-            {reflectionMentorActions ? (
-              <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{reflectionMentorActions}</div>
-            ) : null}
-            {nsHabitPills}
-          </div>
-          {/* RIGHT: analysis+delete on top, time below */}
-          <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
-            <div className="flex items-center gap-1.5">
-              {nsRightAnalysis}
-              {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
+    <article
+      className={`relative min-w-0 overflow-hidden border-b border-neutral-200 pb-3 pt-2 dark:border-white/[.15]${isNew ? " animate-fade-in-up" : ""}${isDragging ? " opacity-50" : ""}${isDragTarget && !isDragging ? " bg-neutral-50 dark:bg-neutral-800/40" : ""}`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Red delete affordance revealed during swipe */}
+      {canDelete && swipeX < 0 ? (
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-end pr-3"
+          style={{ opacity: swipeProgress }}
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white">
+            <DeleteEntryIcon className="h-4 w-4" />
+          </span>
+        </div>
+      ) : null}
+      <div
+        style={{
+          transform: `translateX(${swipeX}px)`,
+          transition: swipeX === 0 ? "transform 0.2s ease" : "none",
+        }}
+      >
+        {nsInlineEditForm}
+        {!nsEditing && (
+          <div className="flex items-start gap-1.5">
+            {dragHandle}
+            {/* LEFT: text + edit + tag inline, secondary/pills below */}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
                 <button
                   type="button"
-                  onClick={() => void onDeleteJournalContextEntry(row.id)}
-                  className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
-                  aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+                  onClick={open}
+                  disabled={!onOpenJournalContextEntry}
+                  title={rawDisplay ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
+                  className={`inline-flex min-w-0 shrink items-baseline gap-1.5 text-left text-[16px] leading-snug disabled:cursor-default ${GHOST_OPEN_BTN}`}
                 >
-                  <DeleteEntryIcon className="h-4 w-4" />
+                  <span className={`mt-[0.25rem] shrink-0 ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+                  <span className="min-w-0 whitespace-pre-wrap break-words">{rawDisplay || "—"}</span>
+                  {metricOnLeft ? (
+                    <span className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}>
+                      {row.metricSummary}
+                    </span>
+                  ) : null}
+                  {habitCheck}
                 </button>
+                {nsEditPencilBtn}
+                {nsTagBtn}
+              </div>
+              {row.secondaryText ? (
+                <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
+              ) : null}
+              {reflectionMentorActions ? (
+                <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{reflectionMentorActions}</div>
+              ) : null}
+              {nsHabitPills}
+            </div>
+            {/* RIGHT: analysis+delete on top, delta + time below */}
+            <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
+              <div className="flex items-center gap-1.5">
+                {nsRightAnalysis}
+                {canDelete ? (
+                  <button
+                    type="button"
+                    onClick={() => void onDeleteJournalContextEntry!(row.id)}
+                    className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+                    aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+                  >
+                    <DeleteEntryIcon className="h-4 w-4" />
+                  </button>
+                ) : null}
+              </div>
+              {deltaBadge}
+              {row.time ? (
+                <span className="text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
               ) : null}
             </div>
-            {row.time ? (
-              <span className="text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
-            ) : null}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </article>
   );
 }
@@ -1138,6 +1267,16 @@ interface CaptureViewProps {
   habitsById?: Record<string, string>;
   /** Called when user saves edited text for a saved row. Returns promise that resolves on server success. */
   onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  /** Aggregated stats for the selected day (summary bar + footer). */
+  daySummary?: QuickNoteDaySummary;
+  /** Consecutive days with at least one journal entry. */
+  journalStreak?: number;
+  /** Yesterday's weight in kg for delta display on weight rows. */
+  prevDayWeightKg?: number | null;
+  /** Yesterday's sleep hours for delta display on sleep rows. */
+  prevDaySleepH?: number | null;
+  /** Called when user reorders a transcript row. newSortMs is the new sort override epoch-ms. */
+  onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
 }
 
 export function BrainDumpCaptureView({
@@ -1164,6 +1303,11 @@ export function BrainDumpCaptureView({
   onTagContextEntry,
   habitsById = {},
   onEditContextEntry,
+  daySummary,
+  journalStreak,
+  prevDayWeightKg = null,
+  prevDaySleepH = null,
+  onReorderContextEntry,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -1172,6 +1316,20 @@ export function BrainDumpCaptureView({
   }, []);
 
   const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
+
+  // Category filter
+  const [filterCategory, setFilterCategory] = React.useState<string | null>(null);
+
+  // Track new entry IDs for fade-in animation
+  const prevRowIdsRef = React.useRef<Set<string>>(new Set());
+  const [newRowIds, setNewRowIds] = React.useState<Set<string>>(new Set());
+
+  // Drag-to-reorder state
+  const [dragIdx, setDragIdx] = React.useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = React.useState<number | null>(null);
+  const [dragLocalOrder, setDragLocalOrder] = React.useState<string[] | null>(null);
+  const dragRowRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const dragTouchStartY = React.useRef<number | null>(null);
 
   const togglePendingTag = useCallback((id: string) => {
     if (!onPendingHabitTagsChange) return;
@@ -1200,6 +1358,23 @@ export function BrainDumpCaptureView({
     }
     return journalContextRows;
   }, [journalContextRows]);
+
+  // Track newly added rows for fade-in animation
+  useEffect(() => {
+    const prevIds = prevRowIdsRef.current;
+    const incoming = new Set<string>();
+    for (const row of journalRowsOrdered) {
+      if (!prevIds.has(row.id)) incoming.add(row.id);
+    }
+    if (incoming.size > 0) setNewRowIds(incoming);
+    // Update the ref to the full current set
+    prevRowIdsRef.current = new Set(journalRowsOrdered.map((r) => r.id));
+    // Clear the "new" flags after the next frame so animation plays once
+    if (incoming.size > 0) {
+      const t = window.setTimeout(() => setNewRowIds(new Set()), 800);
+      return () => window.clearTimeout(t);
+    }
+  }, [journalRowsOrdered]);
 
   useLayoutEffect(() => {
     if (!full) return;
@@ -1280,6 +1455,101 @@ export function BrainDumpCaptureView({
     });
   }, [captureEntries.length, journalRowsOrdered, setCaptureEntries]);
 
+  // ── Drag-to-reorder helpers ──────────────────────────────────────────────
+  const handleDragHandleTouchStart = useCallback((idx: number, e: React.TouchEvent) => {
+    e.stopPropagation();
+    dragTouchStartY.current = e.touches[0]?.clientY ?? 0;
+    setDragIdx(idx);
+    setDragOverIdx(idx);
+    setDragLocalOrder((prev) => prev ?? filteredRows.map((r) => r.id));
+  // filteredRows captured via closure — intentionally excluded from deps for perf
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleDragTouchMove = useCallback((e: React.TouchEvent) => {
+    if (dragIdx === null) return;
+    const currentY = e.touches[0]?.clientY ?? 0;
+    const from = dragIdx;
+    const refs = dragRowRefs.current;
+    for (let i = 0; i < refs.length; i++) {
+      const el = refs[i];
+      if (!el || i === from) continue;
+      const rect = el.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if ((from < i && currentY > midY) || (from > i && currentY < midY)) {
+        setDragLocalOrder((prev) => {
+          if (!prev) return prev;
+          const next = [...prev];
+          const [moved] = next.splice(from, 1);
+          next.splice(i, 0, moved);
+          return next;
+        });
+        setDragIdx(i);
+        setDragOverIdx(i);
+        break;
+      }
+    }
+  }, [dragIdx]);
+
+  const handleDragTouchEnd = useCallback(() => {
+    if (dragIdx === null || !dragLocalOrder || !onReorderContextEntry) {
+      setDragIdx(null);
+      setDragOverIdx(null);
+      return;
+    }
+    // Compute new sortOverrideMs as midpoint between neighbours in the new order
+    const newOrder = dragLocalOrder;
+    const movedId = newOrder[dragIdx];
+    if (movedId) {
+      // Build a combined ordered list: dragLocalOrder IDs mapped back to rows
+      const rowById = new Map(filteredRows.map((r) => [r.id, r]));
+      const ordered = newOrder.map((id) => rowById.get(id)).filter((r): r is BrainDumpJournalContextRow => !!r);
+      const prevRow = ordered[dragIdx - 1];
+      const nextRow = ordered[dragIdx + 1];
+      const prevMs = prevRow?.sortAtMs ?? 0;
+      const nextMs = nextRow?.sortAtMs ?? (prevMs + 2000);
+      const movedRow = ordered[dragIdx];
+      const currentMs = movedRow?.sortAtMs ?? Date.now();
+      let newSortMs: number;
+      if (prevMs === 0 && nextMs > 0) {
+        newSortMs = nextMs - 1000;
+      } else if (prevMs > 0 && nextMs === 0) {
+        newSortMs = prevMs + 1000;
+      } else if (prevMs > 0 && nextMs > prevMs) {
+        newSortMs = Math.round((prevMs + nextMs) / 2);
+      } else {
+        newSortMs = currentMs;
+      }
+      void onReorderContextEntry(movedId, newSortMs);
+    }
+    setDragIdx(null);
+    setDragOverIdx(null);
+    setDragLocalOrder(null);
+  // filteredRows captured via closure
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragIdx, dragLocalOrder, onReorderContextEntry]);
+
+  // Category filter pills — unique categories from displayed rows
+  const distinctCategories = React.useMemo(() => {
+    const seen = new Set<string>();
+    for (const row of journalRowsOrdered) {
+      if (row.journalCategory) seen.add(row.journalCategory);
+    }
+    return Array.from(seen);
+  }, [journalRowsOrdered]);
+
+  const filteredRows = React.useMemo(() => {
+    if (!filterCategory) return journalRowsOrdered;
+    return journalRowsOrdered.filter((r) => r.journalCategory === filterCategory);
+  }, [journalRowsOrdered, filterCategory]);
+
+  // When a drag reorder is in progress, apply the local order override
+  const displayRows = React.useMemo(() => {
+    if (!dragLocalOrder) return filteredRows;
+    const byId = new Map(filteredRows.map((r) => [r.id, r]));
+    return dragLocalOrder.map((id) => byId.get(id)).filter((r): r is BrainDumpJournalContextRow => !!r);
+  }, [filteredRows, dragLocalOrder]);
+
   const journalRowsSheet =
     journalRowsOrdered.length > 0 ? (
       <div className="pb-2">
@@ -1305,30 +1575,134 @@ export function BrainDumpCaptureView({
     ) : null;
 
   if (full) {
+    // ── Daily summary bar ──────────────────────────────────────────────────
+    const hasSummaryBar =
+      daySummary &&
+      (daySummary.hasCalories || daySummary.latestWeightKg !== null || daySummary.totalSleepH !== null);
+
+    const summaryBar = hasSummaryBar && daySummary ? (
+      <div className="flex shrink-0 flex-wrap items-center gap-1.5 border-b border-neutral-200 pb-2.5 pt-0.5 dark:border-white/[.15]">
+        {daySummary.hasCalories ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
+            <span aria-hidden>☕</span>
+            <span className="tabular-nums">
+              {daySummary.netCal >= 0 ? `+${daySummary.netCal.toLocaleString()}` : daySummary.netCal.toLocaleString()} cal net
+            </span>
+          </span>
+        ) : null}
+        {daySummary.totalSleepH !== null ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
+            <span aria-hidden>💤</span>
+            <span className="tabular-nums">{daySummary.totalSleepH.toFixed(1)} h</span>
+          </span>
+        ) : null}
+        {daySummary.latestWeightKg !== null ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-300">
+            <span aria-hidden>⚖️</span>
+            <span className="tabular-nums">{daySummary.latestWeightKg} kg</span>
+          </span>
+        ) : null}
+        {journalStreak && journalStreak >= 2 ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-[11px] font-medium text-orange-600 dark:border-orange-700/40 dark:bg-orange-950/30 dark:text-orange-300">
+            <span aria-hidden>🔥</span>
+            <span className="tabular-nums">{journalStreak}d</span>
+          </span>
+        ) : null}
+      </div>
+    ) : null;
+
+    // ── Category filter pills ──────────────────────────────────────────────
+    const filterPills = distinctCategories.length >= 2 ? (
+      <div className="flex shrink-0 gap-1.5 overflow-x-auto pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <button
+          type="button"
+          onClick={() => setFilterCategory(null)}
+          className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+            !filterCategory
+              ? "border-neutral-400 bg-neutral-900 text-white dark:border-neutral-500 dark:bg-neutral-100 dark:text-neutral-900"
+              : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
+          }`}
+        >
+          All
+        </button>
+        {distinctCategories.map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}
+            className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize transition-colors ${
+              filterCategory === cat
+                ? "border-neutral-400 bg-neutral-900 text-white dark:border-neutral-500 dark:bg-neutral-100 dark:text-neutral-900"
+                : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+    // ── Net calorie footer ─────────────────────────────────────────────────
+    const netCalFooter =
+      daySummary?.hasCalories ? (
+        <div className="shrink-0 border-t border-neutral-200/60 py-2 text-[11px] tabular-nums text-neutral-500 dark:border-white/[.1] dark:text-neutral-400">
+          <span className="text-red-500 dark:text-red-400">+{daySummary.intakeCal.toLocaleString()} in</span>
+          {daySummary.burnCal > 0 ? (
+            <>
+              <span className="mx-1.5 text-neutral-300 dark:text-neutral-600">·</span>
+              <span className="text-emerald-600 dark:text-emerald-400">−{daySummary.burnCal.toLocaleString()} burned</span>
+            </>
+          ) : null}
+          <span className="mx-1.5 text-neutral-300 dark:text-neutral-600">=</span>
+          <span className="font-semibold text-neutral-600 dark:text-neutral-300">{daySummary.netCal.toLocaleString()} net</span>
+        </div>
+      ) : null;
+
     return (
       <>
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
+          {summaryBar}
+          {filterPills}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
-            {journalRowsOrdered.map((row) => (
-              <JournalContextRowNoteStream
+            {displayRows.length === 0 && captureEntries.length === 0 ? (
+              <div className="flex flex-col items-center gap-1 py-8 text-center">
+                <p className="text-sm text-neutral-400 dark:text-neutral-500">Nothing logged yet</p>
+                <p className="text-xs text-neutral-300 dark:text-neutral-600">Start typing below to add your first entry</p>
+              </div>
+            ) : null}
+            {displayRows.map((row, i) => (
+              <div
                 key={row.id}
-                row={row}
-                onOpenJournalContextEntry={onOpenJournalContextEntry}
-                onDeleteJournalContextEntry={onDeleteJournalContextEntry}
-                onOpenReflectionMentor={onOpenReflectionMentor}
-                onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
-                weightTrendSparklineKg={weightTrendSparklineKg}
-                sleepTrendSparklineHours={sleepTrendSparklineHours}
-                onTagContextEntry={onTagContextEntry}
-                habitsById={habitsById}
-                onEditContextEntry={onEditContextEntry}
-              />
+                ref={(el) => { dragRowRefs.current[i] = el; }}
+                onTouchMove={dragIdx !== null ? handleDragTouchMove : undefined}
+                onTouchEnd={dragIdx !== null ? handleDragTouchEnd : undefined}
+              >
+                <JournalContextRowNoteStream
+                  row={row}
+                  onOpenJournalContextEntry={onOpenJournalContextEntry}
+                  onDeleteJournalContextEntry={onDeleteJournalContextEntry}
+                  onOpenReflectionMentor={onOpenReflectionMentor}
+                  onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
+                  weightTrendSparklineKg={weightTrendSparklineKg}
+                  sleepTrendSparklineHours={sleepTrendSparklineHours}
+                  onTagContextEntry={onTagContextEntry}
+                  habitsById={habitsById}
+                  onEditContextEntry={onEditContextEntry}
+                  isNew={newRowIds.has(row.id)}
+                  prevDayWeightKg={prevDayWeightKg}
+                  prevDaySleepH={prevDaySleepH}
+                  isDragging={dragIdx === i}
+                  isDragTarget={dragOverIdx === i && dragIdx !== i}
+                  onDragHandleTouchStart={onReorderContextEntry ? (e) => handleDragHandleTouchStart(i, e) : undefined}
+                />
+              </div>
             ))}
             {captureEntries.map((entry) => (
               <div key={entry.id} className="mb-3">
                 <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} habitsById={habitsById} />
               </div>
             ))}
+            {netCalFooter}
             <div
               className={
                 journalRowsOrdered.length > 0 || captureEntries.length > 0

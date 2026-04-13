@@ -299,6 +299,8 @@ export interface SavedTranscript {
   quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
   /** Habit _ids that the user has tagged this entry to. */
   habitTags?: string[];
+  /** User-defined sort override in milliseconds (epoch); overrides createdAt for ordering. */
+  sortOverrideMs?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -2915,6 +2917,26 @@ export async function updateTranscriptHabitTags(
   const result = await database.collection("transcripts").updateOne(
     { _id: oid, userId },
     { $set: { habitTags, updatedAt: new Date() } }
+  );
+  return result.matchedCount > 0;
+}
+
+export async function updateTranscriptSortOverride(
+  id: string,
+  userId: string,
+  sortOverrideMs: number
+): Promise<boolean> {
+  transcriptsCache.invalidate(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database.collection("transcripts").updateOne(
+    { _id: oid, userId },
+    { $set: { sortOverrideMs, updatedAt: new Date() } }
   );
   return result.matchedCount > 0;
 }

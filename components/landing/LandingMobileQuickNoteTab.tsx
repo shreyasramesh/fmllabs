@@ -5,38 +5,56 @@ import type { BrainDumpCategory } from "@/lib/gemini";
 import {
   BrainDumpCaptureView,
   type BrainDumpJournalContextRow,
+  type QuickNoteDaySummary,
 } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { useBrainDumpCapture } from "@/components/landing/brain-dump/useBrainDumpCapture";
 
-function QuickNoteLoadingView({ label }: { label: string }) {
+// ─── Skeleton loading ─────────────────────────────────────────────────────────
+function SkeletonRow({ textWidth }: { textWidth: "w-1/2" | "w-2/3" | "w-5/6" }) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 py-16">
-      <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
-        {label}
-      </p>
-      <div className="relative h-1.5 w-full max-w-[200px] overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
-        <div
-          className="absolute inset-y-0 w-1/2 rounded-full bg-neutral-400 dark:bg-neutral-500"
-          style={{ animation: "quickNoteBar 1.4s ease-in-out infinite" }}
-        />
+    <div className="flex items-start gap-2 border-b border-neutral-200 dark:border-white/[.15] py-3 animate-pulse">
+      <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex items-center gap-2">
+          <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+          <div className={`h-3.5 rounded bg-neutral-200 dark:bg-neutral-800 ${textWidth}`} />
+        </div>
+        <div className="ml-4 h-2.5 w-1/4 rounded bg-neutral-100 dark:bg-neutral-800/60" />
       </div>
-      <style>{`
-        @keyframes quickNoteBar {
-          0%   { left: -50%; }
-          100% { left: 100%; }
-        }
-      `}</style>
+      <div className="shrink-0 flex flex-col items-end gap-1.5">
+        <div className="h-3.5 w-12 rounded bg-neutral-200 dark:bg-neutral-800" />
+        <div className="h-2.5 w-10 rounded bg-neutral-100 dark:bg-neutral-700/50" />
+      </div>
     </div>
   );
 }
 
+function QuickNoteSkeletonView({ label }: { label: string }) {
+  return (
+    <div className="w-full px-1">
+      <p className="mb-3 text-[11px] font-medium text-neutral-400 dark:text-neutral-500">{label}</p>
+      <SkeletonRow textWidth="w-2/3" />
+      <SkeletonRow textWidth="w-1/2" />
+      <SkeletonRow textWidth="w-5/6" />
+    </div>
+  );
+}
+
+// ─── Props ────────────────────────────────────────────────────────────────────
 interface LandingMobileQuickNoteTabProps {
   onSaved?: (categories: BrainDumpCategory[]) => void;
   journalContextRows?: BrainDumpJournalContextRow[];
-  /** When true, shows a loading animation and disables entry capture. */
+  /** When true, shows skeleton rows and disables entry capture. */
   isLoading?: boolean;
-  /** Label shown below the progress bar while loading, e.g. "Sleep entries". */
+  /** Label shown above skeleton rows while loading. */
   loadingLabel?: string;
+  /** Aggregated stats for the selected day. */
+  daySummary?: QuickNoteDaySummary;
+  /** Consecutive days with at least one journal entry. */
+  journalStreak?: number;
+  /** Yesterday's weight in kg, for delta display. */
+  prevDayWeightKg?: number | null;
+  /** Yesterday's sleep hours, for delta display. */
+  prevDaySleepH?: number | null;
   onOpenJournalEntry?: (transcriptId: string) => void;
   onDeleteJournalEntry?: (transcriptId: string) => void;
   onOpenReflectionMentor?: (ctx?: { reflectionText: string }) => void;
@@ -47,6 +65,7 @@ interface LandingMobileQuickNoteTabProps {
   onTagContextEntry?: (rowId: string) => void;
   habitsById?: Record<string, string>;
   onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
+  onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -54,6 +73,10 @@ export function LandingMobileQuickNoteTab({
   journalContextRows = [],
   isLoading = false,
   loadingLabel = "Loading…",
+  daySummary,
+  journalStreak,
+  prevDayWeightKg,
+  prevDaySleepH,
   onOpenJournalEntry,
   onDeleteJournalEntry,
   onOpenReflectionMentor,
@@ -64,6 +87,7 @@ export function LandingMobileQuickNoteTab({
   onTagContextEntry,
   habitsById = {},
   onEditContextEntry,
+  onReorderContextEntry,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -90,7 +114,7 @@ export function LandingMobileQuickNoteTab({
         </div>
       ) : null}
       {isLoading ? (
-        <QuickNoteLoadingView label={loadingLabel} />
+        <QuickNoteSkeletonView label={loadingLabel} />
       ) : (
         <BrainDumpCaptureView
           captureEntries={captureEntries}
@@ -115,6 +139,11 @@ export function LandingMobileQuickNoteTab({
           onTagContextEntry={onTagContextEntry}
           habitsById={habitsById}
           onEditContextEntry={onEditContextEntry}
+          onReorderContextEntry={onReorderContextEntry}
+          daySummary={daySummary}
+          journalStreak={journalStreak}
+          prevDayWeightKg={prevDayWeightKg ?? null}
+          prevDaySleepH={prevDaySleepH ?? null}
         />
       )}
     </div>

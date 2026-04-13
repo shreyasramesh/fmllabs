@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText, updateTranscriptHabitTags } from "@/lib/db";
+import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText, updateTranscriptHabitTags, updateTranscriptSortOverride } from "@/lib/db";
 import { upsertSpendAmountLine } from "@/lib/spend-journal";
 import { estimateNutritionFactsFromMacros } from "@/lib/gemini";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
@@ -155,6 +155,7 @@ export async function PATCH(
     const body = (await request.json().catch(() => ({}))) as {
       habitTags?: unknown;
       plainText?: unknown;
+      sortOverrideMs?: unknown;
       calories?: unknown;
       proteinGrams?: unknown;
       carbsGrams?: unknown;
@@ -179,6 +180,17 @@ export async function PATCH(
       const ok = await updateTranscriptHabitTags(id, userId, tags);
       if (!ok) return NextResponse.json({ error: "Failed to update habit tags" }, { status: 500 });
       return NextResponse.json({ ok: true, habitTags: tags });
+    }
+
+    // sortOverrideMs update — reorder transcript entries
+    if (body.sortOverrideMs !== undefined) {
+      const sortMs = typeof body.sortOverrideMs === "number" ? body.sortOverrideMs : Number(body.sortOverrideMs);
+      if (!Number.isFinite(sortMs) || sortMs <= 0) {
+        return NextResponse.json({ error: "sortOverrideMs must be a positive number" }, { status: 400 });
+      }
+      const ok = await updateTranscriptSortOverride(id, userId, Math.round(sortMs));
+      if (!ok) return NextResponse.json({ error: "Failed to update sort order" }, { status: 500 });
+      return NextResponse.json({ ok: true, sortOverrideMs: Math.round(sortMs) });
     }
 
     // plainText update — for reflection entries and free-text edits on any journal entry
