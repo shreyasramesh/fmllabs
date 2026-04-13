@@ -28,6 +28,8 @@ export type BrainDumpCaptureEntry = {
   frozenMeta: EntryEstimateModalMeta;
   saveState?: "local" | "pending";
   createdAtMs?: number;
+  /** Habit _ids this entry is tagged to (for display after save). */
+  habitTags?: string[];
 };
 
 /** Entry text fills the row; estimate stays in a dedicated right column (no wrap under text). */
@@ -456,15 +458,28 @@ export function DeleteEntryIcon({ className = "h-5 w-5" }: { className?: string 
   );
 }
 
+const HABIT_PILL_INLINE =
+  "inline-flex items-center gap-0.5 rounded-full border border-violet-200 bg-violet-50 px-1 py-px text-[7px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+
+function HabitTagIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className ?? "h-2.5 w-2.5"}>
+      <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
 /** Persisted capture line: frozen analysis when done (no second request); tap text or estimate to open detail modal. */
 export function CapturePersistedEntryRow({
   entry,
   onDelete,
   disabled = false,
+  habitsById = {},
 }: {
   entry: BrainDumpCaptureEntry;
   onDelete: (id: string) => void;
   disabled?: boolean;
+  habitsById?: Record<string, string>;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
   const trimmed = entry.text.trim();
@@ -488,12 +503,15 @@ export function CapturePersistedEntryRow({
   const openDetailBtn =
     "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
 
+  const habitTagNames = (entry.habitTags ?? []).map((id) => habitsById[id]).filter(Boolean);
+
   return (
     <>
       <div
-        className={`${AMY_PERSISTED_ROW_GRID} py-1.5 ${rowDisabled ? "opacity-[0.52] transition-opacity duration-200" : ""}`}
+        className={`py-1.5 ${rowDisabled ? "opacity-[0.52] transition-opacity duration-200" : ""}`}
         aria-busy={rowDisabled || undefined}
       >
+        <div className={AMY_PERSISTED_ROW_GRID}>
         <button
           type="button"
           onClick={() => !rowDisabled && setDetailOpen(true)}
@@ -537,6 +555,17 @@ export function CapturePersistedEntryRow({
         >
           <DeleteEntryIcon />
         </button>
+        </div>
+        {habitTagNames.length > 0 ? (
+          <div className="mt-0.5 flex flex-wrap gap-0.5 pl-5">
+            {habitTagNames.map((name) => (
+              <span key={name} className={HABIT_PILL_INLINE}>
+                <HabitTagIcon className="h-2 w-2 shrink-0" />
+                {name}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
       <EntryEstimateDetailModal
         open={detailOpen}

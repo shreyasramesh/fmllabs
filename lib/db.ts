@@ -297,6 +297,8 @@ export interface SavedTranscript {
   journalMentorReflectionsUpdatedAt?: Date;
   /** Gemini-authored spans for the entry text shown in Quick Note / transcript modals. */
   quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
+  /** Habit _ids that the user has tagged this entry to. */
+  habitTags?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -2146,6 +2148,7 @@ export async function saveJournalTranscript(
     journalBatchId?: string;
     journalEntryTime?: { hour: number; minute: number };
     quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
+    habitTags?: string[];
   }
 ): Promise<SavedTranscript & { _id: string }> {
   transcriptsCache.invalidate(userId);
@@ -2165,6 +2168,7 @@ export async function saveJournalTranscript(
     ...(options?.quickNoteHighlightSpans?.length
       ? { quickNoteHighlightSpans: options.quickNoteHighlightSpans }
       : {}),
+    ...(options?.habitTags?.length ? { habitTags: options.habitTags } : {}),
     transcriptText,
     ...(journalEntryDate && {
       journalEntryDay: journalEntryDate.day,
@@ -2893,6 +2897,26 @@ export async function updateSavedTranscriptText(
     ...result,
     _id: result._id.toString(),
   } as SavedTranscript & { _id: string });
+}
+
+export async function updateTranscriptHabitTags(
+  id: string,
+  userId: string,
+  habitTags: string[]
+): Promise<boolean> {
+  transcriptsCache.invalidate(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const result = await database.collection("transcripts").updateOne(
+    { _id: oid, userId },
+    { $set: { habitTags, updatedAt: new Date() } }
+  );
+  return result.matchedCount > 0;
 }
 
 export async function getUserSettings(userId: string): Promise<UserSettings | null> {

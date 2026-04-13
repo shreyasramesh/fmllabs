@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   if (!rl.allowed) return tooManyRequestsResponse(rl.resetMs);
 
   try {
-    const body = await request.json().catch(() => ({})) as { entries?: unknown; clientQuickCalories?: unknown };
+    const body = await request.json().catch(() => ({})) as { entries?: unknown; clientQuickCalories?: unknown; habitTags?: unknown };
     if (!Array.isArray(body.entries) || body.entries.length === 0) {
       return NextResponse.json({ error: "entries array is required" }, { status: 400 });
     }
@@ -56,6 +56,9 @@ export async function POST(request: Request) {
     const results: { id: string; category: BrainDumpCategory }[] = [];
     const errors: string[] = [];
     const clientSnaps = Array.isArray(body.clientQuickCalories) ? body.clientQuickCalories : null;
+    const habitTags = Array.isArray(body.habitTags)
+      ? (body.habitTags as unknown[]).filter((t): t is string => typeof t === "string").slice(0, 20)
+      : undefined;
 
     for (let i = 0; i < body.entries.length; i += 1) {
       const raw = body.entries[i];
@@ -81,6 +84,7 @@ export async function POST(request: Request) {
         const saved = await persistBrainDumpFields(userId, fields, {
           geminiEventSuffix: suffix,
           ...(clientQuickCalorie ? { clientQuickCalorie } : {}),
+          ...(habitTags?.length ? { habitTags } : {}),
         });
         results.push(saved);
       } catch (e) {

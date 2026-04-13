@@ -17,6 +17,10 @@ interface LandingMobileQuickNoteTabProps {
   onOpenReflectionConversationChooser?: (ctx?: { reflectionText: string }) => void;
   weightTrendSparklineKg?: number[];
   sleepTrendSparklineHours?: number[];
+  availableHabits?: Array<{ _id: string; name: string }>;
+  onTagContextEntry?: (rowId: string) => void;
+  habitsById?: Record<string, string>;
+  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -28,6 +32,10 @@ export function LandingMobileQuickNoteTab({
   onOpenReflectionConversationChooser,
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
+  availableHabits = [],
+  onTagContextEntry,
+  habitsById = {},
+  onEditContextEntry,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -39,6 +47,8 @@ export function LandingMobileQuickNoteTab({
     startRecording,
     saveSingleLine,
     handleTranscriptionToDraft,
+    pendingHabitTags,
+    setPendingHabitTags,
   } = useBrainDumpCapture({ onSaved });
 
   useEffect(() => {
@@ -69,6 +79,12 @@ export function LandingMobileQuickNoteTab({
         lineSaveBusy={phase !== "recording"}
         weightTrendSparklineKg={weightTrendSparklineKg}
         sleepTrendSparklineHours={sleepTrendSparklineHours}
+        availableHabits={availableHabits}
+        pendingHabitTags={pendingHabitTags}
+        onPendingHabitTagsChange={setPendingHabitTags}
+        onTagContextEntry={onTagContextEntry}
+        habitsById={habitsById}
+        onEditContextEntry={onEditContextEntry}
       />
     </div>
   );

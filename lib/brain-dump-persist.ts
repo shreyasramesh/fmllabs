@@ -302,12 +302,17 @@ async function tryPersistExerciseWithClientSnapshot(
 export async function persistBrainDumpFields(
   userId: string,
   fields: BrainDumpResult,
-  options?: { geminiEventSuffix?: string; clientQuickCalorie?: ClientQuickCalorieSnapshot }
+  options?: {
+    geminiEventSuffix?: string;
+    clientQuickCalorie?: ClientQuickCalorieSnapshot;
+    habitTags?: string[];
+  }
 ): Promise<{ id: string; category: BrainDumpCategory }> {
   const err = validateBrainDumpFields(fields);
   if (err) throw new Error(err);
 
   const suffix = options?.geminiEventSuffix ?? "";
+  const habitTags = options?.habitTags?.length ? options.habitTags : undefined;
   const entryDate = resolveJournalEntryDateParts({});
   const category = fields.category;
   const title = fields.title.trim();
@@ -315,7 +320,9 @@ export async function persistBrainDumpFields(
   if (category === "reflection") {
     const text = fields.reflectionText!.trim();
     const journalTitle = resolveJournalVideoTitle(title, text);
-    const saved = await saveJournalTranscript(userId, text, journalTitle, entryDate);
+    const saved = await saveJournalTranscript(userId, text, journalTitle, entryDate, {
+      ...(habitTags ? { habitTags } : {}),
+    });
     return { id: saved._id, category };
   }
 
@@ -395,6 +402,7 @@ export async function persistBrainDumpFields(
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "exercise",
         quickNoteHighlightSpans: estimate.highlightSpans ?? [],
+        ...(habitTags ? { habitTags } : {}),
       });
       await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
       return { id: saved._id, category: "exercise" };
@@ -413,6 +421,7 @@ export async function persistBrainDumpFields(
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "nutrition",
       quickNoteHighlightSpans: estimate.highlightSpans ?? [],
+      ...(habitTags ? { habitTags } : {}),
     });
     await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
     return { id: saved._id, category };
@@ -451,6 +460,7 @@ export async function persistBrainDumpFields(
       const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
         journalCategory: "nutrition",
         quickNoteHighlightSpans: estimate.highlightSpans ?? [],
+        ...(habitTags ? { habitTags } : {}),
       });
       await upsertReusableJournalItem(userId, "nutrition", text).catch(() => {});
       return { id: saved._id, category: "nutrition" };
@@ -484,6 +494,7 @@ export async function persistBrainDumpFields(
     const saved = await saveJournalTranscript(userId, journalText, journalTitle, entryDate, {
       journalCategory: "exercise",
       quickNoteHighlightSpans: estimate.highlightSpans ?? [],
+      ...(habitTags ? { habitTags } : {}),
     });
     await upsertReusableJournalItem(userId, "exercise", text).catch(() => {});
     return { id: saved._id, category };

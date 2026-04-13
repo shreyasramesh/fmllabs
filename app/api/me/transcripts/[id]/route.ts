@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText } from "@/lib/db";
+import { getSavedTranscript, deleteSavedTranscript, updateSavedTranscriptText, updateTranscriptHabitTags } from "@/lib/db";
 import { upsertSpendAmountLine } from "@/lib/spend-journal";
 import { estimateNutritionFactsFromMacros } from "@/lib/gemini";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
@@ -151,18 +151,10 @@ export async function PATCH(
     if (transcript.sourceType !== "journal") {
       return NextResponse.json({ error: "Only journal transcripts are editable" }, { status: 400 });
     }
-    if (
-      transcript.journalCategory !== "nutrition" &&
-      transcript.journalCategory !== "exercise" &&
-      transcript.journalCategory !== "spend"
-    ) {
-      return NextResponse.json(
-        { error: "Only nutrition, exercise, or spend journals are supported" },
-        { status: 400 }
-      );
-    }
 
     const body = (await request.json().catch(() => ({}))) as {
+      habitTags?: unknown;
+      plainText?: unknown;
       calories?: unknown;
       proteinGrams?: unknown;
       carbsGrams?: unknown;
@@ -175,6 +167,42 @@ export async function PATCH(
       amount?: unknown;
       currency?: unknown;
     };
+
+    // habitTags update — allowed on any journal entry regardless of category
+    if (body.habitTags !== undefined) {
+      if (!Array.isArray(body.habitTags)) {
+        return NextResponse.json({ error: "habitTags must be an array" }, { status: 400 });
+      }
+      const tags = (body.habitTags as unknown[])
+        .filter((t): t is string => typeof t === "string")
+        .slice(0, 20);
+      const ok = await updateTranscriptHabitTags(id, userId, tags);
+      if (!ok) return NextResponse.json({ error: "Failed to update habit tags" }, { status: 500 });
+      return NextResponse.json({ ok: true, habitTags: tags });
+    }
+
+    // plainText update — for reflection entries and free-text edits on any journal entry
+    if (body.plainText !== undefined) {
+      if (typeof body.plainText !== "string" || !body.plainText.trim()) {
+        return NextResponse.json({ error: "plainText must be a non-empty string" }, { status: 400 });
+      }
+      const newText = body.plainText.trim().slice(0, 8000);
+      const updated = await updateSavedTranscriptText(id, userId, newText);
+      if (!updated) return NextResponse.json({ error: "Failed to update transcript" }, { status: 500 });
+      return NextResponse.json(updated);
+    }
+
+    if (
+      transcript.journalCategory !== "nutrition" &&
+      transcript.journalCategory !== "exercise" &&
+      transcript.journalCategory !== "spend"
+    ) {
+      return NextResponse.json(
+        { error: "Only nutrition, exercise, or spend journals are supported for text edits" },
+        { status: 400 }
+      );
+    }
+
     const rawLines = (transcript.transcriptText ?? "").split(/\r?\n/);
     let lines = rawLines.slice();
 

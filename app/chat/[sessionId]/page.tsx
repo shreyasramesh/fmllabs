@@ -2608,11 +2608,11 @@ function journalQuickNoteCaloriesSummary(t: {
   const jc = quickNoteJournalCategoryForChip(t);
   if (jc === "nutrition") {
     const cal = extractEstimatedNumber(txt, /- Calories:\s*([\d.]+)\s*kcal/i);
-    if (cal != null && cal > 0) return `${Math.round(cal)} cal`;
+    if (cal != null && cal > 0) return `+ ${Math.round(cal)} cal`;
   }
   if (jc === "exercise") {
     const burned = extractEstimatedNumber(txt, /- Calories burned:\s*([\d.]+)\s*kcal/i);
-    if (burned != null && burned > 0) return `-${Math.round(burned)} cal`;
+    if (burned != null && burned > 0) return `- ${Math.round(burned)} cal`;
   }
   return null;
 }
@@ -4199,6 +4199,7 @@ export default function ChatPage() {
     journalMentorReflectionsStatus?: "pending" | "ready" | "failed";
     journalMentorReflectionsUpdatedAt?: string | Date;
     quickNoteHighlightSpans?: QuickNoteHighlightSegment[];
+    habitTags?: string[];
   }[]>([]);
   const [cgDetailModal, setCgDetailModal] = useState<ConceptGroupItem | null>(null);
   const [cgFrameworkSummarizing, setCgFrameworkSummarizing] = useState(false);
@@ -6678,6 +6679,7 @@ export default function ChatPage() {
         habitCompletionCheck: habitDone && (jc === "nutrition" || jc === "exercise"),
         showMentorCta: isReflection,
         sortAtMs: transcriptCreatedAtMs(t),
+        habitTags: t.habitTags ?? [],
       };
     });
 
@@ -6757,6 +6759,34 @@ export default function ChatPage() {
     });
     return merged;
   }, [journalEntriesSorted, selectedLandingDayKey, weightTrackerEntries, sleepEntries]);
+
+  // Hero habits + current-month 30-day experiment habits available for tagging
+  const availableHabitsForTagging = useMemo(() => {
+    const now = new Date();
+    const curYear = now.getFullYear();
+    const curMonth = now.getMonth() + 1; // 1-based
+    return habits
+      .filter((h) => {
+        if (h.isHeroHabit) return true;
+        // current-month experiment habit
+        if (
+          typeof h.intendedYear === "number" &&
+          typeof h.intendedMonth === "number" &&
+          h.intendedYear === curYear &&
+          h.intendedMonth === curMonth
+        ) return true;
+        return false;
+      })
+      .map((h) => ({ _id: h._id, name: h.name }));
+  }, [habits]);
+
+  const habitsByIdForTagging = useMemo<Record<string, string>>(() => {
+    const out: Record<string, string> = {};
+    for (const h of habits) {
+      if (h._id) out[h._id] = h.name;
+    }
+    return out;
+  }, [habits]);
 
   /** Oldest → newest kg samples for Quick Note weight sparkline (last 20 tracker entries). */
   const quickNoteWeightTrendSparklineKg = useMemo(() => {
@@ -9953,6 +9983,42 @@ export default function ChatPage() {
     },
     [isAnonymous, incognitoMode, refetchTranscripts]
   );
+
+  const [habitTaggingRowId, setHabitTaggingRowId] = useState<string | null>(null);
+  const [habitTaggingSelected, setHabitTaggingSelected] = useState<string[]>([]);
+  const [habitTaggingSaving, setHabitTaggingSaving] = useState(false);
+
+  const openHabitTaggingForRow = useCallback((rowId: string) => {
+    // Pre-populate with existing tags for this row (find in journal entries)
+    const transcript = savedTranscripts.find((t) => t._id === rowId);
+    setHabitTaggingSelected(transcript?.habitTags ?? []);
+    setHabitTaggingRowId(rowId);
+  }, [savedTranscripts]);
+
+  const saveHabitTags = useCallback(async () => {
+    if (!habitTaggingRowId || habitTaggingSaving) return;
+    setHabitTaggingSaving(true);
+    try {
+      await fetch(`/api/me/transcripts/${encodeURIComponent(habitTaggingRowId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ habitTags: habitTaggingSelected }),
+      });
+      refetchTranscripts();
+    } catch { /* silent */ } finally {
+      setHabitTaggingSaving(false);
+      setHabitTaggingRowId(null);
+    }
+  }, [habitTaggingRowId, habitTaggingSelected, habitTaggingSaving, refetchTranscripts]);
+
+  const editJournalEntryText = useCallback(async (rowId: string, newText: string) => {
+    await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plainText: newText }),
+    });
+    refetchTranscripts();
+  }, [refetchTranscripts]);
 
   const openReflectionMentorFromQuickNote = useCallback(
     (ctx?: { reflectionText?: string }) => {
@@ -15959,6 +16025,10 @@ export default function ChatPage() {
                             onOpenReflectionConversationChooser={openReflectionConversationChooserFromQuickNote}
                             weightTrendSparklineKg={quickNoteWeightTrendSparklineKg}
                             sleepTrendSparklineHours={quickNoteSleepTrendSparklineHours}
+                            availableHabits={availableHabitsForTagging}
+                            onTagContextEntry={isAnonymous || incognitoMode ? undefined : openHabitTaggingForRow}
+                            habitsById={habitsByIdForTagging}
+                            onEditContextEntry={isAnonymous || incognitoMode ? undefined : editJournalEntryText}
                             onSaved={(categories) => {
                               if (
                                 categories.some(
@@ -15985,6 +16055,10 @@ export default function ChatPage() {
                         onOpenReflectionConversationChooser={openReflectionConversationChooserFromQuickNote}
                         weightTrendSparklineKg={quickNoteWeightTrendSparklineKg}
                         sleepTrendSparklineHours={quickNoteSleepTrendSparklineHours}
+                        availableHabits={availableHabitsForTagging}
+                        onTagContextEntry={isAnonymous || incognitoMode ? undefined : openHabitTaggingForRow}
+                        habitsById={habitsByIdForTagging}
+                        onEditContextEntry={isAnonymous || incognitoMode ? undefined : editJournalEntryText}
                         onSaved={(categories) => {
                           if (categories.some((c) => c === "reflection" || c === "nutrition" || c === "exercise")) {
                             refetchTranscripts();
@@ -24662,6 +24736,72 @@ export default function ChatPage() {
         </div>
       )}
 
+      {habitTaggingRowId && (
+        <div
+          className="fixed inset-0 z-[70] flex items-end justify-center p-4 sm:items-center bg-black/50 backdrop-blur-sm"
+          onClick={() => { setHabitTaggingRowId(null); }}
+          role="dialog"
+          aria-modal
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-5 shadow-xl dark:border-neutral-700 dark:bg-neutral-900"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="mb-1 text-[15px] font-semibold text-neutral-900 dark:text-neutral-100">Link to a habit</h3>
+            <p className="mb-3 text-[12px] text-neutral-500 dark:text-neutral-400">Select habits this journal note relates to.</p>
+            {availableHabitsForTagging.length === 0 ? (
+              <p className="py-3 text-center text-sm text-neutral-400">No hero or current-month habits found.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2 pb-3">
+                {availableHabitsForTagging.map((h) => {
+                  const selected = habitTaggingSelected.includes(h._id);
+                  return (
+                    <button
+                      key={h._id}
+                      type="button"
+                      onClick={() => {
+                        setHabitTaggingSelected((prev) =>
+                          selected ? prev.filter((id) => id !== h._id) : [...prev, h._id]
+                        );
+                      }}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                        selected
+                          ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
+                          : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                      }`}
+                      aria-pressed={selected}
+                    >
+                      {selected ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
+                          <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
+                        </svg>
+                      ) : null}
+                      {h.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <div className="flex items-center justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setHabitTaggingRowId(null)}
+                className="rounded-xl px-4 py-2 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={habitTaggingSaving}
+                onClick={() => void saveHabitTags()}
+                className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-60"
+              >
+                {habitTaggingSaving ? "Saving…" : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {habitDetailModal && habitDetailEdit && (
         <div
           className="fixed inset-0 z-[65] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
@@ -25026,6 +25166,50 @@ export default function ChatPage() {
                   </div>
                 </>
               )}
+              {/* Journal Notes linked to this habit */}
+              {(() => {
+                const habitId = habitDetailModal._id;
+                if (!habitId) return null;
+                const linkedNotes = savedTranscripts
+                  .filter((t) => Array.isArray(t.habitTags) && t.habitTags.includes(habitId) && t.sourceType === "journal")
+                  .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime())
+                  .slice(0, 20);
+                return (
+                  <div className="mt-4 border-t border-neutral-200 pt-4 dark:border-neutral-700">
+                    <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400 dark:text-neutral-500">
+                      Journal Notes
+                    </h4>
+                    {linkedNotes.length === 0 ? (
+                      <p className="text-[13px] text-neutral-400 dark:text-neutral-500">
+                        No entries linked to this habit yet. Tag a note from your journal to see it here.
+                      </p>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {linkedNotes.map((t) => {
+                          const date = new Date(t.createdAt ?? 0);
+                          const dateStr = Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+                          const timeStr = Number.isNaN(date.getTime()) ? "" : date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+                          const text = (t.transcriptText ?? "").split("\n")[0]?.trim() ?? "";
+                          const truncated = text.length > 120 ? text.slice(0, 120) + "…" : text;
+                          return (
+                            <button
+                              key={t._id}
+                              type="button"
+                              onClick={() => openLandingJournalTranscriptById(t._id!)}
+                              className="group flex w-full flex-col gap-0.5 rounded-xl border border-neutral-100 bg-neutral-50/60 px-3 py-2 text-left transition-colors hover:bg-neutral-100/60 dark:border-neutral-800 dark:bg-neutral-800/30 dark:hover:bg-neutral-800/60"
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <span className="text-[11px] text-neutral-400 dark:text-neutral-500">{dateStr} {timeStr}</span>
+                              </span>
+                              <span className="text-[13px] leading-snug text-neutral-700 dark:text-neutral-300">{truncated || "—"}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
             <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-2 justify-end">
               <button

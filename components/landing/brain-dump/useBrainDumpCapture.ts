@@ -70,8 +70,10 @@ export function useBrainDumpCapture(options: {
     setPhase("recording");
   }, []);
 
+  const [pendingHabitTags, setPendingHabitTags] = useState<string[]>([]);
+
   const persistEntries = useCallback(
-    async (entries: BrainDumpFields[], clientQuickCalories?: ClientQuickCalorieSnapshot[]) => {
+    async (entries: BrainDumpFields[], clientQuickCalories?: ClientQuickCalorieSnapshot[], habitTags?: string[]) => {
       if (entries.length === 0 || entries.some((e) => !e.title?.trim())) {
         throw new Error("Could not prepare this note for saving");
       }
@@ -79,6 +81,9 @@ export function useBrainDumpCapture(options: {
       const payload: Record<string, unknown> = { entries };
       if (clientQuickCalories && clientQuickCalories.length > 0) {
         payload.clientQuickCalories = clientQuickCalories;
+      }
+      if (habitTags && habitTags.length > 0) {
+        payload.habitTags = habitTags;
       }
       const saveRes = await fetch("/api/me/brain-dump/save-batch", {
         method: "POST",
@@ -117,6 +122,8 @@ export function useBrainDumpCapture(options: {
       if (!text) return;
       if (quickNoteSaveInFlightRef.current) return;
       quickNoteSaveInFlightRef.current = true;
+      // Capture habit tags at submission time (snapshot before clearing)
+      const tagsAtSubmit = pendingHabitTags.slice();
       setPhase("categorizing");
       setError(null);
       try {
@@ -134,7 +141,8 @@ export function useBrainDumpCapture(options: {
 
         const quickCals =
           snap && entries.length === 1 ? ([snap] satisfies ClientQuickCalorieSnapshot[]) : undefined;
-        await persistEntries(entries, quickCals);
+        await persistEntries(entries, quickCals, tagsAtSubmit.length ? tagsAtSubmit : undefined);
+        setPendingHabitTags([]);
         setPhase("recording");
       } catch (err) {
         setCaptureEntries((prev) => prev.filter((entry) => entry.text !== text || entry.saveState !== "pending"));
@@ -145,7 +153,7 @@ export function useBrainDumpCapture(options: {
         quickNoteSaveInFlightRef.current = false;
       }
     },
-    [buildCaptureEntry, categorizeText, persistEntries]
+    [buildCaptureEntry, categorizeText, pendingHabitTags, persistEntries]
   );
 
   /** Modal Done / empty-line commit: full transcript. */
@@ -203,5 +211,7 @@ export function useBrainDumpCapture(options: {
     finishBatchTranscript,
     handleTranscriptionToEntries,
     handleTranscriptionToDraft,
+    pendingHabitTags,
+    setPendingHabitTags,
   };
 }

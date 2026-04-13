@@ -71,6 +71,8 @@ export interface BrainDumpJournalContextRow {
   metricSummary: string | null;
   /** Habit completion auto-journal: show a check on the right. */
   habitCompletionCheck?: boolean;
+  /** Habits the user has tagged this entry to. */
+  habitTags?: string[];
   /** Gemini-authored highlight spans for `bodyText`. */
   highlightSegments?: QuickNoteHighlightSegment[];
   /** Reflection / brain-dump transcript: show 1:1 mentor control. */
@@ -233,7 +235,7 @@ const GHOST_OPEN_BTN =
   "appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:focus-visible:ring-blue-400/30";
 
 const JOURNAL_SECONDARY_TEXT_CLASS =
-  "mt-0.5 block text-[11px] leading-snug text-emerald-700 dark:text-emerald-300";
+  "mt-0.5 text-[11px] leading-snug text-emerald-700 dark:text-emerald-300";
 
 function journalContextRowMetricToneClass(cat: BrainDumpJournalContextRow["journalCategory"]): string {
   if (cat === "spend") return "text-amber-700 dark:text-amber-300";
@@ -385,6 +387,9 @@ function JournalContextRowSheet({
   onOpenReflectionConversationChooser,
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
+  onTagContextEntry,
+  habitsById = {},
+  onEditContextEntry,
 }: {
   row: BrainDumpJournalContextRow;
   onOpenJournalContextEntry?: (id: string) => void;
@@ -396,10 +401,120 @@ function JournalContextRowSheet({
   weightTrendSparklineKg?: number[];
   /** Recent sleep hours for inline sparkline on sleep rows (oldest → newest). */
   sleepTrendSparklineHours?: number[];
+  onTagContextEntry?: (id: string) => void;
+  habitsById?: Record<string, string>;
+  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }) {
+  const [editing, setEditing] = React.useState(false);
+  const [editDraft, setEditDraft] = React.useState("");
+  const [editSaving, setEditSaving] = React.useState(false);
+  const editTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const canEdit = !!onEditContextEntry && row.rowSource === "transcript" &&
+    (row.journalCategory === "reflection" || row.journalCategory === "nutrition" ||
+     row.journalCategory === "exercise" || row.journalCategory === "spend" || row.journalCategory === undefined);
+
+  const startEdit = () => {
+    setEditDraft(row.bodyText);
+    setEditing(true);
+    requestAnimationFrame(() => { editTextareaRef.current?.focus(); });
+  };
+
+  const cancelEdit = () => { setEditing(false); };
+
+  const saveEdit = async () => {
+    const trimmed = editDraft.trim();
+    if (!trimmed || !onEditContextEntry || editSaving) return;
+    setEditSaving(true);
+    try {
+      await onEditContextEntry(row.id, trimmed);
+      setEditing(false);
+    } catch { /* silent - parent shows errors */ } finally {
+      setEditSaving(false);
+    }
+  };
+
   const dotCls = journalContextDotClass(row.journalCategory);
   const burn = row.caloriesSummary?.startsWith("-");
   const open = () => onOpenJournalContextEntry?.(row.id);
+  const habitNames = (row.habitTags ?? []).map((id) => habitsById[id]).filter(Boolean);
+  const editPencilBtn = canEdit ? (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); startEdit(); }}
+      className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-350 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
+      title="Edit entry"
+      aria-label={`Edit journal entry: ${row.bodyText.slice(0, 40)}`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+        <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+      </svg>
+    </button>
+  ) : null;
+
+  const tagBtn = onTagContextEntry ? (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); onTagContextEntry(row.id); }}
+      className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-violet-400 shadow-none outline-none ring-0 transition-colors hover:bg-violet-50 hover:text-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/30 dark:text-violet-500 dark:hover:bg-violet-950/30 dark:hover:text-violet-300"
+      title="Tag to a habit"
+      aria-label={`Tag entry to a habit: ${row.bodyText.slice(0, 40)}`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+      </svg>
+    </button>
+  ) : null;
+
+  const inlineEditForm = editing ? (
+    <div className="flex flex-col gap-2 py-1.5">
+      <textarea
+        ref={editTextareaRef}
+        value={editDraft}
+        onChange={(e) => setEditDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") cancelEdit();
+          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) void saveEdit();
+        }}
+        disabled={editSaving}
+        rows={3}
+        className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[15px] leading-snug text-foreground focus:border-[#295a8a]/40 focus:outline-none focus:ring-2 focus:ring-[#295a8a]/20 disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-800/60 dark:focus:border-blue-500/40 dark:focus:ring-blue-500/20"
+        aria-label="Edit entry text"
+      />
+      <div className="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={cancelEdit}
+          disabled={editSaving}
+          className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          disabled={!editDraft.trim() || editSaving}
+          onClick={() => void saveEdit()}
+          className="rounded-lg bg-neutral-900 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+        >
+          {editSaving ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
+  ) : null;
+
+  const SHEET_PILL_CLS = "inline-flex items-center gap-0.5 rounded-full border border-violet-200 bg-violet-50 px-1 py-px text-[7px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+  const sheetPillIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-2 w-2 shrink-0">
+      <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+    </svg>
+  );
+  const habitPillItems = habitNames.map((name) => (
+    <span key={name} className={SHEET_PILL_CLS}>{sheetPillIcon}{name}</span>
+  ));
+  const habitPills = habitPillItems.length > 0 ? (
+    <div className="flex flex-wrap gap-0.5 pl-[22px]">{habitPillItems}</div>
+  ) : null;
   const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
   const hasMetric = row.metricSummary != null && row.metricSummary !== "";
   const metricOnLeft =
@@ -483,89 +598,76 @@ function JournalContextRowSheet({
     <span className="text-[7.7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
   ) : null;
 
-  /** Weight / sleep / nutrition / exercise: one tight line; avoids 1fr grid dead space. */
-  const compactPrimarySheet =
-    !row.showMentorCta && (metricOnLeft || caloriesOnLeft);
-  if (compactPrimarySheet) {
-    if (caloriesOnLeft) {
-      return (
-        <div className="flex w-full items-start gap-2 py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40">
-          <button
-            type="button"
-            onClick={open}
-            disabled={!onOpenJournalContextEntry}
-            title={row.categoryLabel}
-            className={`min-w-0 flex-1 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
-          >
-            <span className="flex items-start gap-2">
-              <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-              <span className="min-w-0 flex-1">
-                <span className="flex min-w-0 items-start gap-1.5">
-                  <span className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
-                    {row.bodyText}
-                  </span>
-                  {row.habitCompletionCheck ? (
-                    <span
-                      className="mt-[0.2rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
-                      title="Habit completed"
-                    >
-                      <HabitDoneCheckIcon className="h-4 w-4" />
-                    </span>
-                  ) : null}
-                </span>
-                {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-              </span>
-            </span>
-          </button>
-          <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-0.5 text-right">
-            <span
-              className={`text-[14px] font-semibold tabular-nums leading-none ${
-                burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-600 dark:text-blue-400"
-              }`}
-            >
-              {row.caloriesSummary}
-            </span>
-            {timeOnly}
-          </div>
-          <button
-            type="button"
-            onClick={() => void onDeleteJournalContextEntry?.(row.id)}
-            disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
-            className="shrink-0 self-start appearance-none rounded-lg border-0 bg-transparent p-1 pt-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-            aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-          >
-            <DeleteEntryIcon />
-          </button>
-        </div>
-      );
-    }
+  // Right-rail analysis value for this entry type.
+  const sheetRightAnalysis = caloriesOnLeft ? (
+    <span className={`text-[14px] font-semibold tabular-nums leading-none ${burn ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
+      {row.caloriesSummary}
+    </span>
+  ) : metricOnLeft && leftRailTrendValues && leftRailTrendValues.length > 0 ? (
+    <MiniTrendSparkline
+      values={leftRailTrendValues}
+      kind={row.journalCategory === "weight" ? "weight" : "sleep"}
+      width={100}
+      className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
+    />
+  ) : effectiveHasCal ? (
+    <span className={`inline-flex items-center gap-1 text-[14px] font-medium tabular-nums ${burn ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}>
+      <SparklesIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+      {row.caloriesSummary}
+    </span>
+  ) : effectiveHasMetric ? (
+    <span className={`text-[14px] font-medium tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}>
+      {row.metricSummary}
+    </span>
+  ) : null;
 
-    return (
-      <div className="flex w-full items-center gap-2 py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40">
+  // Reflection mentor action buttons shown below the text in the left column.
+  const sheetMentorBtns = row.showMentorCta && (onOpenReflectionConversationChooser || onOpenReflectionMentor) ? (
+    <>
+      {onOpenReflectionConversationChooser ? (
         <button
           type="button"
-          onClick={open}
-          disabled={!onOpenJournalContextEntry}
-          title={row.categoryLabel}
-          className={`min-w-0 flex-1 text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenReflectionConversationChooser({ reflectionText: row.bodyText }); }}
+          className={`${REFLECTION_NEW_CONV_BTN_BASE} ${REFLECTION_ACTION_PILL_BASE} ${REFLECTION_ACTION_PILL_WIDE}`}
+          aria-label="Deep insights — choose session style and metacognition"
         >
-          <span className="flex min-w-0 items-center gap-2">
-            <span className="min-w-0 flex-1">
-              <span className="inline-flex min-w-0 shrink-0 items-center gap-2">
-                <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                <span
-                  className={`min-w-0 text-[17px] leading-tight text-foreground ${
-                    shouldKeepJournalContextTitleInline(row.journalCategory)
-                      ? "shrink-0 whitespace-nowrap"
-                      : "shrink whitespace-pre-wrap break-words"
-                  }`}
-                >
-                  {row.bodyText}
-                </span>
+          <ReflectionBrainIcon className="h-3.5 w-3.5 shrink-0 opacity-90" />
+          <span>Deep</span>
+        </button>
+      ) : null}
+      {onOpenReflectionMentor ? (
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenReflectionMentor({ reflectionText: row.bodyText }); }}
+          className={`${REFLECTION_ACTION_PILL_BASE} ${REFLECTION_ACTION_PILL_WIDE} ${REFLECTION_MENTOR_BTN_BASE}`}
+          aria-label="1:1 mentor"
+        >
+          <MentorHumansIcon />
+          <span>1:1</span>
+        </button>
+      ) : null}
+    </>
+  ) : null;
+
+  return (
+    <div className="py-1.5">
+      {inlineEditForm}
+      {!editing && (
+        <div className="flex items-start gap-2 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40">
+          {/* LEFT: text + edit + tag + time inline, secondary/mentor/pills below */}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
+              <button
+                type="button"
+                onClick={open}
+                disabled={!onOpenJournalContextEntry}
+                title={row.bodyText ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
+                className={`inline-flex min-w-0 shrink items-baseline gap-1.5 text-left text-[17px] leading-tight disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
+              >
+                <span className={`mt-[0.25rem] shrink-0 ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+                <span className="min-w-0 whitespace-pre-wrap break-words text-foreground">{row.bodyText || "—"}</span>
                 {metricOnLeft ? (
-                  <span
-                    className={`shrink-0 text-[13px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                  >
+                  <span className={`shrink-0 text-[14px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}>
                     {row.metricSummary}
                   </span>
                 ) : null}
@@ -574,116 +676,34 @@ function JournalContextRowSheet({
                     <HabitDoneCheckIcon className="h-4 w-4" />
                   </span>
                 ) : null}
-              </span>
-              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-            </span>
-            {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-              <MiniTrendSparkline
-                values={leftRailTrendValues}
-                kind={row.journalCategory === "weight" ? "weight" : "sleep"}
-                width={132}
-                className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-              />
+              </button>
+              {editPencilBtn}
+              {tagBtn}
+              {timeOnly}
+            </div>
+            {row.secondaryText ? (
+              <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
             ) : null}
-            {timeOnly}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => void onDeleteJournalContextEntry?.(row.id)}
-          disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
-          className="ml-auto shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-          aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-        >
-          <DeleteEntryIcon />
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={`${AMY_JOURNAL_LIST_GRID} py-1.5 transition-colors hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40`}
-    >
-      <button
-        type="button"
-        onClick={open}
-        disabled={!onOpenJournalContextEntry}
-        title={row.categoryLabel}
-        className={`col-start-1 row-start-1 row-span-2 min-w-0 self-center text-left disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
-      >
-        <span className="flex items-start gap-2">
-          <span className={`mt-[0.4rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-          {metricOnLeft ? (
-            <span className="min-w-0 flex-1">
-              <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
-                <span
-                  className={`shrink-0 text-[17px] leading-tight text-foreground ${
-                    shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
-                  }`}
-                >
-                  {row.bodyText}
-                </span>
-                <span
-                  className={`shrink-0 text-[15px] font-semibold tabular-nums ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                >
-                  {row.metricSummary}
-                </span>
-                {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-                  <MiniTrendSparkline
-                    values={leftRailTrendValues}
-                    kind={row.journalCategory === "weight" ? "weight" : "sleep"}
-                    className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                  />
-                ) : null}
-              </span>
-              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-            </span>
-          ) : (
-            <span className="min-w-0 flex-1">
-              <span className="min-w-0 flex-1 text-[17px] leading-tight text-foreground whitespace-pre-wrap break-words">
-                {row.bodyText}
-              </span>
-              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-            </span>
-          )}
-        </span>
-      </button>
-      <div className="col-start-2 row-start-1 flex justify-end self-center text-right" aria-live="polite">
-        {row.showMentorCta && (onOpenReflectionConversationChooser || onOpenReflectionMentor) ? (
-          rightRail
-        ) : (
-          <button
-            type="button"
-            onClick={open}
-            disabled={!onOpenJournalContextEntry}
-            className={`max-w-[min(100%,12rem)] disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
-          >
-            {rightRail}
-          </button>
-        )}
-      </div>
-      {timeOnly ? (
-        <button
-          type="button"
-          onClick={open}
-          disabled={!onOpenJournalContextEntry}
-          className={`col-start-2 row-start-2 justify-self-end self-end text-right disabled:cursor-default disabled:opacity-100 ${GHOST_OPEN_BTN}`}
-        >
-          {timeOnly}
-        </button>
-      ) : (
-        <span className="col-start-2 row-start-2 justify-self-end self-end" aria-hidden />
+            {sheetMentorBtns ? (
+              <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{sheetMentorBtns}</div>
+            ) : null}
+            {habitPills}
+          </div>
+          {/* RIGHT: analysis + delete */}
+          <div className="shrink-0 flex items-center gap-1.5 self-start pt-[2px]">
+            {sheetRightAnalysis}
+            <button
+              type="button"
+              onClick={() => void onDeleteJournalContextEntry?.(row.id)}
+              disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
+              className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
+              aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
+            >
+              <DeleteEntryIcon />
+            </button>
+          </div>
+        </div>
       )}
-      <button
-        type="button"
-        onClick={() => void onDeleteJournalContextEntry?.(row.id)}
-        disabled={!onDeleteJournalContextEntry || !isJournalContextRowDeletable(row)}
-        className="col-start-3 row-start-1 row-span-2 justify-self-end self-center appearance-none rounded-lg border-0 bg-transparent p-1 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-        aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-      >
-        <DeleteEntryIcon />
-      </button>
     </div>
   );
 }
@@ -697,6 +717,9 @@ function JournalContextRowNoteStream({
   onOpenReflectionConversationChooser,
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
+  onTagContextEntry,
+  habitsById = {},
+  onEditContextEntry,
 }: {
   row: BrainDumpJournalContextRow;
   onOpenJournalContextEntry?: (id: string) => void;
@@ -705,10 +728,71 @@ function JournalContextRowNoteStream({
   onOpenReflectionConversationChooser?: (ctx?: { reflectionText: string }) => void;
   weightTrendSparklineKg?: number[];
   sleepTrendSparklineHours?: number[];
+  onTagContextEntry?: (id: string) => void;
+  habitsById?: Record<string, string>;
+  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }) {
+  const [nsEditing, setNsEditing] = React.useState(false);
+  const [nsEditDraft, setNsEditDraft] = React.useState("");
+  const [nsEditSaving, setNsEditSaving] = React.useState(false);
+  const nsEditTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const nsCanEdit = !!onEditContextEntry && row.rowSource === "transcript" &&
+    (row.journalCategory === "reflection" || row.journalCategory === "nutrition" ||
+     row.journalCategory === "exercise" || row.journalCategory === "spend" || row.journalCategory === undefined);
+
+  const nsStartEdit = () => {
+    setNsEditDraft(row.bodyText);
+    setNsEditing(true);
+    requestAnimationFrame(() => { nsEditTextareaRef.current?.focus(); });
+  };
+
+  const nsCancelEdit = () => setNsEditing(false);
+
+  const nsSaveEdit = async () => {
+    const trimmed = nsEditDraft.trim();
+    if (!trimmed || !onEditContextEntry || nsEditSaving) return;
+    setNsEditSaving(true);
+    try {
+      await onEditContextEntry(row.id, trimmed);
+      setNsEditing(false);
+    } catch { /* silent */ } finally {
+      setNsEditSaving(false);
+    }
+  };
+
   const dotCls = journalContextDotClass(row.journalCategory);
   const burn = row.caloriesSummary?.startsWith("-");
   const open = () => onOpenJournalContextEntry?.(row.id);
+  const nsHabitNames = (row.habitTags ?? []).map((id) => habitsById[id]).filter(Boolean);
+  const nsTagBtn = onTagContextEntry ? (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); onTagContextEntry(row.id); }}
+      className="shrink-0 appearance-none rounded-lg border-0 bg-transparent p-1 text-violet-400 shadow-none outline-none ring-0 transition-colors hover:bg-violet-50 hover:text-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/30 dark:text-violet-500 dark:hover:bg-violet-950/30 dark:hover:text-violet-300"
+      title="Tag to a habit"
+      aria-label={`Tag entry to a habit: ${row.bodyText.slice(0, 40)}`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+      </svg>
+    </button>
+  ) : null;
+  const NS_PILL_CLS = "inline-flex items-center gap-0.5 rounded-full border border-violet-200 bg-violet-50 px-1 py-px text-[7px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+  const nsPillIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-2 w-2 shrink-0">
+      <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+    </svg>
+  );
+  const nsHabitPillItems = nsHabitNames.map((name) => (
+    <span key={name} className={NS_PILL_CLS}>{nsPillIcon}{name}</span>
+  ));
+  const nsTimeEl = row.time ? (
+    <span className="shrink-0 text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
+  ) : null;
+  const nsHabitPills = nsHabitPillItems.length > 0 ? (
+    <div className="flex flex-wrap gap-0.5 pl-[22px]">{nsHabitPillItems}</div>
+  ) : null;
   const hasCal = row.caloriesSummary != null && row.caloriesSummary !== "";
   const hasMetric = row.metricSummary != null && row.metricSummary !== "";
   const metricOnLeft =
@@ -728,7 +812,7 @@ function JournalContextRowNoteStream({
   const cal = effectiveHasCal ? (
     <span
       className={`inline-flex items-center gap-0.5 text-[12px] font-medium tabular-nums leading-none ${
-        burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-600 dark:text-blue-400"
+        burn ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"
       }`}
     >
       <SparklesIcon className="h-3 w-3 shrink-0 opacity-75" aria-hidden />
@@ -783,226 +867,231 @@ function JournalContextRowNoteStream({
       </span>
     ) : null;
 
+  const nsEditPencilBtn = nsCanEdit ? (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); nsStartEdit(); }}
+      className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
+      title="Edit entry"
+      aria-label={`Edit journal entry: ${row.bodyText.slice(0, 40)}`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+        <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+      </svg>
+    </button>
+  ) : null;
+
+  const nsInlineEditForm = nsEditing ? (
+    <div className="mb-3 flex flex-col gap-2 py-1">
+      <textarea
+        ref={nsEditTextareaRef}
+        value={nsEditDraft}
+        onChange={(e) => setNsEditDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") nsCancelEdit();
+          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) void nsSaveEdit();
+        }}
+        disabled={nsEditSaving}
+        rows={3}
+        className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[15px] leading-snug text-foreground focus:border-[#295a8a]/40 focus:outline-none focus:ring-2 focus:ring-[#295a8a]/20 disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-800/60 dark:focus:border-blue-500/40 dark:focus:ring-blue-500/20"
+        aria-label="Edit entry text"
+      />
+      <div className="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={nsCancelEdit}
+          disabled={nsEditSaving}
+          className="rounded-lg px-3 py-1.5 text-[12px] font-medium text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          disabled={!nsEditDraft.trim() || nsEditSaving}
+          onClick={() => void nsSaveEdit()}
+          className="rounded-lg bg-neutral-900 px-3 py-1.5 text-[12px] font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+        >
+          {nsEditSaving ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   const rawDisplay = row.bodyText.trim();
-  const compactPrimaryStream =
-    !row.showMentorCta && (metricOnLeft || caloriesOnLeft);
-  if (compactPrimaryStream && rawDisplay) {
-    if (caloriesOnLeft) {
-      return (
-        <article className="mb-3 min-w-0">
-          <div className="flex w-full items-start gap-2">
-            <button
-              type="button"
-              onClick={open}
-              disabled={!onOpenJournalContextEntry}
-              title={`${row.categoryLabel}: ${row.bodyText}`}
-              className={`min-w-0 flex-1 text-left disabled:cursor-default ${GHOST_OPEN_BTN}`}
-            >
-              <span className="flex items-start gap-2 text-[16px] leading-snug">
-                <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                <span className="min-w-0 flex-1">
-                  <span className="flex min-w-0 items-start gap-1.5">
-                    <span
-                      className={`min-w-0 flex-1 ${
-                        shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
-                      }`}
-                    >
-                      {rawDisplay}
-                    </span>
-                    {row.habitCompletionCheck ? (
-                      <span
-                        className="mt-[0.15rem] inline-flex shrink-0 text-emerald-600 dark:text-emerald-400"
-                        title="Habit completed"
-                      >
-                        <HabitDoneCheckIcon className="h-3.5 w-3.5" />
-                      </span>
-                    ) : null}
-                  </span>
-                  {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-                </span>
-              </span>
-            </button>
-            <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-0.5 text-right">
-              <span
-                className={`text-[12px] font-semibold tabular-nums leading-none ${
-                  burn ? "text-emerald-600 dark:text-emerald-400" : "text-blue-600 dark:text-blue-400"
-                }`}
+
+  // Right-rail analysis: calories for nutrition/exercise, sparkline for weight/sleep,
+  // otherwise any leftover cal/metric value for entries that don't use the compact paths.
+  const nsRightAnalysis = caloriesOnLeft ? (
+    <span
+      className={`text-[12px] font-semibold tabular-nums leading-none ${
+        burn ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"
+      }`}
+    >
+      {row.caloriesSummary}
+    </span>
+  ) : metricOnLeft && leftRailTrendValues && leftRailTrendValues.length > 0 ? (
+    <MiniTrendSparkline
+      values={leftRailTrendValues}
+      kind={row.journalCategory === "weight" ? "weight" : "sleep"}
+      width={96}
+      className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
+    />
+  ) : cal ?? metric ?? null;
+
+  return (
+    <article className="mb-3 min-w-0">
+      {nsInlineEditForm}
+      {!nsEditing && (
+        <div className="flex items-start gap-2">
+          {/* LEFT: text + edit + tag + time inline, secondary/pills below */}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
+              <button
+                type="button"
+                onClick={open}
+                disabled={!onOpenJournalContextEntry}
+                title={rawDisplay ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
+                className={`inline-flex min-w-0 shrink items-baseline gap-1.5 text-left text-[16px] leading-snug disabled:cursor-default ${GHOST_OPEN_BTN}`}
               >
-                {row.caloriesSummary}
-              </span>
-              {row.time ? (
-                <span className="text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">
-                  {row.time}
-                </span>
-              ) : null}
+                <span className={`mt-[0.25rem] shrink-0 ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
+                <span className="min-w-0 whitespace-pre-wrap break-words">{rawDisplay || "—"}</span>
+                {metricOnLeft ? (
+                  <span className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}>
+                    {row.metricSummary}
+                  </span>
+                ) : null}
+                {habitCheck}
+              </button>
+              {nsEditPencilBtn}
+              {nsTagBtn}
+              {nsTimeEl}
             </div>
+            {row.secondaryText ? (
+              <div className={`pl-[14px] text-left ${JOURNAL_SECONDARY_TEXT_CLASS}`}>{row.secondaryText}</div>
+            ) : null}
+            {reflectionMentorActions ? (
+              <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{reflectionMentorActions}</div>
+            ) : null}
+            {nsHabitPills}
+          </div>
+          {/* RIGHT: analysis + delete */}
+          <div className="shrink-0 flex items-center gap-1.5 self-start pt-[2px]">
+            {nsRightAnalysis}
             {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
               <button
                 type="button"
                 onClick={() => void onDeleteJournalContextEntry(row.id)}
-                className="shrink-0 self-start appearance-none rounded-md border-0 bg-transparent p-0.5 pt-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
+                className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30 dark:hover:bg-red-950/40 dark:hover:text-red-400 dark:focus-visible:ring-red-400/30"
                 aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
               >
                 <DeleteEntryIcon className="h-4 w-4" />
               </button>
             ) : null}
           </div>
-        </article>
-      );
-    }
-
-    return (
-      <article className="mb-3 min-w-0">
-        <div className="flex w-full items-center gap-2">
-          <button
-            type="button"
-            onClick={open}
-            disabled={!onOpenJournalContextEntry}
-            title={`${row.categoryLabel}: ${row.bodyText}`}
-            className={`min-w-0 flex-1 text-left disabled:cursor-default ${GHOST_OPEN_BTN}`}
-          >
-            <span className="flex min-w-0 items-center gap-2 text-[16px] leading-snug">
-              <span className="min-w-0 flex-1">
-                <span className="inline-flex min-w-0 shrink-0 items-center gap-2">
-                  <span className={`${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-                  <span
-                    className={`min-w-0 ${
-                      shouldKeepJournalContextTitleInline(row.journalCategory)
-                        ? "shrink-0 whitespace-nowrap"
-                        : "shrink whitespace-pre-wrap break-words"
-                    }`}
-                  >
-                    {rawDisplay}
-                  </span>
-                  {metricOnLeft ? (
-                    <span
-                      className={`shrink-0 text-[12px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                    >
-                      {row.metricSummary}
-                    </span>
-                  ) : null}
-                  {row.habitCompletionCheck ? (
-                    <span className="inline-flex shrink-0 text-emerald-600 dark:text-emerald-400" title="Habit completed">
-                      <HabitDoneCheckIcon className="h-3.5 w-3.5" />
-                    </span>
-                  ) : null}
-                </span>
-                {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-              </span>
-              {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-                <MiniTrendSparkline
-                  values={leftRailTrendValues}
-                  kind={row.journalCategory === "weight" ? "weight" : "sleep"}
-                  width={144}
-                  className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                />
-              ) : null}
-              {row.time ? (
-                <span className="shrink-0 text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">
-                  {row.time}
-                </span>
-              ) : null}
-            </span>
-          </button>
-          {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
-            <button
-              type="button"
-              onClick={() => void onDeleteJournalContextEntry(row.id)}
-              className="ml-auto shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-              aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-            >
-              <DeleteEntryIcon className="h-4 w-4" />
-            </button>
-          ) : null}
         </div>
-      </article>
-    );
-  }
+      )}
+    </article>
+  );
+}
 
+// ─── Habit tag pill colors ────────────────────────────────────────────────────
+const HABIT_PILL_CLS =
+  "inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+
+function HabitTagIcon({ className }: { className?: string }) {
   return (
-    <article className="mb-3 min-w-0">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+      <path fillRule="evenodd" d="M5.5 3A2.5 2.5 0 003 5.5v2.879a2.5 2.5 0 00.732 1.767l6.5 6.5a2.5 2.5 0 003.536 0l2.878-2.878a2.5 2.5 0 000-3.536l-6.5-6.5A2.5 2.5 0 008.38 3H5.5zM6 7a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function HabitTagPicker({
+  availableHabits,
+  selectedIds,
+  onToggle,
+  open,
+  onOpenChange,
+}: {
+  availableHabits: Array<{ _id: string; name: string }>;
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const hasSelected = selectedIds.length > 0;
+  return (
+    <div className="mt-1.5 flex flex-col gap-1">
+      {/* Selected tags row */}
+      {hasSelected ? (
+        <div className="flex flex-wrap gap-1">
+          {selectedIds.map((id) => {
+            const h = availableHabits.find((x) => x._id === id);
+            if (!h) return null;
+            return (
+              <span key={id} className={HABIT_PILL_CLS}>
+                <HabitTagIcon className="h-2.5 w-2.5 shrink-0" />
+                {h.name}
+                <button
+                  type="button"
+                  onClick={() => onToggle(id)}
+                  className="ml-0.5 rounded-full p-0.5 hover:bg-violet-100 dark:hover:bg-violet-800/50"
+                  aria-label={`Remove habit tag: ${h.name}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5">
+                    <path d="M5.28 4.22a.75.75 0 00-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 101.06 1.06L8 9.06l2.72 2.72a.75.75 0 101.06-1.06L9.06 8l2.72-2.72a.75.75 0 00-1.06-1.06L8 6.94 5.28 4.22z" />
+                  </svg>
+                </button>
+              </span>
+            );
+          })}
+        </div>
+      ) : null}
+      {/* Toggle button */}
       <button
         type="button"
-        onClick={open}
-        disabled={!onOpenJournalContextEntry}
-        title={rawDisplay ? `${row.categoryLabel}: ${row.bodyText}` : row.categoryLabel}
-        className={`flex w-full items-start gap-2 text-left text-[16px] leading-snug text-foreground disabled:cursor-default ${GHOST_OPEN_BTN}`}
+        onClick={() => onOpenChange(!open)}
+        className={`inline-flex w-fit items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+          hasSelected
+            ? "border-violet-200 bg-violet-50 text-violet-600 hover:bg-violet-100 dark:border-violet-700/40 dark:bg-violet-950/30 dark:text-violet-400 dark:hover:bg-violet-950/50"
+            : "border-neutral-200 bg-neutral-50 text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:bg-neutral-800"
+        }`}
+        aria-expanded={open}
+        aria-label="Link to a habit"
       >
-        <span className={`mt-[0.35rem] ${JOURNAL_CATEGORY_DOT_BASE} ${dotCls}`} aria-hidden />
-        <span className="min-w-0 flex-1">
-          {metricOnLeft && rawDisplay ? (
-            <>
-              <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                <span
-                  className={`shrink-0 text-[16px] leading-snug ${
-                    shouldKeepJournalContextTitleInline(row.journalCategory) ? "whitespace-nowrap" : "whitespace-pre-wrap break-words"
-                  }`}
-                >
-                  {rawDisplay}
-                </span>
-                <span
-                  className={`shrink-0 text-[13px] font-semibold tabular-nums leading-none ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                >
-                  {row.metricSummary}
-                </span>
-                {leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-                  <MiniTrendSparkline
-                    values={leftRailTrendValues}
-                    kind={row.journalCategory === "weight" ? "weight" : "sleep"}
-                    className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-                  />
-                ) : null}
-              </span>
-              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-            </>
-          ) : rawDisplay ? (
-            <>
-              <span className="block whitespace-pre-wrap break-words">{rawDisplay}</span>
-              {row.secondaryText ? <span className={JOURNAL_SECONDARY_TEXT_CLASS}>{row.secondaryText}</span> : null}
-            </>
-          ) : (
-            "—"
-          )}
-        </span>
+        <HabitTagIcon className="h-3 w-3 shrink-0" />
+        {hasSelected ? `${selectedIds.length} habit${selectedIds.length > 1 ? "s" : ""} linked` : "Link habit"}
       </button>
-      <div className="mt-1.5 flex min-w-0 flex-wrap items-center justify-end gap-1.5">
-        {reflectionMentorActions}
-        {cal ? (
-          <button
-            type="button"
-            onClick={open}
-            disabled={!onOpenJournalContextEntry}
-            className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
-          >
-            {cal}
-          </button>
-        ) : null}
-        {metric ? (
-          <button
-            type="button"
-            onClick={open}
-            disabled={!onOpenJournalContextEntry}
-            className={`shrink-0 disabled:cursor-default ${GHOST_OPEN_BTN}`}
-          >
-            {metric}
-          </button>
-        ) : null}
-        {habitCheck}
-        {row.time ? (
-          <span className="shrink-0 text-[7px] tabular-nums text-neutral-400 dark:text-neutral-500">{row.time}</span>
-        ) : null}
-        {onDeleteJournalContextEntry && isJournalContextRowDeletable(row) ? (
-          <button
-            type="button"
-            onClick={() => void onDeleteJournalContextEntry(row.id)}
-            className="shrink-0 appearance-none rounded-md border-0 bg-transparent p-0.5 text-neutral-400 shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-blue-400/30"
-            aria-label={`Delete journal entry: ${row.bodyText.slice(0, 40)}${row.bodyText.length > 40 ? "…" : ""}`}
-          >
-            <DeleteEntryIcon className="h-4 w-4" />
-          </button>
-        ) : null}
-      </div>
-    </article>
+      {/* Picker dropdown */}
+      {open ? (
+        <div className="mt-0.5 flex flex-wrap gap-1.5 rounded-xl border border-neutral-200 bg-white p-2 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+          {availableHabits.map((h) => {
+            const selected = selectedIds.includes(h._id);
+            return (
+              <button
+                key={h._id}
+                type="button"
+                onClick={() => { onToggle(h._id); }}
+                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                  selected
+                    ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
+                    : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/30 dark:hover:text-violet-300"
+                }`}
+                aria-pressed={selected}
+              >
+                {selected ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
+                    <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
+                  </svg>
+                ) : null}
+                {h.name}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -1032,6 +1121,17 @@ interface CaptureViewProps {
   weightTrendSparklineKg?: number[];
   /** Recent sleep hours for sparkline on sleep rows; oldest → newest. */
   sleepTrendSparklineHours?: number[];
+  /** Habits available for tagging (hero + current experiment). */
+  availableHabits?: Array<{ _id: string; name: string }>;
+  /** Currently selected habit IDs pending submission. */
+  pendingHabitTags?: string[];
+  onPendingHabitTagsChange?: (tags: string[]) => void;
+  /** Called when user clicks the tag button on a saved journal row. */
+  onTagContextEntry?: (rowId: string) => void;
+  /** habitsById lookup for displaying names on saved rows. */
+  habitsById?: Record<string, string>;
+  /** Called when user saves edited text for a saved row. Returns promise that resolves on server success. */
+  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }
 
 export function BrainDumpCaptureView({
@@ -1052,12 +1152,29 @@ export function BrainDumpCaptureView({
   lineSaveBusy = false,
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
+  availableHabits = [],
+  pendingHabitTags = [],
+  onPendingHabitTagsChange,
+  onTagContextEntry,
+  habitsById = {},
+  onEditContextEntry,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
   const syncDraftMeta = useCallback((m: EntryEstimateModalMeta) => {
     draftMetaRef.current = m;
   }, []);
+
+  const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
+
+  const togglePendingTag = useCallback((id: string) => {
+    if (!onPendingHabitTagsChange) return;
+    if (pendingHabitTags.includes(id)) {
+      onPendingHabitTagsChange(pendingHabitTags.filter((t) => t !== id));
+    } else {
+      onPendingHabitTagsChange([...pendingHabitTags, id]);
+    }
+  }, [onPendingHabitTagsChange, pendingHabitTags]);
 
   const full = layout === "fullScreen";
   const quickNoteStreamEndRef = useRef<HTMLDivElement>(null);
@@ -1173,6 +1290,9 @@ export function BrainDumpCaptureView({
             onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
             weightTrendSparklineKg={weightTrendSparklineKg}
             sleepTrendSparklineHours={sleepTrendSparklineHours}
+            onTagContextEntry={onTagContextEntry}
+            habitsById={habitsById}
+            onEditContextEntry={onEditContextEntry}
           />
         ))}
       </div>
@@ -1193,11 +1313,14 @@ export function BrainDumpCaptureView({
                 onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
                 weightTrendSparklineKg={weightTrendSparklineKg}
                 sleepTrendSparklineHours={sleepTrendSparklineHours}
+                onTagContextEntry={onTagContextEntry}
+                habitsById={habitsById}
+                onEditContextEntry={onEditContextEntry}
               />
             ))}
             {captureEntries.map((entry) => (
               <div key={entry.id} className="mb-3">
-                <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} />
+                <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} habitsById={habitsById} />
               </div>
             ))}
             <div
@@ -1242,7 +1365,7 @@ export function BrainDumpCaptureView({
       >
         {journalRowsSheet}
         {captureEntries.map((entry) => (
-          <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} disabled={captureBusy} />
+          <CapturePersistedEntryRow key={entry.id} entry={entry} onDelete={removeEntry} disabled={captureBusy} habitsById={habitsById} />
         ))}
         <CaptureDraftSentenceRow
           draft={sentenceDraft}

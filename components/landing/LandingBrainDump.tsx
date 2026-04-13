@@ -20,6 +20,10 @@ interface LandingBrainDumpProps {
   onOpenReflectionConversationChooser?: (ctx?: { reflectionText: string }) => void;
   weightTrendSparklineKg?: number[];
   sleepTrendSparklineHours?: number[];
+  availableHabits?: Array<{ _id: string; name: string }>;
+  onTagContextEntry?: (rowId: string) => void;
+  habitsById?: Record<string, string>;
+  onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }
 
 export function LandingBrainDump({
@@ -31,6 +35,10 @@ export function LandingBrainDump({
   onOpenReflectionConversationChooser,
   weightTrendSparklineKg,
   sleepTrendSparklineHours,
+  availableHabits = [],
+  onTagContextEntry,
+  habitsById = {},
+  onEditContextEntry,
 }: LandingBrainDumpProps) {
   const {
     phase,
@@ -43,6 +51,8 @@ export function LandingBrainDump({
     resetAll,
     startRecording,
     finishBatchTranscript,
+    pendingHabitTags,
+    setPendingHabitTags,
   } = useBrainDumpCapture({ onSaved });
 
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -109,6 +119,12 @@ export function LandingBrainDump({
           layout="sheet"
           weightTrendSparklineKg={weightTrendSparklineKg}
           sleepTrendSparklineHours={sleepTrendSparklineHours}
+          availableHabits={availableHabits}
+          pendingHabitTags={pendingHabitTags}
+          onPendingHabitTagsChange={setPendingHabitTags}
+          onTagContextEntry={onTagContextEntry}
+          habitsById={habitsById}
+          onEditContextEntry={onEditContextEntry}
         />
     </BrainDumpSheetFrame>,
     document.body
