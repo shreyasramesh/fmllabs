@@ -457,6 +457,12 @@ interface LandingShellProps {
   mobileQuickNote?: React.ReactNode;
   /** Mobile commonplace book tab. */
   mobileCommonplace?: React.ReactNode;
+  /** Mobile "And More" tab — library / sidebar body (signed-in nav or anonymous upsell). */
+  mobileAndMore?: React.ReactNode;
+  /** When set, parent can call ref.current to switch to the And More tab (e.g. feature tour). */
+  mobileLibraryTabOpenerRef?: React.MutableRefObject<(() => void) | null>;
+  /** Mobile landing: point feature tour "menu" step at And More tab instead of header hamburger. */
+  menuTourOnAndMoreTab?: boolean;
 }
 
 export function LandingShell({
@@ -614,10 +620,21 @@ export function LandingShell({
   dashboardScrollRootRef,
   mobileQuickNote,
   mobileCommonplace,
+  mobileAndMore,
+  mobileLibraryTabOpenerRef,
+  menuTourOnAndMoreTab = false,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
   const [activeMobileTab, setActiveMobileTab] = useState<MobileBottomTab>("quickNote");
+
+  useEffect(() => {
+    if (!mobileLibraryTabOpenerRef) return;
+    mobileLibraryTabOpenerRef.current = () => setActiveMobileTab("andMore");
+    return () => {
+      mobileLibraryTabOpenerRef.current = null;
+    };
+  }, [mobileLibraryTabOpenerRef]);
 
   const distanceToTarget =
     weightCurrentKg != null && weightTargetKg != null
@@ -881,6 +898,8 @@ export function LandingShell({
         );
       case "metacognition":
         return null;
+      case "andMore":
+        return mobileAndMore ?? null;
     }
   })();
 
@@ -1037,7 +1056,11 @@ export function LandingShell({
             </div>
           )}
         </div>
-        <LandingMobileTabBar activeTab={activeMobileTab} onTabChange={setActiveMobileTab} />
+        <LandingMobileTabBar
+          activeTab={activeMobileTab}
+          onTabChange={setActiveMobileTab}
+          menuTourOnAndMore={menuTourOnAndMoreTab}
+        />
       </div>
 
       {/* ===== Desktop stacked layout (unchanged) ===== */}

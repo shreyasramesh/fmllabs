@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
 import type { JournalImageAnalysis, JournalImageAutoKind } from "@/lib/journal-image-analysis";
@@ -1083,12 +1084,15 @@ function JournalContextRowNoteStream({
       if (!Number.isNaN(todayH)) {
         const diffH = todayH - prevDaySleepH;
         if (Math.abs(diffH) >= 0.1) {
-          const improved = diffH > 0; // more sleep is improvement
           const sign = diffH > 0 ? "↑" : "↓";
           const diffMin = Math.round(Math.abs(diffH) * 60);
           const label = diffMin >= 60 ? `${(Math.abs(diffH)).toFixed(1)} h` : `${diffMin} min`;
+          const tone =
+            diffH > 0
+              ? "text-emerald-600 dark:text-emerald-400"
+              : "text-red-600 dark:text-red-400";
           return (
-            <span className={`text-[10px] tabular-nums font-medium ${improved ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
+            <span className={`text-[10px] tabular-nums font-medium ${tone}`}>
               {sign} {label}
             </span>
           );
@@ -1459,6 +1463,11 @@ export function BrainDumpCaptureView({
   const [imageReviewHrvMs, setImageReviewHrvMs] = useState("");
   const [imageReviewBusy, setImageReviewBusy] = useState(false);
   const [imageReviewError, setImageReviewError] = useState<string | null>(null);
+  /** Avoid hydration mismatch; portal image review to document.body (above tab bars / transformed ancestors). */
+  const [imageReviewPortalReady, setImageReviewPortalReady] = useState(false);
+  useEffect(() => {
+    setImageReviewPortalReady(true);
+  }, []);
 
   const revokePendingImagePreviews = useCallback((analyses: JournalImageAnalysis[] | null) => {
     if (!analyses) return;
@@ -1935,18 +1944,19 @@ export function BrainDumpCaptureView({
           disabled={draftDisabled}
         />
 
-        {/* Image-to-text review sheet — slides up after analysis completes */}
-        {pendingImageAnalyses ? (
-          <div
-            className="fixed inset-0 z-[58] flex flex-col justify-end"
-            onClick={handleImageReviewDiscard}
-          >
+        {/* Image-to-text review — portaled to body so fixed positioning is viewport-relative (LandingShell uses transform animations that trap fixed children). */}
+        {pendingImageAnalyses && imageReviewPortalReady
+          ? createPortal(
+              <div
+                className="fixed inset-0 z-[100] flex flex-col justify-end"
+                onClick={handleImageReviewDiscard}
+              >
             {/* scrim */}
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
             {/* sheet */}
             <div
-              className="relative rounded-t-[1.5rem] border-t border-[#e8e6dc] bg-[#faf9f5] px-4 pb-[max(1.75rem,env(safe-area-inset-bottom,1.75rem))] pt-5 shadow-2xl dark:border-[#3d3d3a] dark:bg-[#1c1c1a]"
+              className="relative max-h-[min(92dvh,100%)] overflow-y-auto overscroll-contain rounded-t-[1.5rem] border-t border-[#e8e6dc] bg-[#faf9f5] px-4 pb-[max(1.75rem,env(safe-area-inset-bottom,1.75rem))] pt-5 shadow-2xl dark:border-[#3d3d3a] dark:bg-[#1c1c1a]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* drag handle */}
@@ -2155,8 +2165,10 @@ export function BrainDumpCaptureView({
                 </button>
               </div>
             </div>
-          </div>
-        ) : null}
+              </div>,
+              document.body
+            )
+          : null}
 
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
           {filterPills}

@@ -12,11 +12,14 @@ export type MobileBottomTab =
   | "weight"
   | "sleep"
   | "habits"
-  | "metacognition";
+  | "metacognition"
+  | "andMore";
 
 interface LandingMobileTabBarProps {
   activeTab: MobileBottomTab;
   onTabChange: (tab: MobileBottomTab) => void;
+  /** When true, the "And More" tab carries data-tour="menu-button" (mobile landing replaces header hamburger). */
+  menuTourOnAndMore?: boolean;
 }
 
 const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = [
@@ -28,6 +31,7 @@ const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = 
   { key: "nutrition", label: "Food", ariaLabel: "Nutrition" },
   { key: "exercise", label: "Move", ariaLabel: "Exercise" },
   { key: "metacognition", label: "Meta", ariaLabel: "Metacognition" },
+  { key: "andMore", label: "And More", ariaLabel: "Library and more" },
 ];
 
 function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
@@ -104,12 +108,21 @@ function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
           <path d="M12 18v-3" />
         </svg>
       );
+    case "andMore":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <circle cx="5" cy="12" r="1.5" />
+          <circle cx="12" cy="12" r="1.5" />
+          <circle cx="19" cy="12" r="1.5" />
+        </svg>
+      );
   }
 }
 
 export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
   activeTab,
   onTabChange,
+  menuTourOnAndMore = false,
 }: LandingMobileTabBarProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -128,6 +141,7 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
               key={tab.key}
               type="button"
               onClick={() => onTabChange(tab.key)}
+              {...(menuTourOnAndMore && tab.key === "andMore" ? { "data-tour": "menu-button" } : {})}
               className={`flex min-w-[3.75rem] max-w-[5.5rem] shrink-0 flex-1 flex-col items-center justify-center gap-1 px-1.5 py-2 transition-colors duration-200 active:opacity-80 sm:min-w-0 sm:max-w-none ${
                 active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-400"
               }`}

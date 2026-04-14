@@ -4392,9 +4392,9 @@ export default function ChatPage() {
     return [
       {
         target: "[data-tour=menu-button]",
-        title: "Open the menu",
+        title: "Open the library",
         content:
-          "Tap here to access conversations, concepts, mental models, memory, and playgrounds.",
+          "Use the menu (desktop) or the And More tab (mobile) for conversations, concepts, mental models, memory, and playgrounds.",
         ringClass: "ring-white dark:ring-neutral-300",
       },
       {
@@ -4453,6 +4453,19 @@ export default function ChatPage() {
   const leftPanelReady = isAnonymous
     ? mentalModelsLoaded
     : sessionsLoaded && conceptsLoaded && ltmLoaded && ccLoaded && cgLoaded && mentalModelsLoaded;
+  const hideMobileSidebarDrawerForLanding = useMemo(
+    () =>
+      messages.length === 0 &&
+      !incognitoMode &&
+      !mentorJournalBridgePending &&
+      onboardingStep === null &&
+      !sessionLoading,
+    [messages.length, incognitoMode, mentorJournalBridgePending, onboardingStep, sessionLoading],
+  );
+  useEffect(() => {
+    if (hideMobileSidebarDrawerForLanding) setSidebarOpen(false);
+  }, [hideMobileSidebarDrawerForLanding]);
+  const landingMobileLibraryOpenerRef = useRef<(() => void) | null>(null);
   const signInFeatures = [
     { label: "Saved conversations", description: "Store your chat history and return to past threads anytime.", icon: "chat" },
     { label: "Journaling + calorie tracking", description: "Create journal and nutrition entries with persistent day-by-day history.", icon: "summary" },
@@ -6684,7 +6697,7 @@ export default function ChatPage() {
         if (!isCoffeeRelatedJournalText(text)) return null;
         const mg = parseCaffeineMgFromJournalText(text);
         if (mg == null || mg <= 0) return null;
-        const timestampMs = transcriptCreatedAtMs(entry);
+        const timestampMs = journalEntryTimestamp(entry);
         if (!Number.isFinite(timestampMs) || timestampMs <= 0) return null;
         const date = new Date(timestampMs);
         if (Number.isNaN(date.getTime())) return null;
@@ -10157,11 +10170,45 @@ export default function ChatPage() {
   ) => {
     if (opts?.hour !== undefined && opts?.minute !== undefined) {
       // Save time change first (also updates sortOverrideMs)
-      await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
+      const timeRes = await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ journalEntryHour: opts.hour, journalEntryMinute: opts.minute }),
       });
+      const timeData = (await timeRes.json().catch(() => ({}))) as {
+        journalEntryHour?: number;
+        journalEntryMinute?: number;
+        sortOverrideMs?: number;
+      };
+      if (
+        timeRes.ok &&
+        typeof timeData.journalEntryHour === "number" &&
+        typeof timeData.journalEntryMinute === "number"
+      ) {
+        setSavedJournalTranscripts((prev) =>
+          prev.map((t) =>
+            t._id === rowId
+              ? {
+                  ...t,
+                  journalEntryHour: timeData.journalEntryHour,
+                  journalEntryMinute: timeData.journalEntryMinute,
+                  ...(typeof timeData.sortOverrideMs === "number" && timeData.sortOverrideMs > 0
+                    ? { sortOverrideMs: timeData.sortOverrideMs }
+                    : {}),
+                }
+              : t
+          )
+        );
+        setTranscriptModalTranscript((prev) =>
+          prev && prev.id === rowId
+            ? {
+                ...prev,
+                journalEntryHour: timeData.journalEntryHour,
+                journalEntryMinute: timeData.journalEntryMinute,
+              }
+            : prev
+        );
+      }
     }
     if (newText) {
       await fetch(`/api/me/transcripts/${encodeURIComponent(rowId)}`, {
@@ -13040,6 +13087,232 @@ export default function ChatPage() {
     );
   }
 
+  function renderSidebarLibraryScroll(p: {
+    labels: boolean;
+    showFooter: boolean;
+    onAfterNavPick?: () => void;
+  }) {
+    const { labels, showFooter, onAfterNavPick } = p;
+    return (
+      <>
+        <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!labels ? "lg:justify-center" : ""}`}>
+        {!isAnonymous && (
+        <>
+        <div
+          className={`flex flex-col min-w-0 min-h-0 ${labels ? "flex-1 overflow-hidden" : "shrink-0 lg:gap-1"}`}
+        >
+          <div
+            className={`flex flex-col min-w-0 px-2 py-1.5 ${labels ? "flex-1 min-h-0 overflow-y-auto overscroll-contain" : ""}`}
+          >
+          <Link
+            href="/chat/new"
+            onClick={handleHomeNavigation}
+            className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-accent/50 dark:hover:border-accent/60 hover:bg-accent/10 dark:hover:bg-accent/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
+                labels ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
+              }`}
+            aria-label="Home"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+              <path d="M3 10.5 12 3l9 7.5" />
+              <path d="M5.5 9.5V21h13V9.5" />
+              <path d="M10 21v-6h4v6" />
+              </svg>
+            {labels && <span className="truncate">Home</span>}
+            </Link>
+          {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
+          <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${labels ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
+            {[
+              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
+              ...(!isAnonymous ? [
+                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
+              ] : []),
+              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
+              { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
+              { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("ltm"); } },
+              ...(!isAnonymous ? [
+                { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
+                { id: "journal" as const, label: "Journals", icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
+                { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
+              ] : []),
+            ].map(({ id, label, icon, onClick }) => {
+              const isActive = libraryPanelOpen === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    onClick();
+                    onAfterNavPick?.();
+                  }}
+                  data-tour={`tour-${id}`}
+                  title={!labels ? label : undefined}
+                  className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
+                    labels ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
+                  } ${
+                      isActive
+                        ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
+                        : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
+                  }`}
+                >
+                  {icon === "chat" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  )}
+                  {icon === "concepts" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                      <path d="M12 3v18" />
+                    </svg>
+                  )}
+                  {icon === "models" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                    </svg>
+                  )}
+                  {icon === "memory" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+                      <path d="M12 6v6l4 2" />
+                    </svg>
+                  )}
+                  {icon === "groups" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                  )}
+                  {icon === "habits" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <path d="M22 4 12 14.01l-3-3" />
+                    </svg>
+                  )}
+                  {icon === "journal" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                      <path d="M8 7h8" />
+                      <path d="M8 11h6" />
+                    </svg>
+                  )}
+                  {icon === "figures" && (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  )}
+                  {labels && <span className="truncate">{label}</span>}
+                </button>
+              );
+            })}
+          </nav>
+
+          </div>
+            </div>
+        </>
+        )}
+        {isAnonymous && (
+          <div className={`px-3 py-2 flex flex-col gap-2 items-center ${labels ? "flex-1 min-h-0" : "shrink-0 lg:hidden"}`}>
+            <p className="w-full max-w-[320px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
+              <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
+              <span>Available after sign in:</span>
+            </p>
+            <ul className="space-y-1 w-full flex flex-col items-center">
+              {signInFeatures.map((item, i) => (
+                <li
+                  key={i}
+                  className="w-full max-w-[320px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  <div
+                    className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-xl text-[12px] sm:text-[13px] text-left border border-transparent bg-background text-neutral-600 dark:text-neutral-400"
+                  >
+                    <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
+                    <span className="leading-snug break-words">{item.label}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => setFeedbackModalOpen(true)}
+              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors shrink-0 mt-3"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Send feedback
+            </button>
+            <div className="flex-1 min-h-[4rem] flex flex-col items-center justify-center">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Link
+                  href="/sign-in"
+                  className="px-4 py-2.5 rounded-xl text-base font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="px-4 py-2.5 rounded-xl text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
+                >
+                  Create account
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+        </div>
+        {showFooter && (
+        <div className="shrink-0 px-3 pt-5 pb-4 mt-4">
+          <div className="flex flex-col items-center gap-2 text-center">
+            {!isAnonymous && (
+            <button
+              type="button"
+              onClick={() => setFeedbackModalOpen(true)}
+              className="flex items-center justify-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Send feedback
+            </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setLetterModalOpen(true)}
+              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Crafted with Intention
+            </button>
+            <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400 flex-wrap">
+              <Link href="/terms-of-service" className="hover:text-foreground transition-colors whitespace-nowrap">
+                Terms of Service
+              </Link>
+              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
+              <Link href="/privacy-policy" className="hover:text-foreground transition-colors whitespace-nowrap">
+                Privacy Policy
+              </Link>
+              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
+              <Link href="/faq" className="hover:text-foreground transition-colors whitespace-nowrap">
+                FAQ
+              </Link>
+            </div>
+            <p className="mt-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
+              v{APP_VERSION}
+            </p>
+          </div>
+        </div>
+        )}
+      </>
+    );
+  }
+
+
   return (
     <div className={`relative flex flex-col h-[100dvh] min-h-[100dvh] overflow-hidden chat-bg-area border-2 transition-[border-color,background] duration-300 ease-in-out ${incognitoMode ? "border-violet-400/70 dark:border-violet-500/60" : "border-transparent"}`}>
       {pomodoroConfettiOverlay}
@@ -13130,8 +13403,10 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              data-tour="menu-button"
+              {...(!hideMobileSidebarDrawerForLanding ? { "data-tour": "menu-button" } : {})}
               className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out active:scale-95 shrink-0 lg:hidden ${
+                hideMobileSidebarDrawerForLanding ? "max-lg:hidden " : ""
+              }${
                 !sidebarOpen ? "" : "hidden"
               } ${
                 incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800"
@@ -13438,7 +13713,7 @@ export default function ChatPage() {
             ? "w-72 translate-x-0 opacity-100 lg:w-72"
             : "-translate-x-full opacity-0 pointer-events-none lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto lg:w-14 lg:min-w-14"
           }
-          lg:flex`}
+          lg:flex${hideMobileSidebarDrawerForLanding ? " max-lg:hidden" : ""}`}
       >
         {/* Mobile overlay: sidebar has its own header. Desktop: header is in shared top bar, no header here */}
         <div className="h-14 min-h-[44px] pt-[env(safe-area-inset-top)] shrink-0 lg:hidden">
@@ -13477,224 +13752,18 @@ export default function ChatPage() {
             </Link>
           </div>
         </div>
-        <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!sidebarOpen ? "lg:justify-center" : ""}`}>
-        {!isAnonymous && (
-        <>
-        <div
-          className={`flex flex-col min-w-0 min-h-0 ${sidebarOpen ? "flex-1 overflow-hidden" : "shrink-0 lg:gap-1"}`}
-        >
-          <div
-            className={`flex flex-col min-w-0 px-2 py-1.5 ${sidebarOpen ? "flex-1 min-h-0 overflow-y-auto overscroll-contain" : ""}`}
-          >
-          <Link
-            href="/chat/new"
-            onClick={handleHomeNavigation}
-            className={`flex items-center w-full rounded-xl border border-neutral-200/90 dark:border-neutral-700 bg-white/90 dark:bg-neutral-900 hover:border-accent/50 dark:hover:border-accent/60 hover:bg-accent/10 dark:hover:bg-accent/20 text-[13px] sm:text-[14px] font-medium text-foreground transition-colors shrink-0 ${
-                sidebarOpen ? "justify-center gap-2 px-3 py-2 mb-2" : "justify-center p-2 lg:px-2 lg:py-2"
-              }`}
-            aria-label="Home"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-              <path d="M3 10.5 12 3l9 7.5" />
-              <path d="M5.5 9.5V21h13V9.5" />
-              <path d="M10 21v-6h4v6" />
-              </svg>
-            {sidebarOpen && <span className="truncate">Home</span>}
-            </Link>
-          {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
-          <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${sidebarOpen ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
-            {[
-              { id: "conversations" as const, label: getUiTranslations(language).conversations, icon: "chat", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("conversations"); } },
-              ...(!isAnonymous ? [
-                { id: "habits" as const, label: getUiTranslations(language).habits, icon: "habits" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("habits"); } },
-              ] : []),
-              { id: "cg" as const, label: getUiTranslations(language).groups, icon: "groups", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cg"); } },
-              { id: "concepts" as const, label: getUiTranslations(language).mentalModels, icon: "models", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("concepts"); } },
-              { id: "ltm" as const, label: getUiTranslations(language).longTermMemory, icon: "memory", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("ltm"); } },
-              ...(!isAnonymous ? [
-                { id: "figures" as const, label: getUiTranslations(language).famousFigures, icon: "figures" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("figures"); } },
-                { id: "journal" as const, label: "Journals", icon: "journal" as const, onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("journal"); } },
-                { id: "cc" as const, label: getUiTranslations(language).concepts, icon: "concepts", onClick: () => { playSelectionChime(); setWaysOfLookingAtModalOpen(false); setLibraryPanelOpen("cc"); } },
-              ] : []),
-            ].map(({ id, label, icon, onClick }) => {
-              const isActive = libraryPanelOpen === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => {
-                    onClick();
-                    if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
-                  }}
-                  data-tour={`tour-${id}`}
-                  title={!sidebarOpen ? label : undefined}
-                  className={`flex items-center w-full rounded-full text-left text-[13px] sm:text-[14px] font-medium transition-colors border-2 ${
-                    sidebarOpen ? "gap-2 px-3 py-1" : "justify-center p-2 lg:px-2 lg:py-2"
-                  } ${
-                      isActive
-                        ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
-                        : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
-                  }`}
-                >
-                  {icon === "chat" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                  )}
-                  {icon === "concepts" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                      <path d="M12 3v18" />
-                    </svg>
-                  )}
-                  {icon === "models" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                    </svg>
-                  )}
-                  {icon === "memory" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
-                      <path d="M12 6v6l4 2" />
-                    </svg>
-                  )}
-                  {icon === "groups" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-                      <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-                      <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
-                    </svg>
-                  )}
-                  {icon === "habits" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                      <path d="M22 4 12 14.01l-3-3" />
-                    </svg>
-                  )}
-                  {icon === "journal" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                      <path d="M8 7h8" />
-                      <path d="M8 11h6" />
-                    </svg>
-                  )}
-                  {icon === "figures" && (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 shrink-0">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  )}
-                  {sidebarOpen && <span className="truncate">{label}</span>}
-                </button>
-              );
-            })}
-          </nav>
-
-          </div>
-            </div>
-        </>
-        )}
-        {isAnonymous && (
-          <div className={`px-3 py-2 flex flex-col gap-2 items-center ${sidebarOpen ? "flex-1 min-h-0" : "shrink-0 lg:hidden"}`}>
-            <p className="w-full max-w-[320px] flex items-center gap-1.5 text-[13px] sm:text-[14px] font-medium text-neutral-600 dark:text-neutral-400 text-left">
-              <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
-              <span>Available after sign in:</span>
-            </p>
-            <ul className="space-y-1 w-full flex flex-col items-center">
-              {signInFeatures.map((item, i) => (
-                <li
-                  key={i}
-                  className="w-full max-w-[320px] animate-slide-in-from-left opacity-0 [animation-fill-mode:forwards]"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  <div
-                    className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-xl text-[12px] sm:text-[13px] text-left border border-transparent bg-background text-neutral-600 dark:text-neutral-400"
-                  >
-                    <span className="text-neutral-500 shrink-0">{signInFeatureIconSvg(item.icon)}</span>
-                    <span className="leading-snug break-words">{item.label}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors shrink-0 mt-3"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              Send feedback
-            </button>
-            <div className="flex-1 min-h-[4rem] flex flex-col items-center justify-center">
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <Link
-                  href="/sign-in"
-                  className="px-4 py-2.5 rounded-xl text-base font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href="/sign-up"
-                  className="px-4 py-2.5 rounded-xl text-base font-medium bg-foreground text-background hover:opacity-90 transition-opacity"
-                >
-                  Create account
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-        </div>
-        {sidebarOpen && (
-        <div className="shrink-0 px-3 pt-5 pb-4 mt-4">
-          <div className="flex flex-col items-center gap-2 text-center">
-            {!isAnonymous && (
-            <button
-              type="button"
-              onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center justify-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors whitespace-nowrap"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              Send feedback
-            </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setLetterModalOpen(true)}
-              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors whitespace-nowrap"
-            >
-              Crafted with Intention
-            </button>
-            <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400 flex-wrap">
-              <Link href="/terms-of-service" className="hover:text-foreground transition-colors whitespace-nowrap">
-                Terms of Service
-              </Link>
-              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
-              <Link href="/privacy-policy" className="hover:text-foreground transition-colors whitespace-nowrap">
-                Privacy Policy
-              </Link>
-              <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
-              <Link href="/faq" className="hover:text-foreground transition-colors whitespace-nowrap">
-                FAQ
-              </Link>
-            </div>
-            <p className="mt-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
-              v{APP_VERSION}
-            </p>
-          </div>
-        </div>
-        )}
+        {renderSidebarLibraryScroll({
+          labels: sidebarOpen,
+          showFooter: sidebarOpen,
+          onAfterNavPick: () => {
+            if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false);
+          },
+        })}
       </aside>
 
       {/* Overlay when sidebar open on mobile - fades in/out */}
       <div
-        className={`fixed inset-0 bg-black/30 z-30 lg:hidden transition-opacity duration-300 ease-out ${featureTourStep === null ? "backdrop-blur-sm" : ""} ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 bg-black/30 z-30 lg:hidden transition-opacity duration-300 ease-out ${featureTourStep === null ? "backdrop-blur-sm" : ""} ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}${hideMobileSidebarDrawerForLanding ? " max-lg:hidden" : ""}`}
         onClick={() => setSidebarOpen(false)}
         aria-hidden
       />
@@ -16163,6 +16232,12 @@ export default function ChatPage() {
                         exerciseGoalDaysOff={exerciseGoalDaysOff}
                         sleepHoursGoal={sleepHoursGoal}
                         spendBudgetUsd={spendBudgetUsd}
+                        menuTourOnAndMoreTab={hideMobileSidebarDrawerForLanding}
+                        mobileLibraryTabOpenerRef={landingMobileLibraryOpenerRef}
+                        mobileAndMore={renderSidebarLibraryScroll({
+                          labels: true,
+                          showFooter: true,
+                        })}
                         mobileCommonplace={<LandingMobileCommonplaceTab />}
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
@@ -22143,7 +22218,17 @@ export default function ChatPage() {
             setSelectedMentalModel(null);
             setSidebarOpen(false);
           }}
-          onOpenSidebar={() => setSidebarOpen(true)}
+          onOpenSidebar={() => {
+            if (
+              hideMobileSidebarDrawerForLanding &&
+              typeof window !== "undefined" &&
+              window.innerWidth < 1024
+            ) {
+              landingMobileLibraryOpenerRef.current?.();
+            } else {
+              setSidebarOpen(true);
+            }
+          }}
           onSelectPanel={(panel) => {
             setLibraryPanelOpen(panel);
           }}
