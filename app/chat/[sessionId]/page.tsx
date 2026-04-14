@@ -30,6 +30,7 @@ import {
 import { ChatComposer } from "@/components/ChatComposer";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
+import { LandingDashboardSheetFrame } from "@/components/landing/LandingDashboardSheetFrame";
 import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJumpFab";
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
 import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
@@ -18944,21 +18945,16 @@ export default function ChatPage() {
         <FeedbackModal onClose={() => setFeedbackModalOpen(false)} />
       )}
       {goalsModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!goalsSaving && !goalsCalculatorLoading && !goalsRecalculateLoading && !goalsCoachLoading) {
               setGoalsModalOpen(false);
             }
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).nutritionGoalsModalTitle}
+          ariaLabel={getLandingTranslations(language).nutritionGoalsModalTitle}
+          maxWidthClass="sm:max-w-[min(94vw,420px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,420px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
               <h2 className="text-base sm:text-lg font-semibold text-foreground">
                 {getLandingTranslations(language).nutritionGoalsModalTitle}
@@ -19663,24 +19659,19 @@ export default function ChatPage() {
                 )}
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {sleepInsightsModalOpen && (
-        <div
-          className="fixed inset-0 z-[53] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!sleepInsightsLoading) resetSleepInsightsModal();
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).sleepInsightsModalTitle}
+          ariaLabel={getLandingTranslations(language).sleepInsightsModalTitle}
+          zClass="z-[53]"
+          maxWidthClass="sm:max-w-[min(94vw,640px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {getLandingTranslations(language).sleepInsightsModalTitle}
@@ -19771,24 +19762,18 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {weeklySummaryModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!weeklySummaryLoading) resetWeeklySummaryModal();
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).weeklySummaryModalTitle}
+          ariaLabel={getLandingTranslations(language).weeklySummaryModalTitle}
+          maxWidthClass="sm:max-w-[min(94vw,760px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,760px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {getLandingTranslations(language).weeklySummaryModalTitle}
@@ -20010,24 +19995,18 @@ export default function ChatPage() {
                 </>
               )}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {weightTrackerModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!weightTrackerSaving) resetWeightTrackerModal();
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Weight tracker"
+          ariaLabel="Weight tracker"
+          maxWidthClass="sm:max-w-[min(94vw,560px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">Weight Tracker</h2>
               <button
@@ -20129,24 +20108,18 @@ export default function ChatPage() {
                 <p className="text-sm text-red-600 dark:text-red-400">{weightTrackerError}</p>
               )}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {spendTrackerModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!spendTrackerSaving) resetSpendTrackerModal();
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Spend entry"
+          ariaLabel="Spend entry"
+          maxWidthClass="sm:max-w-[min(94vw,480px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,480px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">Log spend</h2>
               <button
@@ -20226,22 +20199,16 @@ export default function ChatPage() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {nutritionDayViewModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setNutritionDayViewModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Nutrition day view"
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setNutritionDayViewModalOpen(false)}
+          ariaLabel="Nutrition day view"
+          maxWidthClass="sm:max-w-[min(94vw,560px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[88vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">Day View</h2>
               <button
@@ -20310,22 +20277,16 @@ export default function ChatPage() {
               </div>
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {landingActivityGroupModal && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setLandingActivityGroupModal(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={landingActivityGroupModal.title}
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setLandingActivityGroupModal(null)}
+          ariaLabel={landingActivityGroupModal.title}
+          maxWidthClass="sm:max-w-[min(94vw,560px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">{landingActivityGroupModal.title}</h2>
                 <button
@@ -20394,22 +20355,16 @@ export default function ChatPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {sleepEntryEditModal && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => !sleepEditSaving && setSleepEntryEditModal(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Edit sleep entry"
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => !sleepEditSaving && setSleepEntryEditModal(null)}
+          ariaLabel="Edit sleep entry"
+          maxWidthClass="sm:max-w-[min(94vw,420px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,420px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Edit sleep</h2>
@@ -20501,22 +20456,16 @@ export default function ChatPage() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {journalTypeChooserOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setJournalTypeChooserOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Choose journal type"
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setJournalTypeChooserOpen(false)}
+          ariaLabel="Choose journal type"
+          maxWidthClass="sm:max-w-[min(94vw,440px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,440px)] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
               <h2 className="text-lg font-semibold text-foreground">
                 Choose journal type
@@ -20589,24 +20538,18 @@ export default function ChatPage() {
                 </p>
               </button>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {journalEntryModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             if (!journalEntrySaving) resetJournalEntryModal();
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).journalEntryModalTitle}
+          ariaLabel={getLandingTranslations(language).journalEntryModalTitle}
+          maxWidthClass="sm:max-w-[min(94vw,560px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="relative mt-3 sm:mt-0 rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[92dvh] sm:max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {LANDING_JOURNAL_MODAL_TITLE[selectedLandingJournalChip]}
@@ -20624,7 +20567,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3">
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {selectedLandingJournalChip === "gratitude"
                   ? "Capture specific moments you appreciate."
@@ -20783,22 +20726,19 @@ export default function ChatPage() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {calorieTrackerModalOpen && (
-        <div
-          className="fixed inset-0 z-[52] flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={resetCalorieTrackerModal}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Calorie tracker"
+        <LandingDashboardSheetFrame
+          onBackdropClick={resetCalorieTrackerModal}
+          ariaLabel="Calorie tracker"
+          maxWidthClass="sm:max-w-[min(94vw,560px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
           <div
             data-calorie-tracker-modal
-            className="relative mt-3 sm:mt-0 rounded-3xl shadow-xl w-full max-w-[min(94vw,560px)] max-h-[92dvh] sm:max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
+            className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
           >
             <div className="border-b border-neutral-200 dark:border-neutral-700 shrink-0 px-4 py-3 space-y-2">
               <div className="flex items-center justify-between gap-2">
@@ -20853,7 +20793,7 @@ export default function ChatPage() {
                 </div>
               </div>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3">
               {/* Hidden file inputs — shared across choose & input steps */}
               <input
                 ref={calorieTrackerImageInputRef}
@@ -21508,24 +21448,20 @@ export default function ChatPage() {
               )}
             </div>
           </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {newConversationChooserModalOpen && (
-        <div
-          className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             clearReflectionQuickNoteBridge();
             setNewConversationChooserModalOpen(false);
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).conversationChooserTitle}
+          ariaLabel={getLandingTranslations(language).conversationChooserTitle}
+          zClass="z-[55]"
+          maxWidthClass="sm:max-w-[min(94vw,640px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">
                 New Conversation
@@ -21674,22 +21610,17 @@ export default function ChatPage() {
                   ) : null}
                 </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {ideasModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setIdeasModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).ideas}
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setIdeasModalOpen(false)}
+          ariaLabel={getLandingTranslations(language).ideas}
+          zClass="z-50"
+          maxWidthClass="sm:max-w-[min(94vw,640px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[92vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[92vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
@@ -21799,22 +21730,17 @@ export default function ChatPage() {
                 />
               </div>
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {askMentorsRecommendModalOpen && (
-        <div
-          className="fixed inset-0 z-[56] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => setAskMentorsRecommendModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Ask mentors recommendations"
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setAskMentorsRecommendModalOpen(false)}
+          ariaLabel="Ask mentors recommendations"
+          zClass="z-[56]"
+          maxWidthClass="sm:max-w-[min(94vw,640px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">Ask mentors</h2>
               <button
@@ -21925,25 +21851,20 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {mentorOneOnOneModalOpen && (
-        <div
-          className="fixed inset-0 z-[55] flex items-center justify-center p-4 bg-black/50 animate-fade-in backdrop-blur-sm"
-          onClick={() => {
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
             clearReflectionQuickNoteBridge();
             setMentorOneOnOneModalOpen(false);
           }}
-          role="dialog"
-          aria-modal="true"
-          aria-label={getLandingTranslations(language).mentorOneOnOneModalTitle}
+          ariaLabel={getLandingTranslations(language).mentorOneOnOneModalTitle}
+          zClass="z-[55]"
+          maxWidthClass="sm:max-w-[min(94vw,640px)]"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="relative rounded-3xl shadow-xl w-full max-w-[min(94vw,640px)] max-h-[85vh] overflow-hidden flex flex-col bg-background border border-neutral-200 dark:border-neutral-700 animate-fade-in-up"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">
                 {getLandingTranslations(language).mentorOneOnOneModalTitle}
@@ -22145,8 +22066,7 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {signInFeaturesModalOpen && isAnonymous && (
@@ -24856,16 +24776,16 @@ export default function ChatPage() {
       )}
 
       {habitTaggingRowId && (
-        <div
-          className="fixed inset-0 z-[70] flex items-end justify-center p-4 sm:items-center bg-black/50 backdrop-blur-sm"
-          onClick={() => { setHabitTaggingRowId(null); }}
-          role="dialog"
-          aria-modal
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => {
+            setHabitTaggingRowId(null);
+          }}
+          ariaLabel="Link to a habit"
+          zClass="z-[70]"
+          maxWidthClass="sm:max-w-md"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div
-            className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-5 shadow-xl dark:border-neutral-700 dark:bg-neutral-900"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="p-5">
             <h3 className="mb-1 text-[15px] font-semibold text-neutral-900 dark:text-neutral-100">Link to a habit</h3>
             <p className="mb-3 text-[12px] text-neutral-500 dark:text-neutral-400">Select habits this journal note relates to.</p>
             {availableHabitsForTagging.length === 0 ? (
@@ -24919,19 +24839,16 @@ export default function ChatPage() {
               </button>
             </div>
           </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
       {habitDetailModal && habitDetailEdit && (
-        <div
-          className="fixed inset-0 z-[65] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => setHabitDetailModal(null)}
-          aria-modal
-          role="dialog"
+        <LandingDashboardSheetFrame
+          onBackdropClick={() => setHabitDetailModal(null)}
+          ariaLabel={habitDetailModal.name}
+          zClass="z-[65]"
+          maxWidthClass="sm:max-w-lg"
+          maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
         >
-          <div
-            className="bg-background rounded-3xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
-            onClick={(e) => e.stopPropagation()}
-          >
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0 pr-2">
                 <h2 className="font-semibold text-lg truncate min-w-0">
@@ -24965,7 +24882,7 @@ export default function ChatPage() {
               </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-4">
               {habitDetailEditing ? (
                 <>
                   <div>
@@ -25403,8 +25320,7 @@ export default function ChatPage() {
                 </>
               ) : null}
             </div>
-          </div>
-        </div>
+        </LandingDashboardSheetFrame>
       )}
 
       {habitDeleteConfirmModal && (

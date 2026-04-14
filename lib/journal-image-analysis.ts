@@ -1,7 +1,21 @@
+/** Mirrors `NutritionImageAutoKind` from image transcribe (auto mode). Kept here for client-safe imports. */
+export type JournalImageAutoKind =
+  | "nutrition"
+  | "exercise"
+  | "generic_text"
+  | "weight_scale"
+  | "sleep_tracker";
+
 export type JournalImageAnalysis = {
   id: string;
   previewUrl: string;
   extractedText: string;
+  imageKind?: JournalImageAutoKind;
+  /** Short scene label from the model (e.g. dish name, title snippet). */
+  sceneLabel?: string;
+  weightKgGuess?: number | null;
+  sleepHoursGuess?: number | null;
+  hrvMsGuess?: number | null;
 };
 
 export function formatJournalImageAnalysisBlocks(

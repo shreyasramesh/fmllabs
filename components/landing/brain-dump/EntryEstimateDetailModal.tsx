@@ -136,23 +136,18 @@ export function EntryEstimateDetailModal({
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <>
+    <div
+      className="fixed inset-0 z-[65] flex flex-col justify-end bg-black/35 backdrop-blur-[2px] sm:items-center sm:justify-center sm:p-4"
+      onClick={onClose}
+      role="presentation"
+    >
       <div
-        className="fixed inset-0 z-[65] bg-black/35 backdrop-blur-[2px]"
-        onClick={onClose}
-        aria-hidden
-      />
-      <div
-        className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
-        aria-hidden
+        className={`pointer-events-auto flex min-h-0 max-h-[min(88dvh,640px)] w-full max-w-md flex-col overflow-hidden rounded-t-[1.25rem] border shadow-2xl sm:rounded-3xl ${shellClass} pb-[env(safe-area-inset-bottom,0px)]`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="entry-estimate-detail-title"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className={`pointer-events-auto flex max-h-[min(85dvh,640px)] w-full max-w-md flex-col overflow-hidden rounded-3xl border shadow-2xl ${shellClass}`}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="entry-estimate-detail-title"
-          onClick={(e) => e.stopPropagation()}
-        >
           <div className={`flex shrink-0 items-center justify-between gap-2 border-b px-4 py-3 ${dividerClass}`}>
             <h2 id="entry-estimate-detail-title" className="text-lg font-semibold text-foreground">
               Entry details
@@ -328,8 +323,7 @@ export function EntryEstimateDetailModal({
             ) : null}
           </div>
         </div>
-      </div>
-    </>,
+    </div>,
     document.body
   );
 }

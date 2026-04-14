@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
-import type { JournalImageAnalysis } from "@/lib/journal-image-analysis";
+import type { JournalImageAnalysis, JournalImageAutoKind } from "@/lib/journal-image-analysis";
 import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
@@ -1381,6 +1381,25 @@ interface CaptureViewProps {
   onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
 }
 
+type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
+
+function imageKindHint(kind: JournalImageAutoKind | undefined): string | null {
+  switch (kind) {
+    case "nutrition":
+      return "Food or drink";
+    case "exercise":
+      return "Workout or activity";
+    case "generic_text":
+      return "Text or quote";
+    case "weight_scale":
+      return "Weight scale";
+    case "sleep_tracker":
+      return "Sleep app / tracker";
+    default:
+      return null;
+  }
+}
+
 export function BrainDumpCaptureView({
   captureEntries,
   setCaptureEntries,
@@ -1422,6 +1441,21 @@ export function BrainDumpCaptureView({
   // Image review state — analyses are held here until the user confirms or discards
   const [pendingImageAnalyses, setPendingImageAnalyses] = useState<JournalImageAnalysis[] | null>(null);
   const [pendingImageEditText, setPendingImageEditText] = useState("");
+  const [imageReviewDestination, setImageReviewDestination] = useState<ImageReviewDestination>("quick_note");
+  const [imageReviewCommonplaceSource, setImageReviewCommonplaceSource] = useState("");
+  const [imageReviewCommonplaceAuthor, setImageReviewCommonplaceAuthor] = useState("");
+  const [imageReviewWeightKg, setImageReviewWeightKg] = useState("");
+  const [imageReviewSleepHours, setImageReviewSleepHours] = useState("");
+  const [imageReviewHrvMs, setImageReviewHrvMs] = useState("");
+  const [imageReviewBusy, setImageReviewBusy] = useState(false);
+  const [imageReviewError, setImageReviewError] = useState<string | null>(null);
+
+  const revokePendingImagePreviews = useCallback((analyses: JournalImageAnalysis[] | null) => {
+    if (!analyses) return;
+    for (const a of analyses) {
+      if (a.previewUrl) URL.revokeObjectURL(a.previewUrl);
+    }
+  }, []);
 
   const handleImageAnalysesReady = useCallback((analyses: JournalImageAnalysis[]) => {
     const texts = analyses.map((a) => a.extractedText).filter(Boolean);
@@ -1430,22 +1464,159 @@ export function BrainDumpCaptureView({
     setPendingImageEditText(texts.join("\n\n"));
   }, []);
 
-  const handleImageReviewConfirm = useCallback(() => {
+  useEffect(() => {
+    if (!pendingImageAnalyses?.length) return;
+    const a = pendingImageAnalyses[0]!;
+    const kind = a.imageKind;
+    let dest: ImageReviewDestination = "quick_note";
+    if (kind === "generic_text") dest = "commonplace";
+    else if (kind === "weight_scale") dest = "weight";
+    else if (kind === "sleep_tracker") dest = "sleep";
+    setImageReviewDestination(dest);
+    setImageReviewCommonplaceSource((a.sceneLabel?.trim() || "Photo import").slice(0, 200));
+    setImageReviewCommonplaceAuthor("");
+    setImageReviewWeightKg(
+      a.weightKgGuess != null && Number.isFinite(a.weightKgGuess) ? String(a.weightKgGuess) : ""
+    );
+    setImageReviewSleepHours(
+      a.sleepHoursGuess != null && Number.isFinite(a.sleepHoursGuess) ? String(a.sleepHoursGuess) : ""
+    );
+    setImageReviewHrvMs(
+      a.hrvMsGuess != null && Number.isFinite(a.hrvMsGuess) ? String(Math.round(a.hrvMsGuess)) : ""
+    );
+    setImageReviewError(null);
+  }, [pendingImageAnalyses]);
+
+  const imageReviewCanSave = useMemo(() => {
+    if (imageReviewBusy) return false;
     const text = pendingImageEditText.trim();
-    if (text) {
-      setSentenceDraft((prev) => {
-        const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
-        return prefix + text;
-      });
+    if (imageReviewDestination === "quick_note") return text.length > 0;
+    if (imageReviewDestination === "commonplace")
+      return text.length > 0 && imageReviewCommonplaceSource.trim().length > 0;
+    if (imageReviewDestination === "weight") {
+      const w = Number.parseFloat(imageReviewWeightKg.trim());
+      return Number.isFinite(w) && w >= 20 && w <= 400;
     }
-    setPendingImageAnalyses(null);
-    setPendingImageEditText("");
-  }, [pendingImageEditText, setSentenceDraft]);
+    if (imageReviewDestination === "sleep") {
+      const h = Number.parseFloat(imageReviewSleepHours.trim());
+      return Number.isFinite(h) && h >= 0.5 && h <= 24;
+    }
+    return false;
+  }, [
+    imageReviewBusy,
+    imageReviewDestination,
+    pendingImageEditText,
+    imageReviewCommonplaceSource,
+    imageReviewWeightKg,
+    imageReviewSleepHours,
+  ]);
+
+  const handleImageReviewSave = useCallback(async () => {
+    setImageReviewError(null);
+    setImageReviewBusy(true);
+    const analysesSnapshot = pendingImageAnalyses;
+    try {
+      const text = pendingImageEditText.trim();
+
+      if (imageReviewDestination === "quick_note") {
+        if (!text) {
+          setImageReviewError("Add some text for your note.");
+          return;
+        }
+        setSentenceDraft((prev) => {
+          const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
+          return prefix + text;
+        });
+      } else if (imageReviewDestination === "commonplace") {
+        if (!text) {
+          setImageReviewError("Text is required for a commonplace entry.");
+          return;
+        }
+        const source = imageReviewCommonplaceSource.trim();
+        if (!source) {
+          setImageReviewError("Source is required (for example a book title).");
+          return;
+        }
+        const res = await fetch("/api/me/commonplace", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text,
+            source,
+            ...(imageReviewCommonplaceAuthor.trim() ? { author: imageReviewCommonplaceAuthor.trim() } : {}),
+          }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not save commonplace entry.");
+        }
+      } else if (imageReviewDestination === "weight") {
+        const w = Number.parseFloat(imageReviewWeightKg.trim());
+        if (!Number.isFinite(w) || w < 20 || w > 400) {
+          setImageReviewError("Enter a weight between 20 and 400 kg.");
+          return;
+        }
+        const res = await fetch("/api/me/journal/weight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ weightKg: Math.round(w * 10) / 10 }),
+        });
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not save weight.");
+        }
+      } else if (imageReviewDestination === "sleep") {
+        const h = Number.parseFloat(imageReviewSleepHours.trim());
+        if (!Number.isFinite(h) || h < 0.5 || h > 24) {
+          setImageReviewError("Sleep hours must be between 0.5 and 24.");
+          return;
+        }
+        const body: Record<string, unknown> = { sleepHours: roundSleepHoursToMinute(h) };
+        const hrvRaw = imageReviewHrvMs.trim();
+        if (hrvRaw) {
+          const hrv = Number.parseFloat(hrvRaw);
+          if (Number.isFinite(hrv) && hrv >= 1 && hrv <= 300) {
+            body.hrvMs = Math.round(hrv);
+          }
+        }
+        const res = await fetch("/api/me/sleep", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) {
+          throw new Error(data.error || "Could not save sleep.");
+        }
+      }
+
+      revokePendingImagePreviews(analysesSnapshot);
+      setPendingImageAnalyses(null);
+      setPendingImageEditText("");
+    } catch (e) {
+      setImageReviewError(e instanceof Error ? e.message : "Save failed.");
+    } finally {
+      setImageReviewBusy(false);
+    }
+  }, [
+    imageReviewDestination,
+    pendingImageEditText,
+    pendingImageAnalyses,
+    imageReviewCommonplaceSource,
+    imageReviewCommonplaceAuthor,
+    imageReviewWeightKg,
+    imageReviewSleepHours,
+    imageReviewHrvMs,
+    setSentenceDraft,
+    revokePendingImagePreviews,
+  ]);
 
   const handleImageReviewDiscard = useCallback(() => {
+    revokePendingImagePreviews(pendingImageAnalyses);
     setPendingImageAnalyses(null);
     setPendingImageEditText("");
-  }, []);
+    setImageReviewError(null);
+  }, [pendingImageAnalyses, revokePendingImagePreviews]);
 
   // Category filter
   const [filterCategory, setFilterCategory] = React.useState<string | null>(null);
@@ -1763,14 +1934,21 @@ export function BrainDumpCaptureView({
               <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[#d4d2c9] dark:bg-[#4d4c48]" />
 
               {/* header */}
-              <div className="mb-3 flex items-center justify-between">
-                <p className="font-serif text-[15px] font-semibold text-[#141413] dark:text-[#faf9f5]">
-                  Review extracted text
-                </p>
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-serif text-[15px] font-semibold text-[#141413] dark:text-[#faf9f5]">
+                    Review & save
+                  </p>
+                  {imageKindHint(pendingImageAnalyses[0]?.imageKind) ? (
+                    <p className="mt-0.5 text-[11px] text-[#87867f] dark:text-[#5e5d59]">
+                      Detected: {imageKindHint(pendingImageAnalyses[0]?.imageKind)}
+                    </p>
+                  ) : null}
+                </div>
                 <button
                   type="button"
                   onClick={handleImageReviewDiscard}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-[#87867f] hover:bg-[#e8e6dc] dark:hover:bg-[#3d3d3a]"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#87867f] hover:bg-[#e8e6dc] dark:hover:bg-[#3d3d3a]"
                   aria-label="Discard"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -1795,36 +1973,166 @@ export function BrainDumpCaptureView({
                 </div>
               )}
 
-              {/* hint */}
               <p className="mb-2 text-[12px] text-[#87867f] dark:text-[#5e5d59]">
-                Edit before adding to your note, or discard.
+                Choose where this goes, edit the text if needed, then save.
               </p>
 
-              {/* editable extracted text */}
+              {/* destination */}
+              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#87867f] dark:text-[#5e5d59]">
+                Save to
+              </p>
+              <div className="mb-3 grid grid-cols-2 gap-2">
+                {(
+                  [
+                    { id: "quick_note" as const, label: "Quick note" },
+                    { id: "commonplace" as const, label: "Commonplace" },
+                    { id: "weight" as const, label: "Weight" },
+                    { id: "sleep" as const, label: "Sleep" },
+                  ] as const
+                ).map((opt) => {
+                  const on = imageReviewDestination === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setImageReviewDestination(opt.id)}
+                      className={`rounded-xl border py-2 text-[13px] font-medium transition ${
+                        on
+                          ? "border-[#c96442] bg-[#c96442]/10 text-[#a85535] dark:border-[#d97757] dark:bg-[#d97757]/15 dark:text-[#faf9f5]"
+                          : "border-[#e8e6dc] text-[#5e5d59] hover:bg-[#e8e6dc]/60 dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]/60"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {imageReviewDestination === "commonplace" ? (
+                <div className="mb-3 space-y-2">
+                  <div>
+                    <label className="mb-1 block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                      Source <span className="text-red-600 dark:text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={imageReviewCommonplaceSource}
+                      onChange={(e) => setImageReviewCommonplaceSource(e.target.value)}
+                      placeholder="Book, article, speaker…"
+                      className="w-full rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2 text-[14px] text-[#141413] outline-none focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                      Author <span className="text-[#87867f]">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={imageReviewCommonplaceAuthor}
+                      onChange={(e) => setImageReviewCommonplaceAuthor(e.target.value)}
+                      placeholder="Author name"
+                      className="w-full rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2 text-[14px] text-[#141413] outline-none focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              {imageReviewDestination === "weight" ? (
+                <div className="mb-3">
+                  <label className="mb-1 block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                    Weight (kg) <span className="text-red-600 dark:text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={imageReviewWeightKg}
+                    onChange={(e) => setImageReviewWeightKg(e.target.value)}
+                    placeholder="e.g. 72.4"
+                    className="w-full rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2 text-[14px] text-[#141413] outline-none focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                  />
+                </div>
+              ) : null}
+
+              {imageReviewDestination === "sleep" ? (
+                <div className="mb-3 grid grid-cols-2 gap-2">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="mb-1 block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                      Sleep (hours) <span className="text-red-600 dark:text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={imageReviewSleepHours}
+                      onChange={(e) => setImageReviewSleepHours(e.target.value)}
+                      placeholder="e.g. 7.25"
+                      className="w-full rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2 text-[14px] text-[#141413] outline-none focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="mb-1 block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                      HRV (ms) <span className="text-[#87867f]">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={imageReviewHrvMs}
+                      onChange={(e) => setImageReviewHrvMs(e.target.value)}
+                      placeholder="e.g. 45"
+                      className="w-full rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2 text-[14px] text-[#141413] outline-none focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              <p className="mb-1 text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
+                Extracted text {imageReviewDestination !== "quick_note" && imageReviewDestination !== "commonplace" ? (
+                  <span className="font-normal text-[#87867f]"> (optional reference)</span>
+                ) : null}
+              </p>
               <textarea
                 value={pendingImageEditText}
                 onChange={(e) => setPendingImageEditText(e.target.value)}
-                rows={5}
+                rows={imageReviewDestination === "weight" || imageReviewDestination === "sleep" ? 3 : 5}
                 autoFocus
-                className="mb-4 w-full resize-none rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2.5 text-[14px] leading-relaxed text-[#141413] outline-none transition focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+                className="mb-3 w-full resize-none rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2.5 text-[14px] leading-relaxed text-[#141413] outline-none transition focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
               />
+
+              {imageReviewError ? (
+                <p className="mb-3 text-[12px] text-red-600 dark:text-red-400" role="alert">
+                  {imageReviewError}
+                </p>
+              ) : null}
 
               {/* actions */}
               <div className="flex gap-2.5">
                 <button
                   type="button"
                   onClick={handleImageReviewDiscard}
-                  className="flex-1 rounded-xl border border-[#e8e6dc] py-2.5 text-[14px] font-medium text-[#5e5d59] transition hover:bg-[#e8e6dc] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+                  disabled={imageReviewBusy}
+                  className="flex-1 rounded-xl border border-[#e8e6dc] py-2.5 text-[14px] font-medium text-[#5e5d59] transition hover:bg-[#e8e6dc] disabled:opacity-40 dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
                 >
                   Discard
                 </button>
                 <button
                   type="button"
-                  onClick={handleImageReviewConfirm}
-                  disabled={!pendingImageEditText.trim()}
+                  onClick={() => void handleImageReviewSave()}
+                  disabled={!imageReviewCanSave}
                   className="flex-[2] rounded-xl bg-[#c96442] py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#a85535] disabled:opacity-40 dark:bg-[#d97757] dark:hover:bg-[#c96442]"
                 >
-                  Add to note
+                  {imageReviewBusy ? (
+                    <span className="inline-flex items-center justify-center gap-2">
+                      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Saving…
+                    </span>
+                  ) : imageReviewDestination === "quick_note" ? (
+                    "Add to note"
+                  ) : imageReviewDestination === "commonplace" ? (
+                    "Save to commonplace"
+                  ) : imageReviewDestination === "weight" ? (
+                    "Log weight"
+                  ) : (
+                    "Log sleep"
+                  )}
                 </button>
               </div>
             </div>

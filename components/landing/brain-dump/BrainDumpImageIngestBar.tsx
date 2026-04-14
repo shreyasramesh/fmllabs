@@ -9,7 +9,21 @@ import { createPortal } from "react-dom";
  */
 const FILE_INPUT_VISUAL_CLASS = "sr-only";
 import { compressImageForUpload } from "@/lib/compress-image-for-upload";
-import type { JournalImageAnalysis } from "@/lib/journal-image-analysis";
+import type { JournalImageAnalysis, JournalImageAutoKind } from "@/lib/journal-image-analysis";
+
+const JOURNAL_IMAGE_AUTO_KINDS: readonly JournalImageAutoKind[] = [
+  "nutrition",
+  "exercise",
+  "generic_text",
+  "weight_scale",
+  "sleep_tracker",
+] as const;
+
+function parseJournalImageAutoKind(v: unknown): JournalImageAutoKind | undefined {
+  return typeof v === "string" && (JOURNAL_IMAGE_AUTO_KINDS as readonly string[]).includes(v)
+    ? (v as JournalImageAutoKind)
+    : undefined;
+}
 
 /** Let Quick Note infer whether the photo is food or a workout screenshot. */
 const IMAGE_TRANSCRIBE_MODE = "auto" as const;
@@ -69,8 +83,6 @@ export function BrainDumpImageIngestBar({
   /** `floating`: fixed bottom-right above mobile tab bar. `inline`: slim row in modal sheet. */
   layout?: "inline" | "floating";
 }) {
-  const cameraRef = useRef<HTMLInputElement>(null);
-  const galleryRef = useRef<HTMLInputElement>(null);
   const [thumbs, setThumbs] = useState<Thumb[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -135,20 +147,44 @@ export function BrainDumpImageIngestBar({
               mode: IMAGE_TRANSCRIBE_MODE,
             }),
           });
-          const data = (await res.json().catch(() => ({}))) as { error?: string; nutritionLogDraft?: string };
+          const data = (await res.json().catch(() => ({}))) as {
+            error?: string;
+            nutritionLogDraft?: string;
+            imageKind?: unknown;
+            dishName?: unknown;
+            weightKgGuess?: unknown;
+            sleepHoursGuess?: unknown;
+            hrvMsGuess?: unknown;
+          };
           if (!res.ok) {
             throw new Error(data.error || "Could not read text from this image.");
           }
           const draft = (data.nutritionLogDraft ?? "").trim();
           if (draft) {
             const previewUrl = newThumbs[i]!.previewUrl;
-            onAnalysesReadyRef.current([
-              {
-                id: thumbId,
-                previewUrl,
-                extractedText: draft,
-              },
-            ]);
+            const imageKind = parseJournalImageAutoKind(data.imageKind);
+            const sceneLabel =
+              typeof data.dishName === "string" && data.dishName.trim() ? data.dishName.trim().slice(0, 200) : undefined;
+            const asGuess = (v: unknown): number | null | undefined => {
+              if (v === undefined) return undefined;
+              if (v === null || v === "") return null;
+              const n = typeof v === "number" ? v : Number.parseFloat(String(v).trim());
+              return Number.isFinite(n) ? n : null;
+            };
+            const weightKgGuess = asGuess(data.weightKgGuess);
+            const sleepHoursGuess = asGuess(data.sleepHoursGuess);
+            const hrvMsGuess = asGuess(data.hrvMsGuess);
+            const analysis: JournalImageAnalysis = {
+              id: thumbId,
+              previewUrl,
+              extractedText: draft,
+              ...(imageKind ? { imageKind } : {}),
+              ...(sceneLabel ? { sceneLabel } : {}),
+              ...(weightKgGuess !== undefined ? { weightKgGuess } : {}),
+              ...(sleepHoursGuess !== undefined ? { sleepHoursGuess } : {}),
+              ...(hrvMsGuess !== undefined ? { hrvMsGuess } : {}),
+            };
+            onAnalysesReadyRef.current([analysis]);
             completedThumbIds.add(thumbId);
           } else {
             setError("No text could be extracted from this photo. Try a clearer image or type your note.");
@@ -176,47 +212,64 @@ export function BrainDumpImageIngestBar({
   );
 
   const onCameraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files;
-    e.target.value = "";
-    if (f?.length) void processFiles(f);
+    const input = e.currentTarget;
+    if (disabled || busy) {
+      input.value = "";
+      return;
+    }
+    const list = input.files?.length ? Array.from(input.files) : [];
+    input.value = "";
+    if (list.length > 0) void processFiles(list);
   };
 
   const onGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files;
-    e.target.value = "";
-    if (f?.length) void processFiles(f);
+    const input = e.currentTarget;
+    if (disabled || busy) {
+      input.value = "";
+      return;
+    }
+    const list = input.files?.length ? Array.from(input.files) : [];
+    input.value = "";
+    if (list.length > 0) void processFiles(list);
   };
 
   const thumbSize = layout === "floating" ? "h-10 w-10" : "h-11 w-11";
   const thumbRounded = layout === "floating" ? "rounded-lg" : "rounded-xl";
   const floatingCol = layout === "floating";
 
-  const cameraInputId = "bdump-camera-input";
-  const galleryInputId = "bdump-gallery-input";
+  const inactive = disabled || busy;
+  const labelClass = `${COMPACT_ICON_BTN} cursor-pointer ${inactive ? "pointer-events-none opacity-45" : ""}`;
 
-  const fileInputs = (
-    <>
-      <input
-        id={cameraInputId}
-        ref={cameraRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className={FILE_INPUT_VISUAL_CLASS}
-        tabIndex={-1}
-        onChange={onCameraChange}
-      />
-      <input
-        id={galleryInputId}
-        ref={galleryRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className={FILE_INPUT_VISUAL_CLASS}
-        tabIndex={-1}
-        onChange={onGalleryChange}
-      />
-    </>
+  /**
+   * File inputs are nested inside <label> (not htmlFor + remote input). This is the most
+   * reliable way to open the picker from a portaled FAB; avoids broken label/input
+   * association when inputs lived in a different subtree / hidden ancestor.
+   */
+  const fileControls = (
+    <div className={`flex items-center gap-2.5 ${floatingCol ? "justify-end" : "justify-center"}`}>
+      <label aria-label="Capture photo" className={labelClass}>
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className={FILE_INPUT_VISUAL_CLASS}
+          tabIndex={-1}
+          onChange={onCameraChange}
+        />
+        <CameraGlyph className="h-4 w-4" aria-hidden />
+      </label>
+      <label aria-label="Add photos" className={labelClass}>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className={FILE_INPUT_VISUAL_CLASS}
+          tabIndex={-1}
+          onChange={onGalleryChange}
+        />
+        <PhotosGlyph className="h-4 w-4" />
+      </label>
+    </div>
   );
 
   const chrome = (
@@ -254,29 +307,13 @@ export function BrainDumpImageIngestBar({
         </div>
       ) : null}
 
-      <div className={`flex items-center gap-2.5 ${floatingCol ? "justify-end" : "justify-center"}`}>
-        <label
-          htmlFor={cameraInputId}
-          aria-label="Capture photo"
-          className={`${COMPACT_ICON_BTN} cursor-pointer ${disabled || busy ? "pointer-events-none opacity-45" : ""}`}
-        >
-          <CameraGlyph className="h-4 w-4" />
-        </label>
-        <label
-          htmlFor={galleryInputId}
-          aria-label="Add photos"
-          className={`${COMPACT_ICON_BTN} cursor-pointer ${disabled || busy ? "pointer-events-none opacity-45" : ""}`}
-        >
-          <PhotosGlyph className="h-4 w-4" />
-        </label>
-      </div>
+      {fileControls}
     </div>
   );
 
   if (layout === "floating") {
     return (
       <>
-        {fileInputs}
         {!floatingPortalReady || typeof document === "undefined"
           ? null
           : createPortal(
@@ -295,7 +332,6 @@ export function BrainDumpImageIngestBar({
   return (
     <div className="flex w-full flex-col items-center gap-1">
       {chrome}
-      {fileInputs}
     </div>
   );
 }

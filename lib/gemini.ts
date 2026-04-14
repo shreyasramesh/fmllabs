@@ -650,12 +650,26 @@ export interface MentorRecommendationItem {
   reason: string;
 }
 
+/** Primary scene type when `transcribeNutritionImage` runs in `auto` mode. */
+export type NutritionImageAutoKind =
+  | "nutrition"
+  | "exercise"
+  | "generic_text"
+  | "weight_scale"
+  | "sleep_tracker";
+
 export interface NutritionImageTranscriptionResult {
   dishName: string;
   foodsDetected: string[];
   portionAssumptions: string[];
   nutritionLogDraft: string;
   confidence: "low" | "medium" | "high";
+  /** Present when `mode === "auto"`. */
+  imageKind?: NutritionImageAutoKind;
+  /** Model guess in kg (auto mode, weight_scale or visible scale). */
+  weightKgGuess?: number | null;
+  sleepHoursGuess?: number | null;
+  hrvMsGuess?: number | null;
   nutritionIntelligence?: {
     probableMealType?: string;
     proteinSources?: string[];
@@ -912,6 +926,41 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
   }
 }
 
+const NUTRITION_IMAGE_AUTO_KINDS: readonly NutritionImageAutoKind[] = [
+  "nutrition",
+  "exercise",
+  "generic_text",
+  "weight_scale",
+  "sleep_tracker",
+] as const;
+
+function parseNutritionImageAutoKind(v: unknown): NutritionImageAutoKind | undefined {
+  return typeof v === "string" && (NUTRITION_IMAGE_AUTO_KINDS as readonly string[]).includes(v)
+    ? (v as NutritionImageAutoKind)
+    : undefined;
+}
+
+function parseWeightKgGuess(v: unknown): number | null {
+  if (v == null || v === "") return null;
+  const n = typeof v === "number" ? v : Number.parseFloat(String(v).trim());
+  if (!Number.isFinite(n) || n < 20 || n > 400) return null;
+  return Math.round(n * 10) / 10;
+}
+
+function parseSleepHoursGuess(v: unknown): number | null {
+  if (v == null || v === "") return null;
+  const n = typeof v === "number" ? v : Number.parseFloat(String(v).trim());
+  if (!Number.isFinite(n) || n < 0.5 || n > 24) return null;
+  return Math.round(n * 100) / 100;
+}
+
+function parseHrvMsGuess(v: unknown): number | null {
+  if (v == null || v === "") return null;
+  const n = typeof v === "number" ? v : Number.parseFloat(String(v).trim());
+  if (!Number.isFinite(n) || n < 1 || n > 300) return null;
+  return Math.round(n);
+}
+
 export async function transcribeNutritionImage(
   input: {
     imageBase64: string;
@@ -961,29 +1010,31 @@ Rules:
 Optional user hint:
 ${hintText || "(none)"}`
                 : mode === "auto"
-                  ? `You are helping users log either nutrition or exercise from photos and screenshots.
+                  ? `You help users capture content from photos for a personal logging app (Quick Note, commonplace book, weight, sleep, etc.).
 
-Analyze the image and decide whether it is primarily:
-- a nutrition / food image, or
-- an exercise / workout screenshot or photo
+Classify the image into exactly ONE primary type:
+- "nutrition" — food, drinks, meals, grocery items, nutrition labels for eating
+- "exercise" — workouts, activity rings, gym logs, running/cycling summaries
+- "generic_text" — book page, article, handwritten note, document, or screenshot where the main value is text to save (not mainly food/workout/scale/sleep UI)
+- "weight_scale" — bathroom scale, weight readout, or photo centered on a body-weight number
+- "sleep_tracker" — sleep app or wearable screenshot (e.g. Fitbit, Apple Health) showing time asleep, sleep stages, or sleep score
 
 Return ONLY valid JSON in this exact shape:
 {
-  "dishName": "short label for the meal or workout",
-  "foodsDetected": ["key visible food item or workout metric", "..."],
+  "imageKind": "nutrition" | "exercise" | "generic_text" | "weight_scale" | "sleep_tracker",
+  "dishName": "short label for the scene (meal name, workout name, book title snippet, etc.)",
+  "foodsDetected": ["key visible item or metric", "..."],
   "portionAssumptions": ["short assumption", "..."],
-  "nutritionLogDraft": "1-4 sentence plain-text draft that matches the image type",
-  "confidence": "low" | "medium" | "high"
+  "nutritionLogDraft": "Plain text for the user: transcribe important visible text and/or 1-5 sentences describing what to log. For generic_text, prefer accurate transcription of the passage. For sleep_tracker/weight_scale, include readable numbers from the image.",
+  "confidence": "low" | "medium" | "high",
+  "weightKgGuess": <number or null> — body weight in kg ONLY if clearly visible or imageKind is weight_scale (convert lb to kg: divide by 2.205),
+  "sleepHoursGuess": <number or null> — hours of sleep if visible and imageKind is sleep_tracker (or clearly a sleep duration),
+  "hrvMsGuess": <number or null> — heart rate variability in ms if visible (typical 20-200), else null
 }
 
 Rules:
-- If it is food/nutrition: describe foods, likely portions, prep method, and uncertainty notes.
-- If it is exercise/workout: describe activity type, duration, intensity, distance/pace/heart rate/calories when visible.
-- Do NOT mention both domains unless the image genuinely contains both.
-- Make the draft read like something the user could save directly into Quick Note.
-- If uncertain, say "likely" and include assumptions.
-- Keep foodsDetected to max 8 items.
-- Keep portionAssumptions to max 6 items.
+- Choose the single best imageKind. If the image is mostly text from a book or note, use generic_text even if someone could eat food off a table in the corner.
+- Keep foodsDetected max 8, portionAssumptions max 6.
 - No markdown, no extra keys, no surrounding text.
 
 Optional user hint:
@@ -1046,6 +1097,10 @@ ${hintText || "(none)"}`,
       nutritionLogDraft?: unknown;
       confidence?: unknown;
       nutritionIntelligence?: unknown;
+      imageKind?: unknown;
+      weightKgGuess?: unknown;
+      sleepHoursGuess?: unknown;
+      hrvMsGuess?: unknown;
     };
     const foodsDetected = Array.isArray(parsed.foodsDetected)
       ? parsed.foodsDetected
@@ -1109,7 +1164,7 @@ ${hintText || "(none)"}`,
           ]
             .filter(Boolean)
             .join(" ");
-    return {
+    const base: NutritionImageTranscriptionResult = {
       dishName,
       foodsDetected,
       portionAssumptions,
@@ -1117,19 +1172,38 @@ ${hintText || "(none)"}`,
       confidence,
       ...(nutritionIntelligence ? { nutritionIntelligence } : {}),
     };
+    if (mode === "auto") {
+      const imageKind = parseNutritionImageAutoKind(parsed.imageKind) ?? "generic_text";
+      const weightKgGuess = parseWeightKgGuess(parsed.weightKgGuess);
+      const sleepHoursGuess = parseSleepHoursGuess(parsed.sleepHoursGuess);
+      const hrvMsGuess = parseHrvMsGuess(parsed.hrvMsGuess);
+      return {
+        ...base,
+        imageKind,
+        weightKgGuess,
+        sleepHoursGuess,
+        hrvMsGuess,
+      };
+    }
+    return base;
   } catch {
-    return {
+    const fallbackDraft =
+      mode === "exercise"
+        ? "Could not confidently parse the workout screenshot. Please describe your activity details in text."
+        : mode === "auto"
+          ? "Could not confidently parse the image. Please describe what you see (food, workout, text, scale, or sleep app) in text."
+          : "Could not confidently parse the image. Please describe what you ate in text.";
+    const fallback: NutritionImageTranscriptionResult = {
       dishName: "",
       foodsDetected: [],
       portionAssumptions: [],
-      nutritionLogDraft:
-        mode === "exercise"
-          ? "Could not confidently parse the workout screenshot. Please describe your activity details in text."
-          : mode === "auto"
-            ? "Could not confidently parse the image. Please describe the food or workout details in text."
-            : "Could not confidently parse the image. Please describe what you ate in text.",
+      nutritionLogDraft: fallbackDraft,
       confidence: "low",
     };
+    if (mode === "auto") {
+      return { ...fallback, imageKind: "generic_text" };
+    }
+    return fallback;
   }
 }
 

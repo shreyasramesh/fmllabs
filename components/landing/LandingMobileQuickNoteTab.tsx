@@ -115,7 +115,13 @@ export function LandingMobileQuickNoteTab({
           setCaptureEntries={setCaptureEntries}
           sentenceDraft={captureDraft}
           setSentenceDraft={setCaptureDraft}
-          phase={phase === "recording" ? "recording" : phase === "saving" ? "saving" : "categorizing"}
+          phase={
+            phase === "recording" || phase === "idle"
+              ? "recording"
+              : phase === "saving"
+                ? "saving"
+                : "categorizing"
+          }
           journalContextRows={journalContextRows}
           onOpenJournalContextEntry={onOpenJournalEntry}
           onDeleteJournalContextEntry={onDeleteJournalEntry}
@@ -124,7 +130,7 @@ export function LandingMobileQuickNoteTab({
           layout="fullScreen"
           saveLineOnEnter
           onSaveLine={saveSingleLine}
-          lineSaveBusy={phase !== "recording"}
+          lineSaveBusy={phase === "categorizing" || phase === "saving"}
           weightTrendSparklineKg={weightTrendSparklineKg}
           sleepTrendSparklineHours={sleepTrendSparklineHours}
           availableHabits={availableHabits}
