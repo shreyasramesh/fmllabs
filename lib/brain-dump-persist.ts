@@ -11,7 +11,7 @@ import {
   formatMixedCalorieJournalText,
   formatNutritionJournalText,
 } from "@/lib/calorie-journal-format";
-import type { BrainDumpCategory, BrainDumpResult } from "@/lib/gemini";
+import type { BrainDumpCategory, BrainDumpResult, CalorieTrackingNutritionFacts } from "@/lib/gemini";
 import { completeExerciseFuelEstimate, finalizeCalorieTrackingEstimate } from "@/lib/gemini";
 import type { CalorieTrackingFinalizeResult } from "@/lib/gemini";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
@@ -155,7 +155,7 @@ async function tryPersistNutritionWithClientSnapshot(
   journalTitle: string,
   entryDate: JournalEntryDateParts,
   snap: ClientQuickCalorieSnapshot,
-  precomputedFacts?: ReturnType<typeof defaultNutritionFacts> | null,
+  precomputedFacts?: CalorieTrackingNutritionFacts | null,
   originalText?: string
 ): Promise<{ id: string; category: BrainDumpCategory } | null> {
   const snapNorm = snap.sourceText.trim();
