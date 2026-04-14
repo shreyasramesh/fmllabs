@@ -45,7 +45,7 @@ export function LandingThoughtOfTheDayBanner({
               <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
           </span>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#92400e] dark:text-[#D6A67E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c96442] dark:text-[#d97757]">
             Thought of the Day
           </p>
             {thought.streak > 1 && (
@@ -59,7 +59,7 @@ export function LandingThoughtOfTheDayBanner({
         <button
           type="button"
           onClick={onOpenConcept}
-          className="mt-1 text-left text-base font-semibold text-foreground transition-colors hover:text-[#92400e] sm:text-lg dark:hover:text-[#D6A67E]"
+          className="mt-1 text-left text-base font-semibold text-foreground transition-colors hover:text-[#c96442] sm:text-lg dark:hover:text-[#d97757]"
         >
           {thought.title}
         </button>
@@ -71,7 +71,7 @@ export function LandingThoughtOfTheDayBanner({
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="ml-1 text-[12px] font-medium text-[#92400e] hover:underline dark:text-[#D6A67E]"
+              className="ml-1 text-[12px] font-medium text-[#c96442] hover:underline dark:text-[#d97757]"
             >
               Read more
             </button>
@@ -104,7 +104,7 @@ export function LandingThoughtOfTheDayBanner({
               type="button"
               onClick={onReview}
               disabled={reviewing}
-              className="rounded-full border border-[#B87B51] bg-[#FBF4EC] px-3 py-1 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+              className="rounded-full border border-[#c96442] bg-[#f5f4ed] px-3 py-1 text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
             >
               {reviewing ? "Saving…" : "Mark as reviewed"}
             </button>
@@ -113,7 +113,7 @@ export function LandingThoughtOfTheDayBanner({
           <button
             type="button"
             onClick={onOpenConcept}
-            className="text-[13px] font-medium text-neutral-500 transition-colors hover:text-foreground dark:text-neutral-400 dark:hover:text-neutral-200"
+            className="text-[13px] font-medium text-[#87867f] transition-colors hover:text-[#141413] dark:hover:text-[#faf9f5]"
           >
             View full concept →
           </button>

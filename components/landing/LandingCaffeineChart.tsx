@@ -60,7 +60,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
         enabled: true,
         symbol: "circle",
         radius: 6,
-        fillColor: "#92400e",
+        fillColor: "#c96442",
         lineColor: "#fff",
         lineWidth: 2,
       },
@@ -115,13 +115,13 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
           ? [
               {
                 value: nowMinute,
-                color: "#B87B51",
+                color: "#c96442",
                 width: 2,
                 dashStyle: "Dash",
                 zIndex: 5,
                 label: {
                   text: "Now",
-                  style: { color: "#B87B51", fontSize: "9px", fontWeight: "700" },
+                  style: { color: "#c96442", fontSize: "9px", fontWeight: "700" },
                   align: "center",
                   y: -4,
                 },
@@ -156,7 +156,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
               [1, "rgba(180,100,20,0.04)"],
             ],
           },
-          lineColor: "#92400e",
+          lineColor: "#c96442",
           lineWidth: 2.5,
           marker: { enabled: false },
           threshold: 0,
@@ -199,7 +199,7 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-2">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#92400e] dark:text-[#D6A67E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c96442] dark:text-[#d97757]">
             Caffeine
           </p>
           <h2 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">

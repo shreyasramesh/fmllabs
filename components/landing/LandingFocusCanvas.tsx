@@ -108,10 +108,10 @@ function ActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: 
     <button
       type="button"
       onClick={onClick}
-      className="module-nested flex flex-1 flex-col items-center gap-1.5 px-3 py-3 text-center transition-all hover:shadow-md active:scale-[0.97] dark:hover:bg-neutral-800/90"
+      className="module-nested flex flex-1 flex-col items-center gap-1.5 px-3 py-3 text-center transition-all hover:shadow-md active:scale-[0.97] dark:hover:bg-[#30302e]"
     >
-      <span className="text-neutral-600 dark:text-neutral-300">{icon}</span>
-      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-300">{label}</span>
+      <span className="text-[#5e5d59] dark:text-[#b0aea5]">{icon}</span>
+      <span className="text-[11px] font-medium text-[#5e5d59] dark:text-[#b0aea5]">{label}</span>
     </button>
   );
 }
@@ -211,7 +211,7 @@ export function LandingFocusCanvas({
         plotLines: [
           {
             value: target,
-            color: "#B87B5180",
+            color: "#c9644280",
             width: 1.5,
             dashStyle: "Dash",
             zIndex: 3,
@@ -252,7 +252,7 @@ export function LandingFocusCanvas({
       <div className="flex flex-col gap-5">
         {/* header */}
         <div className="flex flex-col items-center gap-2 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c96442] dark:text-[#d97757]">
             {eyebrow}
           </p>
           <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
@@ -387,7 +387,7 @@ export function LandingFocusCanvas({
         <button
           type="button"
           onClick={onOpenNutrition}
-          className="relative rounded-[2rem] border border-[#ECD9C8] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.98),rgba(255,247,238,0.96)_58%,rgba(255,244,236,0.92)_100%)] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-neutral-700 dark:bg-none dark:bg-neutral-800 sm:px-6"
+          className="relative rounded-[2rem] border border-[#e8e6dc] bg-[#faf9f5] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-[#3d3d3a] dark:bg-none dark:bg-[#30302e] sm:px-6"
         >
           <div className="mx-auto max-w-[32rem] space-y-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">

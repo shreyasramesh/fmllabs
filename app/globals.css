@@ -394,12 +394,12 @@ html {
 /* Convert to Deep Conversation - subtle transition on conversation section */
 @keyframes convert-to-deep {
   0% { background-color: transparent; }
-  15% { background-color: rgba(99, 102, 241, 0.06); }
+  15% { background-color: rgba(201, 100, 66, 0.06); }
   100% { background-color: transparent; }
 }
 @keyframes convert-to-deep-dark {
   0% { background-color: transparent; }
-  15% { background-color: rgba(129, 140, 248, 0.08); }
+  15% { background-color: rgba(217, 119, 87, 0.08); }
   100% { background-color: transparent; }
 }
 .animate-convert-to-deep {
@@ -422,9 +422,9 @@ html {
   transform-origin: left;
   background: linear-gradient(
     to right,
-    rgb(243 244 246) 30%,
-    rgba(59, 130, 246, 0.4) 50%,
-    rgb(243 244 246) 70%
+    #f5f4ed 30%,
+    rgba(201, 100, 66, 0.35) 50%,
+    #f5f4ed 70%
   );
   background-size: 200% 100%;
   animation: gemini-expanding 0.4s 0.3s ease-out forwards, gemini-gradient-move 1.2s 0.8s ease-in-out infinite;
@@ -432,9 +432,9 @@ html {
 .dark .gemini-loading-bar {
   background: linear-gradient(
     to right,
-    rgb(38 38 38) 30%,
-    rgba(96, 165, 250, 0.35) 50%,
-    rgb(38 38 38) 70%
+    #30302e 30%,
+    rgba(217, 119, 87, 0.35) 50%,
+    #30302e 70%
   );
   background-size: 200% 100%;
 }
@@ -467,7 +467,7 @@ html {
 
 .voice-fab {
   background: var(--accent);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 14px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 @keyframes voice-wave {
@@ -523,53 +523,59 @@ html {
   }
 }
 
-/* Claude.ai-inspired light mode: warm cream, soft contrast */
+/* Claude-inspired design system: warm parchment, earthy terracotta */
 :root {
-  --background: #FBF8F4;
-  --foreground: #1a1a1a;
+  /* Core surfaces */
+  --background: #f5f4ed;
+  --foreground: #141413;
   --app-wallpaper-image: none;
   /* Modal widths: 30% narrower on desktop */
   --modal-mental-model-max-w: min(90vw, 630px);
   --modal-perspective-card-max-w: 358px;
   --modal-library-concepts-decks-max-w: min(94vw, 840px);
-  --muted: #6b6b6b;
-  --border-light: #e8e4df;
-  --section-bg: #f5f2ed;
-  --selection-bg: #1A3631;
-  --selection-color: #ffffff;
-  --accent: #C47B4A;
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a3a3a3;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-700: #404040;
-  --neutral-800: #262626;
-  --neutral-900: #171717;
-  --neutral-950: #0a0a0a;
+  /* Semantic tokens */
+  --muted: #5e5d59;
+  --border-light: #f0eee6;
+  --section-bg: #e8e6dc;
+  --selection-bg: #c96442;
+  --selection-color: #faf9f5;
+  --accent: #c96442;
+  /* Warm neutral scale — every tone has a yellow-brown undertone */
+  --neutral-50: #faf9f5;
+  --neutral-100: #f5f4ed;
+  --neutral-200: #e8e6dc;
+  --neutral-300: #d1cfc5;
+  --neutral-400: #b0aea5;
+  --neutral-500: #87867f;
+  --neutral-600: #5e5d59;
+  --neutral-700: #4d4c48;
+  --neutral-800: #3d3d3a;
+  --neutral-900: #30302e;
+  --neutral-950: #141413;
 }
 
 :root.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --accent: #d4936a;
+  --background: #141413;
+  --foreground: #faf9f5;
+  --accent: #d97757;
   --app-wallpaper-image: none;
-  --selection-bg: #4a9188;
-  --selection-color: #0f1f1d;
-  /* Standard Tailwind neutral scale - components use dark:bg-neutral-800 for dark backgrounds, dark:text-neutral-300 for light text */
-  --neutral-50: #fafafa;
-  --neutral-100: #f5f5f5;
-  --neutral-200: #e5e5e5;
-  --neutral-300: #d4d4d4;
-  --neutral-400: #a3a3a3;
-  --neutral-500: #737373;
-  --neutral-600: #525252;
-  --neutral-700: #404040;
-  --neutral-800: #262626;
-  --neutral-900: #171717;
-  --neutral-950: #0a0a0a;
+  --selection-bg: #c96442;
+  --selection-color: #faf9f5;
+  --muted: #87867f;
+  --border-light: #30302e;
+  --section-bg: #30302e;
+  /* Warm neutral scale inverted for dark surfaces */
+  --neutral-50: #faf9f5;
+  --neutral-100: #f5f4ed;
+  --neutral-200: #e8e6dc;
+  --neutral-300: #d1cfc5;
+  --neutral-400: #b0aea5;
+  --neutral-500: #87867f;
+  --neutral-600: #5e5d59;
+  --neutral-700: #4d4c48;
+  --neutral-800: #3d3d3a;
+  --neutral-900: #30302e;
+  --neutral-950: #141413;
 }
 
 ::selection {
@@ -585,6 +591,13 @@ body {
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.6;
+}
+
+/* Claude design system: serif utility class for editorial headings */
+.font-serif-display {
+  font-family: "Lora", "Georgia", serif;
+  font-weight: 500;
 }
 
 html {
@@ -599,7 +612,7 @@ html::before {
 :root:not(.dark) [role="dialog"] button {
   border-width: 1px !important;
   border-style: solid !important;
-  border-color: var(--neutral-300) !important;
+  border-color: #e8e6dc !important;
 }
 
 :root:not(.dark) [role="dialog"] button[data-no-modal-border="true"] {
@@ -627,7 +640,7 @@ html::before {
   border-radius: 0.75rem !important;
   border-width: 1px !important;
   border-style: solid !important;
-  border-color: var(--neutral-300) !important;
+  border-color: #e8e6dc !important;
   line-height: 1 !important;
   font-size: 1.125rem !important;
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease !important;
@@ -639,15 +652,15 @@ html::before {
 }
 
 [role="dialog"] button[aria-label="Close"]:hover {
-  background-color: color-mix(in srgb, var(--neutral-100) 88%, transparent) !important;
+  background-color: #f0eee6 !important;
 }
 
 :root.dark [role="dialog"] button[aria-label="Close"] {
-  border-color: var(--neutral-600) !important;
+  border-color: #3d3d3a !important;
 }
 
 :root.dark [role="dialog"] button[aria-label="Close"]:hover {
-  background-color: color-mix(in srgb, var(--neutral-800) 90%, transparent) !important;
+  background-color: #3d3d3a !important;
 }
 
 /* Keep line-height comfortable on mobile without increasing font size */
@@ -1034,12 +1047,12 @@ html::before {
   --neutral-950: #2a1a0f;
 }
 
-/* Subtle edge on the main chat / landing chrome surface */
+/* Subtle ring edge on the main chat / landing chrome surface */
 .chat-bg-area .glass-chrome {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 8%, transparent);
+  box-shadow: 0 0 0 1px #e8e6dc;
 }
 .dark .chat-bg-area .glass-chrome {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground) 12%, transparent);
+  box-shadow: 0 0 0 1px #30302e;
 }
 
 .chat-bg-area .text-neutral-400 {
@@ -1055,18 +1068,18 @@ html::before {
   color: var(--neutral-300);
 }
 
-/* Landing modules: clean solid surfaces inspired by Apple Finder / system UI.
- * Light: white cards on a subtle gray canvas.  Dark: elevated dark surfaces. */
+/* Landing modules: Claude-inspired warm ivory surfaces on parchment canvas.
+ * Light: ivory (#faf9f5) cards on parchment. Dark: warm charcoal (#30302e) surfaces. */
 .landing-module-glass {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: #faf9f5;
+  border-color: #f0eee6;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px;
 }
 
 :root.dark .landing-module-glass {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background: #30302e;
+  border-color: #3d3d3a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /*
@@ -1076,109 +1089,109 @@ html::before {
 .module-glass-hero {
   border-style: solid;
   border-width: 1px;
-  border-color: color-mix(in srgb, var(--foreground) 26%, transparent);
+  border-color: #e8e6dc;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--foreground) 10%, transparent),
+    0 0 0 1px rgba(20, 20, 19, 0.06),
     0 8px 32px rgba(0, 0, 0, 0.07);
 }
 :root.dark .module-glass-hero {
-  border-color: color-mix(in srgb, var(--foreground) 34%, transparent);
+  border-color: #3d3d3a;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--foreground) 14%, transparent),
-    0 8px 32px rgba(0, 0, 0, 0.22);
+    0 0 0 1px rgba(250, 249, 245, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .module-nested-muted {
   border-radius: 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #e8e6dc;
+  background: #faf9f5;
   box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.05),
-    0 2px 8px rgba(0, 0, 0, 0.06);
+    0 1px 0 rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.05);
 }
 :root.dark .module-nested-muted {
-  border-color: color-mix(in srgb, var(--foreground) 40%, transparent);
-  background: rgba(0, 0, 0, 0.32);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: #3d3d3a;
+  background: rgba(30, 29, 28, 0.6);
+  box-shadow: 0 1px 0 rgba(250, 249, 245, 0.04);
 }
 
 .module-nested {
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 28%, transparent);
-  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #e8e6dc;
+  background: #faf9f5;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 0 0 1px rgba(0, 0, 0, 0.05),
-    0 2px 10px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 0 0 1px rgba(20, 20, 19, 0.04),
+    0 2px 10px rgba(0, 0, 0, 0.05);
 }
 :root.dark .module-nested {
-  border-color: color-mix(in srgb, var(--foreground) 42%, transparent);
-  background: rgba(0, 0, 0, 0.28);
+  border-color: #3d3d3a;
+  background: rgba(30, 29, 28, 0.5);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 2px 12px rgba(0, 0, 0, 0.28);
+    inset 0 1px 0 rgba(250, 249, 245, 0.05),
+    0 0 0 1px rgba(250, 249, 245, 0.04),
+    0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .module-chart-inset {
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 24%, transparent);
-  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid #e8e6dc;
+  background: rgba(250, 249, 245, 0.7);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 1px 4px rgba(0, 0, 0, 0.05);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 4px rgba(0, 0, 0, 0.04);
 }
 :root.dark .module-chart-inset {
-  border-color: color-mix(in srgb, var(--foreground) 38%, transparent);
-  background: rgba(0, 0, 0, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: #3d3d3a;
+  background: rgba(30, 29, 28, 0.35);
+  box-shadow: inset 0 1px 0 rgba(250, 249, 245, 0.04);
 }
 
 /* Border + inset edge only — pair with custom bg / gradients in components */
 .module-nested-frame {
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
+  border: 1px solid #e8e6dc;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 1px 4px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 4px rgba(0, 0, 0, 0.05);
 }
 :root.dark .module-nested-frame {
-  border-color: color-mix(in srgb, var(--foreground) 40%, transparent);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: #3d3d3a;
+  box-shadow: inset 0 1px 0 rgba(250, 249, 245, 0.04);
 }
 
 .module-toggle-empty {
-  border-width: 2px;
+  border-width: 1px;
   border-style: solid;
-  border-color: color-mix(in srgb, var(--foreground) 34%, transparent);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-color: #e8e6dc;
+  background: #faf9f5;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 :root.dark .module-toggle-empty {
-  border-color: color-mix(in srgb, var(--foreground) 48%, transparent);
-  background: rgba(0, 0, 0, 0.45);
+  border-color: #3d3d3a;
+  background: rgba(30, 29, 28, 0.6);
 }
 
 /* Chat settings & inset panels (glass-chrome descendants, modals, lists) */
 .app-inset-panel {
   border-radius: 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 26%, transparent);
-  background: color-mix(in srgb, var(--background) 90%, white);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e8e6dc;
+  background: #faf9f5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 :root.dark .app-inset-panel {
-  border-color: color-mix(in srgb, var(--foreground) 46%, transparent);
-  background: color-mix(in srgb, var(--background) 88%, black);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  border-color: #3d3d3a;
+  background: #30302e;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .app-section-divider {
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-top-color: #e8e6dc;
 }
 :root.dark .app-section-divider {
-  border-top-color: color-mix(in srgb, var(--foreground) 28%, transparent);
+  border-top-color: #3d3d3a;
 }
 
 /* Dark mode: star shimmer */
@@ -1249,14 +1262,14 @@ html::before {
     text-wrap: balance;
   }
 
-  /* Global interactive hover tint: translucent warm glass (app-wide). */
+  /* Global interactive hover tint: warm parchment glass (Claude system). */
   .hover\:bg-neutral-50:hover,
   .hover\:bg-neutral-100:hover,
   .hover\:bg-neutral-200:hover,
   .hover\:bg-white:hover {
-    background-color: rgba(255, 247, 237, 0.45) !important;
-    backdrop-filter: blur(12px) saturate(1.3);
-    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    background-color: rgba(232, 230, 220, 0.5) !important;
+    backdrop-filter: blur(8px) saturate(1.2);
+    -webkit-backdrop-filter: blur(8px) saturate(1.2);
   }
 
   .dark .dark\:hover\:bg-neutral-700:hover,
@@ -1264,8 +1277,8 @@ html::before {
   .dark .dark\:hover\:bg-neutral-700\/80:hover,
   .dark .dark\:hover\:bg-neutral-800:hover,
   .dark .dark\:hover\:bg-neutral-800\/70:hover {
-    background-color: rgba(124, 45, 18, 0.15) !important;
-    backdrop-filter: blur(12px) saturate(1.3);
-    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    background-color: rgba(61, 61, 58, 0.6) !important;
+    backdrop-filter: blur(8px) saturate(1.2);
+    -webkit-backdrop-filter: blur(8px) saturate(1.2);
   }
 }

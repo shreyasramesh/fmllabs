@@ -201,10 +201,10 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
                           ? "border-2 border-[#4a8a7a] bg-[#5A9E8A] shadow-sm"
                           : "module-toggle-empty",
                         isToday && !completed
-                          ? "ring-2 ring-[#B87B51] ring-offset-1 ring-offset-white dark:ring-offset-neutral-900"
+                          ? "ring-2 ring-[#c96442] ring-offset-1 ring-offset-white dark:ring-offset-neutral-900"
                           : "",
                         isToday && completed
-                          ? "ring-2 ring-[#B87B51] ring-offset-1 ring-offset-white dark:ring-offset-neutral-900"
+                          ? "ring-2 ring-[#c96442] ring-offset-1 ring-offset-white dark:ring-offset-neutral-900"
                           : "",
                         "hover:scale-110 active:scale-95",
                       ].join(" ")}

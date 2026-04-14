@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useRef, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import type {
-  LandingFoodSuggestion,
   LandingNutritionGoals,
   LandingNutritionSummary,
   LandingRecentFoodEntry,
@@ -25,15 +24,6 @@ interface LandingMobileNutritionTabProps {
   nutritionGoals: LandingNutritionGoals;
   weeklySummary: LandingWeeklySummaryPreview | null;
   onOpenNutrition: () => void;
-  onSearchFood: () => void;
-  onCaptureFood: () => void;
-  inlineFoodInput: string;
-  onInlineFoodInputChange: (value: string) => void;
-  onInlineFoodSubmit: () => void;
-  inlineFoodLoading: boolean;
-  inlineFoodSuggestions: LandingFoodSuggestion[];
-  inlineFoodSuggestionsLoading: boolean;
-  onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: LandingRecentFoodEntry[];
   onRecentFoodEntryClick?: (id: string) => void;
   onRecentFoodEntryDelete?: (id: string) => void;
@@ -52,29 +42,12 @@ export function LandingMobileNutritionTab({
   nutritionGoals,
   weeklySummary,
   onOpenNutrition,
-  onSearchFood,
-  onCaptureFood,
-  inlineFoodInput,
-  onInlineFoodInputChange,
-  onInlineFoodSubmit,
-  inlineFoodLoading,
-  inlineFoodSuggestions,
-  inlineFoodSuggestionsLoading,
-  onInlineFoodSuggestionSelect,
   recentFoodEntries,
   onRecentFoodEntryClick,
   onRecentFoodEntryDelete,
   onOpenGoals,
 }: LandingMobileNutritionTabProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [inputFocused, setInputFocused] = useState(false);
-
   const totalCalories = nutrition.caloriesFood;
-
-  const showTypeahead =
-    inputFocused &&
-    inlineFoodInput.trim().length > 0 &&
-    inlineFoodSuggestions.length > 0;
 
   const trendOptions = useMemo<Highcharts.Options | null>(() => {
     if (!weeklySummary || weeklySummary.rows.length === 0) return null;
@@ -107,7 +80,7 @@ export function LandingMobileNutritionTab({
         plotLines: [
           {
             value: target,
-            color: "#B87B5160",
+            color: "#c9644260",
             width: 1.5,
             dashStyle: "Dash",
             zIndex: 3,
@@ -161,97 +134,6 @@ export function LandingMobileNutritionTab({
       </div>
 
       <LandingMobileGoalsCard rows={goalRows} onViewDetails={onOpenNutrition} />
-
-      {/* Inline food input */}
-      <div className="relative">
-        <div className="landing-module-glass overflow-hidden rounded-2xl border">
-          <textarea
-            ref={textareaRef}
-            value={inlineFoodInput}
-            onChange={(e) => onInlineFoodInputChange(e.target.value)}
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setTimeout(() => setInputFocused(false), 200)}
-            disabled={inlineFoodLoading}
-            rows={2}
-            placeholder="What did you eat? e.g. 2 eggs + toast, chicken bowl..."
-            className="w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-[15px] text-foreground placeholder:text-neutral-400 outline-none disabled:opacity-50 dark:placeholder:text-neutral-500"
-          />
-          <div className="flex items-center justify-between border-t border-neutral-200/60 px-3 py-2 dark:border-neutral-700/40">
-            <div className="flex gap-1">
-              <button
-                type="button"
-                onClick={onSearchFood}
-                className="rounded-lg px-2.5 py-1.5 text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-              >
-                Search
-              </button>
-              <button
-                type="button"
-                onClick={onCaptureFood}
-                className="rounded-lg px-2.5 py-1.5 text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-              >
-                Capture
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={onInlineFoodSubmit}
-              disabled={inlineFoodLoading || !inlineFoodInput.trim()}
-              className="rounded-xl bg-[#B87B51] px-4 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-[#A66B41] disabled:opacity-40 dark:bg-[#D6A67E] dark:text-neutral-900 dark:hover:bg-[#C49670]"
-            >
-              {inlineFoodLoading ? "Logging…" : "Log it"}
-            </button>
-          </div>
-        </div>
-
-        {/* Typeahead suggestions */}
-        {showTypeahead && (
-          <div className="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-xl border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
-            {inlineFoodSuggestions.slice(0, 4).map((s) => {
-              const macroBits = [
-                s.calories != null ? `🔥 ${s.calories} cal` : null,
-                s.proteinGrams != null ? `P: ${s.proteinGrams}g` : null,
-                s.carbsGrams != null ? `C: ${s.carbsGrams}g` : null,
-                s.fatGrams != null ? `F: ${s.fatGrams}g` : null,
-              ]
-                .filter(Boolean)
-                .join("  ");
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => onInlineFoodSuggestionSelect(s.id)}
-                  className="flex w-full items-center justify-between border-b border-neutral-100 px-4 py-2.5 text-left transition-colors last:border-b-0 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
-                >
-                  <div className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium text-foreground truncate">
-                      {s.displayName || s.sampleEntry.split("\n").find(Boolean)?.slice(0, 60) || "Saved entry"}
-                    </span>
-                    {macroBits && (
-                      <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
-                        {macroBits}
-                      </span>
-                    )}
-                  </div>
-                  <span className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#7C3AED] text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                      <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                    </svg>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Loading indicator for suggestions */}
-        {inputFocused && inlineFoodInput.trim().length > 0 && inlineFoodSuggestionsLoading && (
-          <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">Looking up matches…</p>
-          </div>
-        )}
-      </div>
 
       {/* Recents — compact list with macro breakdown */}
       {recentFoodEntries.length > 0 && (

@@ -8,61 +8,62 @@ export const metadata = {
 
 export default function MissionPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-[#f5f4ed] text-[#141413] dark:bg-[#141413] dark:text-[#faf9f5]">
       <div className="max-w-2xl mx-auto px-4 py-12 md:py-16">
         <Link
           href="/chat/new"
           aria-label="Home"
           title="Home"
-          className="mb-8 inline-flex items-center justify-center rounded-xl border border-neutral-200/90 dark:border-neutral-700 px-3 py-2 text-neutral-600 dark:text-neutral-300 hover:text-foreground hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+          className="mb-8 inline-flex items-center gap-2 rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-sm font-medium text-[#4d4c48] shadow-[#e8e6dc_0px_0px_0px_0px,#d1cfc5_0px_0px_0px_1px] transition-colors hover:bg-[#e8e6dc] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
             <path d="m3 10 9-7 9 7" />
             <path d="M5 9.5V20h14V9.5" />
           </svg>
+          Home
         </Link>
 
-        <h1 className="text-2xl md:text-3xl font-semibold mb-2">The Mission of fml labs</h1>
-        <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base font-medium mb-6">
+        <h1 className="font-serif text-3xl font-medium leading-tight text-[#141413] dark:text-[#faf9f5] md:text-4xl mb-4">The Mission of fml labs</h1>
+        <p className="text-[#5e5d59] dark:text-[#87867f] leading-[1.6] text-base font-medium mb-10">
           {PRODUCT_TAGLINE}
         </p>
 
-        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-sm leading-relaxed">
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base font-medium">
+        <div className="space-y-6 text-base leading-[1.6] text-[#4d4c48] dark:text-[#b0aea5]">
+          <p className="text-[#141413] dark:text-[#faf9f5] leading-[1.6] font-medium">
             In a world of cognitive surrender, start taking back control.
           </p>
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
+          <p>
             Design inspired by the penco calendar and claude.
           </p>
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
+          <p>
             fml labs is built to support one practical goal: help people make better decisions day-to-day by combining
-            <strong> deep thinking </strong> with <strong>daily execution</strong>.
+            <strong className="text-[#141413] dark:text-[#faf9f5]"> deep thinking </strong> with <strong className="text-[#141413] dark:text-[#faf9f5]">daily execution</strong>.
           </p>
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
-            The product intentionally lives at the intersection of <strong>productivity and wellness</strong> - journaling, reflection, nutrition tracking, and mental models in one workflow - so insight is easier to turn into consistent action.
+          <p>
+            The product intentionally lives at the intersection of <strong className="text-[#141413] dark:text-[#faf9f5]">productivity and wellness</strong> — journaling, reflection, nutrition tracking, and mental models in one workflow — so insight is easier to turn into consistent action.
           </p>
-          <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-base">
+          <p>
             It is a personal, evolving project focused on building useful AI systems that are calm, practical, and grounded in everyday life.
           </p>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-4">
-          <Link href="/faq" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+        <div className="mt-12 pt-8 border-t border-[#e8e6dc] dark:border-[#30302e] flex flex-wrap gap-4">
+          <Link href="/faq" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             FAQ
           </Link>
-          <Link href="/leaderboard" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/leaderboard" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             Leaderboard
           </Link>
-          <Link href="/about" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/about" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             About the Creator
           </Link>
-          <Link href="/terms-of-service" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/terms-of-service" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             Terms of Service
           </Link>
-          <Link href="/privacy-policy" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/privacy-policy" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             Privacy Policy
           </Link>
-          <Link href="/chat/new" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/chat/new" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             Home
           </Link>
         </div>

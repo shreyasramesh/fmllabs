@@ -17,7 +17,7 @@ export function GoalConfigPill({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border border-[#B87B51]/45 bg-[#FBF4EC]/95 px-3 py-1 text-[11px] font-medium text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E]/55 dark:bg-[#241a14]/90 dark:text-[#F3D6B7] dark:hover:bg-[#2e2018] ${className}`.trim()}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-[#c96442]/45 bg-[#f5f4ed]/95 px-3 py-1 text-[11px] font-medium text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757]/55 dark:bg-[#30302e]/90 dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a] ${className}`.trim()}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

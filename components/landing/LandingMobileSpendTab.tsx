@@ -60,7 +60,7 @@ export function LandingMobileSpendTab({
           <button
             type="button"
             onClick={onOpenSpend}
-            className="shrink-0 rounded-xl border border-[#B87B51]/60 bg-[#FBF4EC] px-3 py-2 text-[12px] font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            className="shrink-0 rounded-xl border border-[#c96442]/60 bg-[#f5f4ed] px-3 py-2 text-[12px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
           >
             Log purchase
           </button>

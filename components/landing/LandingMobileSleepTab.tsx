@@ -144,7 +144,7 @@ export function LandingMobileSleepTab({
                 value={hrvInput}
                 onChange={(e) => setHrvInput(e.target.value)}
                 disabled={sleepSaving}
-                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
+                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-neutral-600 dark:bg-neutral-800"
               />
             </div>
             <div>
@@ -160,7 +160,7 @@ export function LandingMobileSleepTab({
                 value={sleepScoreInput}
                 onChange={(e) => setSleepScoreInput(e.target.value)}
                 disabled={sleepSaving}
-                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800"
+                className="mt-1 w-full rounded-xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-base text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-neutral-600 dark:bg-neutral-800"
               />
             </div>
           </div>
@@ -170,7 +170,7 @@ export function LandingMobileSleepTab({
           type="button"
           disabled={sleepSaving}
           onClick={handleSave}
-          className="w-full rounded-xl border border-[#B87B51] bg-[#FBF4EC] py-3 text-[15px] font-semibold text-[#7C522D] transition-colors disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+          className="w-full rounded-xl border border-[#c96442] bg-[#f5f4ed] py-3 text-[15px] font-semibold text-[#4d4c48] transition-colors disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5]"
         >
           {sleepSaving ? "Saving…" : sleepForSelectedDay ? "Update sleep" : "Save sleep"}
         </button>

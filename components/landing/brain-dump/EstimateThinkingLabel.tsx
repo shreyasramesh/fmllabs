@@ -26,12 +26,12 @@ export function EstimateThinkingLabel({
       : "h-[0.8rem] w-[0.8rem] shrink-0 text-amber-500/90 dark:text-amber-300/90";
   const textCls =
     variant === "prominent"
-      ? "text-xs font-semibold text-[#7C522D] dark:text-[#F3D6B7]"
+      ? "text-xs font-semibold text-[#4d4c48] dark:text-[#b0aea5]"
       : "text-[11px] font-semibold leading-none text-[#8A5A33] dark:text-[#E8C8A8]";
   const shellCls =
     variant === "prominent"
-      ? "rounded-full border border-[#D9B48B]/70 bg-[linear-gradient(135deg,rgba(255,250,245,0.98),rgba(251,240,223,0.95),rgba(255,247,238,0.98))] px-3 py-1.5 shadow-[0_12px_34px_-18px_rgba(184,123,81,0.42)] dark:border-[#D6A67E]/30 dark:bg-[linear-gradient(135deg,rgba(40,26,18,0.96),rgba(58,36,24,0.93),rgba(34,22,16,0.96))]"
-      : "inline-flex h-[1.7rem] rounded-full border border-[#D9B48B]/70 bg-[linear-gradient(135deg,rgba(255,251,246,0.97),rgba(252,242,228,0.94),rgba(255,248,240,0.97))] px-2.5 shadow-[0_10px_26px_-20px_rgba(184,123,81,0.4)] dark:border-[#D6A67E]/28 dark:bg-[linear-gradient(135deg,rgba(38,24,18,0.94),rgba(53,34,24,0.9),rgba(32,21,16,0.95))]";
+      ? "rounded-full border border-[#d1cfc5]/70 bg-[linear-gradient(135deg,rgba(250,249,245,0.98),rgba(245,244,237,0.95),rgba(248,246,239,0.98))] px-3 py-1.5 shadow-[0_12px_34px_-18px_rgba(184,123,81,0.42)] dark:border-[#d97757]/30 dark:bg-[linear-gradient(135deg,rgba(48,48,46,0.96),rgba(61,61,58,0.93),rgba(48,48,46,0.96))]"
+      : "inline-flex h-[1.7rem] rounded-full border border-[#d1cfc5]/70 bg-[linear-gradient(135deg,rgba(255,251,246,0.97),rgba(252,242,228,0.94),rgba(255,248,240,0.97))] px-2.5 shadow-[0_10px_26px_-20px_rgba(184,123,81,0.4)] dark:border-[#d97757]/28 dark:bg-[linear-gradient(135deg,rgba(38,24,18,0.94),rgba(53,34,24,0.9),rgba(32,21,16,0.95))]";
 
   return (
     <span
@@ -155,7 +155,7 @@ export function EstimateThinkingHero({
 }) {
   return (
     <div className="relative flex flex-col items-center justify-center gap-3 py-8">
-      <div className="estimate-thinking-hero-ring relative flex h-16 w-16 items-center justify-center rounded-full border border-[#D9B48B]/70 bg-[radial-gradient(circle_at_30%_30%,rgba(255,252,248,0.99),rgba(252,236,212,0.9),rgba(255,247,236,0.78))] shadow-[0_20px_64px_-28px_rgba(184,123,81,0.46)] dark:border-[#D6A67E]/28 dark:bg-[radial-gradient(circle_at_30%_30%,rgba(56,36,24,0.98),rgba(120,53,15,0.24),rgba(31,20,15,0.96))]">
+      <div className="estimate-thinking-hero-ring relative flex h-16 w-16 items-center justify-center rounded-full border border-[#d1cfc5]/70 bg-[#faf9f5] shadow-[0_20px_64px_-28px_rgba(184,123,81,0.46)] dark:border-[#d97757]/28 dark:bg-[radial-gradient(circle_at_30%_30%,rgba(56,36,24,0.98),rgba(120,53,15,0.24),rgba(31,20,15,0.96))]">
         <span className="estimate-thinking-hero-orbit absolute inset-0 rounded-full" aria-hidden />
         <span className="estimate-thinking-hero-sheen absolute inset-0 rounded-full" aria-hidden />
         <SparklesIcon
@@ -164,7 +164,7 @@ export function EstimateThinkingHero({
         />
       </div>
       <div className="flex flex-col items-center gap-0.5 text-center">
-        <p className="estimate-thinking-hero-text text-sm font-semibold text-[#7C522D] dark:text-[#F3D6B7]">
+        <p className="estimate-thinking-hero-text text-sm font-semibold text-[#4d4c48] dark:text-[#b0aea5]">
           {message}
         </p>
         {subMessage ? (

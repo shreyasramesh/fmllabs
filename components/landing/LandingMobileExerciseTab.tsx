@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -32,10 +32,6 @@ interface LandingMobileExerciseTabProps {
   onRecentExerciseEntryClick?: (id: string) => void;
   onRecentExerciseEntryDelete?: (id: string) => void;
   onOpenExercise: () => void;
-  inlineExerciseInput: string;
-  onInlineExerciseInputChange: (value: string) => void;
-  onInlineExerciseSubmit: () => void;
-  inlineExerciseLoading: boolean;
   weeklySummary: LandingWeeklySummaryPreview | null;
   onOpenGoals: () => void;
 }
@@ -50,15 +46,9 @@ export function LandingMobileExerciseTab({
   onRecentExerciseEntryClick,
   onRecentExerciseEntryDelete,
   onOpenExercise,
-  inlineExerciseInput,
-  onInlineExerciseInputChange,
-  onInlineExerciseSubmit,
-  inlineExerciseLoading,
   weeklySummary,
   onOpenGoals,
 }: LandingMobileExerciseTabProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [inputFocused, setInputFocused] = useState(false);
   const averageSessionMinutes = useMemo(() => {
     if (recentExerciseEntries.length === 0) return 0;
     const totalMinutes = recentExerciseEntries.reduce((sum, entry) => sum + Math.max(0, entry.durationMinutes || 0), 0);
@@ -188,40 +178,6 @@ export function LandingMobileExerciseTab({
         {caloriesBurned === 0 && (
           <p className="text-sm text-neutral-400 dark:text-neutral-500">No exercise logged today</p>
         )}
-      </div>
-
-      {/* Inline exercise input */}
-      <div className="relative">
-        <div className="landing-module-glass overflow-hidden rounded-2xl border">
-          <textarea
-            ref={textareaRef}
-            value={inlineExerciseInput}
-            onChange={(e) => onInlineExerciseInputChange(e.target.value)}
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setTimeout(() => setInputFocused(false), 200)}
-            disabled={inlineExerciseLoading}
-            rows={2}
-            placeholder="What did you do? e.g. 30 min run, upper body session..."
-            className="w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-[15px] text-foreground placeholder:text-neutral-400 outline-none disabled:opacity-50 dark:placeholder:text-neutral-500"
-          />
-          <div className="flex items-center justify-between border-t border-neutral-200/60 px-3 py-2 dark:border-neutral-700/40">
-            <button
-              type="button"
-              onClick={onOpenExercise}
-              className="rounded-lg px-2.5 py-1.5 text-[12px] font-medium text-neutral-500 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
-            >
-              Open modal
-            </button>
-            <button
-              type="button"
-              onClick={onInlineExerciseSubmit}
-              disabled={inlineExerciseLoading || !inlineExerciseInput.trim()}
-              className="rounded-xl bg-[#B87B51] px-4 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-[#A66B41] disabled:opacity-40 dark:bg-[#D6A67E] dark:text-neutral-900 dark:hover:bg-[#C49670]"
-            >
-              {inlineExerciseLoading ? "Logging…" : "Log it"}
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Recents */}

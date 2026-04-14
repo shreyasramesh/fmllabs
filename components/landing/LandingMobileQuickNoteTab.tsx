@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { Skeleton } from "boneyard-js/react";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import {
   BrainDumpCaptureView,
@@ -9,32 +10,25 @@ import {
 } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { useBrainDumpCapture } from "@/components/landing/brain-dump/useBrainDumpCapture";
 
-// ─── Skeleton loading ─────────────────────────────────────────────────────────
-function SkeletonRow({ textWidth }: { textWidth: "w-1/2" | "w-2/3" | "w-5/6" }) {
+// ─── Fixture: shown to boneyard CLI so it can snapshot real layout ─────────────
+function QuickNoteFixture() {
   return (
-    <div className="flex items-start gap-2 border-b border-neutral-200 dark:border-white/[.15] py-3 animate-pulse">
-      <div className="min-w-0 flex-1 space-y-2">
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-          <div className={`h-3.5 rounded bg-neutral-200 dark:bg-neutral-800 ${textWidth}`} />
+    <div className="w-full px-1 space-y-0">
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="flex items-start gap-2 border-b border-[#e8e6dc] dark:border-white/[.10] py-3">
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#d1cfc5] dark:bg-[#4d4c48]" />
+              <div className={`h-3.5 rounded bg-[#e8e6dc] dark:bg-[#3d3d3a] ${["w-2/3", "w-1/2", "w-5/6"][i]}`} />
+            </div>
+            <div className="ml-3.5 h-2.5 w-1/4 rounded bg-[#f0eee6] dark:bg-[#30302e]" />
+          </div>
+          <div className="shrink-0 flex flex-col items-end gap-1.5">
+            <div className="h-3.5 w-12 rounded bg-[#e8e6dc] dark:bg-[#3d3d3a]" />
+            <div className="h-2.5 w-10 rounded bg-[#f0eee6] dark:bg-[#30302e]" />
+          </div>
         </div>
-        <div className="ml-4 h-2.5 w-1/4 rounded bg-neutral-100 dark:bg-neutral-800/60" />
-      </div>
-      <div className="shrink-0 flex flex-col items-end gap-1.5">
-        <div className="h-3.5 w-12 rounded bg-neutral-200 dark:bg-neutral-800" />
-        <div className="h-2.5 w-10 rounded bg-neutral-100 dark:bg-neutral-700/50" />
-      </div>
-    </div>
-  );
-}
-
-function QuickNoteSkeletonView({ label }: { label: string }) {
-  return (
-    <div className="w-full px-1">
-      <p className="mb-3 text-[11px] font-medium text-neutral-400 dark:text-neutral-500">{label}</p>
-      <SkeletonRow textWidth="w-2/3" />
-      <SkeletonRow textWidth="w-1/2" />
-      <SkeletonRow textWidth="w-5/6" />
+      ))}
     </div>
   );
 }
@@ -113,9 +107,7 @@ export function LandingMobileQuickNoteTab({
           {error}
         </div>
       ) : null}
-      {isLoading ? (
-        <QuickNoteSkeletonView label={loadingLabel} />
-      ) : (
+      <Skeleton name="quick-note-tab" loading={isLoading} fixture={<QuickNoteFixture />}>
         <BrainDumpCaptureView
           captureEntries={captureEntries}
           setCaptureEntries={setCaptureEntries}
@@ -145,7 +137,7 @@ export function LandingMobileQuickNoteTab({
           prevDayWeightKg={prevDayWeightKg ?? null}
           prevDaySleepH={prevDaySleepH ?? null}
         />
-      )}
+      </Skeleton>
     </div>
   );
 }

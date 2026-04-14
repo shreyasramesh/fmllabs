@@ -11,6 +11,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        serif: ['"Lora"', '"Georgia"', 'serif'],
         script: ['"Great Vibes"', 'cursive'],
         developer: ['"Pinyon Script"', 'cursive'],
       },
@@ -35,16 +36,29 @@ export default {
           950: "var(--neutral-950)",
         },
         brand: {
-          50: "#eef5f4",
-          100: "#c5dcd9",
-          200: "#9cc3be",
-          300: "#73aaa3",
-          400: "#4a9188",
-          500: "#2a6e66",
-          600: "#225a55",
-          700: "#1a4641",
-          800: "#1A3631",
-          900: "#0f1f1d",
+          50: "#faf9f5",
+          100: "#f5f4ed",
+          200: "#e8e6dc",
+          300: "#d1cfc5",
+          400: "#b0aea5",
+          500: "#87867f",
+          600: "#5e5d59",
+          700: "#4d4c48",
+          800: "#30302e",
+          900: "#141413",
+        },
+        /* Claude terracotta accent scale */
+        terracotta: {
+          light: "#d97757",
+          DEFAULT: "#c96442",
+          dark: "#b05530",
+        },
+        /* Claude parchment surface scale */
+        parchment: {
+          50: "#faf9f5",
+          100: "#f5f4ed",
+          200: "#e8e6dc",
+          300: "#f0eee6",
         },
       },
       keyframes: {

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 export type MobileBottomTab =
   | "quickNote"
+  | "commonplace"
   | "nutrition"
   | "exercise"
   | "spend"
@@ -20,6 +21,7 @@ interface LandingMobileTabBarProps {
 
 const TABS: Array<{ key: MobileBottomTab; label: string }> = [
   { key: "quickNote", label: "Quick Notes" },
+  { key: "commonplace", label: "Commonplace" },
   { key: "weight", label: "Weight" },
   { key: "sleep", label: "Sleep" },
   { key: "habits", label: "Habits" },
@@ -29,7 +31,7 @@ const TABS: Array<{ key: MobileBottomTab; label: string }> = [
 ];
 
 function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
-  const cls = `h-5 w-5 transition-colors ${active ? "text-[#B87B51] dark:text-[#D6A67E]" : "text-neutral-400 dark:text-neutral-500"}`;
+  const cls = `h-5 w-5 transition-colors ${active ? "text-[#c96442] dark:text-[#d97757]" : "text-[#87867f] dark:text-[#5e5d59]"}`;
 
   switch (tab) {
     case "quickNote":
@@ -40,6 +42,13 @@ function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
           <path d="M8 7h8M8 11h6" />
           <path d="m15.5 13.5 4.5-4.5a1.2 1.2 0 0 1 1.7 0l.3.3a1.2 1.2 0 0 1 0 1.7l-4.5 4.5" />
           <path d="M14 15l3.5-3.5M13 21l3-1-2-2" />
+        </svg>
+      );
+    case "commonplace":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
         </svg>
       );
     case "nutrition":
@@ -106,7 +115,7 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
 
   const bar = (
     <nav
-      className="fixed inset-x-0 bottom-0 z-[35] border-t border-neutral-200/60 bg-background dark:border-neutral-800 md:hidden"
+      className="fixed inset-x-0 bottom-0 z-[35] border-t border-[#e8e6dc] bg-[#f5f4ed] dark:border-[#30302e] dark:bg-[#141413] md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       aria-label="Dashboard sections"
     >
@@ -120,8 +129,8 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
               onClick={() => onTabChange(tab.key)}
               className={`flex min-w-[4.25rem] shrink-0 flex-col items-center gap-0.5 px-2 pb-1.5 pt-2 transition-colors ${
                 active
-                  ? "text-[#B87B51] dark:text-[#D6A67E]"
-                  : "text-neutral-400 dark:text-neutral-500"
+                  ? "text-[#c96442] dark:text-[#d97757]"
+                  : "text-[#87867f] dark:text-[#5e5d59]"
               }`}
               aria-label={tab.label}
               aria-current={active ? "page" : undefined}
@@ -129,7 +138,7 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
               <TabIcon tab={tab.key} active={active} />
               <span
                 className={`max-w-[5.5rem] text-center text-[10px] font-medium leading-tight ${
-                  active ? "text-[#B87B51] dark:text-[#D6A67E]" : ""
+                  active ? "text-[#c96442] dark:text-[#d97757]" : "text-[#87867f] dark:text-[#5e5d59]"
                 }`}
               >
                 {tab.label}

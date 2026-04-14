@@ -161,7 +161,7 @@ export function LandingMobileHabitsTab({
         <button
           type="button"
           onClick={onOpenHabits}
-          className="mt-1 rounded-full border border-[#B87B51] bg-[#FBF4EC] px-5 py-2 text-sm font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
+          className="mt-1 rounded-full border border-[#c96442] bg-[#f5f4ed] px-5 py-2 text-sm font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5]"
         >
           Browse habits
         </button>
@@ -199,7 +199,7 @@ export function LandingMobileHabitsTab({
             onDragOver={(e) => handleDragOver(e, idx)}
             onDragEnd={handleDragEnd}
             className={`group flex items-center gap-2.5 border-b border-neutral-200/60 px-3 py-2.5 last:border-b-0 dark:border-neutral-700/40 ${
-              dragIdx === idx || touchDragging === idx ? "bg-[#FBF4EC]/60 dark:bg-[#241a14]/50" : ""
+              dragIdx === idx || touchDragging === idx ? "bg-[#f5f4ed]/60 dark:bg-[#30302e]/50" : ""
             }`}
           >
             {/* Drag handle — desktop: cursor grab, mobile: touch drag */}

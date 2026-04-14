@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { Skeleton } from "boneyard-js/react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
@@ -30,7 +31,6 @@ import type {
   LandingDateItem,
   LandingFigureSummary,
   LandingFocusSummaryRow,
-  LandingFoodSuggestion,
   LandingHabitCompletionMap,
   LandingNutritionGoals,
   LandingNutritionSummary,
@@ -69,11 +69,11 @@ const WeightSparkline = React.memo(function WeightSparkline({
     const yMax = Math.max(...weights, ...(targetKg != null ? [targetKg] : []));
     const padding = Math.max(0.5, (yMax - yMin) * 0.15);
 
-    const muted = isDark ? "#9ca3af" : "#a3a3a3";
-    const grid = isDark ? "rgba(255,255,255,0.12)" : "#f0f0f0";
-    const axisLine = isDark ? "#4b5563" : "#e5e5e5";
-    const dataLabelOutline = isDark ? "1px rgba(0,0,0,0.75)" : "none";
-    const markerRing = isDark ? "rgba(255,255,255,0.92)" : "#fff";
+    const muted = isDark ? "#87867f" : "#5e5d59";
+    const grid = isDark ? "rgba(250,249,245,0.08)" : "#f0eee6";
+    const axisLine = isDark ? "#3d3d3a" : "#e8e6dc";
+    const dataLabelOutline = isDark ? "1px rgba(20,20,19,0.75)" : "none";
+    const markerRing = isDark ? "rgba(250,249,245,0.9)" : "#faf9f5";
 
     const plotLines: Highcharts.YAxisPlotLinesOptions[] =
       targetKg != null
@@ -179,9 +179,12 @@ function ModuleCard({
 }) {
   return (
     <section className="landing-module-glass overflow-hidden rounded-[2rem] border p-4 sm:p-5">
-      <h3 className="truncate text-[13px] font-semibold text-foreground">{eyebrow}</h3>
+      <h3 className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">{eyebrow}</h3>
+      {title && (
+        <p className="mt-0.5 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">{title}</p>
+      )}
       {description && (
-        <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
+        <p className="mt-0.5 text-[11px] leading-relaxed text-[#5e5d59] dark:text-[#87867f]">{description}</p>
       )}
       <div className="mt-2">{children}</div>
     </section>
@@ -216,7 +219,7 @@ function ToggleRow({
       <div className="min-w-0">
         <p className="text-[13px] leading-snug text-foreground">{label}</p>
         {description && (
-          <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{description}</p>
+          <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">{description}</p>
         )}
       </div>
       <button
@@ -225,7 +228,7 @@ function ToggleRow({
         aria-checked={checked}
         onClick={onChange}
         className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
-          checked ? "bg-[#C87B3A]" : "bg-neutral-300 dark:bg-neutral-600"
+          checked ? "bg-[#c96442]" : "bg-[#d1cfc5] dark:bg-[#4d4c48]"
         }`}
       >
         <span
@@ -248,16 +251,16 @@ function SegmentedPicker({
   options: readonly { key: string; label: string }[];
 }) {
   return (
-    <div className="inline-flex rounded-md border border-neutral-300 bg-neutral-100 p-px dark:border-neutral-700 dark:bg-neutral-800">
+    <div className="inline-flex rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] p-px dark:border-[#3d3d3a] dark:bg-[#30302e]">
       {options.map((opt) => (
         <button
           key={opt.key}
           type="button"
           onClick={() => onChange(opt.key)}
-          className={`rounded-[5px] px-2.5 py-1 text-[11px] font-medium transition-colors ${
+          className={`rounded-[9px] px-2.5 py-1 text-[11px] font-medium transition-colors ${
             value === opt.key
-              ? "bg-white text-foreground shadow-sm dark:bg-neutral-700"
-              : "text-neutral-500 hover:text-foreground dark:text-neutral-400"
+              ? "bg-[#faf9f5] text-[#141413] shadow-[0px_0px_0px_1px_#d1cfc5] dark:bg-[#4d4c48] dark:text-[#faf9f5]"
+              : "text-[#87867f] hover:text-[#4d4c48] dark:text-[#5e5d59] dark:hover:text-[#b0aea5]"
           }`}
         >
           {opt.label}
@@ -278,10 +281,10 @@ function ChevronRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-300 px-2.5 py-1.5 text-left text-[13px] font-medium text-foreground transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900"
+      className="flex w-full items-center justify-between gap-2 rounded-xl border border-[#e8e6dc] px-2.5 py-1.5 text-left text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
     >
       {label}
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-[#87867f]">
         <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
       </svg>
     </button>
@@ -330,24 +333,12 @@ interface LandingShellProps {
   onSearchFood: () => void;
   onCaptureFood: () => void;
   onDescribeFood: () => void;
-  /** Inline food input state for the mobile nutrition tab. */
-  inlineFoodInput: string;
-  onInlineFoodInputChange: (value: string) => void;
-  onInlineFoodSubmit: () => void;
-  inlineFoodLoading: boolean;
-  inlineFoodSuggestions: LandingFoodSuggestion[];
-  inlineFoodSuggestionsLoading: boolean;
-  onInlineFoodSuggestionSelect: (suggestionId: string) => void;
   recentFoodEntries: Array<{ id: string; label: string; calories: number; proteinGrams: number; carbsGrams: number; fatGrams: number; time: string }>;
   onRecentFoodEntryClick?: (id: string) => void;
   onRecentFoodEntryDelete?: (id: string) => void;
   recentExerciseEntries: Array<{ id: string; label: string; caloriesBurned: number; durationMinutes: number; time: string }>;
   onRecentExerciseEntryClick?: (id: string) => void;
   onRecentExerciseEntryDelete?: (id: string) => void;
-  inlineExerciseInput: string;
-  onInlineExerciseInputChange: (value: string) => void;
-  onInlineExerciseSubmit: () => void;
-  inlineExerciseLoading: boolean;
   onPomodoroCustomMinutesInputChange: (value: string) => void;
   onApplyCustomPomodoroMinutes: () => void;
   onSelectPomodoroDuration: (minutes: number) => void;
@@ -465,6 +456,8 @@ interface LandingShellProps {
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
   /** Mobile first tab: full-screen quick capture (brain dump) UI. */
   mobileQuickNote?: React.ReactNode;
+  /** Mobile commonplace book tab. */
+  mobileCommonplace?: React.ReactNode;
 }
 
 export function LandingShell({
@@ -508,23 +501,12 @@ export function LandingShell({
   onSearchFood,
   onCaptureFood,
   onDescribeFood,
-  inlineFoodInput,
-  onInlineFoodInputChange,
-  onInlineFoodSubmit,
-  inlineFoodLoading,
-  inlineFoodSuggestions,
-  inlineFoodSuggestionsLoading,
-  onInlineFoodSuggestionSelect,
   recentFoodEntries,
   onRecentFoodEntryClick,
   onRecentFoodEntryDelete,
   recentExerciseEntries,
   onRecentExerciseEntryClick,
   onRecentExerciseEntryDelete,
-  inlineExerciseInput,
-  onInlineExerciseInputChange,
-  onInlineExerciseSubmit,
-  inlineExerciseLoading,
   onPomodoroCustomMinutesInputChange,
   onApplyCustomPomodoroMinutes,
   onSelectPomodoroDuration,
@@ -633,6 +615,7 @@ export function LandingShell({
   spendBudgetUsd,
   dashboardScrollRootRef,
   mobileQuickNote,
+  mobileCommonplace,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
@@ -696,11 +679,11 @@ export function LandingShell({
   }
 
   const inlineChartBase: Highcharts.Options = useMemo(() => {
-    const label = chartDark ? "#d1d5db" : "#525252";
-    const line = chartDark ? "#4b5563" : "#e5e5e5";
-    const grid = chartDark ? "rgba(255,255,255,0.14)" : "#e5e5e5";
-    const legend = chartDark ? "#e5e7eb" : "#525252";
-    const chartBackground = chartDark ? "rgba(10, 10, 10, 0.94)" : "transparent";
+    const label = chartDark ? "#87867f" : "#5e5d59";
+    const line = chartDark ? "#3d3d3a" : "#e8e6dc";
+    const grid = chartDark ? "rgba(250,249,245,0.08)" : "#f0eee6";
+    const legend = chartDark ? "#b0aea5" : "#4d4c48";
+    const chartBackground = chartDark ? "transparent" : "transparent";
     return {
       chart: {
         backgroundColor: chartBackground,
@@ -726,7 +709,7 @@ export function LandingShell({
         gridLineColor: grid,
         labels: { style: { color: label, fontSize: "10px" } },
       },
-      tooltip: { backgroundColor: "#111827", borderColor: "#1f2937", style: { color: "#f9fafb" }, shared: true },
+      tooltip: { backgroundColor: "#30302e", borderColor: "#3d3d3a", style: { color: "#faf9f5" }, shared: true },
     };
   }, [chartDark]);
 
@@ -736,7 +719,7 @@ export function LandingShell({
   );
 
   const weeklyChartTitleStyle = useMemo(
-    () => ({ color: chartDark ? "#f3f4f6" : "#111827", fontSize: "13px", fontWeight: "600" as const }),
+    () => ({ color: chartDark ? "#faf9f5" : "#141413", fontSize: "13px", fontWeight: "500" as const, fontFamily: "Lora, Georgia, serif" }),
     [chartDark],
   );
 
@@ -812,6 +795,8 @@ export function LandingShell({
     switch (activeMobileTab) {
       case "quickNote":
         return mobileQuickNote ?? null;
+      case "commonplace":
+        return mobileCommonplace ?? null;
       case "nutrition":
         return (
           <LandingMobileNutritionTab
@@ -820,15 +805,6 @@ export function LandingShell({
             weeklySummary={weeklySummary}
             onOpenNutrition={onOpenNutrition}
             onOpenGoals={onOpenGoals}
-            onSearchFood={onSearchFood}
-            onCaptureFood={onCaptureFood}
-            inlineFoodInput={inlineFoodInput}
-            onInlineFoodInputChange={onInlineFoodInputChange}
-            onInlineFoodSubmit={onInlineFoodSubmit}
-            inlineFoodLoading={inlineFoodLoading}
-            inlineFoodSuggestions={inlineFoodSuggestions}
-            inlineFoodSuggestionsLoading={inlineFoodSuggestionsLoading}
-            onInlineFoodSuggestionSelect={onInlineFoodSuggestionSelect}
             recentFoodEntries={recentFoodEntries}
             onRecentFoodEntryClick={onRecentFoodEntryClick}
             onRecentFoodEntryDelete={onRecentFoodEntryDelete}
@@ -847,10 +823,6 @@ export function LandingShell({
             onRecentExerciseEntryDelete={onRecentExerciseEntryDelete}
             onOpenExercise={onOpenExercise}
             onOpenGoals={onOpenGoals}
-            inlineExerciseInput={inlineExerciseInput}
-            onInlineExerciseInputChange={onInlineExerciseInputChange}
-            onInlineExerciseSubmit={onInlineExerciseSubmit}
-            inlineExerciseLoading={inlineExerciseLoading}
             weeklySummary={weeklySummary}
           />
         );
@@ -940,10 +912,10 @@ export function LandingShell({
               <ModuleCard eyebrow="Mentor Hub" title={mentorHubTitle}>
                 <div className="space-y-4">
                   <div className="module-nested p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                       1:1 Mentor Chat
                     </p>
-                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                    <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                       Pick a mentor for a private coaching conversation.
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -956,8 +928,8 @@ export function LandingShell({
                             onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
                             className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
                               isSelected
-                                ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
-                                : "border-neutral-300 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                                ? "border-[#c96442] bg-[#f5f4ed] ring-1 ring-[#c96442]/30 dark:border-[#d97757] dark:bg-[#30302e] dark:ring-[#d97757]/20"
+                                : "border-[#e8e6dc] bg-[#faf9f5] hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:hover:border-[#4d4c48] dark:hover:bg-[#3d3d3a]"
                             }`}
                           >
                             <span
@@ -971,7 +943,7 @@ export function LandingShell({
                         );
                       })}
                       {mentorCount === 0 && (
-                        <p className="text-[12px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+                        <p className="text-[12px] text-[#5e5d59] dark:text-[#87867f]">{followMentorsHint}</p>
                       )}
                     </div>
                     <div className="mt-2">
@@ -979,7 +951,7 @@ export function LandingShell({
                         <button
                           type="button"
                           onClick={() => onSelectMentor(selectedMentorId)}
-                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#c96442] bg-[#f5f4ed] px-3 py-1.5 text-[13px] font-semibold text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                         >
                           Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
                         </button>
@@ -987,7 +959,7 @@ export function LandingShell({
                         <button
                           type="button"
                           onClick={onOpenOneOnOneMentor}
-                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#e8e6dc] px-3 py-1.5 text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                         >
                           Browse all mentors
                         </button>
@@ -996,13 +968,13 @@ export function LandingShell({
                   </div>
 
                   <div className="module-nested p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                       New Conversation
                     </p>
-                    <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                    <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                       Start a metacognition session with optional settings.
                     </p>
-                    <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+                    <div className="mt-2 divide-y divide-[#e8e6dc] dark:divide-[#3d3d3a]">
                       <ToggleRow
                         label="Show citations"
                         checked={secondOrderCitationsEnabled}
@@ -1030,7 +1002,7 @@ export function LandingShell({
                     <button
                       type="button"
                       onClick={onStartMindLabConversation}
-                      className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                      className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#c96442] bg-[#f5f4ed] px-3 py-1.5 text-[13px] font-semibold text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                     >
                       Start conversation
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -1043,7 +1015,7 @@ export function LandingShell({
                         onClick={onOpenConversations}
                         className="mt-2 flex w-full items-center justify-between text-left transition-colors hover:opacity-70"
                       >
-                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                           {conversationCount} past conversation{conversationCount !== 1 ? "s" : ""}
                         </p>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
@@ -1054,10 +1026,10 @@ export function LandingShell({
                   </div>
 
                   <div className="module-nested p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                       Ask Mentors
                     </p>
-                    <p className="mt-0.5 mb-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+                    <p className="mt-0.5 mb-2 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                       Get recommendations from multiple mentors at once.
                     </p>
                     {askMentorsContent}
@@ -1120,7 +1092,7 @@ export function LandingShell({
 
           {/* Quick Capture */}
           <section className="landing-module-glass flex-1 overflow-hidden rounded-[2rem] border p-4 sm:p-5">
-            <h3 className="truncate text-[13px] font-semibold text-foreground">Quick Capture</h3>
+            <h3 className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">Quick Capture</h3>
             <div className="mt-2 grid grid-cols-3 gap-2">
               {quickCaptures.map((item) => (
                 <button
@@ -1129,7 +1101,7 @@ export function LandingShell({
                   onClick={item.onClick}
                   className="module-nested flex flex-col items-center gap-1 px-1.5 py-2 text-center transition-shadow hover:shadow-md active:scale-[0.98] dark:hover:brightness-110"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#f5f4ed] text-[#c96442] dark:bg-[#30302e] dark:text-[#E8C3A0]">
                     {item.icon}
                   </span>
                   <span className="text-[11px] font-medium text-foreground">{item.label}</span>
@@ -1140,11 +1112,11 @@ export function LandingShell({
                 onClick={() => setSleepFormOpen((prev) => !prev)}
                 className={`module-nested flex flex-col items-center gap-1 px-1.5 py-2 transition-shadow hover:shadow-md active:scale-[0.98] dark:hover:brightness-110 ${
                   sleepFormOpen
-                    ? "ring-2 ring-[#B87B51]/50 ring-offset-2 ring-offset-transparent dark:ring-[#D6A67E]/55"
+                    ? "ring-2 ring-[#c96442]/50 ring-offset-2 ring-offset-transparent dark:ring-[#d97757]/55"
                     : ""
                 }`}
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FBF4EC] text-[#B87B51] dark:bg-[#241a14] dark:text-[#E8C3A0]">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#f5f4ed] text-[#c96442] dark:bg-[#30302e] dark:text-[#E8C3A0]">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                     <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
                   </svg>
@@ -1155,27 +1127,27 @@ export function LandingShell({
 
             {sleepFormOpen && (
               <div className={`module-nested-muted mt-2 space-y-2 p-2.5 transition-opacity ${sleepSaving ? "opacity-[0.72]" : ""}`}>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[#5e5d59] dark:text-[#87867f]">
                   Sleep · {selectedDayLabel}
                 </p>
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                    <label className="block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
                       Sleep duration
                     </label>
-                    <div className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 dark:border-neutral-500/55 dark:bg-neutral-800">
+                    <div className="mt-0.5 w-full rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1.5 dark:border-[#3d3d3a] dark:bg-[#30302e]">
                       <SleepDurationPicker
                         valueHours={sleepHoursInput}
                         onChangeHours={setSleepHoursInput}
                         disabled={sleepSaving}
                         className="w-full justify-center"
                         selectClassName="min-w-[3.5rem] appearance-none bg-transparent text-center text-[13px] font-medium tabular-nums text-foreground outline-none"
-                        separatorClassName="text-[13px] font-medium tabular-nums text-neutral-500 dark:text-neutral-400"
+                        separatorClassName="text-[13px] font-medium tabular-nums text-[#5e5d59] dark:text-[#87867f]"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                    <label className="block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
                       HRV (ms)
                     </label>
                     <input
@@ -1187,11 +1159,11 @@ export function LandingShell({
                       value={hrvInput}
                       onChange={(e) => setHrvInput(e.target.value)}
                       disabled={sleepSaving}
-                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
+                      className="mt-0.5 w-full rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                    <label className="block text-[11px] font-medium text-[#5e5d59] dark:text-[#87867f]">
                       Score (1-100)
                     </label>
                     <input
@@ -1203,7 +1175,7 @@ export function LandingShell({
                       value={sleepScoreInput}
                       onChange={(e) => setSleepScoreInput(e.target.value)}
                       disabled={sleepSaving}
-                      className="mt-0.5 w-full rounded-lg border border-neutral-400/85 bg-white px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
+                      className="mt-0.5 w-full rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1.5 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
                     />
                   </div>
                 </div>
@@ -1211,7 +1183,7 @@ export function LandingShell({
                   type="button"
                   disabled={sleepSaving}
                   onClick={handleSaveSleep}
-                  className="w-full rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  className="w-full rounded-lg border border-[#c96442] bg-[#f5f4ed] px-3 py-1.5 text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                 >
                   {sleepSaving ? "Saving…" : sleepForSelectedDay ? "Update sleep" : "Save sleep"}
                 </button>
@@ -1219,13 +1191,13 @@ export function LandingShell({
                   <p className="text-[11px] text-red-600 dark:text-red-400">{sleepSaveError}</p>
                 ) : null}
                 {sleepForSelectedDay ? (
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                     Logged: {formatSleepDuration(sleepForSelectedDay.sleepHours)} sleep
                     {sleepForSelectedDay.hrvMs != null ? ` · ${sleepForSelectedDay.hrvMs} ms HRV` : ""}
                     {sleepForSelectedDay.sleepScore != null ? ` · ${sleepForSelectedDay.sleepScore}/100` : ""}
                   </p>
                 ) : (
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                     No sleep logged for this day yet.
                   </p>
                 )}
@@ -1237,14 +1209,14 @@ export function LandingShell({
                 <button
                   type="button"
                   onClick={onOpenSpend}
-                  className="shrink-0 rounded-lg border border-[#B87B51]/60 bg-[#FBF4EC] px-2.5 py-1 text-[11px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                  className="shrink-0 rounded-lg border border-[#c96442]/60 bg-[#f5f4ed] px-2.5 py-1 text-[11px] font-medium text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                 >
                   Log
                 </button>
               </div>
               {Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
               spendDaySummary.recentEntries.length === 0 ? (
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                   No purchases logged for {selectedDayLabel}.
                 </p>
               ) : (
@@ -1261,11 +1233,11 @@ export function LandingShell({
                     ))}
                   </div>
                   {spendDaySummary.recentEntries.length > 0 ? (
-                    <ul className="space-y-1 border-t border-neutral-200/80 pt-2 dark:border-neutral-700/80">
+                    <ul className="space-y-1 border-t border-[#e8e6dc] pt-2 dark:border-[#3d3d3a]">
                       {spendDaySummary.recentEntries.slice(0, 3).map((e) => (
                         <li
                           key={e.id}
-                          className="flex justify-between gap-2 text-[11px] text-neutral-600 dark:text-neutral-400"
+                          className="flex justify-between gap-2 text-[11px] text-[#5e5d59] dark:text-[#87867f]"
                         >
                           <span className="min-w-0 truncate">{e.label}</span>
                           <span className="shrink-0 tabular-nums">
@@ -1293,7 +1265,7 @@ export function LandingShell({
           emptyStateText="No experiments slated for this month yet. Find a new one below."
         />
         <div className="module-nested mt-3 p-3">
-          <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
+          <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#87867f] dark:text-[#87867f]">
             Find a new habit
           </p>
           <div className="mt-2.5 flex w-full gap-1.5 sm:gap-2">
@@ -1307,8 +1279,8 @@ export function LandingShell({
                   onClick={() => setSelectedHabitDiscoveryBucket(option.bucket)}
                   className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
                     isSelected
-                      ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                      : "border-neutral-300/80 bg-white/70 text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                      ? "border-[#d1cfc5] bg-[#f5f4ed] text-[#4d4c48] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5]"
+                      : "border-[#e8e6dc] bg-[#faf9f5]/70 text-[#5e5d59] hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#b0aea5] dark:hover:border-[#4d4c48] dark:hover:bg-[#30302e]"
                   }`}
                 >
                   <span className="whitespace-nowrap">{option.label}</span>
@@ -1319,7 +1291,7 @@ export function LandingShell({
           <button
             type="button"
             onClick={() => onFindNewHabit(selectedHabitDiscoveryBucket)}
-            className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            className="mt-2.5 w-full rounded-full border border-[#d1cfc5] bg-[#f5f4ed] py-2.5 text-xs font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
           >
             Find me a new habit
           </button>
@@ -1338,7 +1310,7 @@ export function LandingShell({
 
       {/* 3. Focus Timer */}
       <section className="landing-module-glass flex w-full flex-col overflow-hidden rounded-[2rem] border p-4 sm:p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c96442] dark:text-[#d97757]">
           Focus Timer
         </p>
         <p className="landing-focus-timer-clock mt-2 font-black text-foreground">
@@ -1355,8 +1327,8 @@ export function LandingShell({
                 disabled={focusTrackerSaving || pomodoroSessionActive}
                 className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors shadow-sm ${
                   pomodoroDurationMinutes === minutes
-                    ? "border-[#B87B51] bg-[#FBF4EC] text-[#7C522D] ring-1 ring-[#B87B51]/25 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:ring-[#D6A67E]/20"
-                    : "border-neutral-400/85 bg-white/90 text-neutral-800 hover:shadow-md dark:border-neutral-500/55 dark:bg-neutral-800/95 dark:text-neutral-200 dark:hover:bg-neutral-700 dark:hover:brightness-110"
+                    ? "border-[#c96442] bg-[#f5f4ed] text-[#4d4c48] ring-1 ring-[#c96442]/25 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:ring-[#d97757]/20"
+                    : "border-[#e8e6dc] bg-[#faf9f5]/90 text-neutral-800 hover:shadow-md dark:border-[#3d3d3a] dark:bg-[#30302e]/95 dark:text-[#faf9f5] dark:hover:bg-neutral-700 dark:hover:brightness-110"
                 } disabled:opacity-50`}
               >
                 {minutes}m
@@ -1370,14 +1342,14 @@ export function LandingShell({
             onChange={(event) => onFocusSessionTagInputChange(event.target.value)}
             placeholder="Tag this focus session..."
             disabled={focusTrackerSaving}
-            className="w-full rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800 dark:shadow-none"
+            className="w-full rounded-full border border-[#e8e6dc] bg-[#faf9f5]/95 px-4 py-2.5 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e] dark:shadow-none"
           />
 
           <button
             type="button"
             onClick={pomodoroSessionActive ? (pomodoroRunning ? onPausePomodoro : onStartPomodoro) : onStartPomodoro}
             disabled={focusTrackerSaving}
-            className="w-full rounded-full border-2 border-[#B87B51] bg-[#FBF4EC] px-5 py-2.5 text-sm font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+            className="w-full rounded-full border-2 border-[#c96442] bg-[#f5f4ed] px-5 py-2.5 text-sm font-semibold text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
           >
             {pomodoroSessionActive ? (pomodoroRunning ? "Pause" : "Resume") : "Start Focus Session"}
           </button>
@@ -1391,13 +1363,13 @@ export function LandingShell({
               value={pomodoroCustomMinutesInput}
               onChange={(event) => onPomodoroCustomMinutesInputChange(event.target.value)}
               disabled={focusTrackerSaving || pomodoroSessionActive}
-              className="w-24 rounded-full border border-neutral-400/85 bg-white/95 px-4 py-2 text-sm text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-500/55 dark:bg-neutral-800"
+              className="w-24 rounded-full border border-[#e8e6dc] bg-[#faf9f5]/95 px-4 py-2 text-sm text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
             />
             <button
               type="button"
               onClick={onApplyCustomPomodoroMinutes}
               disabled={focusTrackerSaving || pomodoroSessionActive}
-              className="rounded-full border border-neutral-400/85 bg-white/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-neutral-500/55 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              className="rounded-full border border-[#e8e6dc] bg-[#faf9f5]/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#faf9f5] dark:hover:bg-[#3d3d3a]"
             >
               Set minutes
             </button>
@@ -1405,7 +1377,7 @@ export function LandingShell({
               type="button"
               onClick={onResetPomodoro}
               disabled={focusTrackerSaving}
-              className="rounded-full border border-neutral-400/85 bg-white/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-neutral-500/55 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              className="rounded-full border border-[#e8e6dc] bg-[#faf9f5]/90 px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm transition-colors hover:shadow-md disabled:opacity-50 dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#faf9f5] dark:hover:bg-[#3d3d3a]"
             >
               Reset
             </button>
@@ -1414,7 +1386,7 @@ export function LandingShell({
                 type="button"
                 onClick={onEndPomodoro}
                 disabled={focusTrackerSaving}
-                className="rounded-full border-2 border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#7C522D] shadow-sm transition-colors hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#C4A070] dark:text-[#E8C3A0] dark:hover:bg-[#241a14]"
+                className="rounded-full border-2 border-[#DDAA7C] px-4 py-2 text-sm font-medium text-[#4d4c48] shadow-sm transition-colors hover:bg-[#f5f4ed] disabled:opacity-50 dark:border-[#C4A070] dark:text-[#E8C3A0] dark:hover:bg-[#30302e]"
               >
                 End
               </button>
@@ -1472,16 +1444,16 @@ export function LandingShell({
       {/* 5. Weekly Summary — full-width with inline charts */}
       <div id="sec-summary" className={SECTION_SCROLL_MARGIN}>
         <ModuleCard eyebrow="Weekly Summary" title={weeklySummaryLabel}>
-          {weeklySummary ? (
-            <>
+          <Skeleton name="weekly-summary" loading={!weeklySummary}>
+            {weeklySummary && <>
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                   {weeklySummary.weekStartLabel} – {weeklySummary.weekEndLabel}
                 </p>
                 <button
                   type="button"
                   onClick={onOpenWeeklySummary}
-                  className="rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
+                  className="rounded-full border border-[#e8e6dc] px-2 py-0.5 text-[11px] font-medium text-[#4d4c48] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                 >
                   Past weeks
                 </button>
@@ -1493,14 +1465,14 @@ export function LandingShell({
                     const hasActivity = row.foodEntries > 0 || row.exerciseEntries > 0 || row.focusMinutes > 0;
                     return (
                       <div key={row.dayKey} className="flex flex-col items-center gap-0.5">
-                        <span className="text-[9px] font-medium text-neutral-400 dark:text-neutral-500">
+                        <span className="text-[9px] font-medium text-[#87867f] dark:text-neutral-500">
                           {row.weekdayLabel.slice(0, 1)}
                         </span>
                         <span
                           className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold ${
                             hasActivity
                               ? "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-300"
-                              : "bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500"
+                              : "bg-[#e8e6dc] text-[#87867f] dark:bg-[#3d3d3a] dark:text-[#5e5d59]"
                           }`}
                         >
                           {row.foodEntries + row.exerciseEntries || "·"}
@@ -1510,43 +1482,38 @@ export function LandingShell({
                   })}
                 </div>
                 <div className="flex flex-1 gap-1.5 min-w-0">
-                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1 dark:border-[#3d3d3a] dark:bg-[#30302e] text-center">
                     <p className="text-base font-semibold text-foreground">{weeklySummary.trackedDays}<span className="text-[10px] font-normal text-neutral-400">/7</span></p>
-                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Days</p>
+                    <p className="text-[9px] text-[#5e5d59] dark:text-[#87867f]">Days</p>
                   </div>
-                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1 dark:border-[#3d3d3a] dark:bg-[#30302e] text-center">
                     <p className={`text-base font-semibold ${weeklySummary.caloriesUnderBudget >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                       {Math.abs(weeklySummary.caloriesUnderBudget).toLocaleString()}
                     </p>
-                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">
+                    <p className="text-[9px] text-[#5e5d59] dark:text-[#87867f]">
                       {weeklySummary.caloriesUnderBudget >= 0 ? "Under" : "Over"}
                     </p>
                   </div>
-                  <div className="flex-1 rounded-lg border border-neutral-300 bg-neutral-50 px-2 py-1 dark:border-neutral-800 dark:bg-neutral-900 text-center">
+                  <div className="flex-1 rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2 py-1 dark:border-[#3d3d3a] dark:bg-[#30302e] text-center">
                     <p className="text-base font-semibold text-foreground">{weeklySummary.foodEntries}</p>
-                    <p className="text-[9px] text-neutral-500 dark:text-neutral-400">Meals</p>
+                    <p className="text-[9px] text-[#5e5d59] dark:text-[#87867f]">Meals</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-3 grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-[#e8e6dc] dark:border-[#3d3d3a] p-2 bg-[#faf9f5] dark:bg-[#30302e] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyCaloriesOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-[#e8e6dc] dark:border-[#3d3d3a] p-2 bg-[#faf9f5] dark:bg-[#30302e] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer">
                   <HighchartsReact highcharts={Highcharts} options={weeklyMacrosOpts} />
                 </button>
-                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-neutral-300 dark:border-neutral-600 p-2 bg-white/70 dark:bg-[#0f0f10] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
+                <button type="button" onClick={onOpenWeeklySummary} className="rounded-xl border border-[#e8e6dc] dark:border-[#3d3d3a] p-2 bg-[#faf9f5] dark:bg-[#30302e] dark:text-foreground text-left transition-shadow hover:shadow-md cursor-pointer lg:col-span-2 xl:col-span-1">
                   <HighchartsReact highcharts={Highcharts} options={weeklyFocusOpts} />
                 </button>
               </div>
-            </>
-          ) : (
-            <div className="space-y-2">
-              <div className="h-6 w-3/4 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700" />
-              <div className="h-20 animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-700" />
-            </div>
-          )}
+            </>}
+          </Skeleton>
         </ModuleCard>
       </div>
 
@@ -1560,27 +1527,27 @@ export function LandingShell({
           {weightWeekPoints.length >= 2 ? (
             <WeightSparkline points={weightWeekPoints} targetKg={weightTargetKg} />
           ) : (
-            <p className="text-[13px] text-neutral-400 dark:text-neutral-500">
+            <p className="text-[13px] text-[#87867f] dark:text-neutral-500">
               {weightWeekPoints.length === 1 ? "Log one more entry to see your trend." : "No entries this week."}
             </p>
           )}
 
           <div className="mt-2 grid grid-cols-2 gap-1.5">
-            <div className="rounded-xl border border-neutral-300 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-1.5 dark:border-[#3d3d3a] dark:bg-[#30302e]">
               <p className="text-base font-semibold text-foreground">
                 {weightCurrentKg == null ? "--" : `${weightCurrentKg.toFixed(1)} kg`}
               </p>
-              <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{currentWeightLabel}</p>
+              <p className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">{currentWeightLabel}</p>
             </div>
-            <div className="rounded-xl border border-neutral-300 bg-neutral-50 px-2.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
+            <div className="rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-1.5 dark:border-[#3d3d3a] dark:bg-[#30302e]">
               <p className="text-base font-semibold text-foreground">
                 {weightTargetKg == null ? "--" : `${weightTargetKg.toFixed(1)} kg`}
               </p>
-              <p className="text-[10px] text-neutral-500 dark:text-neutral-400">{targetWeightLabel}</p>
+              <p className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">{targetWeightLabel}</p>
             </div>
           </div>
           <div className="mt-1.5 flex items-center justify-between">
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+            <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
               {distanceToTarget == null ? noTargetYetLabel : `${distanceToTarget} kg to target`}
               {" · "}
               {weightEntryCount} entr{weightEntryCount === 1 ? "y" : "ies"}
@@ -1588,7 +1555,7 @@ export function LandingShell({
             <button
               type="button"
               onClick={onOpenWeight}
-              className="rounded-full border border-neutral-300 px-2 py-0.5 text-[11px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-950"
+              className="rounded-full border border-[#e8e6dc] px-2 py-0.5 text-[11px] font-medium text-[#4d4c48] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
             >
               {openLabel}
             </button>
@@ -1603,7 +1570,7 @@ export function LandingShell({
         >
           <div className="space-y-3">
             {activityGroups.length === 0 ? (
-              <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+              <p className="text-[13px] text-[#5e5d59] dark:text-[#87867f]">
                 No activity yet for this day.
               </p>
             ) : (
@@ -1616,11 +1583,11 @@ export function LandingShell({
                 >
                   <span className="min-w-0">
                     <span className="block text-[13px] font-semibold text-foreground">{group.label}</span>
-                    <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">
+                    <span className="block text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                       {tapToInspectLabel}
                     </span>
                   </span>
-                  <span className="shrink-0 rounded-full border border-neutral-400/85 bg-white/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-neutral-700 ring-1 ring-neutral-900/[0.05] dark:border-neutral-500/60 dark:bg-neutral-900/50 dark:text-neutral-200 dark:ring-white/[0.08]">
+                  <span className="shrink-0 rounded-full border border-[#e8e6dc] bg-[#faf9f5]/70 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-[#4d4c48] ring-1 ring-[#141413]/[0.05] dark:border-[#3d3d3a] dark:bg-[#30302e]/50 dark:text-[#b0aea5] dark:ring-[#faf9f5]/[0.08]">
                     {group.count}
                   </span>
                 </button>
@@ -1656,10 +1623,10 @@ export function LandingShell({
           <div className="space-y-4">
             {/* Group 1: 1:1 Mentor Chat */}
             <div className="module-nested p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                 1:1 Mentor Chat
               </p>
-              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                 Pick a mentor for a private coaching conversation.
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -1672,8 +1639,8 @@ export function LandingShell({
                       onClick={() => setSelectedMentorId(isSelected ? null : mentor.id)}
                       className={`inline-flex items-center gap-1.5 rounded-full border py-0.5 pl-0.5 pr-2.5 transition-colors ${
                         isSelected
-                          ? "border-[#B87B51] bg-[#FBF4EC] ring-1 ring-[#B87B51]/30 dark:border-[#D6A67E] dark:bg-[#241a14] dark:ring-[#D6A67E]/20"
-                          : "border-neutral-300 bg-white hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                          ? "border-[#c96442] bg-[#f5f4ed] ring-1 ring-[#c96442]/30 dark:border-[#d97757] dark:bg-[#30302e] dark:ring-[#d97757]/20"
+                          : "border-[#e8e6dc] bg-[#faf9f5] hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:hover:border-[#4d4c48] dark:hover:bg-[#3d3d3a]"
                       }`}
                     >
                       <span
@@ -1687,7 +1654,7 @@ export function LandingShell({
                   );
                 })}
                 {mentorCount === 0 && (
-                  <p className="text-[12px] text-neutral-500 dark:text-neutral-400">{followMentorsHint}</p>
+                  <p className="text-[12px] text-[#5e5d59] dark:text-[#87867f]">{followMentorsHint}</p>
                 )}
               </div>
               <div className="mt-2">
@@ -1695,7 +1662,7 @@ export function LandingShell({
                   <button
                     type="button"
                     onClick={() => onSelectMentor(selectedMentorId)}
-                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#c96442] bg-[#f5f4ed] px-3 py-1.5 text-[13px] font-semibold text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                   >
                     Chat with {mentors.find((m) => m.id === selectedMentorId)?.name ?? "mentor"}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -1706,7 +1673,7 @@ export function LandingShell({
                   <button
                     type="button"
                     onClick={onOpenOneOnOneMentor}
-                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-1.5 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-white dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#e8e6dc] px-3 py-1.5 text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                   >
                     Browse all mentors
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -1719,13 +1686,13 @@ export function LandingShell({
 
             {/* Group 2: New Conversation */}
             <div className="module-nested p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                 New Conversation
               </p>
-              <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                 Start a metacognition session with optional settings.
               </p>
-              <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+              <div className="mt-2 divide-y divide-[#e8e6dc] dark:divide-[#3d3d3a]">
                 <ToggleRow
                   label="Show citations"
                   checked={secondOrderCitationsEnabled}
@@ -1753,7 +1720,7 @@ export function LandingShell({
               <button
                 type="button"
                 onClick={onStartMindLabConversation}
-                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#B87B51] bg-[#FBF4EC] px-3 py-1.5 text-[13px] font-semibold text-[#7C522D] shadow-sm transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[#c96442] bg-[#f5f4ed] px-3 py-1.5 text-[13px] font-semibold text-[#4d4c48] shadow-sm transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
               >
                 Start conversation
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -1766,7 +1733,7 @@ export function LandingShell({
                   onClick={onOpenConversations}
                   className="mt-2 flex w-full items-center justify-between text-left transition-colors hover:opacity-70"
                 >
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                  <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                     {conversationCount} past conversation{conversationCount !== 1 ? "s" : ""}
                   </p>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0 text-neutral-400">
@@ -1779,10 +1746,10 @@ export function LandingShell({
             {/* Group 3: Explore — mental models and learning */}
             {(featuredMentalModelName || true) && (
               <div className="module-nested p-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                   Explore
                 </p>
-                <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                   Mental models, frameworks, and interactive learning.
                 </p>
                 <div className="mt-2 space-y-1.5">
@@ -1790,11 +1757,11 @@ export function LandingShell({
                     <button
                       type="button"
                       onClick={onOpenMentalModels}
-                      className="flex w-full items-center justify-between gap-2 rounded-lg border border-neutral-300 bg-white px-2.5 py-2 text-left transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                      className="flex w-full items-center justify-between gap-2 rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-2 text-left transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:hover:bg-[#3d3d3a]"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-[13px] font-semibold text-foreground">{featuredMentalModelName}</p>
-                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400">Interactive mental model</p>
+                        <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">Interactive mental model</p>
                       </div>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-neutral-400">
                         <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
@@ -1810,10 +1777,10 @@ export function LandingShell({
           {/* Right column: Ask Mentors */}
           <div>
             <div className="module-nested p-3">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#B87B51] dark:text-[#D6A67E]">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#c96442] dark:text-[#d97757]">
                 Ask Mentors
               </p>
-              <p className="mt-0.5 mb-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+              <p className="mt-0.5 mb-2 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
                 Get recommendations from multiple mentors at once.
               </p>
               {askMentorsContent}
@@ -1823,13 +1790,13 @@ export function LandingShell({
       </ModuleCard>
       </div>
 
-      <div className="border-t border-neutral-300/60 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4 dark:border-neutral-600/45 lg:hidden">
+      <div className="border-t border-[#e8e6dc] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-4 dark:border-[#3d3d3a] lg:hidden">
         <button
           type="button"
           onClick={() => {
             dashboardScrollRootRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          className="module-nested w-full py-2.5 text-center text-[12px] font-semibold text-neutral-800 dark:text-neutral-200"
+          className="module-nested w-full py-2.5 text-center text-[12px] font-semibold text-[#141413] dark:text-[#faf9f5]"
         >
           Back to top
         </button>

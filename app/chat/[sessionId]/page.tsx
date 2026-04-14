@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { Skeleton } from "boneyard-js/react";
 import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import {
@@ -32,6 +33,7 @@ import { LandingShell } from "@/components/landing/LandingShell";
 import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJumpFab";
 import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
 import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
+import { LandingMobileCommonplaceTab } from "@/components/landing/LandingMobileCommonplaceTab";
 import type { BrainDumpJournalContextRow } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
@@ -210,11 +212,11 @@ function MentorPendingBubbleSkeleton({ size, showDot = false }: { size: number; 
   return (
     <div className="flex flex-col items-center gap-0.5">
       <div
-        className="rounded-full border-2 border-neutral-300/70 dark:border-neutral-600/80 bg-neutral-200/80 dark:bg-neutral-700/80 animate-pulse shrink-0"
+        className="rounded-full border-2 border-[#e8e6dc] dark:border-[#3d3d3a] bg-[#e8e6dc] dark:bg-[#3d3d3a] animate-pulse shrink-0"
         style={{ width: size, height: size }}
       />
       {showDot ? (
-        <span className="w-1 h-1 rounded-full bg-neutral-400/45 shrink-0" aria-hidden />
+        <span className="w-1 h-1 rounded-full bg-[#b0aea5] shrink-0" aria-hidden />
       ) : null}
     </div>
   );
@@ -926,8 +928,8 @@ function MessageBubble({
             message.role === "user"
               ? "max-w-[85%] bg-foreground text-background shadow-sm"
               : isAssistantDotsLoading
-                ? "inline-flex w-auto max-w-[120px] rounded-2xl px-3 py-2 bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground"
-              : "w-full max-w-full sm:max-w-[85%] bg-background border border-neutral-300 dark:border-neutral-600 shadow-sm text-foreground pr-4"
+                ? "inline-flex w-auto max-w-[120px] rounded-2xl px-3 py-2 bg-background border border-[#e8e6dc] dark:border-[#3d3d3a] shadow-[rgba(0,0,0,0.05)_0px_4px_24px] text-foreground"
+              : "w-full max-w-full sm:max-w-[85%] bg-background border border-[#e8e6dc] dark:border-[#3d3d3a] shadow-[rgba(0,0,0,0.05)_0px_4px_24px] text-foreground pr-4"
           }`}
           dir={isRtl ? "rtl" : undefined}
         >
@@ -1097,14 +1099,14 @@ function MessageBubble({
                     <div className="flex flex-col items-start">
                       {ctxExpanded ? (
                         <div
-                          className="w-full rounded-2xl border border-neutral-300 dark:border-neutral-600 bg-gradient-to-br from-neutral-50/95 to-neutral-100/80 dark:from-neutral-800 dark:to-neutral-900 shadow-sm overflow-visible text-foreground"
+                          className="w-full rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-[#faf9f5] dark:bg-[#30302e] shadow-sm overflow-visible text-foreground"
                           onPointerDownCapture={(e) => {
                             if (ctxReasonPillKey && !(e.target as HTMLElement).closest("[data-context-pill]")) {
                               setCtxReasonPillKey(null);
                             }
                           }}
                         >
-                          <div className="flex flex-col items-start gap-2 border-b border-neutral-300/90 px-3.5 py-2.5 dark:border-neutral-600/60">
+                          <div className="flex flex-col items-start gap-2 border-b border-[#e8e6dc] px-3.5 py-2.5 dark:border-[#3d3d3a]">
                             <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 shrink-0">
                               Context used
                             </span>
@@ -1234,7 +1236,7 @@ function MessageBubble({
                 </div>
               </div>
             )}
-            <div className="inline-flex items-center gap-1 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/60 px-1.5 py-1">
+            <div className="inline-flex items-center gap-1 rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-[#faf9f5]/80 dark:bg-[#30302e]/60 px-1.5 py-1">
               {showAssistantFeedbackControls && (
                 <>
                   <button
@@ -1338,7 +1340,7 @@ function MessageBubble({
         </div>
       )}
       {showQuestions && message.questions && (
-        <div className="mt-3 w-full max-w-full sm:max-w-[85%] rounded-2xl border border-neutral-200/80 dark:border-neutral-700/70 bg-white/60 dark:bg-neutral-800/50 backdrop-blur-xl p-4 shadow-sm opacity-0 animate-fade-in-up" style={{ animationFillMode: "forwards" }}>
+        <div className="mt-3 w-full max-w-full sm:max-w-[85%] rounded-2xl border border-[#e8e6dc]/80 dark:border-[#3d3d3a]/70 bg-[#faf9f5]/60 dark:bg-[#30302e]/50 backdrop-blur-xl p-4 shadow-sm opacity-0 animate-fade-in-up" style={{ animationFillMode: "forwards" }}>
           <div className="flex flex-col gap-4">
             {message.questions.map((q, qi) => {
               const LABELS = "ABCDEFGHIJ";
@@ -13013,7 +13015,7 @@ export default function ChatPage() {
               type="button"
               onClick={() => void endPomodoro()}
               disabled={!pomodoroSessionStartIso || focusTrackerSaving}
-              className="rounded-2xl bg-orange-500 text-white px-6 py-3 text-lg font-medium hover:bg-orange-400 transition-colors disabled:opacity-50"
+              className="rounded-2xl bg-[#c96442] text-[#faf9f5] px-6 py-3 text-lg font-medium hover:bg-[#b05530] transition-colors disabled:opacity-50"
             >
               End
             </button>
@@ -15857,34 +15859,6 @@ export default function ChatPage() {
                           void fetchCalorieTrackerFrequentMeals();
                           pendingCalorieTrackerFocusRef.current = true;
                         }}
-                        inlineFoodInput={calorieTrackerInput}
-                        onInlineFoodInputChange={(value) => {
-                          setSelectedLandingJournalChip("nutrition");
-                          replaceCalorieTrackerInput(value);
-                        }}
-                        onInlineFoodSubmit={async () => {
-                          setSelectedLandingJournalChip("nutrition");
-                          const saved = await runCalorieTrackerAnalyze();
-                          if (saved) {
-                            replaceCalorieTrackerInput("");
-                            setCalorieTrackerStep("input");
-                          }
-                        }}
-                        inlineFoodLoading={calorieTrackerLoading}
-                        inlineFoodSuggestions={calorieTrackerSuggestions.map((s) => ({
-                          id: s.id,
-                          displayName: s.displayName,
-                          sampleEntry: s.sampleEntry,
-                          calories: s.nutritionSnapshot?.calories ?? null,
-                          proteinGrams: s.nutritionSnapshot?.proteinGrams ?? null,
-                          carbsGrams: s.nutritionSnapshot?.carbsGrams ?? null,
-                          fatGrams: s.nutritionSnapshot?.fatGrams ?? null,
-                        }))}
-                        inlineFoodSuggestionsLoading={calorieTrackerSuggestionsLoading}
-                        onInlineFoodSuggestionSelect={(suggestionId) => {
-                          const suggestion = calorieTrackerSuggestions.find((s) => s.id === suggestionId);
-                          if (suggestion) void handleCalorieTrackerSuggestionSelect(suggestion);
-                        }}
                         recentFoodEntries={selectedLandingDayRecentFood}
                         onRecentFoodEntryClick={openLandingJournalTranscriptById}
                         onRecentFoodEntryDelete={
@@ -15895,20 +15869,6 @@ export default function ChatPage() {
                         onRecentExerciseEntryDelete={
                           isAnonymous || incognitoMode ? undefined : deleteLandingJournalTranscriptById
                         }
-                        inlineExerciseInput={calorieTrackerInput}
-                        onInlineExerciseInputChange={(value) => {
-                          setSelectedLandingJournalChip("exercise");
-                          replaceCalorieTrackerInput(value);
-                        }}
-                        onInlineExerciseSubmit={async () => {
-                          setSelectedLandingJournalChip("exercise");
-                          const saved = await runCalorieTrackerAnalyze();
-                          if (saved) {
-                            replaceCalorieTrackerInput("");
-                            setCalorieTrackerStep("input");
-                          }
-                        }}
-                        inlineExerciseLoading={calorieTrackerLoading}
                         spendDaySummary={{
                           totalsByCurrency: selectedLandingDaySpendTotals,
                           recentEntries: selectedLandingDayRecentSpend.slice().reverse(),
@@ -16011,7 +15971,7 @@ export default function ChatPage() {
                                     type="button"
                               onClick={() => void requestAskMentorRecommendations()}
                               disabled={askMentorsRecommendationsLoading || !askMentorsRecommendationInput.trim()}
-                              className="w-full px-3 py-2 rounded-xl border border-[#B87B51] bg-[#FBF4EC] text-[13px] font-medium text-[#7C522D] transition-colors hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                              className="w-full px-3 py-2 rounded-xl border border-[#c96442] bg-[#f5f4ed] text-[13px] font-medium text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                             >
                               {askMentorsRecommendationsLoading ? "Finding top mentors..." : "Suggest 5 mentors"}
                                   </button>
@@ -16068,7 +16028,7 @@ export default function ChatPage() {
                                       setSelectedMentorFigureIds(askMentorsSelectedFigureIds.slice(0, 5));
                                     }}
                                     disabled={askMentorsSelectedFigureIds.length < 2 || askMentorsSelectedFigureIds.length > 5}
-                                    className="flex-1 px-3 py-2 rounded-xl border border-[#B87B51] bg-[#FBF4EC] text-[13px] font-medium text-[#7C522D] hover:bg-[#F5E8D8] disabled:opacity-50 dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                                    className="flex-1 px-3 py-2 rounded-xl border border-[#c96442] bg-[#f5f4ed] text-[13px] font-medium text-[#4d4c48] hover:bg-[#e8e6dc] disabled:opacity-50 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                                   >
                                     Use selected mentors
                                     </button>
@@ -16202,6 +16162,7 @@ export default function ChatPage() {
                         exerciseGoalDaysOff={exerciseGoalDaysOff}
                         sleepHoursGoal={sleepHoursGoal}
                         spendBudgetUsd={spendBudgetUsd}
+                        mobileCommonplace={<LandingMobileCommonplaceTab />}
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
                             journalContextRows={brainDumpJournalContextRows}
@@ -17685,10 +17646,11 @@ export default function ChatPage() {
                 )}
                 <div className="flex flex-col items-center gap-3">
                   <div className="flex items-start justify-center gap-4 sm:gap-5 flex-wrap">
-                    {transcriptModalTranscript.journalMentorReflectionsStatus === "pending" &&
-                      [0, 1, 2].map((i) => (
-                        <MentorPendingBubbleSkeleton key={i} size={44} />
-                      ))}
+                    <Skeleton
+                      name="mentor-bubbles"
+                      loading={transcriptModalTranscript.journalMentorReflectionsStatus === "pending"}
+                      fixture={<div className="flex gap-4">{[0,1,2].map(i => <MentorPendingBubbleSkeleton key={i} size={44} />)}</div>}
+                    >
                     {transcriptModalTranscript.journalMentorReflectionsStatus === "ready" &&
                       transcriptModalTranscript.journalMentorReflections &&
                       transcriptModalTranscript.journalMentorReflections.map((m) => (
@@ -17706,11 +17668,12 @@ export default function ChatPage() {
                           }
                         />
                       ))}
+                    </Skeleton>
                     {transcriptModalTranscript.journalMentorReflectionsStatus === "failed" &&
                       [0, 1, 2].map((i) => (
                         <div
                           key={i}
-                          className="rounded-full border-2 border-neutral-400/50 dark:border-neutral-500 shrink-0 bg-neutral-200/80 dark:bg-neutral-800 opacity-45"
+                          className="rounded-full border-2 border-[#e8e6dc] dark:border-[#3d3d3a] shrink-0 bg-[#e8e6dc] dark:bg-[#30302e] opacity-45"
                           style={{ width: 44, height: 44 }}
                         />
                       ))}
@@ -18478,7 +18441,7 @@ export default function ChatPage() {
                           title={name}
                           className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-colors border-[0.75px] ${
                             background === id
-                              ? "border-[#B87B51] bg-[#B87B51]/12 dark:border-white/20 dark:bg-neutral-800 text-foreground ring-2 ring-[#B87B51]/25 dark:ring-foreground/20"
+                              ? "border-[#c96442] bg-[#c96442]/12 dark:border-white/20 dark:bg-neutral-800 text-foreground ring-2 ring-[#c96442]/25 dark:ring-foreground/20"
                               : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                           }`}
                         >
@@ -18631,7 +18594,7 @@ export default function ChatPage() {
                             onClick={() => setUserType(id)}
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                               userType === id
-                                ? "bg-[#B87B51] text-white dark:bg-foreground dark:text-background"
+                                ? "bg-[#c96442] text-white dark:bg-foreground dark:text-background"
                                 : "border border-neutral-400/75 dark:border-neutral-500/55 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                             }`}
                           >
@@ -18706,7 +18669,7 @@ export default function ChatPage() {
                                     onClick={() => toggleReminderDay(type, day)}
                                     className={`w-8 h-8 rounded-lg text-xs font-semibold border transition-colors ${
                                       selected
-                                        ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
+                                        ? "bg-[#c96442] text-white border-[#c96442] dark:bg-foreground dark:text-background dark:border-foreground"
                                         : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-400/75 dark:border-neutral-500/55 hover:bg-neutral-200 dark:hover:bg-neutral-700"
                                     }`}
                                   >
@@ -20146,7 +20109,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={() => setWeightTrackerAddOpen(true)}
                   disabled={weightTrackerSaving}
-                  className="w-full rounded-2xl border border-orange-400 dark:border-orange-500 py-2.5 text-sm font-medium text-orange-500 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors disabled:opacity-50"
+                  className="w-full rounded-2xl border border-[#c96442] py-2.5 text-sm font-medium text-[#c96442] dark:text-[#d97757] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e] transition-colors disabled:opacity-50"
                 >
                   Add Entry
                 </button>
@@ -20532,7 +20495,7 @@ export default function ChatPage() {
                   type="button"
                   onClick={saveSleepEntryEdit}
                   disabled={sleepEditSaving}
-                  className="rounded-full border border-[#B87B51] bg-[#FBF4EC] px-4 py-1.5 text-[13px] font-semibold text-[#7C522D] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] disabled:opacity-50"
+                  className="rounded-full border border-[#c96442] bg-[#f5f4ed] px-4 py-1.5 text-[13px] font-semibold text-[#4d4c48] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#b0aea5] disabled:opacity-50"
                 >
                   {sleepEditSaving ? "Saving…" : "Save"}
                 </button>
@@ -20762,7 +20725,7 @@ export default function ChatPage() {
                           disabled={journalEntrySaving || journalRefineLoading}
                           className={`px-2.5 py-1.5 rounded-lg text-xs border transition-colors disabled:opacity-50 ${
                             selected
-                              ? "bg-[#B87B51] text-white border-[#B87B51] dark:bg-foreground dark:text-background dark:border-foreground"
+                              ? "bg-[#c96442] text-white border-[#c96442] dark:bg-foreground dark:text-background dark:border-foreground"
                               : "border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                           }`}
                         >
@@ -20934,7 +20897,7 @@ export default function ChatPage() {
                       disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
                       placeholder={selectedLandingJournalChip === "exercise" ? "Search workouts or exercises…" : "Search meals, foods, or recipes…"}
                       autoFocus
-                      className="w-full rounded-2xl border border-neutral-300 bg-neutral-50 py-3 pl-10 pr-4 text-sm text-foreground outline-none focus:border-[#B87B51] focus:ring-2 focus:ring-[#B87B51]/25 dark:border-neutral-600 dark:bg-neutral-800 dark:focus:border-[#D6A67E] dark:focus:ring-[#D6A67E]/25"
+                      className="w-full rounded-2xl border border-neutral-300 bg-neutral-50 py-3 pl-10 pr-4 text-sm text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-neutral-600 dark:bg-neutral-800 dark:focus:border-[#d97757] dark:focus:ring-[#d97757]/25"
                     />
                     {calorieTrackerSuggestionQuery.trim() && (
                       <button
@@ -20960,15 +20923,15 @@ export default function ChatPage() {
                       setCalorieTrackerStep("input");
                     }}
                     disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                    className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-[#B87B51]/40 bg-[#FBF4EC]/50 px-4 py-3 text-left transition-colors hover:border-[#B87B51]/70 hover:bg-[#FBF4EC] disabled:opacity-50 dark:border-[#D6A67E]/30 dark:bg-[#241a14]/40 dark:hover:border-[#D6A67E]/50 dark:hover:bg-[#241a14]"
+                    className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-[#c96442]/40 bg-[#f5f4ed]/50 px-4 py-3 text-left transition-colors hover:border-[#c96442]/70 hover:bg-[#f5f4ed] disabled:opacity-50 dark:border-[#d97757]/30 dark:bg-[#30302e]/40 dark:hover:border-[#d97757]/50 dark:hover:bg-[#30302e]"
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#B87B51] text-white dark:bg-[#D6A67E] dark:text-neutral-900">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#c96442] text-white dark:bg-[#d97757] dark:text-neutral-900">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                         <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                       </svg>
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-[#7C522D] dark:text-[#F3D6B7]">Log something new</p>
+                      <p className="text-sm font-semibold text-[#4d4c48] dark:text-[#b0aea5]">Log something new</p>
                       <p className="text-[11px] text-[#9A7B5A] dark:text-[#C4A07E]">{selectedLandingJournalChip === "exercise" ? "Describe your workout" : "Describe what you ate"}</p>
                     </div>
                   </button>
@@ -21032,13 +20995,18 @@ export default function ChatPage() {
                     <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                       {calorieTrackerSuggestionQuery.trim() ? "Results" : selectedLandingJournalChip === "exercise" ? "Recent workouts" : "Recent meals"}
                     </p>
-                    {calorieTrackerSuggestionsLoading ? (
-                      <div className="space-y-2">
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="h-16 animate-pulse rounded-xl bg-neutral-100 dark:bg-neutral-800" />
-                        ))}
-                      </div>
-                    ) : calorieTrackerSuggestions.length > 0 ? (
+                    <Skeleton
+                      name="calorie-tracker-items"
+                      loading={calorieTrackerSuggestionsLoading}
+                      fixture={
+                        <div className="space-y-2">
+                          {[1, 2, 3].map((i) => (
+                            <div key={i} className="h-16 rounded-xl bg-[#e8e6dc] dark:bg-[#3d3d3a]" />
+                          ))}
+                        </div>
+                      }
+                    >
+                    {calorieTrackerSuggestions.length > 0 ? (
                       <div className="space-y-1.5 max-h-[50vh] overflow-y-auto">
                         {calorieTrackerSuggestions.map((suggestion) => {
                           const fallbackTitle =
@@ -21066,7 +21034,7 @@ export default function ChatPage() {
                               type="button"
                               onClick={() => void handleCalorieTrackerSuggestionSelect(suggestion)}
                               disabled={calorieTrackerLoading || calorieTrackerImageProcessing}
-                              className="flex w-full items-center gap-3 rounded-xl border border-neutral-200 px-3.5 py-3 text-left transition-all hover:border-[#B87B51]/40 hover:bg-[#FBF4EC]/30 active:scale-[0.99] disabled:opacity-50 dark:border-neutral-700 dark:hover:border-[#D6A67E]/30 dark:hover:bg-[#241a14]/30"
+                              className="flex w-full items-center gap-3 rounded-xl border border-neutral-200 px-3.5 py-3 text-left transition-all hover:border-[#c96442]/40 hover:bg-[#f5f4ed]/30 active:scale-[0.99] disabled:opacity-50 dark:border-neutral-700 dark:hover:border-[#d97757]/30 dark:hover:bg-[#30302e]/30"
                             >
                               <div className="min-w-0 flex-1">
                                 <p className="text-[14px] font-medium text-foreground truncate">{title}</p>
@@ -21108,6 +21076,7 @@ export default function ChatPage() {
                         </p>
                       </div>
                     )}
+                    </Skeleton>
                   </div>
                 </>
               )}
@@ -21579,7 +21548,7 @@ export default function ChatPage() {
             <div className="px-4 py-4 flex-1 min-h-0 overflow-y-auto">
               <div className="rounded-3xl border border-neutral-200 dark:border-neutral-700 bg-background p-5">
                   <div className="text-center">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#B87B51] dark:text-[#D6A67E]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c96442] dark:text-[#d97757]">
                       New Conversation
                     </p>
                     <p className="mt-2 text-[15px] text-neutral-600 dark:text-neutral-400">
@@ -21676,7 +21645,7 @@ export default function ChatPage() {
                         newConversationResponseVerbosity
                       );
                     }}
-                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#B87B51] bg-[#FBF4EC] px-4 py-3 text-[15px] font-semibold text-[#8A5A2D] transition-colors hover:bg-[#F5E8D8] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#c96442] bg-[#f5f4ed] px-4 py-3 text-[15px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                   >
                     <span>Start conversation</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -24596,8 +24565,8 @@ export default function ChatPage() {
                           }
                           className={`flex min-h-[2.5rem] min-w-0 flex-1 items-center justify-center rounded-full border px-1.5 py-2 text-center text-[10px] font-medium leading-tight transition-colors sm:px-2 sm:text-xs ${
                             habitCreateDraft.bucket === b
-                              ? "border-[#DDB691] bg-[#FBF4EC] text-[#7C522D] dark:border-[#D6A67E] dark:bg-[#241a14] dark:text-[#F3D6B7]"
-                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#DDB691] hover:bg-[#FBF4EC] dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:border-[#6A4A33] dark:hover:bg-[#241a14]"
+                              ? "border-[#d1cfc5] bg-[#f5f4ed] text-[#4d4c48] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5]"
+                              : "border-neutral-200 bg-white text-neutral-600 hover:border-[#d1cfc5] hover:bg-[#f5f4ed] dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5] dark:hover:border-[#4d4c48] dark:hover:bg-[#30302e]"
                           }`}
                         >
                           <span className="whitespace-nowrap">{HABIT_BUCKET_SHORT_LABELS[b]}</span>
@@ -24607,7 +24576,7 @@ export default function ChatPage() {
                     <button
                       type="button"
                       onClick={() => handleFindNewHabit(habitCreateDraft.bucket)}
-                      className="mt-2.5 w-full rounded-full border border-[#DDB691] bg-[#FBF4EC] py-2.5 text-xs font-semibold text-[#7C522D] transition-colors hover:bg-[#F5E8D8] dark:border-[#6A4A33] dark:bg-[#241a14] dark:text-[#F3D6B7] dark:hover:bg-[#2e2018]"
+                      className="mt-2.5 w-full rounded-full border border-[#d1cfc5] bg-[#f5f4ed] py-2.5 text-xs font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
                     >
                       Find me a new habit
                     </button>

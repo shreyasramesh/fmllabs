@@ -33,10 +33,10 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
     <section className="landing-module-glass w-full overflow-hidden rounded-[1.75rem] border p-4 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-500 dark:text-neutral-400">
+          <p className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">
             {label}
           </p>
-          <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
+          <p className="mt-1 text-sm text-[#4d4c48] dark:text-[#b0aea5] leading-relaxed">
             {hint}
           </p>
         </div>
@@ -52,26 +52,26 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
               aria-pressed={item.selected}
               className={`relative flex min-h-[78px] w-[74px] shrink-0 flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition-all lg:w-auto ${
                 item.selected
-                  ? "border-[#B87B51] bg-[#FBF4EC] shadow-[0_12px_24px_rgba(184,123,81,0.16)] dark:border-[#D6A67E] dark:bg-[#241a14]"
-                  : "border-neutral-400/90 bg-white hover:-translate-y-0.5 hover:border-neutral-500 hover:bg-neutral-50 dark:border-neutral-600 dark:bg-neutral-950 dark:hover:border-neutral-500 dark:hover:bg-neutral-900"
+                  ? "border-[#c96442] bg-[#f5f4ed] shadow-[rgba(201,100,66,0.12)_0px_0px_0px_1px,rgba(0,0,0,0.05)_0px_4px_16px] dark:border-[#d97757] dark:bg-[#30302e]"
+                  : "border-[#e8e6dc] bg-[#faf9f5] hover:-translate-y-0.5 hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#141413] dark:hover:border-[#4d4c48] dark:hover:bg-[#30302e]"
               }`}
             >
               <span
                 className={`text-[11px] font-medium ${
                   item.struck
-                    ? "text-neutral-400 dark:text-neutral-500"
-                    : "text-neutral-500 dark:text-neutral-400"
+                    ? "text-[#b0aea5] dark:text-[#5e5d59]"
+                    : "text-[#87867f] dark:text-[#87867f]"
                 }`}
               >
                 {item.weekdayLabel}
               </span>
               <span
-                className={`mt-1 text-lg font-semibold leading-none ${
+                className={`mt-1 text-lg font-medium leading-none ${
                   item.selected
-                    ? "text-[#7C522D] dark:text-[#F3D6B7]"
+                    ? "text-[#c96442] dark:text-[#d97757]"
                     : item.struck
-                      ? "text-neutral-500 dark:text-neutral-400"
-                      : "text-foreground"
+                      ? "text-[#87867f] dark:text-[#5e5d59]"
+                      : "text-[#141413] dark:text-[#faf9f5]"
                 }`}
               >
                 {item.dateLabel}
@@ -90,7 +90,7 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
                     stroke="currentColor"
                     strokeWidth="2.4"
                     strokeLinecap="round"
-                    className="text-neutral-400/90 dark:text-neutral-500/85"
+                    className="text-[#b0aea5] dark:text-[#5e5d59]"
                   />
                 </svg>
               )}

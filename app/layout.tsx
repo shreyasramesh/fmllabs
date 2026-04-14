@@ -10,6 +10,7 @@ import { NativeHaptics } from "@/components/NativeHaptics";
 import { NativeAppUrlHandler } from "@/components/NativeAppUrlHandler";
 import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
+import "../src/bones/registry";
 
 export const metadata: Metadata = {
   title: "FixMyLife Labs",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#f5f4ed",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -69,7 +70,7 @@ export default function RootLayout({
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
+          <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet" />
           <script
             dangerouslySetInnerHTML={{
               __html: `(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.classList.toggle('dark',t==='dark');var b=localStorage.getItem('fmllabs-background');if(b==='default'||b==='air'||b==='water'||b==='earth'||b==='fire')document.documentElement.setAttribute('data-background',b);else document.documentElement.setAttribute('data-background','default');})();`,

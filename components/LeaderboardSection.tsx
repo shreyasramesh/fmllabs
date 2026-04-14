@@ -31,7 +31,7 @@ function LeaderboardTable({
   return (
     <table className="w-full text-sm">
       <thead>
-        <tr className="border-b border-neutral-200 dark:border-neutral-700">
+        <tr className="border-b border-[#e8e6dc] dark:border-[#3d3d3a]">
           <th className="text-left py-3 px-3 font-semibold text-neutral-600 dark:text-neutral-400 w-14">
             Rank
           </th>
@@ -47,7 +47,7 @@ function LeaderboardTable({
         {entries.map((e) => (
           <tr
             key={e.rank}
-            className="border-b border-neutral-200/90 last:border-0 dark:border-neutral-600/50"
+            className="border-b border-[#e8e6dc] last:border-0 dark:border-[#3d3d3a]"
           >
             <td className="py-3 px-3">
               <RankCell rank={e.rank} />
@@ -63,7 +63,7 @@ function LeaderboardTable({
                     className="rounded-full object-cover shrink-0"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-neutral-200 dark:bg-neutral-700 shrink-0 flex items-center justify-center text-neutral-500 dark:text-neutral-400 text-xs font-medium">
+                  <div className="w-8 h-8 rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a] shrink-0 flex items-center justify-center text-[#87867f] dark:text-[#5e5d59] text-xs font-medium">
                     {e.displayName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -98,7 +98,7 @@ export async function LeaderboardSection({
       {showBackLink && (
         <Link
           href="/"
-          className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground mb-8 inline-block"
+          className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors mb-8 inline-block"
         >
           ← Back to fml labs
         </Link>
@@ -117,8 +117,8 @@ export async function LeaderboardSection({
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 flex items-center gap-2">
+        <div className="rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-[#e8e6dc] dark:border-[#3d3d3a] flex items-center gap-2">
             <span className="font-semibold text-foreground">{currentMonth}</span>
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden />
           </div>
@@ -130,8 +130,8 @@ export async function LeaderboardSection({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
+        <div className="rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-neutral-50/50 dark:bg-neutral-900/50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-[#e8e6dc] dark:border-[#3d3d3a]">
             <span className="font-semibold text-foreground">All-time</span>
           </div>
           <div className="p-2">
@@ -151,14 +151,14 @@ export async function LeaderboardSection({
       )}
 
       {showFooterLinks && (
-        <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-700 flex flex-wrap gap-4">
-          <Link href="/" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+        <div className="mt-12 pt-8 border-t border-[#e8e6dc] dark:border-[#3d3d3a] flex flex-wrap gap-4">
+          <Link href="/" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             ← Back to fml labs
           </Link>
-          <Link href="/faq" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/faq" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             FAQ
           </Link>
-          <Link href="/about" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-foreground">
+          <Link href="/about" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             About the Creator
           </Link>
         </div>

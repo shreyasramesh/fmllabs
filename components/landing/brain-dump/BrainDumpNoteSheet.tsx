@@ -2,6 +2,8 @@
 
 import React, { useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo } from "react";
 import type { BrainDumpCategory } from "@/lib/gemini";
+import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
+import type { JournalImageAnalysis } from "@/lib/journal-image-analysis";
 import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
@@ -271,7 +273,7 @@ function shouldKeepJournalContextTitleInline(cat: BrainDumpJournalContextRow["jo
 }
 
 const REFLECTION_NEW_CONV_BTN_BASE =
-  "inline-flex items-center gap-1 rounded-full border border-[#B87B51]/45 bg-[#B87B51]/12 font-semibold text-[#7C522D] dark:border-[#D6A67E]/50 dark:bg-[#D6A67E]/15 dark:text-[#F3D6B7]";
+  "inline-flex items-center gap-1 rounded-full border border-[#c96442]/45 bg-[#c96442]/12 font-semibold text-[#4d4c48] dark:border-[#d97757]/50 dark:bg-[#d97757]/15 dark:text-[#b0aea5]";
 const REFLECTION_ACTION_PILL_BASE =
   "inline-flex items-center justify-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold";
 const REFLECTION_ACTION_PILL_WIDE = "h-7 w-[4.6rem]";
@@ -1417,6 +1419,15 @@ export function BrainDumpCaptureView({
 
   const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
 
+  const handleImageAnalysesReady = useCallback((analyses: JournalImageAnalysis[]) => {
+    const texts = analyses.map((a) => a.extractedText).filter(Boolean);
+    if (texts.length === 0) return;
+    setSentenceDraft((prev) => {
+      const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
+      return prefix + texts.join("\n");
+    });
+  }, [setSentenceDraft]);
+
   // Category filter
   const [filterCategory, setFilterCategory] = React.useState<string | null>(null);
 
@@ -1708,6 +1719,12 @@ export function BrainDumpCaptureView({
 
     return (
       <>
+        <BrainDumpImageIngestBar
+          layout="floating"
+          hintText={sentenceDraft}
+          onAnalysesReady={handleImageAnalysesReady}
+          disabled={draftDisabled}
+        />
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
           {filterPills}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">

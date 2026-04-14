@@ -23,7 +23,7 @@ export function LandingMobileWeightTargetPanel({
   if (!hasBoth) {
     return (
       <div className="landing-module-glass rounded-2xl border border-neutral-200/90 px-4 py-4 dark:border-neutral-700/80">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-[#7C522D]/90 dark:text-[#D6A67E]/90">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-[#4d4c48]/90 dark:text-[#d97757]/90">
           Target
         </p>
         <p className="mt-2 text-[13px] text-neutral-600 dark:text-neutral-400">{emptyHint}</p>
@@ -57,7 +57,7 @@ export function LandingMobileWeightTargetPanel({
 
   return (
     <div className="landing-module-glass rounded-2xl border border-neutral-200/90 px-4 py-4 dark:border-neutral-700/80">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-[#7C522D]/90 dark:text-[#D6A67E]/90">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-[#4d4c48]/90 dark:text-[#d97757]/90">
         Target
       </p>
       <p className="mt-1 text-[15px] font-semibold text-foreground">{direction}</p>

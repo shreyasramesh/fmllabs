@@ -11,8 +11,8 @@ export function ThemeToggle({ inverted }: { inverted?: boolean }) {
       onClick={toggleTheme}
       className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
         inverted
-          ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200"
-          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          ? "text-[#faf9f5] dark:text-[#141413] hover:text-[#e8e6dc] dark:hover:text-[#30302e] hover:bg-[#3d3d3a] dark:hover:bg-[#e8e6dc]"
+          : "text-[#5e5d59] dark:text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] hover:bg-[#e8e6dc] dark:hover:bg-[#30302e]"
       }`}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
     >

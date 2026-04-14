@@ -183,7 +183,7 @@ export default function JournalNewPage() {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
-      <header className="shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
+      <header className="shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-[#e8e6dc] dark:border-[#3d3d3a]">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/chat/new"
@@ -211,7 +211,7 @@ export default function JournalNewPage() {
               </Link>
               <Link
                 href={`/sign-up?redirect_url=${encodeURIComponent("/chat/journal/new")}`}
-                className="inline-flex px-4 py-2 rounded-xl text-sm font-medium border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                className="inline-flex px-4 py-2 rounded-xl text-sm font-medium border border-[#e8e6dc] dark:border-[#3d3d3a] hover:bg-[#f0eee6] dark:hover:bg-[#30302e]"
               >
                 Create account
               </Link>
@@ -219,7 +219,7 @@ export default function JournalNewPage() {
           </div>
         ) : (
           <div className="flex-1 min-h-0 flex flex-col gap-4">
-            <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-background px-2.5 py-2">
+            <div className="w-full rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-background px-2.5 py-2">
               <div className="mb-1.5 flex items-center justify-between px-0.5">
                 <p className="text-xs font-semibold text-foreground">Last 7 days</p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -239,7 +239,7 @@ export default function JournalNewPage() {
                         className={`relative w-14 sm:w-auto shrink-0 flex flex-col items-center justify-center rounded-lg border px-1 py-2 transition-colors ${
                           selected
                             ? "border-foreground bg-neutral-100 dark:bg-neutral-800"
-                            : "border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+                            : "border-[#e8e6dc] dark:border-[#3d3d3a] hover:bg-[#f0eee6] dark:hover:bg-[#30302e]"
                         }`}
                         aria-pressed={selected}
                       >
@@ -271,23 +271,23 @@ export default function JournalNewPage() {
                 {entriesBySelectedDay.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-background px-3 py-2.5"
+                    className="rounded-xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-background px-3 py-2.5"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <h2 className="text-sm font-semibold text-foreground">{item.title}</h2>
                       <span
                         className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${
                           item.typeLabel === "Nutrition"
-                            ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
+                            ? "bg-[#f5f4ed] text-[#c96442] dark:bg-[#30302e] dark:text-[#d97757]"
                             : item.typeLabel === "Exercise"
                               ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200"
-                              : "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
+                              : "bg-[#e8e6dc] text-[#4d4c48] dark:bg-[#3d3d3a] dark:text-[#faf9f5]"
                         }`}
                       >
                         {item.typeLabel}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    <p className="mt-1 text-sm text-[#4d4c48] dark:text-[#b0aea5]">
                       {item.preview || "No preview available."}
                     </p>
                     <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{item.dateText}</p>

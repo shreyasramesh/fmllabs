@@ -36,6 +36,7 @@
     "@deepgram/sdk": "^5.0.0",
     "@google/generative-ai": "^0.21.0",
     "@tailwindcss/typography": "^0.5.19",
+    "boneyard-js": "^1.7.6",
     "dagre": "^0.8.5",
     "highcharts": "^12.5.0",
     "highcharts-react-official": "^3.2.3",

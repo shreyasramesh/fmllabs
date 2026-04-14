@@ -223,7 +223,7 @@ export function LandingSleepRecoveryChart({
       <div className="flex flex-col gap-5">
         {!chartsOnly ? (
           <div className="flex flex-col items-center gap-1 text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B87B51] dark:text-[#D6A67E]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c96442] dark:text-[#d97757]">
               Sleep &amp; Recovery
             </p>
             <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">

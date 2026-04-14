@@ -137,7 +137,7 @@ export function LandingTimelineCard({
   return (
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B87B51] dark:text-[#D6A67E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c96442] dark:text-[#d97757]">
           {eyebrow}
         </p>
         <h2 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
@@ -200,10 +200,10 @@ export function LandingTimelineCard({
                 }}
               >
                 <div
-                  className="w-px border-l border-dashed border-[#B87B51]/70 dark:border-[#D6A67E]/70"
+                  className="w-px border-l border-dashed border-[#c96442]/70 dark:border-[#d97757]/70"
                   style={{ height: activeLanes.length * LANE_HEIGHT }}
                 />
-                <span className="mt-0.5 rounded-sm bg-[#B87B51]/10 px-1 text-[7px] font-bold uppercase tracking-wide text-[#B87B51] dark:text-[#D6A67E]">
+                <span className="mt-0.5 rounded-sm bg-[#c96442]/10 px-1 text-[7px] font-bold uppercase tracking-wide text-[#c96442] dark:text-[#d97757]">
                   Now
                 </span>
               </div>

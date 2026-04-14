@@ -279,8 +279,12 @@ export interface SavedTranscript {
   channel?: string;
   /** When omitted, treated as YouTube for backward compatibility. */
   sourceType?: "youtube" | "journal";
-  /** Journal subtype used for calorie tracking and spend entries. */
-  journalCategory?: "nutrition" | "exercise" | "spend";
+  /** Journal subtype used for calorie tracking, spend entries, and commonplace quotes. */
+  journalCategory?: "nutrition" | "exercise" | "spend" | "quote";
+  /** Commonplace book: source title (book, film, article, podcast). */
+  quoteSource?: string;
+  /** Commonplace book: author or speaker name. */
+  quoteAuthor?: string;
   /** Optional shared id to link related journal rows (e.g. mixed nutrition+exercise input). */
   journalBatchId?: string;
   /** Calendar date the user assigned to the entry (journal only); display and sorting. */
@@ -2202,6 +2206,84 @@ export async function saveJournalTranscript(
     _id: result.insertedId.toString(),
   }) as SavedTranscript & { _id: string };
 }
+
+// ─── Commonplace Book ─────────────────────────────────────────────────────────
+
+export async function getCommonplaceEntries(
+  userId: string
+): Promise<(SavedTranscript & { _id: string })[]> {
+  const cacheKey = `${userId}:commonplace`;
+  const cached = transcriptsCache.get<(SavedTranscript & { _id: string })[]>(cacheKey);
+  if (cached) return cached;
+  const database = await getDb();
+  const docs = await database
+    .collection<SavedTranscriptDoc>("transcripts")
+    .find({ userId, sourceType: "journal", journalCategory: "quote" })
+    .sort({ createdAt: -1 })
+    .toArray();
+  const result = docs.map((d) =>
+    decryptTranscriptFields({ ...d, _id: d._id.toString() } as SavedTranscript & { _id: string })
+  ) as (SavedTranscript & { _id: string })[];
+  transcriptsCache.set(cacheKey, result, TTL_2M);
+  return result;
+}
+
+export async function saveCommonplaceEntry(
+  userId: string,
+  transcriptText: string,
+  quoteSource: string,
+  quoteAuthor?: string
+): Promise<SavedTranscript & { _id: string }> {
+  transcriptsCache.invalidatePrefix(userId);
+  const database = await getDb();
+  const now = new Date();
+  const videoId = `commonplace_${new ObjectId().toHexString()}`;
+  const doc = encryptTranscriptFields({
+    userId,
+    videoId,
+    videoTitle: quoteSource.trim() || "Commonplace entry",
+    sourceType: "journal" as const,
+    journalCategory: "quote" as const,
+    quoteSource: quoteSource.trim(),
+    ...(quoteAuthor?.trim() ? { quoteAuthor: quoteAuthor.trim() } : {}),
+    transcriptText,
+    createdAt: now,
+    updatedAt: now,
+  }) as Omit<SavedTranscript, "_id">;
+  const result = await database.collection("transcripts").insertOne(doc);
+  return decryptTranscriptFields({
+    ...doc,
+    _id: result.insertedId.toString(),
+  }) as SavedTranscript & { _id: string };
+}
+
+export async function updateCommonplaceEntry(
+  id: string,
+  userId: string,
+  fields: { transcriptText?: string; quoteSource?: string; quoteAuthor?: string }
+): Promise<boolean> {
+  transcriptsCache.invalidatePrefix(userId);
+  const database = await getDb();
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return false;
+  }
+  const $set: Record<string, unknown> = { updatedAt: new Date() };
+  if (fields.transcriptText !== undefined) {
+    const enc = encryptTranscriptFields({ transcriptText: fields.transcriptText }) as Record<string, unknown>;
+    Object.assign($set, enc);
+  }
+  if (fields.quoteSource !== undefined) $set.quoteSource = fields.quoteSource.trim();
+  if (fields.quoteAuthor !== undefined) $set.quoteAuthor = fields.quoteAuthor.trim();
+  const result = await database
+    .collection<SavedTranscriptDoc>("transcripts")
+    .updateOne({ _id: oid, userId, journalCategory: "quote" }, { $set });
+  return result.modifiedCount > 0;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 
 export async function upsertReusableJournalItem(
   userId: string,
