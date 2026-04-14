@@ -1,6 +1,8 @@
 import { Resend } from "resend";
+import { PRODUCT_NAME } from "@/lib/product-tagline";
 
-const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "fml labs <onboarding@resend.dev>";
+const FROM_EMAIL =
+  process.env.CONTACT_FROM_EMAIL ?? `${PRODUCT_NAME} <onboarding@resend.dev>`;
 
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY?.trim();

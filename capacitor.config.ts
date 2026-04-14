@@ -4,7 +4,7 @@ const serverUrl = process.env.CAPACITOR_SERVER_URL ?? "https://www.fmllabs.ai";
 
 const config: CapacitorConfig = {
   appId: "ai.fmllabs.app",
-  appName: "FixMyLife Labs",
+  appName: "mainichi",
   webDir: "public",
   server: {
     url: serverUrl,

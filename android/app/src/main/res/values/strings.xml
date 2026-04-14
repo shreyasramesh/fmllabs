@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">FixMyLife Labs</string>
-    <string name="title_activity_main">FixMyLife Labs</string>
+    <string name="app_name">mainichi</string>
+    <string name="title_activity_main">mainichi</string>
     <string name="package_name">ai.fmllabs.app</string>
     <string name="custom_url_scheme">ai.fmllabs.app</string>
     <string name="widget_calorie_description">Shows today\'s calorie and macro tracking summary</string>

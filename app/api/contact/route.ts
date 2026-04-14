@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mail";
+import { PRODUCT_NAME } from "@/lib/product-tagline";
 
 const TO_EMAIL = "shreyas.ramesh@gmail.com";
 
@@ -43,8 +44,8 @@ export async function POST(request: Request) {
       to: [TO_EMAIL],
       replyTo: [senderEmail],
       subject: type === "feedback"
-      ? `fml labs feedback from ${senderEmail}`
-      : `fml labs contact from ${senderEmail}`,
+      ? `${PRODUCT_NAME} feedback from ${senderEmail}`
+      : `${PRODUCT_NAME} contact from ${senderEmail}`,
       html: `
         <p><strong>From:</strong> ${senderEmail}</p>
         <p><strong>Message:</strong></p>

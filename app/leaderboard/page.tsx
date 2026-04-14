@@ -1,8 +1,8 @@
 import { LeaderboardSection } from "@/components/LeaderboardSection";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "Leaderboard — FixMyLife Labs",
+  title: `Leaderboard — ${PRODUCT_NAME}`,
   description: `${PRODUCT_TAGLINE} — Top learners by XP. Climb the leaderboard.`,
 };
 

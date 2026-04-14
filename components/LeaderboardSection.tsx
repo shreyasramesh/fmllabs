@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import { getLeaderboard } from "@/lib/score";
 
 function RankCell({ rank }: { rank: number }) {
@@ -100,7 +100,7 @@ export async function LeaderboardSection({
           href="/"
           className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors mb-8 inline-block"
         >
-          ← Back to fml labs
+          ← Back to {PRODUCT_NAME}
         </Link>
       )}
       <div className={compact ? "mb-6" : "mb-8"}>
@@ -111,7 +111,7 @@ export async function LeaderboardSection({
           {PRODUCT_TAGLINE}
         </p>
         <p className="text-neutral-600 dark:text-neutral-400 text-base max-w-2xl mt-2">
-          Build concepts, use mental models, and learn with perspective cards to earn XP and climb
+          Journal, build concepts, use mental models, and learn with perspective cards to earn XP and climb
           the leaderboard.
         </p>
       </div>
@@ -153,7 +153,7 @@ export async function LeaderboardSection({
       {showFooterLinks && (
         <div className="mt-12 pt-8 border-t border-[#e8e6dc] dark:border-[#3d3d3a] flex flex-wrap gap-4">
           <Link href="/" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
-            ← Back to fml labs
+            ← Back to {PRODUCT_NAME}
           </Link>
           <Link href="/faq" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
             FAQ

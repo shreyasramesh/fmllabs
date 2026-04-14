@@ -439,7 +439,8 @@ export function MathCurveLoader({ visible }: { visible: boolean }) {
 
     for (let i = 0; i < curve.particleCount; i++) {
       const c = document.createElementNS(NS, "circle");
-      c.setAttribute("fill", "currentColor");
+      /* App accent (terracotta light / warm orange dark) from globals.css */
+      c.setAttribute("fill", "var(--accent)");
       group.appendChild(c);
       circlesRef.current.push(c);
     }
@@ -512,18 +513,17 @@ export function MathCurveLoader({ visible }: { visible: boolean }) {
           ref={svgRef}
           viewBox="0 0 100 100"
           className="h-32 w-32 overflow-visible"
-          style={{ color: "var(--foreground)" }}
           fill="none"
           aria-hidden="true"
         >
           <g ref={groupRef}>
             <path
               ref={pathRef}
-              stroke="currentColor"
+              stroke="var(--accent)"
               strokeWidth={curve.strokeWidth}
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={0.1}
+              opacity={0.14}
             />
           </g>
         </svg>

@@ -333,6 +333,8 @@ export function CaptureDraftSentenceRow({
   showEstimateDetailTap?: boolean;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
+  /** Mobile Quick Note: avoid autoFocus so the OS keyboard stays closed until the user taps the field. */
+  const [draftTextareaFocused, setDraftTextareaFocused] = useState(false);
   const trimmedDraft = draft.trim();
   const estimateNutrition = shouldRunQuickEstimate(draft);
   const estimateSleep = looksLikeSleepSentence(draft);
@@ -380,6 +382,12 @@ export function CaptureDraftSentenceRow({
       <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
     );
 
+  const showIdleCaret =
+    variant === "fullScreen" &&
+    !disabled &&
+    trimmedDraft === "" &&
+    !draftTextareaFocused;
+
   return (
     <>
       <div
@@ -388,23 +396,33 @@ export function CaptureDraftSentenceRow({
         }`}
         aria-busy={disabled || undefined}
       >
-        <textarea
-          ref={setRefs}
-          value={draft}
-          onChange={(e) => onDraftValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              onEnterCommit();
-            }
-          }}
-          disabled={disabled}
-          rows={variant === "fullScreen" ? 2 : 1}
-          autoFocus
-          placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing…"}
-          className={`${taMin} min-w-0 w-full resize-none border-0 bg-transparent ${variant === "fullScreen" ? "text-[16px] leading-tight" : "text-[17px] leading-snug"} text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-100 ${NOTES_LIKE_TEXTAREA}`}
-          aria-label="Note draft"
-        />
+        <div className="relative min-h-0 min-w-0">
+          <textarea
+            ref={setRefs}
+            value={draft}
+            onChange={(e) => onDraftValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onEnterCommit();
+              }
+            }}
+            onFocus={() => setDraftTextareaFocused(true)}
+            onBlur={() => setDraftTextareaFocused(false)}
+            disabled={disabled}
+            rows={variant === "fullScreen" ? 2 : 1}
+            autoFocus={variant !== "fullScreen"}
+            placeholder={variant === "fullScreen" ? "Start typing…" : "Start typing…"}
+            className={`${taMin} min-w-0 w-full resize-none border-0 bg-transparent ${variant === "fullScreen" ? "text-[16px] leading-tight" : "text-[17px] leading-snug"} text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-0 dark:placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-100 ${NOTES_LIKE_TEXTAREA}`}
+            aria-label="Note draft"
+          />
+          {showIdleCaret ? (
+            <span
+              className="pointer-events-none absolute left-0 top-[0.45rem] h-[1.05em] w-px animate-pulse bg-foreground/80 dark:bg-foreground/70"
+              aria-hidden
+            />
+          ) : null}
+        </div>
         {showEstimateDetailTap ? (
           <button
             type="button"

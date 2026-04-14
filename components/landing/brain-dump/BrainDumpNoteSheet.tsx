@@ -1646,9 +1646,6 @@ export function BrainDumpCaptureView({
     setImageReviewError(null);
   }, [pendingImageAnalyses, revokePendingImagePreviews]);
 
-  // Category filter
-  const [filterCategory, setFilterCategory] = React.useState<string | null>(null);
-
   // Track new entry IDs for fade-in animation
   const prevRowIdsRef = React.useRef<Set<string>>(new Set());
   const [newRowIds, setNewRowIds] = React.useState<Set<string>>(new Set());
@@ -1790,8 +1787,8 @@ export function BrainDumpCaptureView({
     dragTouchStartY.current = e.touches[0]?.clientY ?? 0;
     setDragIdx(idx);
     setDragOverIdx(idx);
-    setDragLocalOrder((prev) => prev ?? filteredRows.map((r) => r.id));
-  // filteredRows captured via closure — intentionally excluded from deps for perf
+    setDragLocalOrder((prev) => prev ?? journalRowsOrdered.map((r) => r.id));
+  // journalRowsOrdered captured via closure — intentionally excluded from deps for perf
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1831,7 +1828,7 @@ export function BrainDumpCaptureView({
     const movedId = newOrder[dragIdx];
     if (movedId) {
       // Build a combined ordered list: dragLocalOrder IDs mapped back to rows
-      const rowById = new Map(filteredRows.map((r) => [r.id, r]));
+      const rowById = new Map(journalRowsOrdered.map((r) => [r.id, r]));
       const ordered = newOrder.map((id) => rowById.get(id)).filter((r): r is BrainDumpJournalContextRow => !!r);
       const prevRow = ordered[dragIdx - 1];
       const nextRow = ordered[dragIdx + 1];
@@ -1854,30 +1851,16 @@ export function BrainDumpCaptureView({
     setDragIdx(null);
     setDragOverIdx(null);
     setDragLocalOrder(null);
-  // filteredRows captured via closure
+  // journalRowsOrdered captured via closure
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragIdx, dragLocalOrder, onReorderContextEntry]);
 
-  // Category filter pills — unique categories from displayed rows
-  const distinctCategories = React.useMemo(() => {
-    const seen = new Set<string>();
-    for (const row of journalRowsOrdered) {
-      if (row.journalCategory) seen.add(row.journalCategory);
-    }
-    return Array.from(seen);
-  }, [journalRowsOrdered]);
-
-  const filteredRows = React.useMemo(() => {
-    if (!filterCategory) return journalRowsOrdered;
-    return journalRowsOrdered.filter((r) => r.journalCategory === filterCategory);
-  }, [journalRowsOrdered, filterCategory]);
-
   // When a drag reorder is in progress, apply the local order override
   const displayRows = React.useMemo(() => {
-    if (!dragLocalOrder) return filteredRows;
-    const byId = new Map(filteredRows.map((r) => [r.id, r]));
+    if (!dragLocalOrder) return journalRowsOrdered;
+    const byId = new Map(journalRowsOrdered.map((r) => [r.id, r]));
     return dragLocalOrder.map((id) => byId.get(id)).filter((r): r is BrainDumpJournalContextRow => !!r);
-  }, [filteredRows, dragLocalOrder]);
+  }, [journalRowsOrdered, dragLocalOrder]);
 
   const journalRowsSheet =
     journalRowsOrdered.length > 0 ? (
@@ -1904,37 +1887,6 @@ export function BrainDumpCaptureView({
     ) : null;
 
   if (full) {
-    // ── Category filter pills ──────────────────────────────────────────────
-    const filterPills = distinctCategories.length >= 2 ? (
-      <div className="flex shrink-0 gap-1.5 overflow-x-auto pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <button
-          type="button"
-          onClick={() => setFilterCategory(null)}
-          className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
-            !filterCategory
-              ? "border-orange-400 bg-transparent text-orange-600 dark:border-transparent dark:bg-neutral-700 dark:text-neutral-100"
-              : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
-          }`}
-        >
-          All
-        </button>
-        {distinctCategories.map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            onClick={() => setFilterCategory(filterCategory === cat ? null : cat)}
-            className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-medium capitalize transition-colors ${
-              filterCategory === cat
-                ? "border-orange-400 bg-transparent text-orange-600 dark:border-transparent dark:bg-neutral-700 dark:text-neutral-100"
-                : "border-neutral-200 bg-transparent text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-    ) : null;
-
     return (
       <>
         <BrainDumpImageIngestBar
@@ -2171,7 +2123,6 @@ export function BrainDumpCaptureView({
           : null}
 
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
-          {filterPills}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
             {displayRows.length === 0 && captureEntries.length === 0 ? (
               <div className="flex flex-col items-center gap-1 py-8 text-center">

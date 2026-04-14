@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "The Mission of fml labs — fml labs",
-  description: `${PRODUCT_TAGLINE} — The mission and purpose of fml labs`,
+  title: `The mission of ${PRODUCT_NAME} — ${PRODUCT_NAME}`,
+  description: `${PRODUCT_TAGLINE} — The mission and purpose of ${PRODUCT_NAME}`,
 };
 
 export default function MissionPage() {
@@ -23,7 +23,9 @@ export default function MissionPage() {
           Home
         </Link>
 
-        <h1 className="font-serif text-3xl font-medium leading-tight text-[#141413] dark:text-[#faf9f5] md:text-4xl mb-4">The Mission of fml labs</h1>
+        <h1 className="font-serif text-3xl font-medium leading-tight text-[#141413] dark:text-[#faf9f5] md:text-4xl mb-4">
+          The mission of {PRODUCT_NAME}
+        </h1>
         <p className="text-[#5e5d59] dark:text-[#87867f] leading-[1.6] text-base font-medium mb-10">
           {PRODUCT_TAGLINE}
         </p>
@@ -36,11 +38,15 @@ export default function MissionPage() {
             Design inspired by the penco calendar and claude.
           </p>
           <p>
-            fml labs is built to support one practical goal: help people make better decisions day-to-day by combining
-            <strong className="text-[#141413] dark:text-[#faf9f5]"> deep thinking </strong> with <strong className="text-[#141413] dark:text-[#faf9f5]">daily execution</strong>.
+            {PRODUCT_NAME} is built so you can <strong className="text-[#141413] dark:text-[#faf9f5]">capture your story one day at a time</strong>
+            — journaling, chat, reflection, and small daily wins in one calm workspace — and still go deep when you need{" "}
+            <strong className="text-[#141413] dark:text-[#faf9f5]">first-principles thinking</strong>,{" "}
+            <strong className="text-[#141413] dark:text-[#faf9f5]">mental models</strong>, and{" "}
+            <strong className="text-[#141413] dark:text-[#faf9f5]">long-term memory</strong> to support better decisions.
           </p>
           <p>
-            The product intentionally lives at the intersection of <strong className="text-[#141413] dark:text-[#faf9f5]">productivity and wellness</strong> — journaling, reflection, nutrition tracking, and mental models in one workflow — so insight is easier to turn into consistent action.
+            The product lives at the intersection of <strong className="text-[#141413] dark:text-[#faf9f5]">daily life and depth</strong>{" "}
+            — nutrition, habits, perspective cards, and conversation — so what you capture today is easier to learn from tomorrow.
           </p>
           <p>
             It is a personal, evolving project focused on building useful AI systems that are calm, practical, and grounded in everyday life.

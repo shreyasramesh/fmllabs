@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "FAQ — fml labs",
+  title: `FAQ — ${PRODUCT_NAME}`,
   description: `${PRODUCT_TAGLINE} — Frequently asked questions about privacy, encryption, and features`,
 };
 
@@ -22,12 +22,12 @@ export default function FaqPage() {
           href="/"
           className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] mb-8 inline-block transition-colors"
         >
-          ← Back to fml labs
+          ← Back to {PRODUCT_NAME}
         </Link>
 
         <h1 className="font-serif text-3xl font-medium leading-tight text-[#141413] dark:text-[#faf9f5] md:text-4xl mb-3">Frequently asked questions</h1>
         <p className="text-base text-[#5e5d59] dark:text-[#87867f] mb-8 leading-relaxed">
-          Quick answers about security, privacy, and how fml labs works.
+          Quick answers about security, privacy, and how {PRODUCT_NAME} works.
         </p>
 
         <nav
@@ -99,7 +99,7 @@ export default function FaqPage() {
 
             <h3 className="text-base font-medium mt-6 mb-2 text-[#141413] dark:text-[#faf9f5]">Is my data sold or used for ads?</h3>
             <p>
-              fml labs is a personal, non-commercial project. See the{" "}
+              {PRODUCT_NAME} is a personal, non-commercial project. See the{" "}
               <Link href="/privacy-policy" className="text-[#c96442] underline underline-offset-2 hover:no-underline dark:text-[#d97757]">
                 Privacy Policy
               </Link>{" "}
@@ -144,10 +144,10 @@ export default function FaqPage() {
           <section id="features" className="scroll-mt-24">
             <h2 className="font-serif text-2xl font-medium mb-4 text-[#141413] dark:text-[#faf9f5]">Mental models, concepts & chat</h2>
 
-            <h3 className="text-base font-medium mt-6 mb-2 text-[#141413] dark:text-[#faf9f5]">What is fml labs for?</h3>
+            <h3 className="text-base font-medium mt-6 mb-2 text-[#141413] dark:text-[#faf9f5]">What is {PRODUCT_NAME} for?</h3>
             <p className="text-[#4d4c48] dark:text-[#b0aea5]">
-              {PRODUCT_TAGLINE} — The app combines a conversational chat with mental models, custom concepts,
-              long-term memory, perspective cards, and related tools to help you think more clearly over time.
+              {PRODUCT_TAGLINE} — The app combines daily journaling and chat with mental models, custom concepts,
+              long-term memory, perspective cards, and related tools so you can capture your story and think more clearly over time.
             </p>
 
             <h3 className="text-base font-medium mt-6 mb-2 text-[#141413] dark:text-[#faf9f5]">What are mental models and frameworks?</h3>
@@ -195,7 +195,7 @@ export default function FaqPage() {
               </Link>
               . For the mission behind the project, see{" "}
               <Link href="/mission" className="text-[#c96442] underline underline-offset-2 hover:no-underline dark:text-[#d97757]">
-                The Mission of fml labs
+                The mission of {PRODUCT_NAME}
               </Link>
               . For policy questions, contact{" "}
               <a href="mailto:shreyas.ramesh@gmail.com" className="text-[#c96442] underline underline-offset-2 hover:no-underline dark:text-[#d97757]">
@@ -220,7 +220,7 @@ export default function FaqPage() {
             Privacy Policy
           </Link>
           <Link href="/" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
-            ← Back to fml labs
+            ← Back to {PRODUCT_NAME}
           </Link>
         </div>
       </div>

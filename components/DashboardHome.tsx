@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { resolveUserDisplayNameForPrompt } from "@/lib/user-display-name";
 import type { UserScore } from "@/lib/score-types";
 import type { DashboardStats } from "@/lib/dashboard-stats";
+import { PRODUCT_NAME } from "@/lib/product-tagline";
 import { HeaderStatsPill } from "@/components/HeaderStatsPill";
 import { StatsOverviewModal } from "@/components/StatsOverviewModal";
 
@@ -105,7 +106,7 @@ export function DashboardHome() {
             You&apos;ve been reflecting. Here&apos;s your snapshot.
           </h2>
           <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 max-w-md mx-auto">
-            A quick look at your learning and conversations on FixMyLife Labs.
+            A quick look at your learning and conversations on {PRODUCT_NAME}.
           </p>
           <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link

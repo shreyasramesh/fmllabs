@@ -1,8 +1,8 @@
 {
-  "name": "FixMyLife Labs",
-  "short_name": "FixMyLife Labs",
+  "name": "mainichi",
+  "short_name": "mainichi",
   "prefer_related_applications": false,
-  "description": "Organize concepts, goals, and conversations so your past thinking actually shows up when you need it",
+  "description": "Capture your story, one day at a time.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafafa",

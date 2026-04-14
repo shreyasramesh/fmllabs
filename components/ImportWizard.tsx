@@ -7,11 +7,12 @@ import {
   type ImportPayload,
   type ImportSectionKey,
 } from "@/lib/import-parser";
+import { PRODUCT_NAME } from "@/lib/product-tagline";
 
 const IMPORT_PROMPT = `I need to convert my health and wellness data into a specific markdown format for import into an app. Please transform my data into the exact format below. Only include sections where I have data. Use metric units (kg for weight). Use 24-hour time format (HH:MM). Use ISO dates (YYYY-MM-DD). If a value is unknown, write \`unknown\`. Do not add extra columns or sections.
 
 \`\`\`markdown
-# FML Labs Data Import
+# ${PRODUCT_NAME} Data Import
 
 ## Nutrition
 | Date | Time | Description | Calories (kcal) | Protein (g) | Carbs (g) | Fat (g) | Fiber (g) | Sugar (g) | Sodium (mg) | Caffeine (mg) | Tag | Notes |

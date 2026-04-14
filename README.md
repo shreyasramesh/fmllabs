@@ -1,14 +1,14 @@
-# fml labs
+# mainichi (まいにち)
 
-**Organize concepts, goals, and conversations so your past thinking actually shows up when you need it.**
+**Capture your story, one day at a time.**
 
-A decision-making chat application that helps you think deeper. Uses mental models and cognitive biases from the index to surface relevant concepts and guide better decisions.
+A journaling and chat app with mental models, long-term memory, and perspective cards—so daily reflection and deeper thinking stay in one place.
 
 ## Features
 
 - **Clerk authentication** — Sign in, sign up, protected routes
 - **MongoDB persistence** — Chat sessions and messages per user
-- **Gemini 2.5 Flash** — AI coach for decision-making
+- **Gemini 2.5 Flash** — AI for journaling, chat, and reflection
 - **Mental models integration** — Surfaces relevant cognitive biases from 55+ models
 - **PWA** — Installable on mobile and desktop
 - **Responsive** — Mobile, tablet, desktop

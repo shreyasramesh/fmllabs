@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "Privacy Policy — fml labs",
-  description: `${PRODUCT_TAGLINE} — Privacy Policy for fml labs`,
+  title: `Privacy Policy — ${PRODUCT_NAME}`,
+  description: `${PRODUCT_TAGLINE} — Privacy Policy for ${PRODUCT_NAME}`,
 };
 
 export default function PrivacyPolicyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
           href="/"
           className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors mb-8 inline-block"
         >
-          ← Back to fml labs
+          ← Back to {PRODUCT_NAME}
         </Link>
 
         <h1 className="font-serif text-3xl font-medium leading-tight mb-3 md:text-4xl">Privacy Policy</h1>
@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="font-serif text-xl font-medium mt-8 mb-3 text-[#141413] dark:text-[#faf9f5]">1. Introduction</h2>
             <p>
-              fml labs is a personal, non-commercial research project operated by Shreyas Ramesh. This Privacy Policy explains how data is handled within this technical demonstration. Because this is a personal project, your data is never used for commercial gain.
+              {PRODUCT_NAME} is a personal, non-commercial research project operated by Shreyas Ramesh. This Privacy Policy explains how data is handled within this technical demonstration. Because this is a personal project, your data is never used for commercial gain.
             </p>
           </section>
 
@@ -107,7 +107,7 @@ export default function PrivacyPolicyPage() {
             Terms of Service
           </Link>
           <Link href="/" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
-            ← Back to fml labs
+            ← Back to {PRODUCT_NAME}
           </Link>
         </div>
       </div>

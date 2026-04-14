@@ -72,26 +72,30 @@ export function useBrainDumpCapture(options: {
 
   const [pendingHabitTags, setPendingHabitTags] = useState<string[]>([]);
 
-  const persistEntries = useCallback(
-    async (entries: BrainDumpFields[], clientQuickCalories?: ClientQuickCalorieSnapshot[], habitTags?: string[]) => {
-      if (entries.length === 0 || entries.some((e) => !e.title?.trim())) {
+  /**
+   * One server round-trip: Gemini categorization (+ bundled calorie estimate for short text) and persist.
+   * Replaces separate /categorize + /save-batch calls to cut latency and duplicate LLM work.
+   */
+  const runQuickNotePipeline = useCallback(
+    async (text: string, clientQuickCalories?: ClientQuickCalorieSnapshot[], habitTags?: string[]) => {
+      const trimmed = text.trim();
+      if (!trimmed) {
         throw new Error("Could not prepare this note for saving");
       }
-      setPhase("saving");
-      const payload: Record<string, unknown> = { entries };
+      const payload: Record<string, unknown> = { text: trimmed };
       if (clientQuickCalories && clientQuickCalories.length > 0) {
         payload.clientQuickCalories = clientQuickCalories;
       }
       if (habitTags && habitTags.length > 0) {
         payload.habitTags = habitTags;
       }
-      const saveRes = await fetch("/api/me/brain-dump/save-batch", {
+      const saveRes = await fetch("/api/me/brain-dump/quick-note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       if (!saveRes.ok) {
-        const data = await saveRes.json().catch(() => ({}));
+        const data = (await saveRes.json().catch(() => ({}))) as { error?: string };
         throw new Error(data.error || "Save failed");
       }
       const saveData = (await saveRes.json()) as { results?: { category: BrainDumpCategory }[] };
@@ -101,20 +105,6 @@ export function useBrainDumpCapture(options: {
     [onSaved]
   );
 
-  const categorizeText = useCallback(async (text: string) => {
-    const catRes = await fetch("/api/me/brain-dump/categorize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
-    });
-    if (!catRes.ok) {
-      const data = await catRes.json().catch(() => ({}));
-      throw new Error(data.error || "Categorization failed");
-    }
-    const catData = (await catRes.json()) as { entries?: BrainDumpFields[] };
-    return Array.isArray(catData.entries) ? catData.entries : [];
-  }, []);
-
   /** Mobile Quick Note: one line → categorize + save. Stays on tab (phase returns to recording). */
   const saveSingleLine = useCallback(
     async (line: string, frozenMeta: EntryEstimateModalMeta) => {
@@ -122,7 +112,6 @@ export function useBrainDumpCapture(options: {
       if (!text) return;
       if (quickNoteSaveInFlightRef.current) return;
       quickNoteSaveInFlightRef.current = true;
-      // Capture habit tags at submission time (snapshot before clearing)
       const tagsAtSubmit = pendingHabitTags.slice();
       setPhase("categorizing");
       setError(null);
@@ -137,11 +126,9 @@ export function useBrainDumpCapture(options: {
           frozenMeta.status === "done" && shouldRunQuickEstimate(text)
             ? doneMetaToQuickSnapshot(text, frozenMeta)
             : null;
-        const entries = await categorizeText(text);
-
         const quickCals =
-          snap && entries.length === 1 ? ([snap] satisfies ClientQuickCalorieSnapshot[]) : undefined;
-        await persistEntries(entries, quickCals, tagsAtSubmit.length ? tagsAtSubmit : undefined);
+          snap ? ([snap] satisfies ClientQuickCalorieSnapshot[]) : undefined;
+        await runQuickNotePipeline(text, quickCals, tagsAtSubmit.length ? tagsAtSubmit : undefined);
         setPendingHabitTags([]);
         setPhase("recording");
       } catch (err) {
@@ -153,7 +140,7 @@ export function useBrainDumpCapture(options: {
         quickNoteSaveInFlightRef.current = false;
       }
     },
-    [buildCaptureEntry, categorizeText, pendingHabitTags, persistEntries]
+    [buildCaptureEntry, pendingHabitTags, runQuickNotePipeline]
   );
 
   /** Modal Done / empty-line commit: full transcript. */
@@ -166,30 +153,32 @@ export function useBrainDumpCapture(options: {
     setPhase("categorizing");
     setError(null);
     try {
-      const entries = await categorizeText(text);
-      await persistEntries(entries);
+      await runQuickNotePipeline(text);
       resetAll();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setPhase("recording");
     }
-  }, [transcript, categorizeText, persistEntries, resetAll]);
+  }, [transcript, runQuickNotePipeline, resetAll]);
 
   /** Brain dump modal: flush voice sentences into local rows. */
-  const handleTranscriptionToEntries = useCallback((text: string) => {
-    setCaptureDraft((prev) => {
-      const merged = prev ? `${prev} ${text}` : text;
-      const { commits, rest } = flushSentencesFromTyping(merged);
-      if (commits.length > 0) {
-        setCaptureEntries((e) => [
-          ...e,
-          ...commits.map((t) => buildCaptureEntry(t, { status: "idle" as const })),
-        ]);
-        return rest;
-      }
-      return merged;
-    });
-  }, [buildCaptureEntry]);
+  const handleTranscriptionToEntries = useCallback(
+    (text: string) => {
+      setCaptureDraft((prev) => {
+        const merged = prev ? `${prev} ${text}` : text;
+        const { commits, rest } = flushSentencesFromTyping(merged);
+        if (commits.length > 0) {
+          setCaptureEntries((e) => [
+            ...e,
+            ...commits.map((t) => buildCaptureEntry(t, { status: "idle" as const })),
+          ]);
+          return rest;
+        }
+        return merged;
+      });
+    },
+    [buildCaptureEntry]
+  );
 
   /** Quick Note tab: voice only extends the draft (Enter saves). */
   const handleTranscriptionToDraft = useCallback((text: string) => {

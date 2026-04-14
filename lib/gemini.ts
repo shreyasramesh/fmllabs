@@ -714,6 +714,145 @@ function toFiniteNumberOrNull(v: unknown): number | null {
   return null;
 }
 
+/**
+ * Parses a calorie-tracking finalize JSON object (from Gemini or bundled brain-dump categorize).
+ * Returns null if the payload is not a usable estimate object.
+ */
+export function tryParseCalorieTrackingFinalizePayload(
+  parsed: unknown,
+  highlightSourceText: string
+): CalorieTrackingFinalizeResult | null {
+  if (!parsed || typeof parsed !== "object") return null;
+  const p = parsed as Record<string, unknown>;
+  try {
+    const intent: CalorieTrackingIntent =
+      p.intent === "exercise" || p.intent === "mixed" ? p.intent : "nutrition";
+    const confidence: "low" | "medium" | "high" =
+      p.confidence === "low" || p.confidence === "high" ? p.confidence : "medium";
+    const confidenceScore =
+      typeof p.confidenceScore === "number" && Number.isFinite(p.confidenceScore)
+        ? Math.max(0, Math.min(100, Math.round(p.confidenceScore)))
+        : confidence === "high"
+          ? 80
+          : confidence === "medium"
+            ? 55
+            : 25;
+    const assumptions = Array.isArray(p.assumptions)
+      ? p.assumptions
+          .map((s) => (typeof s === "string" ? s.trim() : ""))
+          .filter(Boolean)
+          .slice(0, 6)
+      : [];
+    const reasoning = typeof p.reasoning === "string" ? p.reasoning.trim().slice(0, 1000) : "";
+
+    const nutritionItems: CalorieTrackingNutritionItem[] = Array.isArray(p.nutritionItems)
+      ? (p.nutritionItems as Record<string, unknown>[])
+          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
+          .map((item) => ({
+            name: (item.name as string).trim().slice(0, 200),
+            calories: toFiniteNumberOrNull(item.calories),
+            proteinGrams: toFiniteNumberOrNull(item.proteinGrams),
+            carbsGrams: toFiniteNumberOrNull(item.carbsGrams),
+            fatGrams: toFiniteNumberOrNull(item.fatGrams),
+          }))
+          .slice(0, 20)
+      : [];
+
+    const exerciseItems: CalorieTrackingExerciseItem[] = Array.isArray(p.exerciseItems)
+      ? (p.exerciseItems as Record<string, unknown>[])
+          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
+          .map((item) => ({
+            name: (item.name as string).trim().slice(0, 200),
+            caloriesBurned: toFiniteNumberOrNull(item.caloriesBurned),
+            durationMinutes: toFiniteNumberOrNull(item.durationMinutes),
+          }))
+          .slice(0, 20)
+      : [];
+
+    const nut = p.nutrition;
+    const nutrition =
+      nut && typeof nut === "object"
+        ? {
+            calories: toFiniteNumberOrNull((nut as Record<string, unknown>).calories),
+            proteinGrams: toFiniteNumberOrNull((nut as Record<string, unknown>).proteinGrams),
+            carbsGrams: toFiniteNumberOrNull((nut as Record<string, unknown>).carbsGrams),
+            fatGrams: toFiniteNumberOrNull((nut as Record<string, unknown>).fatGrams),
+            facts: {
+              totalCarbohydratesGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.totalCarbohydratesGrams
+              ),
+              dietaryFiberGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.dietaryFiberGrams
+              ),
+              sugarGrams: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.sugarGrams),
+              addedSugarsGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.addedSugarsGrams
+              ),
+              sugarAlcoholsGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.sugarAlcoholsGrams
+              ),
+              netCarbsGrams: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.netCarbsGrams),
+              saturatedFatGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.saturatedFatGrams
+              ),
+              transFatGrams: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.transFatGrams),
+              polyunsaturatedFatGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.polyunsaturatedFatGrams
+              ),
+              monounsaturatedFatGrams: toFiniteNumberOrNull(
+                (nut as { facts?: Record<string, unknown> }).facts?.monounsaturatedFatGrams
+              ),
+              cholesterolMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.cholesterolMg),
+              sodiumMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.sodiumMg),
+              calciumMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.calciumMg),
+              ironMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.ironMg),
+              potassiumMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.potassiumMg),
+              vitaminAIu: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.vitaminAIu),
+              vitaminCMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.vitaminCMg),
+              vitaminDMcg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.vitaminDMcg),
+              caffeineMg: toFiniteNumberOrNull((nut as { facts?: Record<string, unknown> }).facts?.caffeineMg),
+            },
+            notes:
+              typeof (nut as Record<string, unknown>).notes === "string"
+                ? ((nut as Record<string, unknown>).notes as string).trim()
+                : "",
+          }
+        : undefined;
+
+    const ex = p.exercise;
+    const exercise =
+      ex && typeof ex === "object"
+        ? {
+            caloriesBurned: toFiniteNumberOrNull((ex as Record<string, unknown>).caloriesBurned),
+            carbsUsedGrams: toFiniteNumberOrNull((ex as Record<string, unknown>).carbsUsedGrams),
+            fatUsedGrams: toFiniteNumberOrNull((ex as Record<string, unknown>).fatUsedGrams),
+            proteinDeltaGrams: toFiniteNumberOrNull((ex as Record<string, unknown>).proteinDeltaGrams),
+            notes:
+              typeof (ex as Record<string, unknown>).notes === "string"
+                ? ((ex as Record<string, unknown>).notes as string).trim()
+                : "",
+          }
+        : undefined;
+
+    const highlightSpans = normalizeApiHighlightSpans(highlightSourceText, p.highlightSpans);
+
+    return {
+      intent,
+      confidence,
+      confidenceScore,
+      assumptions,
+      reasoning,
+      nutritionItems,
+      exerciseItems,
+      highlightSpans,
+      nutrition,
+      exercise,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function normalizeTagToken(value: string): string {
   return value
     .toLowerCase()
@@ -1438,188 +1577,50 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
   const raw = result.response.text().trim();
   const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
   try {
-    const parsed = JSON.parse(cleaned) as {
-      intent?: string;
-      confidence?: string;
-      confidenceScore?: unknown;
-      assumptions?: unknown;
-      reasoning?: unknown;
-      nutritionItems?: unknown;
-      exerciseItems?: unknown;
-      nutrition?: {
-        calories?: unknown;
-        proteinGrams?: unknown;
-        carbsGrams?: unknown;
-        fatGrams?: unknown;
-        facts?: {
-          totalCarbohydratesGrams?: unknown;
-          dietaryFiberGrams?: unknown;
-          sugarGrams?: unknown;
-          addedSugarsGrams?: unknown;
-          sugarAlcoholsGrams?: unknown;
-          netCarbsGrams?: unknown;
-          saturatedFatGrams?: unknown;
-          transFatGrams?: unknown;
-          polyunsaturatedFatGrams?: unknown;
-          monounsaturatedFatGrams?: unknown;
-          cholesterolMg?: unknown;
-          sodiumMg?: unknown;
-          calciumMg?: unknown;
-          ironMg?: unknown;
-          potassiumMg?: unknown;
-          vitaminAIu?: unknown;
-          vitaminCMg?: unknown;
-          vitaminDMcg?: unknown;
-          caffeineMg?: unknown;
-        };
-        notes?: unknown;
-      } | null;
-      exercise?: {
-        caloriesBurned?: unknown;
-        carbsUsedGrams?: unknown;
-        fatUsedGrams?: unknown;
-        proteinDeltaGrams?: unknown;
-        notes?: unknown;
-      } | null;
-      highlightSpans?: unknown;
-    };
-
-    const intent: CalorieTrackingIntent =
-      parsed.intent === "exercise" || parsed.intent === "mixed" ? parsed.intent : "nutrition";
-    const confidence: "low" | "medium" | "high" =
-      parsed.confidence === "low" || parsed.confidence === "high" ? parsed.confidence : "medium";
-    const confidenceScore = typeof parsed.confidenceScore === "number" && Number.isFinite(parsed.confidenceScore)
-      ? Math.max(0, Math.min(100, Math.round(parsed.confidenceScore)))
-      : confidence === "high" ? 80 : confidence === "medium" ? 55 : 25;
-    const assumptions = Array.isArray(parsed.assumptions)
-      ? parsed.assumptions
-          .map((s) => (typeof s === "string" ? s.trim() : ""))
-          .filter(Boolean)
-          .slice(0, 6)
-      : [];
-    const reasoning = typeof parsed.reasoning === "string" ? parsed.reasoning.trim().slice(0, 1000) : "";
-
-    const nutritionItems: CalorieTrackingNutritionItem[] = Array.isArray(parsed.nutritionItems)
-      ? (parsed.nutritionItems as Record<string, unknown>[])
-          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
-          .map((item) => ({
-            name: (item.name as string).trim().slice(0, 200),
-            calories: toFiniteNumberOrNull(item.calories),
-            proteinGrams: toFiniteNumberOrNull(item.proteinGrams),
-            carbsGrams: toFiniteNumberOrNull(item.carbsGrams),
-            fatGrams: toFiniteNumberOrNull(item.fatGrams),
-          }))
-          .slice(0, 20)
-      : [];
-
-    const exerciseItems: CalorieTrackingExerciseItem[] = Array.isArray(parsed.exerciseItems)
-      ? (parsed.exerciseItems as Record<string, unknown>[])
-          .filter((item) => item && typeof item === "object" && typeof item.name === "string")
-          .map((item) => ({
-            name: (item.name as string).trim().slice(0, 200),
-            caloriesBurned: toFiniteNumberOrNull(item.caloriesBurned),
-            durationMinutes: toFiniteNumberOrNull(item.durationMinutes),
-          }))
-          .slice(0, 20)
-      : [];
-
-    const nutrition =
-      parsed.nutrition && typeof parsed.nutrition === "object"
-        ? {
-            calories: toFiniteNumberOrNull(parsed.nutrition.calories),
-            proteinGrams: toFiniteNumberOrNull(parsed.nutrition.proteinGrams),
-            carbsGrams: toFiniteNumberOrNull(parsed.nutrition.carbsGrams),
-            fatGrams: toFiniteNumberOrNull(parsed.nutrition.fatGrams),
-            facts: {
-              totalCarbohydratesGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.totalCarbohydratesGrams),
-              dietaryFiberGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.dietaryFiberGrams),
-              sugarGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.sugarGrams),
-              addedSugarsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.addedSugarsGrams),
-              sugarAlcoholsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.sugarAlcoholsGrams),
-              netCarbsGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.netCarbsGrams),
-              saturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.saturatedFatGrams),
-              transFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.transFatGrams),
-              polyunsaturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.polyunsaturatedFatGrams),
-              monounsaturatedFatGrams: toFiniteNumberOrNull(parsed.nutrition.facts?.monounsaturatedFatGrams),
-              cholesterolMg: toFiniteNumberOrNull(parsed.nutrition.facts?.cholesterolMg),
-              sodiumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.sodiumMg),
-              calciumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.calciumMg),
-              ironMg: toFiniteNumberOrNull(parsed.nutrition.facts?.ironMg),
-              potassiumMg: toFiniteNumberOrNull(parsed.nutrition.facts?.potassiumMg),
-              vitaminAIu: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminAIu),
-              vitaminCMg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminCMg),
-              vitaminDMcg: toFiniteNumberOrNull(parsed.nutrition.facts?.vitaminDMcg),
-              caffeineMg: toFiniteNumberOrNull(parsed.nutrition.facts?.caffeineMg),
-            },
-            notes: typeof parsed.nutrition.notes === "string" ? parsed.nutrition.notes.trim() : "",
-          }
-        : undefined;
-
-       const exercise =
-      parsed.exercise && typeof parsed.exercise === "object"
-        ? {
-            caloriesBurned: toFiniteNumberOrNull(parsed.exercise.caloriesBurned),
-            carbsUsedGrams: toFiniteNumberOrNull(parsed.exercise.carbsUsedGrams),
-            fatUsedGrams: toFiniteNumberOrNull(parsed.exercise.fatUsedGrams),
-            proteinDeltaGrams: toFiniteNumberOrNull(parsed.exercise.proteinDeltaGrams),
-            notes: typeof parsed.exercise.notes === "string" ? parsed.exercise.notes.trim() : "",
-          }
-        : undefined;
-
-    const highlightSpans = normalizeApiHighlightSpans(text, parsed.highlightSpans);
-
-    return {
-      intent,
-      confidence,
-      confidenceScore,
-      assumptions,
-      reasoning,
-      nutritionItems,
-      exerciseItems,
-      highlightSpans,
-      nutrition,
-      exercise,
-    };
+    const parsed: unknown = JSON.parse(cleaned);
+    const est = tryParseCalorieTrackingFinalizePayload(parsed, text);
+    if (est) return est;
   } catch {
-    return {
-      intent: "nutrition",
-      confidence: "low",
-      confidenceScore: 25,
-      assumptions: [],
-      reasoning: "",
-      nutritionItems: [],
-      exerciseItems: [],
-      highlightSpans: [],
-      nutrition: {
-        calories: null,
-        proteinGrams: null,
-        carbsGrams: null,
-        fatGrams: null,
-        facts: {
-          totalCarbohydratesGrams: null,
-          dietaryFiberGrams: null,
-          sugarGrams: null,
-          addedSugarsGrams: null,
-          sugarAlcoholsGrams: null,
-          netCarbsGrams: null,
-          saturatedFatGrams: null,
-          transFatGrams: null,
-          polyunsaturatedFatGrams: null,
-          monounsaturatedFatGrams: null,
-          cholesterolMg: null,
-          sodiumMg: null,
-          calciumMg: null,
-          ironMg: null,
-          potassiumMg: null,
-          vitaminAIu: null,
-          vitaminCMg: null,
-          vitaminDMcg: null,
-          caffeineMg: null,
-        },
-        notes: "",
-      },
-    };
+    /* fall through to fallback */
   }
+  return {
+    intent: "nutrition",
+    confidence: "low",
+    confidenceScore: 25,
+    assumptions: [],
+    reasoning: "",
+    nutritionItems: [],
+    exerciseItems: [],
+    highlightSpans: [],
+    nutrition: {
+      calories: null,
+      proteinGrams: null,
+      carbsGrams: null,
+      fatGrams: null,
+      facts: {
+        totalCarbohydratesGrams: null,
+        dietaryFiberGrams: null,
+        sugarGrams: null,
+        addedSugarsGrams: null,
+        sugarAlcoholsGrams: null,
+        netCarbsGrams: null,
+        saturatedFatGrams: null,
+        transFatGrams: null,
+        polyunsaturatedFatGrams: null,
+        monounsaturatedFatGrams: null,
+        cholesterolMg: null,
+        sodiumMg: null,
+        calciumMg: null,
+        ironMg: null,
+        potassiumMg: null,
+        vitaminAIu: null,
+        vitaminCMg: null,
+        vitaminDMcg: null,
+        caffeineMg: null,
+      },
+      notes: "",
+    },
+  };
 }
 
 export async function generateDailyLifeReport(
@@ -3427,6 +3428,8 @@ export interface BrainDumpResult {
   weightKg?: number;
   sleepHours?: number;
   hrvMs?: number | null;
+  /** When set (short-input bundled categorize), persist skips a second Gemini finalize call. */
+  precomputedCalorieEstimate?: CalorieTrackingFinalizeResult;
 }
 
 function normalizeBrainDumpEntry(
@@ -3449,7 +3452,7 @@ function normalizeBrainDumpEntry(
   const toStr = (v: unknown) => (typeof v === "string" ? v.trim() : undefined);
   const toNum = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : undefined);
 
-  return {
+  const base: BrainDumpResult = {
     category,
     title: typeof parsed.title === "string" ? parsed.title.trim().slice(0, 120) : fallbackTitle,
     reflectionText: toStr(parsed.reflectionText),
@@ -3464,6 +3467,35 @@ function normalizeBrainDumpEntry(
     sleepHours: toNum(parsed.sleepHours),
     hrvMs: parsed.hrvMs === null ? null : toNum(parsed.hrvMs),
   };
+
+  const ceRaw = parsed.calorieEstimate;
+  if (
+    (category === "nutrition" || category === "exercise") &&
+    ceRaw &&
+    typeof ceRaw === "object"
+  ) {
+    const lineForHighlights =
+      category === "nutrition"
+        ? (base.nutritionText ?? "").trim()
+        : (base.exerciseText ?? "").trim();
+    const pre = tryParseCalorieTrackingFinalizePayload(
+      ceRaw,
+      lineForHighlights || fallbackTitle
+    );
+    if (pre) {
+      base.precomputedCalorieEstimate = pre;
+    }
+  }
+
+  return base;
+}
+
+/** Transcripts this length or shorter can bundle calorie estimation into categorize (one Gemini call). */
+export const BRAIN_DUMP_BUNDLE_CALORIE_MAX_CHARS = 800;
+
+/** Remove server-only fields before returning brain-dump entries to the client. */
+export function stripBrainDumpClientEntries(entries: BrainDumpResult[]): BrainDumpResult[] {
+  return entries.map(({ precomputedCalorieEstimate: _, ...rest }) => rest);
 }
 
 /**
@@ -3472,12 +3504,38 @@ function normalizeBrainDumpEntry(
  */
 export async function categorizeBrainDump(
   transcript: string,
-  usageContext?: GeminiUsageContext
+  usageContext?: GeminiUsageContext,
+  categorizeOptions?: { bundleCalorieEstimate?: boolean }
 ): Promise<BrainDumpResult[]> {
+  const trimmedTranscript = transcript.trim();
+  const bundleCalorieEstimate = Boolean(
+    categorizeOptions?.bundleCalorieEstimate &&
+      trimmedTranscript.length > 0 &&
+      trimmedTranscript.length <= BRAIN_DUMP_BUNDLE_CALORIE_MAX_CHARS
+  );
+
+  const bundleCalorieBlock = bundleCalorieEstimate
+    ? `
+
+SHORT INPUT — bundled calorie estimation (required):
+- For EVERY entry with category "nutrition" or "exercise", also include "calorieEstimate": { ... } using the SAME JSON shape as a calorie-tracking finalize response:
+  - "intent": "nutrition" | "exercise" | "mixed"
+  - "confidence": "low" | "medium" | "high", "confidenceScore": 0-100
+  - "assumptions": string[], "reasoning": string
+  - "nutritionItems": [{ "name", "calories", "proteinGrams", "carbsGrams", "fatGrams" }]
+  - "exerciseItems": [{ "name", "caloriesBurned", "durationMinutes" }]
+  - "nutrition": { calories, proteinGrams, carbsGrams, fatGrams, facts: { micronutrients }, notes } | null
+  - "exercise": { caloriesBurned, carbsUsedGrams, fatUsedGrams, proteinDeltaGrams, notes } | null
+  - "highlightSpans": [{ "start", "end", "kind", "reason" }] (0-based indices into THAT entry's nutritionText or exerciseText only)
+- Derive calorieEstimate only from that entry's nutritionText or exerciseText.
+- For "reflection", "concept", "experiment", "weight", "sleep" entries: omit calorieEstimate.
+`
+    : "";
+
   const model = getModel();
   const result = await model.generateContent(
     `You are an AI assistant that categorizes a user's voice brain-dump into one or more structured entries.
-
+${bundleCalorieBlock}
 Categories (same rules apply as before):
 1. "reflection" — journaling, emotions, reviewing the day, gratitude, processing experiences.
 2. "concept" — idea, mental model, framework, insight to remember.
@@ -3507,7 +3565,7 @@ Return ONLY valid JSON:
 { "entries": [ { ... }, ... ] }
 
 User's brain dump transcript:
-${transcript}`
+${trimmedTranscript}`
   );
   if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   const text = result.response.text().trim();

@@ -8,12 +8,12 @@ import { TtsSpeedProvider } from "@/components/TtsSpeedProvider";
 import { BackgroundProvider } from "@/components/BackgroundProvider";
 import { NativeHaptics } from "@/components/NativeHaptics";
 import { NativeAppUrlHandler } from "@/components/NativeAppUrlHandler";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import "./globals.css";
 import "../src/bones/registry";
 
 export const metadata: Metadata = {
-  title: "FixMyLife Labs",
+  title: PRODUCT_NAME,
   description: PRODUCT_TAGLINE,
   manifest: "/manifest.json",
   icons: {
@@ -23,16 +23,16 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "FixMyLife Labs",
+    title: PRODUCT_NAME,
   },
   openGraph: {
-    title: "FixMyLife Labs",
+    title: PRODUCT_NAME,
     description: PRODUCT_TAGLINE,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FixMyLife Labs",
+    title: PRODUCT_NAME,
     description: PRODUCT_TAGLINE,
   },
 };
@@ -56,12 +56,12 @@ export default function RootLayout({
       localization={{
         signIn: {
           start: {
-            title: "Sign In - FixMyLife Labs",
+            title: `Sign In — ${PRODUCT_NAME}`,
           },
         },
         signUp: {
           start: {
-            title: "Sign Up - FixMyLife Labs",
+            title: `Sign Up — ${PRODUCT_NAME}`,
           },
         },
       }}

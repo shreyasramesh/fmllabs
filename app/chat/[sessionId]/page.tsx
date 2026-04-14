@@ -51,7 +51,7 @@ import { getModalTranslations } from "@/lib/mental-model-modal-translations";
 import { getMentionTranslations } from "@/lib/mention-translations";
 import { getLandingTranslations } from "@/lib/landing-translations";
 import { APP_VERSION } from "@/lib/version";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_DISPLAY, PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 import {
   EXTRACT_CONCEPTS_CHUNK_CHARS,
   EXTRACT_CONCEPTS_MAX_TOTAL_CHARS,
@@ -15652,7 +15652,7 @@ export default function ChatPage() {
             <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 max-w-xl mx-auto">
               {onboardingStep === 1 && (
                 <div className="w-full text-center animate-fade-in-up space-y-8">
-                  <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Welcome to fml labs</h1>
+                  <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Welcome to {PRODUCT_DISPLAY}</h1>
                   <p className="text-base text-neutral-600 dark:text-neutral-400">
                     {getLandingTranslations(language).productTagline}
                   </p>
@@ -15669,7 +15669,7 @@ export default function ChatPage() {
                 <div className="w-full text-center animate-fade-in-up space-y-6">
                   <h2 className="text-xl font-semibold text-foreground">Privacy & Terms</h2>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400 text-left">
-                    By using fml labs, you agree to our{" "}
+                    By using {PRODUCT_NAME}, you agree to our{" "}
                     <Link href="/terms-of-service" className="text-foreground underline underline-offset-2 hover:no-underline" target="_blank" rel="noopener noreferrer">
                       Terms of Service
                     </Link>{" "}
@@ -15692,7 +15692,7 @@ export default function ChatPage() {
                 <div className="w-full animate-fade-in-up space-y-6">
                   <h2 className="text-2xl md:text-xl font-semibold text-foreground text-center">A note from the developer</h2>
                   <p className="text-base text-neutral-600 dark:text-neutral-400 text-center">
-                    fml labs combines daily productivity and wellness in one place.
+                    {PRODUCT_TAGLINE}
                   </p>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
                     I built this because my own interests sit at the intersection of getting meaningful work done and staying physically and mentally well.
@@ -22355,7 +22355,7 @@ export default function ChatPage() {
             <div className="mb-5 flex items-center justify-center gap-3">
               <Image
                 src="/icon.svg"
-                alt="FixMyLife Labs logo"
+                alt={`${PRODUCT_DISPLAY} logo`}
                 width={72}
                 height={72}
                 className="rounded-full border border-neutral-200 dark:border-neutral-700/40 shadow-sm"
@@ -22386,7 +22386,7 @@ export default function ChatPage() {
             </h2>
             <div className="space-y-2 max-w-prose mx-auto">
               <p className="text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                fml labs combines daily productivity and wellness in one place.
+                {PRODUCT_TAGLINE}
             </p>
               <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 I built this because my interests sit at the intersection of getting meaningful work done and staying physically and mentally well.

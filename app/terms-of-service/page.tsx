@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { PRODUCT_TAGLINE } from "@/lib/product-tagline";
+import { PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-tagline";
 
 export const metadata = {
-  title: "Terms of Service — fml labs",
-  description: `${PRODUCT_TAGLINE} — Terms of Service for fml labs`,
+  title: `Terms of Service — ${PRODUCT_NAME}`,
+  description: `${PRODUCT_TAGLINE} — Terms of Service for ${PRODUCT_NAME}`,
 };
 
 export default function TermsOfServicePage() {
@@ -14,7 +14,7 @@ export default function TermsOfServicePage() {
           href="/"
           className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors mb-8 inline-block"
         >
-          ← Back to fml labs
+          ← Back to {PRODUCT_NAME}
         </Link>
 
         <h1 className="font-serif text-3xl font-medium leading-tight mb-3 md:text-4xl">Terms of Service</h1>
@@ -24,14 +24,14 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="font-serif text-xl font-medium mt-8 mb-3 text-[#141413] dark:text-[#faf9f5]">1. Personal Research Project</h2>
             <p>
-              fml labs is a personal, non-commercial research project created by Shreyas Ramesh to demonstrate AI engineering capabilities. By accessing or using the Service, you acknowledge that this is a hobbyist portfolio project and agree to these Terms.
+              {PRODUCT_NAME} is a personal, non-commercial research project created by Shreyas Ramesh to demonstrate AI engineering capabilities. By accessing or using the Service, you acknowledge that this is a hobbyist portfolio project and agree to these Terms.
             </p>
           </section>
 
           <section>
             <h2 className="font-serif text-xl font-medium mt-8 mb-3 text-[#141413] dark:text-[#faf9f5]">2. Description of Service</h2>
             <p>
-              fml labs is a decision-making coach where users can explore first-principles thinking and multi-order reasoning. This tool is provided solely for educational and demonstration purposes and is not a commercial product or service.
+              {PRODUCT_NAME} helps you capture your story day by day—journaling, reflection, and chat—and explore first-principles thinking when you want to go deeper. This tool is provided solely for educational and demonstration purposes and is not a commercial product or service.
             </p>
           </section>
 
@@ -43,7 +43,7 @@ export default function TermsOfServicePage() {
             <ul className="list-disc pl-6 space-y-2 mt-2">
               <li><strong>No Fees:</strong> There are no subscriptions, fees, or charges associated with any part of the Service.</li>
               <li><strong>No Advertising:</strong> The Service does not host third-party advertisements or generate revenue through affiliate links or data monetization.</li>
-              <li><strong>No Business Entity:</strong> fml labs is not a legal business entity or corporation; it is a private technical experiment.</li>
+              <li><strong>No Business Entity:</strong> {PRODUCT_NAME} is not a legal business entity or corporation; it is a private technical experiment.</li>
             </ul>
           </section>
 
@@ -126,7 +126,7 @@ export default function TermsOfServicePage() {
             Privacy Policy
           </Link>
           <Link href="/" className="text-sm text-[#87867f] hover:text-[#141413] dark:hover:text-[#faf9f5] transition-colors">
-            ← Back to fml labs
+            ← Back to {PRODUCT_NAME}
           </Link>
         </div>
       </div>

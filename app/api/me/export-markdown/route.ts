@@ -29,6 +29,7 @@ import {
 } from "@/lib/crypto-fields";
 import { getOneLiner, loadMentalModelContent } from "@/lib/mental-models";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
+import { PRODUCT_NAME } from "@/lib/product-tagline";
 
 type ExportSection =
   | "settings"
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
     const db = await getDb();
     const now = new Date();
     const lines: string[] = [];
-    lines.push("# FixMyLife Labs Data Export");
+    lines.push(`# ${PRODUCT_NAME} data export`);
     lines.push("");
     lines.push(`- **Generated:** ${now.toISOString()}`);
     lines.push(`- **User ID:** ${userId}`);
@@ -440,7 +441,7 @@ export async function POST(request: Request) {
     return new NextResponse(markdown, {
       headers: {
         "Content-Type": "text/markdown; charset=utf-8",
-        "Content-Disposition": `attachment; filename=\"fml-export-${datePart}.md\"`,
+        "Content-Disposition": `attachment; filename=\"mainichi-export-${datePart}.md\"`,
         "Cache-Control": "no-store",
       },
     });

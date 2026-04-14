@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { categorizeBrainDump } from "@/lib/gemini";
+import {
+  categorizeBrainDump,
+  stripBrainDumpClientEntries,
+  BRAIN_DUMP_BUNDLE_CALORIE_MAX_CHARS,
+} from "@/lib/gemini";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
 
 const MAX_TRANSCRIPT_LENGTH = 20_000;
@@ -26,11 +30,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const entries = await categorizeBrainDump(text, {
-      userId,
-      eventType: "brain_dump_categorize",
-    });
-    return NextResponse.json({ entries });
+    const entries = await categorizeBrainDump(
+      text,
+      { userId, eventType: "brain_dump_categorize" },
+      { bundleCalorieEstimate: text.length <= BRAIN_DUMP_BUNDLE_CALORIE_MAX_CHARS }
+    );
+    return NextResponse.json({ entries: stripBrainDumpClientEntries(entries) });
   } catch (err) {
     console.error("Brain dump categorize failed:", err);
     return NextResponse.json({ error: "Categorization failed" }, { status: 500 });

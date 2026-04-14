@@ -361,10 +361,12 @@ export async function persistBrainDumpFields(
       const reused = await tryPersistNutritionWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
       if (reused) return reused;
     }
-    const estimate = await finalizeCalorieTrackingEstimate(text, [], {
-      userId,
-      eventType: `brain_dump_nutrition_save${suffix}`,
-    });
+    const estimate =
+      fields.precomputedCalorieEstimate ??
+      (await finalizeCalorieTrackingEstimate(text, [], {
+        userId,
+        eventType: `brain_dump_nutrition_save${suffix}`,
+      }));
     const assumptions = normalizeAssumptions(estimate);
     const reasoning = typeof estimate.reasoning === "string" ? estimate.reasoning : "";
 
@@ -435,10 +437,12 @@ export async function persistBrainDumpFields(
       const reused = await tryPersistExerciseWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
       if (reused) return reused;
     }
-    const estimate = await finalizeCalorieTrackingEstimate(text, [], {
-      userId,
-      eventType: `brain_dump_exercise_save${suffix}`,
-    });
+    const estimate =
+      fields.precomputedCalorieEstimate ??
+      (await finalizeCalorieTrackingEstimate(text, [], {
+        userId,
+        eventType: `brain_dump_exercise_save${suffix}`,
+      }));
     const assumptions = normalizeAssumptions(estimate);
     const reasoning = typeof estimate.reasoning === "string" ? estimate.reasoning : "";
 
