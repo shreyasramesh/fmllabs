@@ -74,6 +74,7 @@ export async function POST(request: Request) {
             : null;
         const saved = await persistBrainDumpFields(userId, fields, {
           geminiEventSuffix: suffix,
+          originalText: text,
           ...(clientQuickCalorie ? { clientQuickCalorie } : {}),
           ...(habitTags?.length ? { habitTags } : {}),
         });

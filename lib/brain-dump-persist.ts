@@ -146,15 +146,20 @@ function resolveJournalVideoTitle(geminiTitle: string, bodyFallback: string): st
 
 type JournalEntryDateParts = { day: number; month: number; year: number };
 
-/** When inline quick-estimate matches the saved line, skip a second finalizeCalorieTrackingEstimate call. */
+/** When inline quick-estimate matches the saved line, skip a second finalizeCalorieTrackingEstimate call.
+ * Accepts `precomputedFacts` from the bundled Gemini categorization so micronutrient data isn't lost.
+ * `originalText` is the raw user-typed text before Gemini rewrites it during categorization. */
 async function tryPersistNutritionWithClientSnapshot(
   userId: string,
   text: string,
   journalTitle: string,
   entryDate: JournalEntryDateParts,
-  snap: ClientQuickCalorieSnapshot
+  snap: ClientQuickCalorieSnapshot,
+  precomputedFacts?: ReturnType<typeof defaultNutritionFacts> | null,
+  originalText?: string
 ): Promise<{ id: string; category: BrainDumpCategory } | null> {
-  if (snap.sourceText.trim() !== text.trim()) return null;
+  const snapNorm = snap.sourceText.trim();
+  if (snapNorm !== text.trim() && snapNorm !== (originalText?.trim() ?? "")) return null;
 
   const intent = snap.intent.toLowerCase();
   const assumptions = snap.assumptions.map((a) => a.trim()).filter(Boolean).slice(0, 8);
@@ -192,6 +197,7 @@ async function tryPersistNutritionWithClientSnapshot(
         proteinGrams: snap.proteinGrams,
         carbsGrams: snap.carbsGrams,
         fatGrams: snap.fatGrams,
+        facts: snap.facts ?? precomputedFacts ?? defaultNutritionFacts(),
         notes: (snap.nutritionNotes || "").trim().slice(0, 500),
       };
       const exerciseEstimate = {
@@ -237,7 +243,7 @@ async function tryPersistNutritionWithClientSnapshot(
     proteinGrams: snap.proteinGrams,
     carbsGrams: snap.carbsGrams,
     fatGrams: snap.fatGrams,
-    facts: defaultNutritionFacts(),
+    facts: snap.facts ?? precomputedFacts ?? defaultNutritionFacts(),
     notes: (snap.nutritionNotes || snap.reasoning || "").trim().slice(0, 500),
   };
   const journalText = formatNutritionJournalText(text, [], nutritionEstimate, assumptions);
@@ -254,9 +260,11 @@ async function tryPersistExerciseWithClientSnapshot(
   text: string,
   journalTitle: string,
   entryDate: JournalEntryDateParts,
-  snap: ClientQuickCalorieSnapshot
+  snap: ClientQuickCalorieSnapshot,
+  originalText?: string
 ): Promise<{ id: string; category: BrainDumpCategory } | null> {
-  if (snap.sourceText.trim() !== text.trim()) return null;
+  const snapNorm = snap.sourceText.trim();
+  if (snapNorm !== text.trim() && snapNorm !== (originalText?.trim() ?? "")) return null;
 
   const intent = snap.intent.toLowerCase();
   const assumptions = snap.assumptions.map((a) => a.trim()).filter(Boolean).slice(0, 8);
@@ -306,6 +314,9 @@ export async function persistBrainDumpFields(
     geminiEventSuffix?: string;
     clientQuickCalorie?: ClientQuickCalorieSnapshot;
     habitTags?: string[];
+    /** Raw user-typed text before Gemini rewrites it during categorization.
+     * Used to match the client quick-calorie snapshot even when Gemini enriches the text. */
+    originalText?: string;
   }
 ): Promise<{ id: string; category: BrainDumpCategory }> {
   const err = validateBrainDumpFields(fields);
@@ -358,7 +369,10 @@ export async function persistBrainDumpFields(
     const journalTitle = resolveJournalVideoTitle(title, text);
     const snap = options?.clientQuickCalorie;
     if (snap) {
-      const reused = await tryPersistNutritionWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
+      const precomputedFacts = fields.precomputedCalorieEstimate?.nutrition?.facts ?? null;
+      const reused = await tryPersistNutritionWithClientSnapshot(
+        userId, text, journalTitle, entryDate, snap, precomputedFacts, options?.originalText
+      );
       if (reused) return reused;
     }
     const estimate =
@@ -434,7 +448,7 @@ export async function persistBrainDumpFields(
     const journalTitle = resolveJournalVideoTitle(title, text);
     const snap = options?.clientQuickCalorie;
     if (snap) {
-      const reused = await tryPersistExerciseWithClientSnapshot(userId, text, journalTitle, entryDate, snap);
+      const reused = await tryPersistExerciseWithClientSnapshot(userId, text, journalTitle, entryDate, snap, options?.originalText);
       if (reused) return reused;
     }
     const estimate =

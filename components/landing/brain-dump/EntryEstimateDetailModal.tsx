@@ -9,6 +9,7 @@ import {
   validateHighlightSegments,
 } from "@/lib/quick-note-highlights";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
+import type { CalorieTrackingNutritionFacts } from "@/lib/gemini";
 
 export type NutritionEstimateDetailItem = {
   name: string;
@@ -38,6 +39,7 @@ export type EntryEstimateModalMeta =
       proteinGrams: number | null;
       carbsGrams: number | null;
       fatGrams: number | null;
+      facts?: CalorieTrackingNutritionFacts | null;
       confidenceScore: number;
       highlightSpans?: QuickNoteHighlightSegment[];
     };

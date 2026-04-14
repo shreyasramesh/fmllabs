@@ -19,6 +19,7 @@ import {
 import { ThinkingEstimateLabel } from "@/components/landing/brain-dump/EstimateThinkingLabel";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { validateHighlightSegments } from "@/lib/quick-note-highlights";
+import type { CalorieTrackingNutritionFacts } from "@/lib/gemini";
 
 type LineMeta = EntryEstimateModalMeta;
 
@@ -96,11 +97,11 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
       <span className="inline-flex flex-col items-end gap-0.5 text-right">
         <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
           <SparklesIcon className="h-4 w-4 shrink-0" />
-          −{Math.round(burn)} cal
+          ~−{Math.round(burn)} cal
         </span>
         <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-blue-500 dark:text-blue-400">
           <SparklesIcon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-          +{Math.round(calories)} cal
+          ~+{Math.round(calories)} cal
         </span>
       </span>
     );
@@ -110,7 +111,7 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
     return (
       <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
         <SparklesIcon className="h-4 w-4 shrink-0" />
-        −{Math.round(burn)} cal
+        ~−{Math.round(burn)} cal
       </span>
     );
   }
@@ -119,7 +120,7 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
     return (
       <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-blue-500 dark:text-blue-400">
         <SparklesIcon className="h-4 w-4 shrink-0" />
-        {Math.round(calories)} cal
+        ~{Math.round(calories)} cal
       </span>
     );
   }
@@ -139,7 +140,8 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
 function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSleepLocal: boolean): LineMeta {
   const [meta, setMeta] = useState<LineMeta>({ status: "idle" });
 
-  useEffect(() => {
+  /** Layout effect so "thinking" paints in the same frame as food/sleep heuristics flip on (idle is an empty placeholder). */
+  useLayoutEffect(() => {
     const trimmed = line.trim();
     if (!trimmed) {
       setMeta({ status: "idle" });
@@ -200,6 +202,7 @@ function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSle
             proteinGrams?: number | null;
             carbsGrams?: number | null;
             fatGrams?: number | null;
+            facts?: CalorieTrackingNutritionFacts | null;
             confidenceScore?: number;
             highlightSpans?: QuickNoteHighlightSegment[];
           };
@@ -252,6 +255,7 @@ function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSle
             proteinGrams: numOrNull(data.proteinGrams),
             carbsGrams: numOrNull(data.carbsGrams),
             fatGrams: numOrNull(data.fatGrams),
+            facts: data.facts ?? null,
             confidenceScore:
               typeof data.confidenceScore === "number" && Number.isFinite(data.confidenceScore)
                 ? Math.round(data.confidenceScore)
@@ -264,7 +268,7 @@ function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSle
       })();
     }, 700);
 
-       return () => {
+    return () => {
       window.clearTimeout(timer);
       ac.abort();
     };
@@ -304,7 +308,7 @@ export function looksLikeFoodLogCapture(text: string): boolean {
   if (parts.some((l) => l.length > 220)) return false;
   if (parts.length > 14) return false;
   const foodish =
-    /\b(ate|eating|eaten|breakfast|lunch|dinner|snack|drink|coffee|tea|protein|kcal|calories|cal\b|bowl|shake|eggs|chicken|salad|rice|oatmeal|smoothie|burger|fries|latte|ramen|soup|sandwich|toast|pizza|fruit|yogurt|bar\b|meal)\b/i;
+    /\b(ate|eating|eaten|breakfast|lunch|dinner|snack|drink|coffee|tea|protein|kcal|calories|cal\b|bowl|shake|eggs|chicken|salad|rice|oatmeal|smoothie|burger|fries|latte|ramen|noodles?|pasta|pho|udon|soba|spaghetti|dumplings?|taco|burrito|curry|steak|salmon|tofu|waffles?|pancakes?|croissant|bagel|cereal|soup|sandwich|toast|pizza|fruit|yogurt|bar\b|meal)\b/i;
   if (parts.some((l) => foodish.test(l))) return true;
   if (parts.length >= 2 && parts.every((l) => l.length < 120)) return true;
   return false;
@@ -372,8 +376,8 @@ export function CaptureDraftSentenceRow({
       : "min-h-[1.75rem]";
   const openDetailBtn =
     variant === "fullScreen"
-      ? "appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-0.5 pt-0 text-right text-[13px] shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30"
-      : "appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-1 pt-0.5 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30";
+      ? "w-max appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-0.5 pt-0 text-right text-[13px] shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30"
+      : "w-max appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-1 pt-0.5 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30";
 
   const rightCol =
     showEstimateColumn || !draft.trim() ? (
@@ -391,7 +395,7 @@ export function CaptureDraftSentenceRow({
   return (
     <>
       <div
-        className={`${AMY_ENTRY_ROW_GRID} min-h-0 flex-1 ${variant === "fullScreen" ? "items-start py-0.5" : "py-1.5"} ${
+        className={`${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
           disabled ? "pointer-events-none select-none opacity-[0.52] transition-opacity duration-200" : ""
         }`}
         aria-busy={disabled || undefined}
@@ -436,7 +440,7 @@ export function CaptureDraftSentenceRow({
           </button>
         ) : (
           <span
-            className={`justify-self-end self-start whitespace-nowrap text-right ${variant === "fullScreen" ? "pt-0 text-[13px]" : "pt-0.5"}`}
+            className={`w-max justify-self-end self-start whitespace-nowrap text-right ${variant === "fullScreen" ? "pt-0 text-[13px]" : "pt-0.5"}`}
             aria-live="polite"
           >
             {rightCol}
@@ -513,7 +517,12 @@ export function CapturePersistedEntryRow({
     useLive && shouldRunQuickEstimate(entry.text),
     useLive && looksLikeSleepSentence(entry.text)
   );
-  const meta = entry.frozenMeta.status === "done" ? entry.frozenMeta : liveMeta;
+  const meta =
+    entry.frozenMeta.status === "done"
+      ? entry.frozenMeta
+      : entry.frozenMeta.status === "thinking"
+        ? entry.frozenMeta
+        : liveMeta;
 
   const attemptedEstimate = shouldShowQuickNoteEstimateColumn(entry.text);
   const showEstimateColumn = attemptedEstimate || meta.status !== "idle";
@@ -557,7 +566,11 @@ export function CapturePersistedEntryRow({
           aria-label="View estimate details for this line"
         >
           {isPending ? (
-            <span className="text-[15px] font-medium text-neutral-400 dark:text-neutral-500">Saving…</span>
+            meta.status !== "idle" ? (
+              <LineRightMeta meta={meta} />
+            ) : (
+              <span className="text-[15px] font-medium text-neutral-400 dark:text-neutral-500">Saving…</span>
+            )
           ) : showEstimateColumn ? (
             <LineRightMeta meta={meta} />
           ) : (

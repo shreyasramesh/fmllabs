@@ -72,6 +72,7 @@ export async function POST(request: Request) {
       proteinGrams: result.nutrition?.proteinGrams ?? null,
       carbsGrams: result.nutrition?.carbsGrams ?? null,
       fatGrams: result.nutrition?.fatGrams ?? null,
+      facts: result.nutrition?.facts ?? null,
       confidenceScore: result.confidenceScore,
       highlightSpans: result.highlightSpans ?? [],
     });

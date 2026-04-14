@@ -23,7 +23,7 @@ html {
   }
 }
 .animate-fade-in-up {
-  animation: fade-in-up 0.35s ease-out forwards;
+  animation: fade-in-up 0.35s ease-out both;
 }
 
 /* What I can do: swipe right (left to right) */

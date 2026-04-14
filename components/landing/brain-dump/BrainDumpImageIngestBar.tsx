@@ -56,11 +56,14 @@ function isProbablyImageFile(file: File): boolean {
 
 export function BrainDumpImageIngestBar({
   disabled,
+  hidden = false,
   hintText,
   onAnalysesReady,
   layout = "inline",
 }: {
   disabled?: boolean;
+  /** When true, suppresses the floating portal entirely (e.g. when a modal is open over the Quick Note tab). */
+  hidden?: boolean;
   hintText: string;
   onAnalysesReady: (analyses: JournalImageAnalysis[]) => void;
   /** `floating`: fixed bottom-right above mobile tab bar. `inline`: slim row in modal sheet. */
@@ -251,7 +254,7 @@ export function BrainDumpImageIngestBar({
     // Mobile Quick Note only; desktop uses camera/gallery on LandingDesktopJournalSpeedDial.
     return (
       <>
-        {!floatingPortalReady || typeof document === "undefined"
+        {!floatingPortalReady || typeof document === "undefined" || hidden
           ? null
           : createPortal(
               <div

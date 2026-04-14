@@ -23,15 +23,15 @@ export function EstimateThinkingLabel({
   const iconCls =
     variant === "prominent"
       ? "h-3.5 w-3.5 shrink-0 text-amber-500/95 dark:text-amber-300/95"
-      : "h-[0.8rem] w-[0.8rem] shrink-0 text-amber-500/90 dark:text-amber-300/90";
+      : "h-[0.8rem] w-[0.8rem] shrink-0 text-blue-500 dark:text-blue-400";
   const textCls =
     variant === "prominent"
       ? "text-xs font-semibold text-[#4d4c48] dark:text-[#b0aea5]"
-      : "text-[11px] font-semibold leading-none text-[#8A5A33] dark:text-[#E8C8A8]";
+      : "text-[11px] font-semibold leading-none text-blue-600 dark:text-blue-400";
   const shellCls =
     variant === "prominent"
       ? "rounded-full border border-[#d1cfc5]/70 bg-[linear-gradient(135deg,rgba(250,249,245,0.98),rgba(245,244,237,0.95),rgba(248,246,239,0.98))] px-3 py-1.5 shadow-[0_12px_34px_-18px_rgba(184,123,81,0.42)] dark:border-[#d97757]/30 dark:bg-[linear-gradient(135deg,rgba(48,48,46,0.96),rgba(61,61,58,0.93),rgba(48,48,46,0.96))]"
-      : "inline-flex h-[1.7rem] rounded-full border border-[#d1cfc5]/70 bg-[linear-gradient(135deg,rgba(255,251,246,0.97),rgba(252,242,228,0.94),rgba(255,248,240,0.97))] px-2.5 shadow-[0_10px_26px_-20px_rgba(184,123,81,0.4)] dark:border-[#d97757]/28 dark:bg-[linear-gradient(135deg,rgba(38,24,18,0.94),rgba(53,34,24,0.9),rgba(32,21,16,0.95))]";
+      : "inline-flex h-[1.7rem] rounded-full bg-blue-50/90 px-2.5 shadow-[0_8px_20px_-12px_rgba(59,130,246,0.35)] dark:bg-blue-950/40";
 
   return (
     <span
@@ -61,9 +61,9 @@ export function EstimateThinkingLabel({
           background: linear-gradient(
             110deg,
             transparent 0%,
-            rgba(255, 244, 214, 0.05) 30%,
-            rgba(255, 248, 235, 0.36) 50%,
-            rgba(255, 241, 209, 0.08) 70%,
+            rgba(219, 234, 254, 0.05) 30%,
+            rgba(255, 255, 255, 0.55) 50%,
+            rgba(219, 234, 254, 0.08) 70%,
             transparent 100%
           );
           transform: translateX(-150%);
@@ -71,16 +71,16 @@ export function EstimateThinkingLabel({
           pointer-events: none;
         }
         .estimate-thinking-sheen {
-          background: radial-gradient(circle at 18% 50%, rgba(251, 191, 36, 0.18), transparent 42%);
+          background: radial-gradient(circle at 18% 50%, rgba(59, 130, 246, 0.12), transparent 42%);
           pointer-events: none;
         }
         .estimate-thinking-glow {
-          background: rgba(245, 158, 11, 0.18);
+          background: rgba(59, 130, 246, 0.15);
           animation: estimate-thinking-glow 4.2s ease-in-out infinite;
           pointer-events: none;
         }
         .estimate-thinking-icon-halo {
-          background: radial-gradient(circle, rgba(251, 191, 36, 0.28), transparent 70%);
+          background: radial-gradient(circle, rgba(59, 130, 246, 0.22), transparent 70%);
           animation: estimate-thinking-breathe 3.4s ease-in-out infinite;
         }
         .estimate-thinking-icon {

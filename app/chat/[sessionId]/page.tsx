@@ -9966,7 +9966,7 @@ export default function ChatPage() {
         journalMentorReflectionsUpdatedAt: row.journalMentorReflectionsUpdatedAt,
       });
     },
-    [savedTranscripts, sleepEntries]
+    [savedJournalTranscripts, savedTranscripts, sleepEntries]
   );
 
   const fetchWeightTrackerRef = useRef<() => Promise<void>>(async () => {});
@@ -16192,6 +16192,7 @@ export default function ChatPage() {
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
                             journalContextRows={brainDumpJournalContextRows}
+                            hideImageIngestBar={!!transcriptModalTranscript}
                             isLoading={!transcriptsLoaded || !sleepEntriesLoaded || !weightInitialLoaded}
                             loadingLabel={
                               !transcriptsLoaded ? "Loading Journal Entries" :
@@ -17064,7 +17065,7 @@ export default function ChatPage() {
 
       {transcriptModalTranscript && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-sm animate-fade-in sm:items-center sm:justify-center sm:p-4"
           onClick={() => {
             setTranscriptModalTranscript(null);
             setTranscriptExtractedConceptOpen(null);
@@ -17075,9 +17076,13 @@ export default function ChatPage() {
           role="dialog"
         >
           <div
-            className="bg-background rounded-3xl shadow-xl max-w-2xl w-full w-[min(100%,42rem)] max-h-[min(85vh,100dvh-1.5rem)] min-h-0 overflow-hidden flex flex-col border border-neutral-200 dark:border-neutral-700"
+            className="bg-background w-full rounded-t-[1.5rem] shadow-xl max-h-[min(92dvh,100%)] min-h-0 overflow-hidden flex flex-col border-t border-neutral-200 dark:border-neutral-700 animate-fade-in-up sm:rounded-3xl sm:max-w-[min(100%,42rem)] sm:max-h-[min(85vh,100dvh-1.5rem)] sm:border"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Mobile drag handle */}
+            <div className="flex shrink-0 items-center justify-center pt-2.5 pb-1 sm:hidden" aria-hidden>
+              <div className="h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+            </div>
             <div className="relative p-4 pr-12 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <button
                 type="button"
@@ -17170,7 +17175,7 @@ export default function ChatPage() {
               </div>
             )}
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-                <div className="p-4 pb-6">
+                <div className="p-4 pb-[max(1.5rem,env(safe-area-inset-bottom,1.5rem))] sm:pb-6">
                   {transcriptModalSpendSnapshot && (
                     <div className="w-full mb-4">
                       <div className="rounded-lg border border-emerald-500/30 dark:border-emerald-400/35 bg-emerald-500/10 dark:bg-emerald-900/20 p-3">
@@ -17887,7 +17892,7 @@ export default function ChatPage() {
               </div>
               ))}
             </div>
-            <div className="p-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end shrink-0">
+            <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom,1rem))] sm:pb-4 border-t border-neutral-200 dark:border-neutral-700 flex gap-2 justify-end shrink-0">
               {!(transcriptModalTranscript.sourceType === "journal" &&
                 (transcriptModalTranscript.journalCategory === "nutrition" ||
                   transcriptModalTranscript.journalCategory === "exercise" ||

@@ -5,6 +5,7 @@
 
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { validateHighlightSegments } from "@/lib/quick-note-highlights";
+import type { CalorieTrackingNutritionFacts } from "@/lib/gemini";
 
 const MAX_SOURCE = 2000;
 
@@ -19,6 +20,8 @@ export type ClientQuickCalorieSnapshot = {
   proteinGrams: number | null;
   carbsGrams: number | null;
   fatGrams: number | null;
+  /** Full micronutrient facts from the inline estimate, to be saved as daily dietary facts. */
+  facts?: CalorieTrackingNutritionFacts | null;
   reasoning: string;
   highlightSpans?: QuickNoteHighlightSegment[];
 };
@@ -30,6 +33,32 @@ function toStr(v: unknown): string | undefined {
 function toNum(v: unknown): number | null {
   if (typeof v !== "number" || !Number.isFinite(v)) return null;
   return v;
+}
+
+function parseFacts(raw: unknown): CalorieTrackingNutritionFacts | null {
+  if (!raw || typeof raw !== "object") return null;
+  const f = raw as Record<string, unknown>;
+  return {
+    totalCarbohydratesGrams: toNum(f.totalCarbohydratesGrams),
+    dietaryFiberGrams: toNum(f.dietaryFiberGrams),
+    sugarGrams: toNum(f.sugarGrams),
+    addedSugarsGrams: toNum(f.addedSugarsGrams),
+    sugarAlcoholsGrams: toNum(f.sugarAlcoholsGrams),
+    netCarbsGrams: toNum(f.netCarbsGrams),
+    saturatedFatGrams: toNum(f.saturatedFatGrams),
+    transFatGrams: toNum(f.transFatGrams),
+    polyunsaturatedFatGrams: toNum(f.polyunsaturatedFatGrams),
+    monounsaturatedFatGrams: toNum(f.monounsaturatedFatGrams),
+    cholesterolMg: toNum(f.cholesterolMg),
+    sodiumMg: toNum(f.sodiumMg),
+    calciumMg: toNum(f.calciumMg),
+    ironMg: toNum(f.ironMg),
+    potassiumMg: toNum(f.potassiumMg),
+    vitaminAIu: toNum(f.vitaminAIu),
+    vitaminCMg: toNum(f.vitaminCMg),
+    vitaminDMcg: toNum(f.vitaminDMcg),
+    caffeineMg: toNum(f.caffeineMg),
+  };
 }
 
 /** Parse and validate body.clientQuickCalories[i] from save-batch. */
@@ -64,6 +93,7 @@ export function parseClientQuickCalorieSnapshot(raw: unknown): ClientQuickCalori
     proteinGrams: o.proteinGrams === null ? null : toNum(o.proteinGrams),
     carbsGrams: o.carbsGrams === null ? null : toNum(o.carbsGrams),
     fatGrams: o.fatGrams === null ? null : toNum(o.fatGrams),
+    facts: parseFacts(o.facts),
     reasoning: toStr(o.reasoning) ?? "",
     highlightSpans,
   };

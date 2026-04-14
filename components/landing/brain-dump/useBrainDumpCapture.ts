@@ -5,7 +5,11 @@ import type { BrainDumpCategory } from "@/lib/gemini";
 import type { BrainDumpFields } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import type { BrainDumpCaptureEntry } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
-import { flushSentencesFromTyping, shouldRunQuickEstimate } from "@/components/landing/brain-dump/sentence-entries";
+import {
+  flushSentencesFromTyping,
+  normalizeQuickNoteBodyForMatch,
+  shouldRunQuickEstimate,
+} from "@/components/landing/brain-dump/sentence-entries";
 import type { ClientQuickCalorieSnapshot } from "@/lib/quick-calorie-snapshot";
 
 export type BrainDumpModalPhase = "idle" | "recording" | "categorizing" | "saving";
@@ -25,6 +29,7 @@ function doneMetaToQuickSnapshot(line: string, meta: EntryEstimateModalMeta): Cl
     proteinGrams: meta.proteinGrams,
     carbsGrams: meta.carbsGrams,
     fatGrams: meta.fatGrams,
+    facts: meta.facts ?? null,
     reasoning: meta.reasoning,
     highlightSpans: meta.highlightSpans ?? [],
   };
@@ -116,11 +121,8 @@ export function useBrainDumpCapture(options: {
       setPhase("categorizing");
       setError(null);
       try {
-        const pendingEntry = buildCaptureEntry(
-          text,
-          frozenMeta.status === "done" ? frozenMeta : { status: "idle" as const },
-          "pending"
-        );
+        /** Keep draft estimate snapshot (thinking/done) so the row still shows Analyzing / cal while the server saves. */
+        const pendingEntry = buildCaptureEntry(text, frozenMeta, "pending");
         setCaptureEntries((prev) => [...prev, pendingEntry]);
         const snap =
           frozenMeta.status === "done" && shouldRunQuickEstimate(text)
@@ -129,10 +131,19 @@ export function useBrainDumpCapture(options: {
         const quickCals =
           snap ? ([snap] satisfies ClientQuickCalorieSnapshot[]) : undefined;
         await runQuickNotePipeline(text, quickCals, tagsAtSubmit.length ? tagsAtSubmit : undefined);
+        /** onSaved (inside runQuickNotePipeline) already triggered refetch; remove pending entry by ID now
+         * so it doesn't linger as a ghost while the refetch is in flight. */
+        setCaptureEntries((prev) => prev.filter((e) => e.id !== pendingEntry.id));
         setPendingHabitTags([]);
         setPhase("recording");
       } catch (err) {
-        setCaptureEntries((prev) => prev.filter((entry) => entry.text !== text || entry.saveState !== "pending"));
+        setCaptureEntries((prev) =>
+          prev.filter(
+            (entry) =>
+              entry.saveState !== "pending" ||
+              normalizeQuickNoteBodyForMatch(entry.text) !== normalizeQuickNoteBodyForMatch(text)
+          )
+        );
         setCaptureDraft(text);
         setError(err instanceof Error ? err.message : "Something went wrong");
         setPhase("recording");

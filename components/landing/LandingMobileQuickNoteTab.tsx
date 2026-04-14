@@ -61,6 +61,8 @@ interface LandingMobileQuickNoteTabProps {
   habitsById?: Record<string, string>;
   onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
   onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
+  /** When true, hides the floating camera/gallery FAB (e.g. a modal is open on top). */
+  hideImageIngestBar?: boolean;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -83,6 +85,7 @@ export function LandingMobileQuickNoteTab({
   habitsById = {},
   onEditContextEntry,
   onReorderContextEntry,
+  hideImageIngestBar = false,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -102,7 +105,7 @@ export function LandingMobileQuickNoteTab({
   }, [startRecording]);
 
   return (
-    <div className="flex min-h-0 w-full flex-col px-3 sm:px-4">
+    <div className="flex min-h-0 min-w-0 w-full flex-col px-3 sm:px-4">
       {error ? (
         <div className="mb-3 shrink-0 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
           {error}
@@ -140,6 +143,7 @@ export function LandingMobileQuickNoteTab({
           habitsById={habitsById}
           onEditContextEntry={onEditContextEntry}
           onReorderContextEntry={onReorderContextEntry}
+          hideImageIngestBar={hideImageIngestBar}
           daySummary={daySummary}
           journalStreak={journalStreak}
           prevDayWeightKg={prevDayWeightKg ?? null}

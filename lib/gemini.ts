@@ -3524,10 +3524,11 @@ SHORT INPUT — bundled calorie estimation (required):
   - "assumptions": string[], "reasoning": string
   - "nutritionItems": [{ "name", "calories", "proteinGrams", "carbsGrams", "fatGrams" }]
   - "exerciseItems": [{ "name", "caloriesBurned", "durationMinutes" }]
-  - "nutrition": { calories, proteinGrams, carbsGrams, fatGrams, facts: { micronutrients }, notes } | null
+  - "nutrition": { "calories": number|null, "proteinGrams": number|null, "carbsGrams": number|null, "fatGrams": number|null, "facts": { "totalCarbohydratesGrams": number|null, "dietaryFiberGrams": number|null, "sugarGrams": number|null, "addedSugarsGrams": number|null, "sugarAlcoholsGrams": number|null, "netCarbsGrams": number|null, "saturatedFatGrams": number|null, "transFatGrams": number|null, "polyunsaturatedFatGrams": number|null, "monounsaturatedFatGrams": number|null, "cholesterolMg": number|null, "sodiumMg": number|null, "calciumMg": number|null, "ironMg": number|null, "potassiumMg": number|null, "vitaminAIu": number|null, "vitaminCMg": number|null, "vitaminDMcg": number|null, "caffeineMg": number|null }, "notes": string } | null
   - "exercise": { caloriesBurned, carbsUsedGrams, fatUsedGrams, proteinDeltaGrams, notes } | null
   - "highlightSpans": [{ "start", "end", "kind", "reason" }] (0-based indices into THAT entry's nutritionText or exerciseText only)
 - Derive calorieEstimate only from that entry's nutritionText or exerciseText.
+- For nutrition facts, provide your best realistic estimate per field — use null only when truly unknown.
 - For "reflection", "concept", "experiment", "weight", "sleep" entries: omit calorieEstimate.
 `
     : "";

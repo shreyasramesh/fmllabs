@@ -1,3 +1,8 @@
+/** Normalize body text so typed Quick Note lines match Gemini-titled journal rows (case, spacing). */
+export function normalizeQuickNoteBodyForMatch(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 /**
  * Split completed sentences from the current draft while typing.
  * Commits when . ! ? are followed by whitespace, or when the only segment ends with . ! ?
@@ -47,7 +52,7 @@ export function looksLikeFoodSentence(s: string): boolean {
   const t = s.trim();
   if (t.length < 2 || t.length > 280) return false;
   const foodish =
-    /\b(ate|eating|eaten|breakfast|lunch|dinner|snack|drink|coffee|tea|protein|kcal|calories|\bcal\b|bowl|shake|eggs|chicken|salad|rice|oatmeal|smoothie|burger|fries|latte|ramen|soup|sandwich|toast|pizza|fruit|yogurt|bar\b|meal|had|grams?|oz\b|cup|slice|scoop)\b/i;
+    /\b(ate|eating|eaten|breakfast|lunch|dinner|snack|drink|coffee|tea|protein|kcal|calories|\bcal\b|bowl|shake|eggs|chicken|salad|rice|oatmeal|smoothie|burger|fries|latte|ramen|noodles?|pasta|pho|udon|soba|spaghetti|dumplings?|taco|burrito|curry|steak|salmon|tofu|waffles?|pancakes?|croissant|bagel|cereal|soup|sandwich|toast|pizza|fruit|yogurt|bar\b|meal|had|grams?|oz\b|cup|slice|scoop)\b/i;
   return foodish.test(t) || /\d/.test(t);
 }
 

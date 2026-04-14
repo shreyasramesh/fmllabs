@@ -20,7 +20,7 @@ import {
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
-import { flushSentencesFromTyping } from "@/components/landing/brain-dump/sentence-entries";
+import { flushSentencesFromTyping, normalizeQuickNoteBodyForMatch } from "@/components/landing/brain-dump/sentence-entries";
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { roundSleepHoursToMinute } from "@/lib/sleep-duration";
@@ -1393,6 +1393,8 @@ interface CaptureViewProps {
   prevDaySleepH?: number | null;
   /** Called when user reorders a transcript row. newSortMs is the new sort override epoch-ms. */
   onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
+  /** When true, hides the floating camera/gallery buttons (e.g. a modal is open on top). */
+  hideImageIngestBar?: boolean;
 }
 
 type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
@@ -1443,6 +1445,7 @@ export function BrainDumpCaptureView({
   prevDayWeightKg = null,
   prevDaySleepH = null,
   onReorderContextEntry,
+  hideImageIngestBar = false,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -1649,6 +1652,8 @@ export function BrainDumpCaptureView({
   // Track new entry IDs for fade-in animation
   const prevRowIdsRef = React.useRef<Set<string>>(new Set());
   const [newRowIds, setNewRowIds] = React.useState<Set<string>>(new Set());
+  /** Stagger index for each row on initial load — maps row.id → position in the first batch. */
+  const [staggerIndexMap, setStaggerIndexMap] = React.useState<Map<string, number>>(new Map());
 
   // Drag-to-reorder state
   const [dragIdx, setDragIdx] = React.useState<number | null>(null);
@@ -1685,19 +1690,38 @@ export function BrainDumpCaptureView({
     return journalContextRows;
   }, [journalContextRows]);
 
-  // Track newly added rows for fade-in animation
+  // Track newly added rows for fade-in / staggered-load animation
+  const isInitialLoadRef = React.useRef(true);
   useEffect(() => {
     const prevIds = prevRowIdsRef.current;
     const incoming = new Set<string>();
     for (const row of journalRowsOrdered) {
       if (!prevIds.has(row.id)) incoming.add(row.id);
     }
-    if (incoming.size > 0) setNewRowIds(incoming);
-    // Update the ref to the full current set
-    prevRowIdsRef.current = new Set(journalRowsOrdered.map((r) => r.id));
-    // Clear the "new" flags after the next frame so animation plays once
     if (incoming.size > 0) {
-      const t = window.setTimeout(() => setNewRowIds(new Set()), 800);
+      setNewRowIds(incoming);
+      // First time rows arrive: record per-row stagger indices so each row delays slightly more than the last.
+      if (isInitialLoadRef.current) {
+        const map = new Map<string, number>();
+        let staggerIdx = 0;
+        for (const row of journalRowsOrdered) {
+          if (incoming.has(row.id)) map.set(row.id, staggerIdx++);
+        }
+        setStaggerIndexMap(map);
+        isInitialLoadRef.current = false;
+      } else {
+        // Subsequent additions (new saves) get no stagger — appear instantly at index 0.
+        setStaggerIndexMap(new Map());
+      }
+    }
+    prevRowIdsRef.current = new Set(journalRowsOrdered.map((r) => r.id));
+    if (incoming.size > 0) {
+      // Hold the "new" flag long enough for the slowest staggered row to finish (max 12 rows × 45ms + 380ms).
+      const holdMs = Math.min(incoming.size, 12) * 45 + 420;
+      const t = window.setTimeout(() => {
+        setNewRowIds(new Set());
+        setStaggerIndexMap(new Map());
+      }, holdMs);
       return () => window.clearTimeout(t);
     }
   }, [journalRowsOrdered]);
@@ -1766,18 +1790,22 @@ export function BrainDumpCaptureView({
   useEffect(() => {
     if (captureEntries.length === 0 || journalRowsOrdered.length === 0) return;
     setCaptureEntries((prev) => {
-      const next = prev.filter(
-        (entry) =>
-          !(
-            entry.saveState === "pending" &&
-            journalRowsOrdered.some((row) => {
-              if (row.bodyText.trim() !== entry.text.trim()) return false;
-              if (!entry.createdAtMs) return true;
-              return (row.sortAtMs ?? 0) >= entry.createdAtMs - 120000;
-            })
-          )
-      );
-      return next.length === prev.length ? prev : next;
+      const pendingEntries = prev.filter((e) => e.saveState === "pending");
+      if (pendingEntries.length === 0) return prev;
+      /** Remove a pending entry if any journal row arrived in the 3-minute window after we submitted it.
+       * Gemini may rewrite the text entirely ("burma noodles" → "Burma Superstar tea leaf salad and garlic noodles"),
+       * so we match purely on timing — not on text content. */
+      const pendingIdsToRemove = new Set<string>();
+      for (const entry of pendingEntries) {
+        if (!entry.createdAtMs) continue;
+        const hasMatchingRow = journalRowsOrdered.some(
+          (row) => (row.sortAtMs ?? 0) >= entry.createdAtMs! - 5_000 &&
+                   (row.sortAtMs ?? 0) <= entry.createdAtMs! + 180_000
+        );
+        if (hasMatchingRow) pendingIdsToRemove.add(entry.id);
+      }
+      if (pendingIdsToRemove.size === 0) return prev;
+      return prev.filter((e) => !pendingIdsToRemove.has(e.id));
     });
   }, [captureEntries.length, journalRowsOrdered, setCaptureEntries]);
 
@@ -1894,6 +1922,7 @@ export function BrainDumpCaptureView({
           hintText={sentenceDraft}
           onAnalysesReady={handleImageAnalysesReady}
           disabled={draftDisabled}
+          hidden={hideImageIngestBar || !!pendingImageAnalyses}
         />
 
         {/* Image-to-text review — portaled to body so fixed positioning is viewport-relative (LandingShell uses transform animations that trap fixed children). */}
@@ -2122,7 +2151,7 @@ export function BrainDumpCaptureView({
             )
           : null}
 
-        <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
+        <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 min-w-0 w-full flex-1 flex-col">
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
             {displayRows.length === 0 && captureEntries.length === 0 ? (
               <div className="flex flex-col items-center gap-1 py-8 text-center">
@@ -2130,33 +2159,38 @@ export function BrainDumpCaptureView({
                 <p className="text-xs text-neutral-300 dark:text-neutral-600">Start typing below to add your first entry</p>
               </div>
             ) : null}
-            {displayRows.map((row, i) => (
-              <div
-                key={row.id}
-                ref={(el) => { dragRowRefs.current[i] = el; }}
-                onTouchMove={dragIdx !== null ? handleDragTouchMove : undefined}
-                onTouchEnd={dragIdx !== null ? handleDragTouchEnd : undefined}
-              >
-                <JournalContextRowNoteStream
-                  row={row}
-                  onOpenJournalContextEntry={onOpenJournalContextEntry}
-                  onDeleteJournalContextEntry={onDeleteJournalContextEntry}
-                  onOpenReflectionMentor={onOpenReflectionMentor}
-                  onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
-                  weightTrendSparklineKg={weightTrendSparklineKg}
-                  sleepTrendSparklineHours={sleepTrendSparklineHours}
-                  onTagContextEntry={onTagContextEntry}
-                  habitsById={habitsById}
-                  onEditContextEntry={onEditContextEntry}
-                  isNew={newRowIds.has(row.id)}
-                  prevDayWeightKg={prevDayWeightKg}
-                  prevDaySleepH={prevDaySleepH}
-                  isDragging={dragIdx === i}
-                  isDragTarget={dragOverIdx === i && dragIdx !== i}
-                  onDragHandleTouchStart={onReorderContextEntry ? (e) => handleDragHandleTouchStart(i, e) : undefined}
-                />
-              </div>
-            ))}
+            {displayRows.map((row, i) => {
+              const isNew = newRowIds.has(row.id);
+              const staggerIdx = staggerIndexMap.get(row.id) ?? 0;
+              return (
+                <div
+                  key={row.id}
+                  ref={(el) => { dragRowRefs.current[i] = el; }}
+                  onTouchMove={dragIdx !== null ? handleDragTouchMove : undefined}
+                  onTouchEnd={dragIdx !== null ? handleDragTouchEnd : undefined}
+                  style={isNew && staggerIdx > 0 ? { animationDelay: `${staggerIdx * 45}ms` } : undefined}
+                >
+                  <JournalContextRowNoteStream
+                    row={row}
+                    onOpenJournalContextEntry={onOpenJournalContextEntry}
+                    onDeleteJournalContextEntry={onDeleteJournalContextEntry}
+                    onOpenReflectionMentor={onOpenReflectionMentor}
+                    onOpenReflectionConversationChooser={onOpenReflectionConversationChooser}
+                    weightTrendSparklineKg={weightTrendSparklineKg}
+                    sleepTrendSparklineHours={sleepTrendSparklineHours}
+                    onTagContextEntry={onTagContextEntry}
+                    habitsById={habitsById}
+                    onEditContextEntry={onEditContextEntry}
+                    isNew={isNew}
+                    prevDayWeightKg={prevDayWeightKg}
+                    prevDaySleepH={prevDaySleepH}
+                    isDragging={dragIdx === i}
+                    isDragTarget={dragOverIdx === i && dragIdx !== i}
+                    onDragHandleTouchStart={onReorderContextEntry ? (e) => handleDragHandleTouchStart(i, e) : undefined}
+                  />
+                </div>
+              );
+            })}
             {captureEntries.map((entry) => (
               <div key={entry.id} className="mb-3">
                 <CapturePersistedEntryRow entry={entry} onDelete={removeEntry} disabled={captureBusy} habitsById={habitsById} />
@@ -2180,7 +2214,8 @@ export function BrainDumpCaptureView({
                 textAreaRef={draftTextareaRef}
               />
             </div>
-            {phase !== "recording" ? (
+            {phase !== "recording" &&
+            !captureEntries.some((e) => e.saveState === "pending") ? (
               <p className="mt-2 px-1 text-[12px] font-medium text-neutral-400 dark:text-neutral-500">
                 {phase === "saving" ? "Saving your note…" : "Categorizing your note…"}
               </p>
