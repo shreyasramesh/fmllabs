@@ -31,8 +31,8 @@ import { ChatComposer } from "@/components/ChatComposer";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
 import { LandingDashboardSheetFrame } from "@/components/landing/LandingDashboardSheetFrame";
-import { LandingDashboardJumpFab } from "@/components/landing/LandingDashboardJumpFab";
-import { LandingBrainDump } from "@/components/landing/LandingBrainDump";
+import { LandingBrainDump, type LandingBrainDumpHandle } from "@/components/landing/LandingBrainDump";
+import { LandingDesktopJournalSpeedDial } from "@/components/landing/LandingDesktopJournalSpeedDial";
 import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
 import { LandingMobileCommonplaceTab } from "@/components/landing/LandingMobileCommonplaceTab";
 import type { BrainDumpJournalContextRow } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
@@ -4502,6 +4502,7 @@ export default function ChatPage() {
     return () => clearTimeout(timer);
   }, [isAnonymous, incognitoMode, leftPanelReady, sessions.length, customConcepts.length, longTermMemories.length, conceptGroups.length]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const landingBrainDumpRef = useRef<LandingBrainDumpHandle>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -15792,7 +15793,6 @@ export default function ChatPage() {
                       <LandingShell
                         dashboardScrollRootRef={messagesScrollRef}
                         dateItems={landingDateStripItems}
-                        dateStripLabel={landingTranslations.landingDateStripLabel}
                         dateStripHint={landingTranslations.landingDateStripHint}
                         selectedDayLabel={headerCalendarLabel}
                         focusCanvasEyebrow={landingTranslations.landingFocusCanvasEyebrow}
@@ -16209,6 +16209,7 @@ export default function ChatPage() {
                       )}
                 {!incognitoMode && (
                       <LandingBrainDump
+                        ref={landingBrainDumpRef}
                         journalContextRows={brainDumpJournalContextRows}
                         onOpenJournalEntry={openLandingJournalTranscriptById}
                         onDeleteJournalEntry={isAnonymous ? undefined : deleteLandingJournalTranscriptById}
@@ -16532,7 +16533,7 @@ export default function ChatPage() {
           !incognitoMode &&
           !mentorJournalBridgePending &&
           onboardingStep === null && (
-            <LandingDashboardJumpFab />
+            <LandingDesktopJournalSpeedDial onVoiceClick={() => landingBrainDumpRef.current?.startRecording()} />
           )}
 
         {/* Incognito disclaimer - shown when in incognito mode */}

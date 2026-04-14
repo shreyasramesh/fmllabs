@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import { createPortal } from "react-dom";
-import { SparklesIcon } from "@/components/SharedIcons";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import {
   BrainDumpCaptureView,
@@ -26,20 +25,27 @@ interface LandingBrainDumpProps {
   onEditContextEntry?: (rowId: string, newText: string) => Promise<void>;
 }
 
-export function LandingBrainDump({
-  onSaved,
-  journalContextRows = [],
-  onOpenJournalEntry,
-  onDeleteJournalEntry,
-  onOpenReflectionMentor,
-  onOpenReflectionConversationChooser,
-  weightTrendSparklineKg,
-  sleepTrendSparklineHours,
-  availableHabits = [],
-  onTagContextEntry,
-  habitsById = {},
-  onEditContextEntry,
-}: LandingBrainDumpProps) {
+export type LandingBrainDumpHandle = {
+  startRecording: () => void;
+};
+
+export const LandingBrainDump = forwardRef<LandingBrainDumpHandle, LandingBrainDumpProps>(function LandingBrainDump(
+  {
+    onSaved,
+    journalContextRows = [],
+    onOpenJournalEntry,
+    onDeleteJournalEntry,
+    onOpenReflectionMentor,
+    onOpenReflectionConversationChooser,
+    weightTrendSparklineKg,
+    sleepTrendSparklineHours,
+    availableHabits = [],
+    onTagContextEntry,
+    habitsById = {},
+    onEditContextEntry,
+  },
+  ref
+) {
   const {
     phase,
     captureEntries,
@@ -54,6 +60,8 @@ export function LandingBrainDump({
     pendingHabitTags,
     setPendingHabitTags,
   } = useBrainDumpCapture({ onSaved });
+
+  useImperativeHandle(ref, () => ({ startRecording }), [startRecording]);
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = React.useState(false);
@@ -70,20 +78,9 @@ export function LandingBrainDump({
 
   if (!mounted) return null;
 
+  // No floating idle button on mobile — Quick Note tab handles capture; desktop uses LandingDesktopJournalSpeedDial.
   if (phase === "idle") {
-    return createPortal(
-      <button
-        type="button"
-        onClick={startRecording}
-        aria-label="Brain Dump — speak with Gemini"
-        className="hidden md:flex fixed right-6 z-50 isolate h-10 w-10 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-105 active:scale-95 voice-fab bottom-6"
-      >
-        <span className="voice-fab-wave" aria-hidden />
-        <span className="voice-fab-wave" style={{ animationDelay: "1.5s" }} aria-hidden />
-        <SparklesIcon className="relative z-10 h-[18px] w-[18px]" />
-      </button>,
-      document.body
-    );
+    return null;
   }
 
   return createPortal(
@@ -129,4 +126,6 @@ export function LandingBrainDump({
     </BrainDumpSheetFrame>,
     document.body
   );
-}
+});
+
+LandingBrainDump.displayName = "LandingBrainDump";

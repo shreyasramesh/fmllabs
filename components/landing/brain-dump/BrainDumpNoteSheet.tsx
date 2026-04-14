@@ -5,6 +5,10 @@ import type { BrainDumpCategory } from "@/lib/gemini";
 import { BrainDumpImageIngestBar } from "@/components/landing/brain-dump/BrainDumpImageIngestBar";
 import type { JournalImageAnalysis, JournalImageAutoKind } from "@/lib/journal-image-analysis";
 import {
+  JOURNAL_IMAGE_ANALYSES_BRIDGE_EVENT,
+  type JournalImageAnalysesBridgeDetail,
+} from "@/lib/journal-image-analyses-bridge";
+import {
   NutritionAmyNoteBody,
   CaptureDraftSentenceRow,
   CapturePersistedEntryRow,
@@ -187,13 +191,27 @@ export function BrainDumpSheetFrame({
   onBackdropClick,
   phase,
   onClose,
-  onPrimaryCapture,
-  capturePrimaryDisabled,
-  capturePrimaryLabel = "Done",
+  onPrimaryCapture: _onPrimaryCapture,
+  capturePrimaryDisabled: _capturePrimaryDisabled,
+  capturePrimaryLabel: _capturePrimaryLabel = "Done",
   children,
 }: BrainDumpSheetFrameProps) {
-  const isCapture = phase === "recording" || phase === "categorizing";
-  const showCapturePrimary = isCapture && onPrimaryCapture && phase === "recording";
+  const titleText =
+    phase === "categorizing" ? "Sorting your note…" : phase === "saving" ? "Saving…" : "Quick note";
+
+  const closeIconBtn = (
+    <button
+      type="button"
+      onClick={onClose}
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+      aria-label="Close"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </button>
+  );
 
   return (
     <div
@@ -210,32 +228,11 @@ export function BrainDumpSheetFrame({
         className="flex h-[100dvh] max-h-[100dvh] w-full max-w-xl flex-col overflow-hidden rounded-t-[1.25rem] border border-neutral-200/80 bg-[var(--background)] shadow-2xl dark:border-neutral-700/80 sm:h-auto sm:max-h-[min(92dvh,860px)] sm:rounded-3xl sm:shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <header className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200/70 px-2 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] dark:border-neutral-700/60 sm:px-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg px-3 py-2 text-[15px] font-medium text-[#295a8a] dark:text-blue-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            aria-label="Close"
-          >
-            Cancel
-          </button>
-          <h2 id="brain-dump-sheet-title" className="truncate text-center text-sm font-semibold text-neutral-500 dark:text-neutral-400">
-            {phase === "categorizing" ? "Sorting your note…" : phase === "saving" ? "Saving…" : "Quick note"}
+        <header className="flex shrink-0 items-center justify-end gap-2 border-b border-neutral-200/70 px-2 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] dark:border-neutral-700/60 sm:px-3 sm:py-2.5">
+          <h2 id="brain-dump-sheet-title" className="sr-only">
+            {titleText}
           </h2>
-          <div className="flex w-[72px] justify-end">
-            {showCapturePrimary ? (
-              <button
-                type="button"
-                onClick={onPrimaryCapture}
-                disabled={capturePrimaryDisabled}
-                className="rounded-lg px-3 py-2 text-[15px] font-semibold text-[#295a8a] disabled:opacity-40 dark:text-blue-300"
-              >
-                {capturePrimaryLabel}
-              </button>
-            ) : (
-              <span className="w-14" aria-hidden />
-            )}
-          </div>
+          {closeIconBtn}
         </header>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-5">
@@ -307,17 +304,20 @@ function MiniTrendSparkline({
   kind,
   className,
   width = 88,
+  compact = false,
 }: {
   values: number[];
   kind: "weight" | "sleep";
   className?: string;
   width?: number;
+  /** Shorter chart for single-row inline layout between title and timestamp. */
+  compact?: boolean;
 }) {
   if (values.length === 0) return null;
   const w = width;
-  const h = 36;
-  const topPad = 10;
-  const bottomPad = 9;
+  const h = compact ? 24 : 36;
+  const topPad = compact ? 5 : 10;
+  const bottomPad = compact ? 5 : 9;
   const sidePad = 2;
   const vals = values.length === 1 ? [values[0]!, values[0]!] : values;
   const min = Math.min(...vals);
@@ -360,7 +360,7 @@ function MiniTrendSparkline({
       <polyline
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth={compact ? 1 : 1.2}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
@@ -370,17 +370,18 @@ function MiniTrendSparkline({
         const label = formatValue(point.value);
         const approxWidth = label.length * 4.2;
         const textX = Math.min(w - approxWidth / 2 - 1, Math.max(approxWidth / 2 + 1, point.x));
+        const fs = compact ? 5.2 : 6.2;
         const textY =
           placement === "above"
-            ? Math.max(6.5, point.y - 6)
-            : Math.min(h - 1.5, point.y + 10);
+            ? Math.max(compact ? 5 : 6.5, point.y - (compact ? 4 : 6))
+            : Math.min(h - 1.5, point.y + (compact ? 7 : 10));
         return (
           <g key={`spark-label-${point.index}`}>
-            <circle cx={point.x} cy={point.y} r="1.8" fill="currentColor" />
+            <circle cx={point.x} cy={point.y} r={compact ? 1.4 : 1.8} fill="currentColor" />
             <text
               x={textX}
               y={textY}
-              fontSize="6.2"
+              fontSize={fs}
               fontWeight="600"
               textAnchor="middle"
               fill="currentColor"
@@ -1064,10 +1065,13 @@ function JournalContextRowNoteStream({
       if (!Number.isNaN(todayKg)) {
         const diff = todayKg - prevDayWeightKg;
         if (Math.abs(diff) >= 0.05) {
-          const improved = diff < 0; // weight loss is improvement
           const sign = diff > 0 ? "↑" : "↓";
+          const tone =
+            diff > 0
+              ? "text-red-600 dark:text-red-400"
+              : "text-emerald-600 dark:text-emerald-400";
           return (
-            <span className={`text-[10px] tabular-nums font-medium ${improved ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-400 dark:text-neutral-500"}`}>
+            <span className={`text-[10px] tabular-nums font-medium ${tone}`}>
               {sign} {Math.abs(diff).toFixed(1)} kg
             </span>
           );
@@ -1094,8 +1098,19 @@ function JournalContextRowNoteStream({
     return null;
   })();
 
-  // Right-rail analysis: calories for nutrition/exercise, sparkline for weight/sleep,
-  // otherwise any leftover cal/metric value for entries that don't use the compact paths.
+  /** Inline between title and timestamp for weight/sleep rows (saves a full extra row). */
+  const nsTrendSparkline =
+    metricOnLeft && leftRailTrendValues && leftRailTrendValues.length > 0 ? (
+      <MiniTrendSparkline
+        values={leftRailTrendValues}
+        kind={row.journalCategory === "weight" ? "weight" : "sleep"}
+        width={100}
+        compact
+        className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
+      />
+    ) : null;
+
+  // Right-rail analysis: calories for nutrition/exercise; otherwise cal/metric when not shown on left / not in middle sparkline.
   const nsRightAnalysis = caloriesOnLeft ? (
     <span
       className={`text-[12px] font-semibold tabular-nums leading-none ${
@@ -1104,14 +1119,7 @@ function JournalContextRowNoteStream({
     >
       {row.caloriesSummary}
     </span>
-  ) : metricOnLeft && leftRailTrendValues && leftRailTrendValues.length > 0 ? (
-    <MiniTrendSparkline
-      values={leftRailTrendValues}
-      kind={row.journalCategory === "weight" ? "weight" : "sleep"}
-      width={96}
-      className={`shrink-0 ${journalContextRowMetricToneClass(row.journalCategory)}`}
-    />
-  ) : cal ?? metric ?? null;
+  ) : nsTrendSparkline != null ? null : cal ?? metric ?? null;
 
   const swipeProgress = Math.min(Math.abs(swipeX) / SWIPE_THRESHOLD, 1);
 
@@ -1169,10 +1177,9 @@ function JournalContextRowNoteStream({
       >
         {nsInlineEditForm}
         {!nsEditing && (
-          <div className="flex items-start gap-1.5">
+          <div className={`flex gap-1.5 ${nsTrendSparkline ? "items-center" : "items-start"}`}>
             {dragHandle}
-            {/* LEFT: text + edit + tag inline; sparkline below for sleep/weight rows */}
-            <div className="min-w-0 flex-1">
+            <div className={`min-w-0 ${nsTrendSparkline ? "shrink" : "flex-1"}`}>
               <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
                 <button
                   type="button"
@@ -1200,13 +1207,16 @@ function JournalContextRowNoteStream({
                 <div className="mt-0.5 flex flex-wrap gap-1 pl-5">{reflectionMentorActions}</div>
               ) : null}
               {nsHabitPills}
-              {/* Sparkline chart sits below the text for sleep/weight rows so the row stays compact */}
-              {metricOnLeft && nsRightAnalysis ? (
-                <div className="mt-1.5 pl-[14px]">{nsRightAnalysis}</div>
-              ) : null}
             </div>
+            {nsTrendSparkline ? (
+              <div className="flex min-w-0 flex-1 items-center justify-center px-0.5">
+                {nsTrendSparkline}
+              </div>
+            ) : null}
             {/* RIGHT: analysis (non-sparkline rows) + delete, delta, time */}
-            <div className="flex shrink-0 flex-col items-end gap-0.5 self-start pt-[2px]">
+            <div
+              className={`flex shrink-0 flex-col items-end gap-0.5 ${nsTrendSparkline ? "self-center" : "self-start pt-[2px]"}`}
+            >
               <div className="flex items-center gap-1.5">
                 {!metricOnLeft ? nsRightAnalysis : null}
                 {canDelete ? (
@@ -1463,6 +1473,15 @@ export function BrainDumpCaptureView({
     setPendingImageAnalyses(analyses);
     setPendingImageEditText(texts.join("\n\n"));
   }, []);
+
+  useEffect(() => {
+    const onBridge = (e: Event) => {
+      const detail = (e as CustomEvent<JournalImageAnalysesBridgeDetail>).detail;
+      if (detail?.analyses?.length) handleImageAnalysesReady(detail.analyses);
+    };
+    window.addEventListener(JOURNAL_IMAGE_ANALYSES_BRIDGE_EVENT, onBridge);
+    return () => window.removeEventListener(JOURNAL_IMAGE_ANALYSES_BRIDGE_EVENT, onBridge);
+  }, [handleImageAnalysesReady]);
 
   useEffect(() => {
     if (!pendingImageAnalyses?.length) return;
@@ -2213,8 +2232,7 @@ export function BrainDumpCaptureView({
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <p className="text-xs text-neutral-500 dark:text-neutral-400">
-        Type and we&apos;ll file it in the right journal. Enter commits a line; Enter on an empty line (or Done) saves
-        immediately — no review screen.
+        Type and we&apos;ll file it in the right journal.
       </p>
       <div
         className="min-h-[min(52dvh,360px)] flex-1 overflow-y-auto rounded-xl bg-white/60 px-3 py-2 pb-24 dark:bg-neutral-900/25"

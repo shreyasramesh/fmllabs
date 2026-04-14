@@ -293,7 +293,6 @@ function ChevronRow({
 
 interface LandingShellProps {
   dateItems: LandingDateItem[];
-  dateStripLabel: string;
   dateStripHint: string;
   /** Short label for the selected dashboard day (e.g. "Today", "Jan 4"). */
   selectedDayLabel: string;
@@ -462,7 +461,6 @@ interface LandingShellProps {
 
 export function LandingShell({
   dateItems,
-  dateStripLabel,
   dateStripHint,
   selectedDayLabel,
   focusCanvasEyebrow,
@@ -1044,7 +1042,7 @@ export function LandingShell({
 
       {/* ===== Desktop stacked layout (unchanged) ===== */}
     <div className="hidden md:block w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
-      <LandingDateStrip label={dateStripLabel} hint={dateStripHint} items={dateItems} />
+      <LandingDateStrip hint={dateStripHint} items={dateItems} />
 
       {/* 1. Focus Canvas + Hero Habits + Quick Capture */}
       <div

@@ -8,25 +8,8 @@ import { createPortal } from "react-dom";
  * the file picker via `input.click()` from a separate control (e.g. portaled FAB).
  */
 const FILE_INPUT_VISUAL_CLASS = "sr-only";
-import { compressImageForUpload } from "@/lib/compress-image-for-upload";
-import type { JournalImageAnalysis, JournalImageAutoKind } from "@/lib/journal-image-analysis";
-
-const JOURNAL_IMAGE_AUTO_KINDS: readonly JournalImageAutoKind[] = [
-  "nutrition",
-  "exercise",
-  "generic_text",
-  "weight_scale",
-  "sleep_tracker",
-] as const;
-
-function parseJournalImageAutoKind(v: unknown): JournalImageAutoKind | undefined {
-  return typeof v === "string" && (JOURNAL_IMAGE_AUTO_KINDS as readonly string[]).includes(v)
-    ? (v as JournalImageAutoKind)
-    : undefined;
-}
-
-/** Let Quick Note infer whether the photo is food or a workout screenshot. */
-const IMAGE_TRANSCRIBE_MODE = "auto" as const;
+import type { JournalImageAnalysis } from "@/lib/journal-image-analysis";
+import { transcribeJournalImageFile } from "@/lib/journal-image-transcribe-client";
 
 type Thumb = { id: string; previewUrl: string };
 
@@ -136,59 +119,12 @@ export function BrainDumpImageIngestBar({
           if (file.size > 20 * 1024 * 1024) {
             throw new Error("An image is too large (max 20MB before compression).");
           }
-          const { base64, mimeType } = await compressImageForUpload(file);
-          const res = await fetch("/api/me/journal/calorie/image-transcribe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              imageBase64: base64,
-              mimeType,
-              hintText: hintTextRef.current.slice(0, 600),
-              mode: IMAGE_TRANSCRIBE_MODE,
-            }),
-          });
-          const data = (await res.json().catch(() => ({}))) as {
-            error?: string;
-            nutritionLogDraft?: string;
-            imageKind?: unknown;
-            dishName?: unknown;
-            weightKgGuess?: unknown;
-            sleepHoursGuess?: unknown;
-            hrvMsGuess?: unknown;
-          };
-          if (!res.ok) {
-            throw new Error(data.error || "Could not read text from this image.");
-          }
-          const draft = (data.nutritionLogDraft ?? "").trim();
-          if (draft) {
-            const previewUrl = newThumbs[i]!.previewUrl;
-            const imageKind = parseJournalImageAutoKind(data.imageKind);
-            const sceneLabel =
-              typeof data.dishName === "string" && data.dishName.trim() ? data.dishName.trim().slice(0, 200) : undefined;
-            const asGuess = (v: unknown): number | null | undefined => {
-              if (v === undefined) return undefined;
-              if (v === null || v === "") return null;
-              const n = typeof v === "number" ? v : Number.parseFloat(String(v).trim());
-              return Number.isFinite(n) ? n : null;
-            };
-            const weightKgGuess = asGuess(data.weightKgGuess);
-            const sleepHoursGuess = asGuess(data.sleepHoursGuess);
-            const hrvMsGuess = asGuess(data.hrvMsGuess);
-            const analysis: JournalImageAnalysis = {
-              id: thumbId,
-              previewUrl,
-              extractedText: draft,
-              ...(imageKind ? { imageKind } : {}),
-              ...(sceneLabel ? { sceneLabel } : {}),
-              ...(weightKgGuess !== undefined ? { weightKgGuess } : {}),
-              ...(sleepHoursGuess !== undefined ? { sleepHoursGuess } : {}),
-              ...(hrvMsGuess !== undefined ? { hrvMsGuess } : {}),
-            };
-            onAnalysesReadyRef.current([analysis]);
-            completedThumbIds.add(thumbId);
-          } else {
-            setError("No text could be extracted from this photo. Try a clearer image or type your note.");
-          }
+          const analysis = await transcribeJournalImageFile(file, hintTextRef.current);
+          analysis.id = thumbId;
+          URL.revokeObjectURL(analysis.previewUrl);
+          analysis.previewUrl = newThumbs[i]!.previewUrl;
+          onAnalysesReadyRef.current([analysis]);
+          completedThumbIds.add(thumbId);
           setThumbs((prev) => {
             return prev.filter((t) => t.id !== thumbId);
           });
@@ -312,13 +248,14 @@ export function BrainDumpImageIngestBar({
   );
 
   if (layout === "floating") {
+    // Mobile Quick Note only; desktop uses camera/gallery on LandingDesktopJournalSpeedDial.
     return (
       <>
         {!floatingPortalReady || typeof document === "undefined"
           ? null
           : createPortal(
               <div
-                className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-end px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4 md:pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]"
+                className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-end px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] pt-1 sm:px-4 md:hidden"
                 aria-hidden={false}
               >
                 <div className="pointer-events-auto">{chrome}</div>

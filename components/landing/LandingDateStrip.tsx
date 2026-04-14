@@ -5,13 +5,12 @@ import React, { useLayoutEffect, useRef } from "react";
 import type { LandingDateItem } from "@/components/landing/types";
 
 interface LandingDateStripProps {
-  label: string;
   hint: string;
   items: LandingDateItem[];
 }
 
 /** After load/refresh, pan the strip horizontally so the current day (rightmost in the week) is in view. */
-export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) {
+export function LandingDateStrip({ hint, items }: LandingDateStripProps) {
   const stripScrollRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -31,19 +30,10 @@ export function LandingDateStrip({ label, hint, items }: LandingDateStripProps) 
 
   return (
     <section className="landing-module-glass w-full overflow-hidden rounded-[1.75rem] border p-4 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">
-            {label}
-          </p>
-          <p className="mt-1 text-sm text-[#4d4c48] dark:text-[#b0aea5] leading-relaxed">
-            {hint}
-          </p>
-        </div>
-      </div>
+      <p className="text-sm text-[#4d4c48] dark:text-[#b0aea5] leading-relaxed">{hint}</p>
 
-      <div ref={stripScrollRef} className="mt-4 overflow-x-auto overflow-y-hidden">
-        <div className="flex min-w-max gap-2 lg:grid lg:min-w-0 lg:grid-cols-7">
+      <div ref={stripScrollRef} className="mt-4 overflow-x-auto">
+        <div className="flex min-w-max gap-2 py-2 lg:grid lg:min-w-0 lg:grid-cols-7">
           {items.map((item) => (
             <button
               key={item.key}
