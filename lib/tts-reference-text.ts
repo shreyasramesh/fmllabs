@@ -1,7 +1,7 @@
 import { normalizeMentalModelCitationMarkup } from "@/lib/chat-utils";
 import { stripMarkdown } from "@/lib/strip-markdown";
 
-const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
+const FIGURE_TOKEN_REGEX = /\[\[figure:([a-zA-Z0-9_-]+)\]\]/g;
 const MM_TOKEN_REGEX = /\[\[(?!memory:|concept:|group:|figure:)([a-z0-9_]+)\]\]/g;
 const MM_NAME_TOKEN_REGEX = /\[\[\s*([^[\]]+?)\s*\]\]/g;
 const LTM_TOKEN_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;

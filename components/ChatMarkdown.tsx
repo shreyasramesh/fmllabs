@@ -11,7 +11,8 @@ const CG_HREF_PREFIX = "#cg-";
 const FIGURE_HREF_PREFIX = "#figure-";
 
 const LTM_TOKEN_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;
-const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
+/** Includes YAML slugs (snake_case) and custom mentors (`cm_` + base64url). */
+const FIGURE_TOKEN_REGEX = /\[\[figure:([a-zA-Z0-9_-]+)\]\]/g;
 const CC_TOKEN_REGEX = /\[\[concept:([a-fA-F0-9]{24})\]\]/g;
 const CG_TOKEN_REGEX = /\[\[group:([a-fA-F0-9]{24})\]\]/g;
 const LEGACY_LTM_REGEX = /@ltm:([a-fA-F0-9]{24})/g;

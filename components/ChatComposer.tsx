@@ -42,6 +42,8 @@ interface ChatComposerProps {
   onLtmClick?: (id: string) => void;
   onCustomConceptClick?: (id: string) => void;
   onConceptGroupClick?: (id: string) => void;
+  /** When false, hides speech-to-text (e.g. new chat or 1:1 mentor thread). Default true. */
+  showVoiceButton?: boolean;
 }
 
 export const ChatComposer = memo(function ChatComposer({
@@ -66,6 +68,7 @@ export const ChatComposer = memo(function ChatComposer({
   onLtmClick,
   onCustomConceptClick,
   onConceptGroupClick,
+  showVoiceButton = true,
 }: ChatComposerProps) {
   const [draft, setDraft] = useState(value);
   const draftRef = useRef(value);
@@ -109,7 +112,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div
-      className="flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-visible rounded-2xl border border-neutral-400/85 bg-white shadow-sm dark:border-neutral-500/55 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2"
+      className="flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-visible rounded-2xl border-[1px] border-neutral-400/80 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2 pr-1 sm:pr-1.5"
       data-tour="input-area"
     >
       <div className="flex-1 min-w-0 flex items-stretch px-3">
@@ -135,23 +138,31 @@ export const ChatComposer = memo(function ChatComposer({
           previewMap={previewMap}
         />
       </div>
-      <div className="relative w-[108px] sm:w-[120px] shrink-0 px-2 flex flex-col">
-        <div className="flex items-center gap-1">
-          <div className="flex-1">
-            <VoiceInputButton
-              onTranscription={handleVoiceInput}
-              language={language}
-              disabled={disabled}
-              ariaLabel="Voice input"
-              compactStopWhileListening
-              className="!w-full !min-h-10 !min-w-0 !rounded-xl !border-neutral-400/85 dark:!border-neutral-500/55 !bg-neutral-50/80 dark:!bg-neutral-900/45 hover:!border-accent/80 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20"
-            />
-          </div>
+      <div
+        className={`relative shrink-0 pl-2 pr-3 sm:pr-4 flex flex-col ${
+          showVoiceButton ? "w-[108px] sm:w-[120px]" : "w-[60px] sm:w-16"
+        }`}
+      >
+        <div className={`flex items-center gap-1 ${showVoiceButton ? "" : "justify-stretch"}`}>
+          {showVoiceButton ? (
+            <div className="flex-1">
+              <VoiceInputButton
+                onTranscription={handleVoiceInput}
+                language={language}
+                disabled={disabled}
+                ariaLabel="Voice input"
+                compactStopWhileListening
+                className="!w-full !min-h-10 !min-w-0 !rounded-xl !border-[1px] !border-neutral-400/80 dark:!border-neutral-700 !bg-neutral-50/80 dark:!bg-neutral-900/45 hover:!border-accent/80 dark:hover:!border-accent/70 hover:!bg-accent/10 dark:hover:!bg-accent/20"
+              />
+            </div>
+          ) : null}
           <button
             onClick={handleSend}
             disabled={sendDisabled}
             aria-label="Send message"
-            className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+            className={`flex items-center justify-center gap-1.5 h-10 min-w-[2.75rem] rounded-xl bg-accent text-white transition-all duration-200 hover:bg-accent/90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${
+              showVoiceButton ? "flex-1" : "w-full"
+            }`}
           >
             {isLoading ? (
               <span aria-label="Sending" className="text-sm leading-none">

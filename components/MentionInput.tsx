@@ -954,11 +954,11 @@ export function MentionInput({
       {isEmpty && (
         <span
           dir="ltr"
-          className={`pointer-events-none absolute z-0 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left text-sm sm:text-base ${
+          className={`pointer-events-none absolute z-0 text-neutral-500 dark:text-neutral-400 select-none whitespace-nowrap overflow-hidden text-ellipsis text-left text-sm sm:text-base leading-5 sm:leading-6 ${
             placeholderCentered
               ? "mention-input-singleline-placeholder top-0 left-0 right-4"
               : placeholderTopAligned
-                ? "top-1/2 -translate-y-1/2 left-0 right-4"
+                ? "top-1 sm:top-1.5 left-0 right-4"
                 : "top-0 left-0 right-4"
           }`}
           aria-hidden

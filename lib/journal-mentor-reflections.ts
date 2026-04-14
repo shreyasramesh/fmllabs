@@ -2,14 +2,16 @@ import { getModel } from "@/lib/gemini";
 import {
   getSavedTranscript,
   updateJournalMentorReflections,
+  getUserSettings,
+  getCustomMentorsByIds,
   type JournalMentorReflectionItem,
 } from "@/lib/db";
 import {
-  getFigureById,
   loadFamousFigures,
   type FamousFigure,
   type FamousFigureCategory,
 } from "@/lib/famous-figures";
+import { resolveMentorFigure } from "@/lib/resolve-mentor-figure";
 import { computeGeminiCost, recordUsageEvent } from "@/lib/usage";
 
 const JOURNAL_MAX_CHARS = 12_000;
@@ -260,10 +262,13 @@ ${clipped}`;
   return out;
 }
 
-function toPersistedItems(rows: { figureId: string; reflection: string }[]): JournalMentorReflectionItem[] {
+async function toPersistedItems(
+  rows: { figureId: string; reflection: string }[],
+  userId: string
+): Promise<JournalMentorReflectionItem[]> {
   const items: JournalMentorReflectionItem[] = [];
   for (const row of rows) {
-    const fig = getFigureById(row.figureId);
+    const fig = await resolveMentorFigure(userId, row.figureId);
     if (!fig) continue;
     items.push({
       figureId: row.figureId,
@@ -301,6 +306,22 @@ export async function runJournalMentorReflections(transcriptId: string, userId: 
     if (pool.length === 0) {
       pool = [...figures];
     }
+    const settings = await getUserSettings(userId);
+    const customFollowed = (settings?.followedFigureIds ?? []).filter((id) => id.startsWith("cm_"));
+    if (customFollowed.length > 0) {
+      const customRows = await getCustomMentorsByIds(userId, customFollowed);
+      const poolIds = new Set(pool.map((f) => f.id));
+      for (const c of customRows) {
+        if (poolIds.has(c.id)) continue;
+        poolIds.add(c.id);
+        pool.push({
+          id: c.id,
+          name: c.name,
+          description: c.description,
+          category: c.category,
+        });
+      }
+    }
     const candidates = capCandidates(pool, userId, transcriptId);
     if (candidates.length < 2) {
       await updateJournalMentorReflections(transcriptId, userId, { status: "failed" });
@@ -309,7 +330,7 @@ export async function runJournalMentorReflections(transcriptId: string, userId: 
 
     const targetCount = targetMentorReflectionCount(userId, transcriptId, journalText);
     const rawRows = await selectReflections(journalText, candidates, userId, targetCount);
-    let persisted = toPersistedItems(rawRows);
+    let persisted = await toPersistedItems(rawRows, userId);
 
     if (persisted.length > targetCount) {
       persisted = persisted.slice(0, targetCount);

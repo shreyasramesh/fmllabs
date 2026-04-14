@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import { MongoClient, Db, ObjectId } from "mongodb";
 import { getCache } from "./cache";
 import {
@@ -101,6 +102,8 @@ async function ensureIndexes(database: Db): Promise<void> {
       database.collection("concept_groups").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
       database.collection("long_term_memory").createIndex({ userId: 1, updatedAt: -1 }, { background: true }),
       database.collection("user_reusable_journal_items").createIndex({ userId: 1, kind: 1, usageCount: -1 }, { background: true }),
+      database.collection("custom_mentors").createIndex({ userId: 1, id: 1 }, { unique: true, background: true }),
+      database.collection("custom_mentors").createIndex({ userId: 1, createdAt: -1 }, { background: true }),
     ]);
   } catch {
     indexesEnsured = false;
@@ -3316,4 +3319,144 @@ export async function deleteAllUserData(userId: string): Promise<void> {
   await database.collection("user_progress").deleteMany({ userId });
   await database.collection("weekly_reflection_sends").deleteMany({ userId });
   await database.collection<UsageEventDoc>("usage_events").deleteMany({ userId });
+  await database.collection("custom_mentors").deleteMany({ userId });
+}
+
+/** User-defined mentor personas (stored per user; IDs prefixed `cm_`). */
+export const CUSTOM_MENTOR_CATEGORY = "custom";
+export const CUSTOM_MENTORS_MAX_PER_USER = 25;
+export const CUSTOM_MENTOR_NAME_MAX = 120;
+export const CUSTOM_MENTOR_DESCRIPTION_MAX = 2000;
+
+export interface CustomMentorRecord {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  category: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface CustomMentorDoc {
+  _id: ObjectId;
+  userId: string;
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+function newCustomMentorPublicId(): string {
+  return `cm_${randomBytes(12).toString("base64url")}`;
+}
+
+function customMentorDocToRecord(doc: CustomMentorDoc): CustomMentorRecord {
+  return {
+    id: doc.id,
+    userId: doc.userId,
+    name: doc.name,
+    description: doc.description,
+    category: doc.category,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+  };
+}
+
+export async function listCustomMentors(userId: string): Promise<CustomMentorRecord[]> {
+  const database = await getDb();
+  const docs = await database
+    .collection<CustomMentorDoc>("custom_mentors")
+    .find({ userId })
+    .sort({ createdAt: -1 })
+    .toArray();
+  return docs.map(customMentorDocToRecord);
+}
+
+export async function getCustomMentorById(userId: string, mentorId: string): Promise<CustomMentorRecord | null> {
+  const database = await getDb();
+  const doc = await database.collection<CustomMentorDoc>("custom_mentors").findOne({ userId, id: mentorId });
+  return doc ? customMentorDocToRecord(doc) : null;
+}
+
+export async function getCustomMentorsByIds(userId: string, mentorIds: string[]): Promise<CustomMentorRecord[]> {
+  const uniq = [...new Set(mentorIds.filter(Boolean))];
+  if (uniq.length === 0) return [];
+  const database = await getDb();
+  const docs = await database
+    .collection<CustomMentorDoc>("custom_mentors")
+    .find({ userId, id: { $in: uniq } })
+    .toArray();
+  return docs.map(customMentorDocToRecord);
+}
+
+/**
+ * Creates a custom mentor. Returns null if name is empty or user is at the limit.
+ */
+export async function createCustomMentor(
+  userId: string,
+  name: string,
+  description: string
+): Promise<CustomMentorRecord | null> {
+  const n = name.trim().slice(0, CUSTOM_MENTOR_NAME_MAX);
+  if (!n) return null;
+  const d = description.trim().slice(0, CUSTOM_MENTOR_DESCRIPTION_MAX);
+  const database = await getDb();
+  const count = await database.collection("custom_mentors").countDocuments({ userId });
+  if (count >= CUSTOM_MENTORS_MAX_PER_USER) return null;
+  const now = new Date();
+  const id = newCustomMentorPublicId();
+  await database.collection<CustomMentorDoc>("custom_mentors").insertOne({
+    _id: new ObjectId(),
+    userId,
+    id,
+    name: n,
+    description: d,
+    category: CUSTOM_MENTOR_CATEGORY,
+    createdAt: now,
+    updatedAt: now,
+  });
+  return { id, userId, name: n, description: d, category: CUSTOM_MENTOR_CATEGORY, createdAt: now, updatedAt: now };
+}
+
+export async function updateCustomMentor(
+  userId: string,
+  mentorId: string,
+  updates: { name?: string; description?: string }
+): Promise<CustomMentorRecord | null> {
+  const patch: Record<string, unknown> = { updatedAt: new Date() };
+  if (updates.name !== undefined) {
+    const n = updates.name.trim().slice(0, CUSTOM_MENTOR_NAME_MAX);
+    if (!n) return null;
+    patch.name = n;
+  }
+  if (updates.description !== undefined) {
+    patch.description = updates.description.trim().slice(0, CUSTOM_MENTOR_DESCRIPTION_MAX);
+  }
+  if (Object.keys(patch).length === 1) {
+    return getCustomMentorById(userId, mentorId);
+  }
+  const database = await getDb();
+  const result = await database.collection<CustomMentorDoc>("custom_mentors").findOneAndUpdate(
+    { userId, id: mentorId },
+    { $set: patch },
+    { returnDocument: "after" }
+  );
+  if (!result) return null;
+  return customMentorDocToRecord(result);
+}
+
+/** Deletes the mentor and removes its id from followedFigureIds if present. */
+export async function deleteCustomMentor(userId: string, mentorId: string): Promise<boolean> {
+  const database = await getDb();
+  const del = await database.collection<CustomMentorDoc>("custom_mentors").deleteOne({ userId, id: mentorId });
+  if (del.deletedCount === 0) return false;
+  const settings = await getUserSettings(userId);
+  const ids = settings?.followedFigureIds ?? [];
+  if (ids.includes(mentorId)) {
+    await upsertUserSettings(userId, { followedFigureIds: ids.filter((x) => x !== mentorId) });
+  }
+  return true;
 }

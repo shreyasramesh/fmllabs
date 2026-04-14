@@ -457,11 +457,11 @@ interface LandingShellProps {
   mobileQuickNote?: React.ReactNode;
   /** Mobile commonplace book tab. */
   mobileCommonplace?: React.ReactNode;
-  /** Mobile "And More" tab — library / sidebar body (signed-in nav or anonymous upsell). */
+  /** Mobile "More" tab — library / sidebar body (signed-in nav or anonymous upsell). */
   mobileAndMore?: React.ReactNode;
   /** When set, parent can call ref.current to switch to the And More tab (e.g. feature tour). */
   mobileLibraryTabOpenerRef?: React.MutableRefObject<(() => void) | null>;
-  /** Mobile landing: point feature tour "menu" step at And More tab instead of header hamburger. */
+  /** Mobile landing: point feature tour "menu" step at More tab instead of header hamburger. */
   menuTourOnAndMoreTab?: boolean;
 }
 

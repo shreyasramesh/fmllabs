@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { normalizeMentalModelCitationMarkup } from "@/lib/chat-utils";
 
+/** Claude-aligned: dark pill on warm-sand bubbles (light), ivory pill on charcoal bubbles (dark) */
 const MENTION_CHIP_CLASS =
-  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-foreground text-background border-[0.6px] border-background cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
+  "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-brand-900 text-brand-50 border-[0.6px] border-brand-700 cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline dark:bg-brand-50 dark:text-brand-900 dark:border-brand-300";
 const ASSISTANT_MENTION_CHIP_CLASS =
   "inline-flex items-baseline py-px px-1.5 rounded-lg text-sm font-medium bg-background text-foreground border-[0.6px] border-foreground cursor-pointer hover:opacity-90 transition-opacity duration-150 active:scale-[0.98] align-baseline";
 const INLINE_MARKDOWN_REGEX = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
@@ -18,7 +19,8 @@ type Segment =
   | { type: "figure"; id: string; name: string };
 
 /** New format: [[id]] / [[memory:id]] / [[concept:id]] / [[group:id]] / [[figure:id]] / [[Display Name]] */
-const FIGURE_TOKEN_REGEX = /\[\[figure:([a-z0-9_]+)\]\]/g;
+/** Includes YAML slugs and custom mentor ids (`cm_…`). */
+const FIGURE_TOKEN_REGEX = /\[\[figure:([a-zA-Z0-9_-]+)\]\]/g;
 const MM_TOKEN_REGEX = /\[\[(?!memory:|concept:|group:|figure:)([a-z0-9_]+)\]\]/g;
 const MM_NAME_TOKEN_REGEX = /\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g; // [[Display Name]] - resolved via nameToId
 const LTM_TOKEN_REGEX = /\[\[memory:([a-fA-F0-9]{24})\]\]/g;

@@ -16,7 +16,9 @@ import {
   loadMentalModelsIndex,
   getIndexSummary,
 } from "@/lib/mental-models";
-import { getFiguresByIds, getFigureById, type FamousFigure } from "@/lib/famous-figures";
+import type { FamousFigure } from "@/lib/famous-figures";
+import { getFigureById } from "@/lib/famous-figures";
+import { resolveMentorFigure, resolveMentorFiguresPreservingOrder } from "@/lib/resolve-mentor-figure";
 import {
   extractMentalModelIdsFromMessages,
   getRelevantContextBlockDelimiters,
@@ -348,6 +350,7 @@ export async function POST(request: Request) {
   /** Set in body parse: second-order plain mode (no index/RAG in prompt). */
   let bodySecondOrderPlain = false;
   let mentorJournalBridgeFromBody: { journalText: string; reflectionText: string } | null = null;
+  let rawOneOnOneMentorId: string | undefined;
 
   try {
     const body = await request.json();
@@ -430,23 +433,7 @@ export async function POST(request: Request) {
       multiMentorFigureIds.length >= 2 &&
       multiMentorFigureIds.length <= 5;
     if (typeof body.oneOnOneMentorFigureId === "string" && body.oneOnOneMentorFigureId.trim()) {
-      const fig = getFigureById(body.oneOnOneMentorFigureId.trim());
-      if (!fig) {
-        return NextResponse.json({ error: "Invalid mentor figure id" }, { status: 400 });
-      }
-      resolvedOneOnOneFigure = fig;
-    }
-    if (multiMentorMode && resolvedOneOnOneFigure) {
-      return NextResponse.json(
-        { error: "Cannot use multi-mentor mode with 1:1 mentor" },
-        { status: 400 }
-      );
-    }
-    if (resolvedOneOnOneFigure && typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
-      return NextResponse.json(
-        { error: "Cannot combine perspective card with 1:1 mentor in the same request" },
-        { status: 400 }
-      );
+      rawOneOnOneMentorId = body.oneOnOneMentorFigureId.trim();
     }
     if (body.secondOrderThinking === true) {
       requestedSecondOrder = true;
@@ -470,24 +457,6 @@ export async function POST(request: Request) {
     if (multiMentorEligible) {
       requestedSecondOrder = false;
     }
-    if (requestedSecondOrder && resolvedOneOnOneFigure) {
-      return NextResponse.json(
-        { error: "Cannot combine second-order mode with 1:1 mentor" },
-        { status: 400 }
-      );
-    }
-    if (mentorJournalBridgeFromBody && !resolvedOneOnOneFigure) {
-      return NextResponse.json(
-        { error: "mentorJournalContext requires oneOnOneMentorFigureId" },
-        { status: 400 }
-      );
-    }
-    if (requestedSecondOrder && typeof body.activeCardPrompt === "string" && body.activeCardPrompt.trim()) {
-      return NextResponse.json(
-        { error: "Cannot combine second-order mode with a perspective card" },
-        { status: 400 }
-      );
-    }
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -497,6 +466,44 @@ export async function POST(request: Request) {
     }
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  if (rawOneOnOneMentorId?.trim()) {
+    const fig = await resolveMentorFigure(userId, rawOneOnOneMentorId.trim());
+    if (!fig) {
+      return NextResponse.json({ error: "Invalid mentor figure id" }, { status: 400 });
+    }
+    resolvedOneOnOneFigure = fig;
+  }
+  if (multiMentorMode && resolvedOneOnOneFigure) {
+    return NextResponse.json(
+      { error: "Cannot use multi-mentor mode with 1:1 mentor" },
+      { status: 400 }
+    );
+  }
+  if (resolvedOneOnOneFigure && activeCardPrompt) {
+    return NextResponse.json(
+      { error: "Cannot combine perspective card with 1:1 mentor in the same request" },
+      { status: 400 }
+    );
+  }
+  if (requestedSecondOrder && resolvedOneOnOneFigure) {
+    return NextResponse.json(
+      { error: "Cannot combine second-order mode with 1:1 mentor" },
+      { status: 400 }
+    );
+  }
+  if (mentorJournalBridgeFromBody && !resolvedOneOnOneFigure) {
+    return NextResponse.json(
+      { error: "mentorJournalContext requires oneOnOneMentorFigureId" },
+      { status: 400 }
+    );
+  }
+  if (requestedSecondOrder && activeCardPrompt) {
+    return NextResponse.json(
+      { error: "Cannot combine second-order mode with a perspective card" },
+      { status: 400 }
+    );
   }
 
   recordMongoUsageRequest(userId ?? null).catch(() => {});
@@ -607,7 +614,7 @@ export async function POST(request: Request) {
         clearSecondOrder: true,
       });
     } else if (!resolvedOneOnOneFigure && session?.oneOnOneMentorFigureId) {
-      const fig = getFigureById(session.oneOnOneMentorFigureId);
+      const fig = await resolveMentorFigure(userId!, session.oneOnOneMentorFigureId);
       if (fig) mentorOneOnOne = fig;
     }
 
@@ -740,7 +747,7 @@ export async function POST(request: Request) {
       !mentorOneOnOne &&
       !(secondOrderMode && secondOrderPlainMode)
     ) {
-      const figures = getFiguresByIds(userSettings.followedFigureIds);
+      const figures = await resolveMentorFiguresPreservingOrder(userId, userSettings.followedFigureIds);
       const names = figures.map((f) => f.name).join(", ");
       followedFiguresNudgeBlock = `\n\nFOLLOWED FAMOUS FIGURES (sparing use):\nThe user follows these figures: ${names}. Their perspectives are valuable **when** they clearly fit—but **do not** reference a famous figure every response. **Default:** answer without invoking a figure; use them only when a reflective moment, decision point, or crossroads genuinely calls for that lens. At most one figure per reply, only when additive. Weave naturally—never force "What would X say?" as a habit.\n`;
     }
@@ -767,7 +774,7 @@ export async function POST(request: Request) {
     const followedSet = new Set(userSettings.followedFigureIds);
     const validFigureIds = multiMentorFigureIds.filter((id) => followedSet.has(id));
     if (validFigureIds.length >= 2 && validFigureIds.length <= 5) {
-      const figures = getFiguresByIds(validFigureIds);
+      const figures = await resolveMentorFiguresPreservingOrder(userId, validFigureIds);
       const langInstr =
         language !== "en"
           ? ` Respond in ${getLanguageName(language as LanguageCode)}.`
@@ -899,14 +906,19 @@ ${userNamePromptSuffix}${langInstr}`;
     }
   }
 
+  let perspectiveFigureForPersona: FamousFigure | null = null;
+  if (activeCardFigureId) {
+    perspectiveFigureForPersona = userId
+      ? await resolveMentorFigure(userId, activeCardFigureId)
+      : getFigureById(activeCardFigureId);
+  }
+
   if (isLightweight) {
     const langInstr =
       language !== "en"
         ? `\n\nLANGUAGE: Respond in ${getLanguageName(language as LanguageCode)}.`
         : "";
     const cardInPrepend = messagesForModel[0]?.role === "assistant";
-    const perspectiveFigureForPersona =
-      activeCardFigureId ? getFigureById(activeCardFigureId) : null;
     const figurePersonaBlock =
       activeCardFigureName
         ? `\n\n${buildPerspectiveFigurePersonaBlock(activeCardFigureName, perspectiveFigureForPersona)}\n`

@@ -18,7 +18,7 @@ export type MobileBottomTab =
 interface LandingMobileTabBarProps {
   activeTab: MobileBottomTab;
   onTabChange: (tab: MobileBottomTab) => void;
-  /** When true, the "And More" tab carries data-tour="menu-button" (mobile landing replaces header hamburger). */
+  /** When true, the "More" tab carries data-tour="menu-button" (mobile landing replaces header hamburger). */
   menuTourOnAndMore?: boolean;
 }
 
@@ -31,7 +31,7 @@ const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = 
   { key: "nutrition", label: "Food", ariaLabel: "Nutrition" },
   { key: "exercise", label: "Move", ariaLabel: "Exercise" },
   { key: "metacognition", label: "Meta", ariaLabel: "Metacognition" },
-  { key: "andMore", label: "And More", ariaLabel: "Library and more" },
+  { key: "andMore", label: "More", ariaLabel: "Library and more" },
 ];
 
 function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {

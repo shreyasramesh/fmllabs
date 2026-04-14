@@ -4,7 +4,7 @@
  * MathCurveLoader
  *
  * Picks one of 21 mathematical curve animations at random on mount and runs it
- * as an SVG particle-trail overlay over the boneyard skeleton screens.
+ * as a centered SVG particle-trail overlay (no captions; for use over skeleton UIs).
  *
  * Animation engine ported from https://github.com/Paidax01/math-curve-loaders
  */
@@ -403,11 +403,9 @@ const CURVES: CurveCfg[] = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 /**
- * Renders a randomly-chosen mathematical curve animation while a skeleton is
- * loading.  Pass `visible={isLoading}` and mount it as a sibling/overlay to
- * the boneyard <Skeleton> wrapper.
- *
- * Positioning: fixed, covering the content area above the mobile tab bar.
+ * Renders a randomly-chosen mathematical curve animation while content is loading.
+ * Pass `visible={isLoading}` and mount as a sibling overlay (e.g. over boneyard Skeleton).
+ * Visual: curve only, centered. Positioning: fixed, above the mobile tab bar.
  */
 export function MathCurveLoader({ visible }: { visible: boolean }) {
   // Random curve only after mount — avoids SSR/client hydration text mismatch
@@ -499,69 +497,38 @@ export function MathCurveLoader({ visible }: { visible: boolean }) {
 
   return (
     <div
-      className="fixed inset-x-0 top-0 z-[34] flex flex-col items-center justify-center gap-5 backdrop-blur-[3px]"
+      role="status"
+      className="fixed inset-x-0 top-0 z-[34] flex flex-col items-center justify-center backdrop-blur-[3px]"
       style={{
         bottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
         /* Follows :root / :root.dark from globals.css (same as html class from ThemeProvider + layout script). */
         backgroundColor: "color-mix(in srgb, var(--background) 92%, transparent)",
       }}
-      aria-live="polite"
       aria-label="Loading"
     >
+      <span className="sr-only">Loading</span>
       {curve ? (
-        <>
-          {/* Curve color tracks --foreground (dark ink in light mode, light in dark mode). */}
-          <svg
-            ref={svgRef}
-            viewBox="0 0 100 100"
-            className="h-32 w-32 overflow-visible"
-            style={{ color: "var(--foreground)" }}
-            fill="none"
-            aria-hidden="true"
-          >
-            <g ref={groupRef}>
-              <path
-                ref={pathRef}
-                stroke="currentColor"
-                strokeWidth={curve.strokeWidth}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity={0.1}
-              />
-            </g>
-          </svg>
-
-          <div className="flex max-w-[260px] flex-col items-center gap-1.5 text-center">
-            <p
-              className="font-serif text-[16px] font-semibold leading-tight"
-              style={{ color: "var(--foreground)" }}
-            >
-              {curve.name}
-            </p>
-            <p
-              className="text-[10px] uppercase tracking-[0.18em]"
-              style={{ color: "var(--muted)" }}
-            >
-              {curve.tag}
-            </p>
-            <p
-              className="mt-0.5 text-[12px] leading-relaxed"
-              style={{ color: "var(--muted)" }}
-            >
-              {curve.description}
-            </p>
-            <pre
-              className="mt-1 whitespace-pre-wrap font-mono text-[9.5px] leading-relaxed opacity-90"
-              style={{ color: "var(--muted)" }}
-            >
-              {curve.formula}
-            </pre>
-          </div>
-        </>
+        <svg
+          ref={svgRef}
+          viewBox="0 0 100 100"
+          className="h-32 w-32 overflow-visible"
+          style={{ color: "var(--foreground)" }}
+          fill="none"
+          aria-hidden="true"
+        >
+          <g ref={groupRef}>
+            <path
+              ref={pathRef}
+              stroke="currentColor"
+              strokeWidth={curve.strokeWidth}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity={0.1}
+            />
+          </g>
+        </svg>
       ) : (
-        <p className="font-serif text-[15px]" style={{ color: "var(--muted)" }}>
-          Loading…
-        </p>
+        <div className="h-32 w-32 shrink-0" aria-hidden />
       )}
     </div>
   );

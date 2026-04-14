@@ -28,6 +28,7 @@ import {
   parseMentionsFromMessage,
 } from "@/components/MentionInput";
 import { ChatComposer } from "@/components/ChatComposer";
+import { MathCurveLoader } from "@/components/MathCurveLoader";
 import { BufferedInput, BufferedTextarea } from "@/components/BufferedTextControls";
 import { LandingShell } from "@/components/landing/LandingShell";
 import { LandingDashboardSheetFrame } from "@/components/landing/LandingDashboardSheetFrame";
@@ -347,6 +348,31 @@ function processMessagesWithContext(msgs: Message[]): Message[] {
   });
 }
 
+/** Restore client-only display flags on the first assistant bubble after loading history from the API. */
+function enrichMessagesFromSession(messages: Message[], session: Session): Message[] {
+  if (messages.length === 0 || messages[0].role !== "assistant") return messages;
+  const m0 = messages[0];
+  const patch: Partial<Message> = {};
+  if (session.oneOnOneMentorFigureId && session.oneOnOneMentorFigureName && !m0.mentorOneOnOne) {
+    patch.mentorOneOnOne = {
+      id: session.oneOnOneMentorFigureId,
+      name: session.oneOnOneMentorFigureName,
+    };
+  }
+  if (session.secondOrderThinking && !m0.secondOrderThinking) {
+    patch.secondOrderThinking = true;
+    patch.secondOrderPlain = session.secondOrderPlain !== false;
+  }
+  if (session.perspectiveCardPrompt && session.perspectiveCardName && !m0.perspectiveCard) {
+    patch.perspectiveCard = {
+      name: session.perspectiveCardName,
+      prompt: session.perspectiveCardPrompt,
+    };
+  }
+  if (Object.keys(patch).length === 0) return messages;
+  return [{ ...m0, ...patch }, ...messages.slice(1)];
+}
+
 interface Session {
   _id: string;
   title: string;
@@ -533,84 +559,6 @@ const JOURNAL_REFINE_PERSONAS: Array<{ id: JournalRefinePersonaId; label: string
   { id: "stoic", label: "The Stoic" },
 ];
 
-type ChatInputLensId =
-  | "none"
-  | "contrarian"
-  | "systems_thinker"
-  | "stoic"
-  | "casual_friend"
-  | "playful_coach";
-const CHAT_INPUT_LENSES: Array<{ id: ChatInputLensId; label: string }> = [
-  { id: "none", label: "No lens" },
-  { id: "contrarian", label: "Contrarian" },
-  { id: "systems_thinker", label: "Systems Thinker" },
-  { id: "stoic", label: "Stoic" },
-  { id: "casual_friend", label: "Casual Friend" },
-  { id: "playful_coach", label: "Playful Coach" },
-];
-const CHAT_INPUT_LENS_DESCRIPTIONS: Record<ChatInputLensId, string> = {
-  none: "Sends your message unchanged.",
-  contrarian: "Challenges assumptions and stress-tests your thinking.",
-  systems_thinker: "Maps dependencies, constraints, and second-order effects.",
-  stoic: "Reframes around what is in your control and next grounded action.",
-  casual_friend: "Makes the tone warmer, lighter, and conversational.",
-  playful_coach: "Adds energizing, playful momentum while staying practical.",
-};
-
-function detectAutoSuggestedChatLens(sourceText: string): {
-  suggested: Exclude<ChatInputLensId, "none"> | null;
-  reason: string;
-} {
-  const text = sourceText.trim().toLowerCase();
-  if (!text) return { suggested: null, reason: "" };
-
-  if (/\b(fun|playful|joke|humou?r|hype|pump me up|pep talk|roast me)\b/.test(text)) {
-    return {
-      suggested: "playful_coach",
-      reason: "Detected fun/energy language.",
-    };
-  }
-  if (/\b(system|dependency|dependencies|trade[- ]?off|second[- ]?order|feedback loop|downstream|interconnected)\b/.test(text)) {
-    return {
-      suggested: "systems_thinker",
-      reason: "Detected systems/dependency language.",
-    };
-  }
-  if (/\b(stress|stressed|anxious|anxiety|overwhelmed|panic|burnout|spiral|angry|annoyed)\b/.test(text)) {
-    return {
-      suggested: "stoic",
-      reason: "Detected stress/overwhelm language.",
-    };
-  }
-  if (/\b(always|never|obviously|clearly|must|definitely|for sure|everyone|no one)\b/.test(text)) {
-    return {
-      suggested: "contrarian",
-      reason: "Detected certainty-heavy phrasing.",
-    };
-  }
-  if (/\b(vent|idk|i don't know|kinda|sorta|just talk|quick chat|low key|casual)\b/.test(text)) {
-    return {
-      suggested: "casual_friend",
-      reason: "Detected casual/conversational intent.",
-    };
-  }
-  return { suggested: null, reason: "" };
-}
-
-function buildChatLensHoverText(
-  lensId: ChatInputLensId,
-  suggestedLens: Exclude<ChatInputLensId, "none"> | null,
-  suggestedReason: string
-): string {
-  const base = CHAT_INPUT_LENS_DESCRIPTIONS[lensId];
-  if (lensId !== "none" && lensId === suggestedLens) {
-    return `${base} Suggested for this draft: ${suggestedReason}`;
-  }
-  if (suggestedLens) {
-    return `${base} Current auto-suggestion: ${CHAT_INPUT_LENSES.find((lens) => lens.id === suggestedLens)?.label ?? "None"} (${suggestedReason})`;
-  }
-  return `${base} No strong auto-suggestion for this draft yet.`;
-}
 const LETTER_MODAL_TITLE = "a note from the developer";
 type ExportDataSection =
   | "settings"
@@ -913,7 +861,8 @@ function MessageBubble({
   const canGoBack =
     onGoBackInTime &&
     messageIndex < totalMessages - 1 &&
-    !isLoading;
+    !isLoading &&
+    !isModeInitializationMessage;
   const hasAdditionalAssistantActions =
     (message.role === "assistant" && hideContextUsed && showConvertToDeep && !!onConvertToDeep) ||
     (message.role === "assistant" && !hideContextUsed && !!ctx && ctxCount !== undefined);
@@ -927,7 +876,7 @@ function MessageBubble({
       <div
           className={`group/tts relative rounded-3xl px-4 py-3 transition-shadow duration-200 ${
             message.role === "user"
-              ? "max-w-[85%] bg-foreground text-background shadow-sm"
+              ? "max-w-[85%] bg-brand-200 text-brand-900 shadow-sm border border-brand-300/90 dark:bg-brand-800 dark:text-brand-50 dark:border-brand-700"
               : isAssistantDotsLoading
                 ? "inline-flex w-auto max-w-[120px] rounded-2xl px-3 py-2 bg-background border border-[#e8e6dc] dark:border-[#3d3d3a] shadow-[rgba(0,0,0,0.05)_0px_4px_24px] text-foreground"
               : "w-full max-w-full sm:max-w-[85%] bg-background border border-[#e8e6dc] dark:border-[#3d3d3a] shadow-[rgba(0,0,0,0.05)_0px_4px_24px] text-foreground pr-4"
@@ -953,7 +902,7 @@ function MessageBubble({
               />
             </span>
             {message.perspectiveCard && (
-              <div className="mt-1 pt-2 border-t border-white/20 rounded-b-xl">
+              <div className="mt-1 pt-2 border-t border-brand-900/15 dark:border-brand-50/15 rounded-b-xl">
                 <p className="text-xs font-medium opacity-90 uppercase tracking-wider">{message.perspectiveCard.name}</p>
                 <p className="text-sm opacity-95 mt-0.5 leading-relaxed">{message.perspectiveCard.prompt}</p>
               </div>
@@ -1462,20 +1411,32 @@ function MessageBubble({
       )}
       {canGoBack && (
         <div
-          className={`mt-1.5 w-full max-w-full sm:max-w-[85%] ${
+          className={`mt-0.5 w-full max-w-full sm:max-w-[85%] ${
             message.role === "user" ? "self-end flex justify-end" : "self-start"
-          }`}
+          } max-sm:opacity-100 sm:opacity-0 sm:group-hover/msg:opacity-100 sm:transition-opacity duration-150`}
         >
           <button
             type="button"
             onClick={() => onGoBackInTime?.(messageIndex, message)}
-            className="inline-flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            title="Truncate chat to this message"
+            aria-label="Go back to here"
+            className="inline-flex items-center gap-1 rounded-md min-h-[28px] px-2 py-1 text-[10px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100/80 dark:hover:bg-neutral-800/80 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 text-accent">
-              <path d="M9 14L4 9l5-5" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-3 w-3 shrink-0 opacity-80"
+              aria-hidden
+            >
+              <path d="M9 14 4 9l5-5" />
               <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
             </svg>
-            Go back to here
+            <span>Back to here</span>
           </button>
         </div>
       )}
@@ -3940,15 +3901,6 @@ export default function ChatPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [chatInputLens, setChatInputLens] = useState<ChatInputLensId>("none");
-  const [chatInputLensLoading, setChatInputLensLoading] = useState(false);
-  const [chatInputLensError, setChatInputLensError] = useState<string | null>(null);
-  const [chatInputLensRefinedText, setChatInputLensRefinedText] = useState("");
-  const [chatInputLensHoverId, setChatInputLensHoverId] = useState<ChatInputLensId | null>(null);
-  const [chatInputLensMobileExpanded, setChatInputLensMobileExpanded] = useState(false);
-  const [chatInputLensMenuOpen, setChatInputLensMenuOpen] = useState(false);
-  const chatInputLensMenuRef = useRef<HTMLDivElement | null>(null);
-  const chatInputLensMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const [landingPlaceholderIndex, setLandingPlaceholderIndex] = useState(0);
   const [landingPlaceholderText, setLandingPlaceholderText] = useState("");
   const [landingPlaceholderDeleting, setLandingPlaceholderDeleting] = useState(false);
@@ -4394,7 +4346,7 @@ export default function ChatPage() {
         target: "[data-tour=menu-button]",
         title: "Open the library",
         content:
-          "Use the menu (desktop) or the And More tab (mobile) for conversations, concepts, mental models, memory, and playgrounds.",
+          "Use the menu (desktop) or the More tab (mobile) for conversations, concepts, mental models, memory, and playgrounds.",
         ringClass: "ring-white dark:ring-neutral-300",
       },
       {
@@ -4535,12 +4487,10 @@ export default function ChatPage() {
   const ccTranslatePopoverRef = useRef<HTMLDivElement>(null);
   const ccAutoTagSuggestionsRef = useRef(ccAutoTagSuggestions);
   ccAutoTagSuggestionsRef.current = ccAutoTagSuggestions;
-  const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const lastAutoScrolledAssistantIndexRef = useRef<number | null>(null);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    setShowScrollToBottom(false);
   }, []);
 
   // Selection actions are shown via context menu on right-click, not on selection.
@@ -4570,19 +4520,6 @@ export default function ChatPage() {
     };
   }, []);
 
-  useEffect(() => {
-    const el = messagesScrollRef.current;
-    if (!el) return;
-    const check = () => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const atBottom = scrollHeight - scrollTop - clientHeight < 80;
-      setShowScrollToBottom((prev) => (atBottom ? false : true));
-    };
-    el.addEventListener("scroll", check, { passive: true });
-    check(); // Initial check
-    return () => el.removeEventListener("scroll", check);
-  }, [messages, currentSession?.isCollapsed]);
-
   // Auto-scroll behavior:
   // - while waiting for assistant, keep latest content visible at bottom
   // - once assistant response starts, snap to the start of that assistant message
@@ -4596,7 +4533,6 @@ export default function ChatPage() {
       const el = document.getElementById(`assistant-msg-${lastIndex}`);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
-        setShowScrollToBottom(false);
       }
       return;
     }
@@ -7814,6 +7750,8 @@ export default function ChatPage() {
       }
       justCreatedSessionRef.current = null; // clear before fetching a different session
       setSessionLoading(true);
+      // Avoid stale 1:1 ref from a prior thread affecting composer voice until fetch returns.
+      activeOneOnOneMentorRef.current = null;
       fetch(`/api/sessions/${sessionId}`)
         .then((r) => {
           if (!r.ok) throw new Error("Not found");
@@ -7843,7 +7781,9 @@ export default function ChatPage() {
               setPendingSecondOrder(false);
             }
           }
-          setMessages(processMessagesWithContext(msgs || []));
+          setMessages(
+            enrichMessagesFromSession(processMessagesWithContext(msgs || []), session)
+          );
           setCollapsedSummary(session.isCollapsed && longTermMemory ? longTermMemory : null);
         })
         .catch(() => {
@@ -8486,8 +8426,6 @@ export default function ChatPage() {
 
   const handleMainInputChange = useCallback((nextValue: string) => {
     composerDraftRef.current = nextValue;
-    if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-    if (chatInputLensError) setChatInputLensError(null);
     if (composerInputSyncTimeoutRef.current) {
       clearTimeout(composerInputSyncTimeoutRef.current);
     }
@@ -8495,7 +8433,7 @@ export default function ChatPage() {
       composerInputSyncTimeoutRef.current = null;
       setInput(nextValue);
     }, 120);
-  }, [chatInputLensError, chatInputLensRefinedText]);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -8504,78 +8442,6 @@ export default function ChatPage() {
       }
     };
   }, []);
-
-  const refineMainInputWithLens = useCallback(async () => {
-    const trimmed = composerDraftRef.current.trim();
-    if (!trimmed || chatInputLens === "none" || chatInputLensLoading) return;
-    setChatInputLensLoading(true);
-    setChatInputLensError(null);
-    try {
-      const res = await fetch("/api/chat/refine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: trimmed,
-          lens: chatInputLens,
-        }),
-      });
-      const data = (await res.json().catch(() => ({}))) as { refinedText?: string; error?: string };
-      if (!res.ok) {
-        throw new Error(data.error || "Could not refine message.");
-      }
-      const refinedText = typeof data.refinedText === "string" ? data.refinedText.trim() : "";
-      if (!refinedText) {
-        throw new Error("Could not refine message.");
-      }
-      setChatInputLensRefinedText(refinedText);
-    } catch (error) {
-      setChatInputLensError(error instanceof Error ? error.message : "Could not refine message.");
-    } finally {
-      setChatInputLensLoading(false);
-    }
-  }, [chatInputLens, chatInputLensLoading]);
-
-  const chatLensSignalText = useMemo(() => {
-    const trimmed = input.trim();
-    if (trimmed) return trimmed;
-    const recentConversation = messages
-      .slice(-4)
-      .map((m) => m.content)
-      .join(" ");
-    return recentConversation.trim();
-  }, [input, messages]);
-  const autoSuggestedChatLensMeta = useMemo(
-    () => detectAutoSuggestedChatLens(chatLensSignalText),
-    [chatLensSignalText]
-  );
-
-  useEffect(() => {
-    if (chatInputLensLoading || chatInputLensRefinedText || chatInputLensError) {
-      setChatInputLensMobileExpanded(true);
-    }
-  }, [chatInputLensError, chatInputLensLoading, chatInputLensRefinedText]);
-
-  useEffect(() => {
-    if (!chatInputLensMenuOpen) return;
-    const onPointerDown = (event: MouseEvent) => {
-      const target = event.target as Node | null;
-      if (!target) return;
-      if (chatInputLensMenuRef.current?.contains(target)) return;
-      if (chatInputLensMenuButtonRef.current?.contains(target)) return;
-      setChatInputLensMenuOpen(false);
-    };
-    const onEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setChatInputLensMenuOpen(false);
-      chatInputLensMenuButtonRef.current?.focus();
-    };
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onEscape);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onEscape);
-    };
-  }, [chatInputLensMenuOpen]);
 
   const sendMessage = useCallback(async (overrideText?: string, options?: { retry?: boolean; messagesOverride?: Message[]; activeCardPrompt?: string; activeCardName?: string }) => {
     const rawText = (overrideText ?? composerDraftRef.current).trim();
@@ -8634,8 +8500,6 @@ export default function ChatPage() {
       dismissOnboarding();
     }
     replaceComposerInput("");
-    setChatInputLensRefinedText("");
-    setChatInputLensError(null);
     setIsLoading(true);
     setLastFailedUserMessage(null);
     void playLlmResponseStartHaptic();
@@ -9030,6 +8894,18 @@ export default function ChatPage() {
   const [figuresSearchQuery, setFiguresSearchQuery] = useState("");
   const [figuresCategoryFilter, setFiguresCategoryFilter] = useState<string>("all");
   const [followedFigureIds, setFollowedFigureIds] = useState<string[]>([]);
+  /** User-created mentors (IDs prefixed `cm_`); merged into personas catalog. */
+  const [customMentors, setCustomMentors] = useState<
+    { id: string; name: string; description: string; category: string }[]
+  >([]);
+  const [newCustomMentorName, setNewCustomMentorName] = useState("");
+  const [newCustomMentorDesc, setNewCustomMentorDesc] = useState("");
+  const [newCustomMentorBusy, setNewCustomMentorBusy] = useState(false);
+  const [newCustomMentorErr, setNewCustomMentorErr] = useState<string | null>(null);
+  const [editingCustomMentorId, setEditingCustomMentorId] = useState<string | null>(null);
+  const [editMentorName, setEditMentorName] = useState("");
+  const [editMentorDesc, setEditMentorDesc] = useState("");
+  const [editMentorBusy, setEditMentorBusy] = useState(false);
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(false);
   const [preferredNameInput, setPreferredNameInput] = useState("");
   const [habitListFilterMonth, setHabitListFilterMonth] = useState<number | null>(null);
@@ -10320,8 +10196,25 @@ export default function ChatPage() {
       })),
     [openLandingActivityGroupModal, selectedLandingDayActivityGroups]
   );
+  const mergedFiguresCatalog = useMemo(() => {
+    const CUSTOM_CAT = "custom";
+    if (!figuresData) return null;
+    const catExists = figuresData.categories.some((c) => c.id === CUSTOM_CAT);
+    const categories =
+      customMentors.length > 0 && !catExists
+        ? [...figuresData.categories, { id: CUSTOM_CAT, name: "My mentors" }]
+        : figuresData.categories;
+    const extraFigures = customMentors.map((m) => ({
+      id: m.id,
+      name: m.name,
+      description: m.description,
+      category: m.category || CUSTOM_CAT,
+    }));
+    return { categories, figures: [...figuresData.figures, ...extraFigures] };
+  }, [figuresData, customMentors]);
+
   const landingMentorSummaries = useMemo(() => {
-    const figureMap = new Map((figuresData?.figures ?? []).map((figure) => [figure.id, figure]));
+    const figureMap = new Map((mergedFiguresCatalog?.figures ?? []).map((figure) => [figure.id, figure]));
     const convCounts = new Map<string, number>();
     for (const s of sessions) {
       if (s.oneOnOneMentorFigureId) {
@@ -10343,7 +10236,7 @@ export default function ChatPage() {
     });
     all.sort((a, b) => (convCounts.get(b.id) ?? 0) - (convCounts.get(a.id) ?? 0));
     return all.slice(0, 5);
-  }, [figuresData?.figures, followedFigureIds, sessions]);
+  }, [mergedFiguresCatalog?.figures, followedFigureIds, sessions]);
 
   const resetWeeklySummaryModal = useCallback(() => {
     setWeeklySummaryModalOpen(false);
@@ -12089,6 +11982,32 @@ export default function ChatPage() {
   }, [userId, incognitoMode, isAnonymous]);
 
   useEffect(() => {
+    if (!userId || incognitoMode || isAnonymous) {
+      setCustomMentors([]);
+      return;
+    }
+    fetch("/api/me/custom-mentors")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.mentors && Array.isArray(data.mentors)) {
+          setCustomMentors(
+            data.mentors.map(
+              (m: { id: string; name: string; description?: string; category?: string }) => ({
+                id: m.id,
+                name: m.name,
+                description: typeof m.description === "string" ? m.description : "",
+                category: typeof m.category === "string" ? m.category : "custom",
+              })
+            )
+          );
+        } else {
+          setCustomMentors([]);
+        }
+      })
+      .catch(() => setCustomMentors([]));
+  }, [userId, incognitoMode, isAnonymous]);
+
+  useEffect(() => {
     if (libraryPanelOpen !== "figures") return;
     if (figuresData && (!userId || followedFigureIds.length > 0)) return;
     setFiguresLoading(true);
@@ -12288,19 +12207,36 @@ export default function ChatPage() {
     (subdomainsByDomain["digital_ghost"] ?? []).map((s) => [s.id, s.name])
   );
 
+  /**
+   * Session/messages in state can lag behind `sessionId` when switching threads; only treat them
+   * as authoritative for the current URL once they match (always true on /chat/new and incognito).
+   */
+  const chatStateMatchesRoute =
+    isNew || incognitoMode || (currentSessionId != null && currentSessionId === sessionId);
+
+  /** Hide composer voice input on /chat/new and in 1:1 mentor threads. */
+  const oneOnOneForComposerVoice =
+    !!pendingOneOnOneMentor ||
+    activeOneOnOneMentorRef.current != null ||
+    (chatStateMatchesRoute && !!currentSession?.oneOnOneMentorFigureId) ||
+    (chatStateMatchesRoute && messages.some((msg) => msg.mentorOneOnOne));
+  const showComposerVoiceButton =
+    !isNew && !sessionLoading && !oneOnOneForComposerVoice;
+
   /** Hide Journal, Ask mentors, and "Context used" during 1:1 mentor and perspective-card flows. */
   const suppressJournalAndAskMentors = useMemo(() => {
     const mentorFlow =
-      !!currentSession?.oneOnOneMentorFigureId ||
       !!pendingOneOnOneMentor ||
-      messages.some((msg) => msg.mentorOneOnOne);
+      (chatStateMatchesRoute && !!currentSession?.oneOnOneMentorFigureId) ||
+      (chatStateMatchesRoute && messages.some((msg) => msg.mentorOneOnOne));
     const perspectiveFlow =
-      !!currentSession?.perspectiveCardPrompt ||
-      !!messages[0]?.perspectiveCard ||
+      (chatStateMatchesRoute && !!currentSession?.perspectiveCardPrompt) ||
+      (chatStateMatchesRoute && !!messages[0]?.perspectiveCard) ||
       !!pendingCardContext ||
       !!pendingCardFetch;
     return mentorFlow || perspectiveFlow;
   }, [
+    chatStateMatchesRoute,
     currentSession?.oneOnOneMentorFigureId,
     currentSession?.perspectiveCardPrompt,
     pendingOneOnOneMentor,
@@ -12315,19 +12251,19 @@ export default function ChatPage() {
   const selectableMentorFigureIds = useMemo(() => {
     const conversationFigureId =
       activeConversationFigure?.id ?? currentSession?.perspectiveCardFigureId;
-    if (!conversationFigureId || !figuresData?.figures) return followedFigureIds;
-    const cardFigure = figuresData.figures.find((f) => f.id === conversationFigureId);
+    if (!conversationFigureId || !mergedFiguresCatalog?.figures) return followedFigureIds;
+    const cardFigure = mergedFiguresCatalog.figures.find((f) => f.id === conversationFigureId);
     const category = cardFigure?.category;
     if (!category) return followedFigureIds;
     const categorySet = new Set(
-      figuresData.figures.filter((f) => f.category === category).map((f) => f.id)
+      mergedFiguresCatalog.figures.filter((f) => f.category === category).map((f) => f.id)
     );
     return followedFigureIds.filter((id) => categorySet.has(id));
   }, [
     followedFigureIds,
     activeConversationFigure?.id,
     currentSession?.perspectiveCardFigureId,
-    figuresData?.figures,
+    mergedFiguresCatalog?.figures,
   ]);
 
   useEffect(() => {
@@ -12337,33 +12273,33 @@ export default function ChatPage() {
   }, [selectableMentorFigureIds]);
 
   const mentorDomainsForPicker = useMemo(() => {
-    if (!figuresData?.categories?.length || !selectableMentorFigureIds.length) return [];
+    if (!mergedFiguresCatalog?.categories?.length || !selectableMentorFigureIds.length) return [];
     const selectableSet = new Set(selectableMentorFigureIds);
-    return figuresData.categories.filter((cat) =>
-      figuresData.figures.some((f) => f.category === cat.id && selectableSet.has(f.id))
+    return mergedFiguresCatalog.categories.filter((cat) =>
+      mergedFiguresCatalog.figures.some((f) => f.category === cat.id && selectableSet.has(f.id))
     );
-  }, [figuresData, selectableMentorFigureIds]);
+  }, [mergedFiguresCatalog, selectableMentorFigureIds]);
 
   const mentorIdsInSelectedDomain = useMemo(() => {
-    if (!figuresData?.figures?.length || !selectableMentorFigureIds.length) return [];
+    if (!mergedFiguresCatalog?.figures?.length || !selectableMentorFigureIds.length) return [];
     const effectiveCategoryId =
       mentorPickerCategoryId ??
       (mentorDomainsForPicker.length === 1 ? mentorDomainsForPicker[0].id : null);
     if (!effectiveCategoryId) return [];
     return selectableMentorFigureIds.filter((id) => {
-      const f = figuresData.figures.find((ff) => ff.id === id);
+      const f = mergedFiguresCatalog.figures.find((ff) => ff.id === id);
       return f?.category === effectiveCategoryId;
     });
   }, [
-    figuresData?.figures,
+    mergedFiguresCatalog?.figures,
     selectableMentorFigureIds,
     mentorPickerCategoryId,
     mentorDomainsForPicker,
   ]);
 
   const mentorCatalogFilteredFigures = useMemo(() => {
-    if (!figuresData?.figures?.length) return [];
-    let list = figuresData.figures;
+    if (!mergedFiguresCatalog?.figures?.length) return [];
+    let list = mergedFiguresCatalog.figures;
     if (mentorCatalogCategoryId) {
       list = list.filter((f) => f.category === mentorCatalogCategoryId);
     }
@@ -12377,7 +12313,7 @@ export default function ChatPage() {
       );
     }
     return list;
-  }, [figuresData?.figures, mentorCatalogCategoryId, mentorCatalogSearch]);
+  }, [mergedFiguresCatalog?.figures, mentorCatalogCategoryId, mentorCatalogSearch]);
 
   const requestMentorRecommendations = useCallback(async () => {
     const query = mentorRecommendationInput.trim();
@@ -13091,8 +13027,21 @@ export default function ChatPage() {
     labels: boolean;
     showFooter: boolean;
     onAfterNavPick?: () => void;
+    /** Mobile "More" tab reuses this body; hide the redundant Home pill there (header still has home). */
+    showHomeButton?: boolean;
+    /** Mobile More tab: hover states use app accent (terracotta) instead of neutral gray. */
+    useAccentHover?: boolean;
   }) {
-    const { labels, showFooter, onAfterNavPick } = p;
+    const { labels, showFooter, onAfterNavPick, showHomeButton = true, useAccentHover = false } = p;
+    const moreTabInactiveNavHover = useAccentHover
+      ? "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-accent dark:hover:text-accent hover:border-accent/45 dark:hover:border-accent/55 hover:bg-accent/10 dark:hover:bg-accent/20"
+      : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500";
+    const moreTabFooterBtnHover = useAccentHover
+      ? "hover:text-accent dark:hover:text-accent hover:bg-accent/10 dark:hover:bg-accent/20"
+      : "hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800";
+    const moreTabTextHover = useAccentHover
+      ? "hover:text-accent dark:hover:text-accent"
+      : "hover:text-foreground";
     return (
       <>
         <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain ${!labels ? "lg:justify-center" : ""}`}>
@@ -13104,6 +13053,7 @@ export default function ChatPage() {
           <div
             className={`flex flex-col min-w-0 px-2 py-1.5 ${labels ? "flex-1 min-h-0 overflow-y-auto overscroll-contain" : ""}`}
           >
+          {showHomeButton ? (
           <Link
             href="/chat/new"
             onClick={handleHomeNavigation}
@@ -13119,6 +13069,7 @@ export default function ChatPage() {
               </svg>
             {labels && <span className="truncate">Home</span>}
             </Link>
+          ) : null}
           {/* Primary nav - Claude.ai pill style; icon-only when collapsed (Browser Use style) */}
           <nav className={`flex flex-col gap-0.5 shrink-0 p-1 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 ${labels ? "mb-2" : ""}`} aria-label="Select view" data-tour="sidebar-nav">
             {[
@@ -13151,7 +13102,7 @@ export default function ChatPage() {
                   } ${
                       isActive
                         ? "border-neutral-300 dark:border-neutral-400 bg-white dark:bg-neutral-700 text-foreground"
-                        : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:border-neutral-400 dark:hover:border-neutral-500"
+                        : moreTabInactiveNavHover
                   }`}
                 >
                   {icon === "chat" && (
@@ -13241,7 +13192,7 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors shrink-0 mt-3"
+              className={`flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 transition-colors shrink-0 mt-3 ${moreTabTextHover}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -13252,7 +13203,11 @@ export default function ChatPage() {
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <Link
                   href="/sign-in"
-                  className="px-4 py-2.5 rounded-xl text-base font-medium border-2 border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors"
+                  className={`px-4 py-2.5 rounded-xl text-base font-medium border-2 border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-400 transition-colors ${
+                    useAccentHover
+                      ? "hover:border-accent/55 dark:hover:border-accent/60 hover:text-accent dark:hover:text-accent"
+                      : "hover:border-neutral-400 dark:hover:border-neutral-500 hover:text-foreground"
+                  }`}
                 >
                   Sign in
                 </Link>
@@ -13274,7 +13229,7 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setFeedbackModalOpen(true)}
-              className="flex items-center justify-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors whitespace-nowrap"
+              className={`flex items-center justify-center gap-2 px-2.5 py-1 rounded-lg text-[15px] text-neutral-600 dark:text-neutral-400 transition-colors whitespace-nowrap ${moreTabFooterBtnHover}`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 shrink-0">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -13285,20 +13240,20 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setLetterModalOpen(true)}
-              className="font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 hover:text-foreground transition-colors whitespace-nowrap"
+              className={`font-developer text-[1.2em] leading-none font-normal text-neutral-600 dark:text-neutral-400 transition-colors whitespace-nowrap ${moreTabTextHover}`}
             >
               Crafted with Intention
             </button>
             <div className="mt-1 flex items-center justify-center gap-x-2 text-[10px] text-neutral-500 dark:text-neutral-400 flex-wrap">
-              <Link href="/terms-of-service" className="hover:text-foreground transition-colors whitespace-nowrap">
+              <Link href="/terms-of-service" className={`${moreTabTextHover} transition-colors whitespace-nowrap`}>
                 Terms of Service
               </Link>
               <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
-              <Link href="/privacy-policy" className="hover:text-foreground transition-colors whitespace-nowrap">
+              <Link href="/privacy-policy" className={`${moreTabTextHover} transition-colors whitespace-nowrap`}>
                 Privacy Policy
               </Link>
               <span className="text-neutral-400 dark:text-neutral-500 shrink-0" aria-hidden>·</span>
-              <Link href="/faq" className="hover:text-foreground transition-colors whitespace-nowrap">
+              <Link href="/faq" className={`${moreTabTextHover} transition-colors whitespace-nowrap`}>
                 FAQ
               </Link>
             </div>
@@ -15591,17 +15546,15 @@ export default function ChatPage() {
         ) : (
         <>
         <div
-          className={`flex-1 min-h-0 min-w-0 flex flex-col overflow-x-hidden transition-all duration-500 ${
-            messages.length > 0
-              ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
-              : !shouldHideBottomBar && isAnonymous
-                ? "pb-36 sm:pb-40 md:pb-0 overflow-hidden"
-                : "pb-0 overflow-hidden"
-          } ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
+          className={`flex-1 min-h-0 min-w-0 flex flex-col overflow-x-hidden transition-all duration-500 pb-0 overflow-hidden ${convertToDeepSuccess ? "animate-convert-to-deep" : ""}`}
         >
           <div
             ref={messagesScrollRef}
-            className="flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar"
+            className={`flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar ${
+              !shouldHideBottomBar
+                ? "max-md:pb-[max(6.5rem,5.25rem+env(safe-area-inset-bottom,0px))] md:pb-0"
+                : ""
+            }`}
           >
           {currentSession?.isCollapsed && collapsedSummary ? (
             <div className="min-h-full flex items-start md:items-center justify-center p-3 sm:p-4">
@@ -15690,15 +15643,10 @@ export default function ChatPage() {
               </div>
             </div>
           ) : sessionLoading && messages.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center min-h-[200px] animate-fade-in">
-              <div className="flex flex-col items-center gap-4 text-neutral-500 dark:text-neutral-400">
-                <div className="w-8 h-8 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
-                <p className="text-sm flex items-center gap-1">
-                  Loading conversation
-                  <LoadingDots />
-                </p>
-              </div>
-            </div>
+            <>
+              <MathCurveLoader visible />
+              <div className="flex-1 min-h-[200px] shrink-0 animate-fade-in" aria-hidden />
+            </>
           ) : onboardingStep !== null && messages.length === 0 ? (
             /* First-time onboarding overlay - Claude.ai style */
             <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 max-w-xl mx-auto">
@@ -16237,6 +16185,8 @@ export default function ChatPage() {
                         mobileAndMore={renderSidebarLibraryScroll({
                           labels: true,
                           showFooter: true,
+                          showHomeButton: false,
+                          useAccentHover: true,
                         })}
                         mobileCommonplace={<LandingMobileCommonplaceTab />}
                         mobileQuickNote={
@@ -16359,12 +16309,12 @@ export default function ChatPage() {
                 ccIdToTitle={new Map(customConcepts.map((cc) => [cc._id, translatedTitles[cc._id] ?? cc.title]))}
                 cgIdToTitle={new Map(conceptGroups.map((cg) => [cg._id, translatedTitles[cg._id] ?? cg.title]))}
                 figureIdToName={(() => {
-                  const m = new Map(figuresData?.figures.map((f) => [f.id, f.name]) ?? []);
+                  const m = new Map(mergedFiguresCatalog?.figures.map((f) => [f.id, f.name]) ?? []);
                   if (activeConversationFigure) m.set(activeConversationFigure.id, activeConversationFigure.name);
                   return m;
                 })()}
                 figureIdToDescription={(() => {
-                  const m = new Map(figuresData?.figures.map((f) => [f.id, f.description]) ?? []);
+                  const m = new Map(mergedFiguresCatalog?.figures.map((f) => [f.id, f.description]) ?? []);
                   if (activeConversationFigure?.description) m.set(activeConversationFigure.id, activeConversationFigure.description);
                   return m;
                 })()}
@@ -16512,7 +16462,7 @@ export default function ChatPage() {
                                       setSelectedMentorFigureIds((prev) =>
                                         prev.filter(
                                           (id) =>
-                                            figuresData?.figures?.find((ff) => ff.id === id)?.category === cat.id
+                                            mergedFiguresCatalog?.figures?.find((ff) => ff.id === id)?.category === cat.id
                                         )
                                       );
                                     }}
@@ -16533,7 +16483,7 @@ export default function ChatPage() {
                           {(mentorDomainsForPicker.length === 1 || mentorPickerCategoryId != null) && (
                             <div className="flex flex-wrap items-center gap-1.5">
                               {mentorIdsInSelectedDomain.map((id) => {
-                                const f = figuresData?.figures?.find((ff) => ff.id === id);
+                                const f = mergedFiguresCatalog?.figures?.find((ff) => ff.id === id);
                                 if (!f) return null;
                                 const selected = selectedMentorFigureIds.includes(f.id);
                                 const canSelect = selected || selectedMentorFigureIds.length < 5;
@@ -16589,19 +16539,6 @@ export default function ChatPage() {
           )}
         </div>
         </div>
-
-        {showScrollToBottom && !currentSession?.isCollapsed && messages.length > 0 && (
-          <button
-            type="button"
-            onClick={scrollToBottom}
-            aria-label="Scroll to bottom"
-            className="fixed right-2 md:right-8 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-white text-neutral-600 dark:text-neutral-600 shadow-md hover:shadow-lg hover:bg-neutral-50 active:scale-95 transition-all duration-200 bottom-[5.5rem] md:bottom-[5rem]"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-              <path d="M7 12l5 5 5-5M7 5l5 5 5-5" />
-            </svg>
-          </button>
-        )}
 
         {messages.length === 0 &&
           !sessionLoading &&
@@ -16685,121 +16622,11 @@ export default function ChatPage() {
                     }
                   }}
                   previewMap={previewMap}
+                  showVoiceButton={showComposerVoiceButton}
                 />
                 <div className="relative w-full max-w-2xl lg:max-w-4xl flex items-center justify-center gap-2 mt-1">
-                <button
-                  ref={chatInputLensMenuButtonRef}
-                  type="button"
-                  onClick={() => setChatInputLensMenuOpen((prev) => !prev)}
-                  className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  aria-expanded={chatInputLensMenuOpen}
-                  aria-haspopup="menu"
-                  aria-label="Refine options"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden>
-                    <path d="m12 3 1.8 3.7L18 8.5l-3 2.9.7 4.1-3.7-2-3.7 2 .7-4.1-3-2.9 4.2-1.8L12 3Z" />
-                    <path d="M19 16v5" />
-                    <path d="M16.5 18.5h5" />
-                  </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-2.5 w-2.5 transition-transform ${chatInputLensMenuOpen ? "rotate-180" : ""}`}>
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-                <span className="text-[10px] text-neutral-400 dark:text-neutral-500">AI can make mistakes.</span>
-                {chatInputLensMenuOpen && (
-                  <div
-                    ref={chatInputLensMenuRef}
-                    role="menu"
-                    aria-label="Lens options"
-                    className="absolute bottom-full right-0 z-[70] mb-1.5 w-max max-w-[86vw] max-h-[62vh] overflow-y-auto rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background shadow-xl p-1.5"
-                  >
-                    <div className="inline-grid grid-cols-1 gap-1">
-                      {CHAT_INPUT_LENSES.map((lens) => {
-                        const selected = chatInputLens === lens.id;
-                        const isSuggested =
-                          lens.id !== "none" &&
-                          autoSuggestedChatLensMeta.suggested != null &&
-                          autoSuggestedChatLensMeta.suggested === lens.id;
-                        return (
-                          <button
-                            key={`chat-lens-menu-${lens.id}`}
-                            type="button"
-                            onClick={() => {
-                              setChatInputLens(lens.id);
-                              if (chatInputLensRefinedText) setChatInputLensRefinedText("");
-                              if (chatInputLensError) setChatInputLensError(null);
-                            }}
-                            className={`inline-flex w-full rounded-lg border px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug transition-colors ${
-                              selected
-                                ? "border-accent text-accent bg-accent/10"
-                                : isSuggested
-                                  ? "border-accent/60 text-accent bg-accent/5"
-                                  : "border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                            }`}
-                            aria-pressed={selected}
-                          >
-                            <span className="inline-flex items-center gap-1.5">
-                              {lens.label}
-                              {isSuggested && (
-                                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                              )}
-                            </span>
-                          </button>
-                        );
-                      })}
-                      <button
-                        type="button"
-                        onClick={() => void refineMainInputWithLens()}
-                        disabled={
-                          chatInputLensLoading ||
-                          !input.trim() ||
-                          chatInputLens === "none" ||
-                          sessionLoading ||
-                          !!currentSession?.isCollapsed ||
-                          isLoading
-                        }
-                        className="inline-flex w-full rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1.5 text-[11px] font-medium leading-snug text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                      >
-                        {chatInputLensLoading ? "Refining..." : "Refine message"}
-                      </button>
-                    </div>
-                    {chatInputLensError && (
-                      <p className="px-0.5 text-[11px] text-red-600 dark:text-red-400">{chatInputLensError}</p>
-                    )}
-                    {chatInputLensRefinedText && (
-                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/50 p-2">
-                        <p className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">
-                          Refined with {CHAT_INPUT_LENSES.find((lens) => lens.id === chatInputLens)?.label ?? "lens"}
-                        </p>
-                        <p className="mt-1 text-sm text-foreground whitespace-pre-wrap">
-                          {chatInputLensRefinedText}
-                        </p>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => {
-                                replaceComposerInput(chatInputLensRefinedText);
-                              setChatInputLensRefinedText("");
-                              setChatInputLensError(null);
-                              setChatInputLensMenuOpen(false);
-                            }}
-                            className="rounded-lg bg-foreground text-background px-2.5 py-1 text-[10px] font-medium hover:opacity-90 transition-opacity"
-                          >
-                            Use refined
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setChatInputLensRefinedText("")}
-                            className="rounded-lg border border-neutral-300 dark:border-neutral-600 px-2.5 py-1 text-[10px] font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                          >
-                            Keep original
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+                  <span className="text-[10px] text-neutral-400 dark:text-neutral-500">AI can make mistakes.</span>
+                </div>
                 </div>
         </div>
         </div>
@@ -16938,6 +16765,75 @@ export default function ChatPage() {
               {libraryPanelOpen === "figures" && (
                 <div className="space-y-4">
                   <p className="text-xs text-neutral-500 dark:text-neutral-400">Follow personas to get contextual nudges in chat: &quot;What would [persona] have to say about this?&quot;</p>
+                  {!isAnonymous && (
+                    <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/80 dark:bg-neutral-900/40 p-3 space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+                        Create your own mentor
+                      </p>
+                      <input
+                        type="text"
+                        value={newCustomMentorName}
+                        onChange={(e) => setNewCustomMentorName(e.target.value)}
+                        placeholder="Name"
+                        maxLength={120}
+                        className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-foreground"
+                      />
+                      <textarea
+                        value={newCustomMentorDesc}
+                        onChange={(e) => setNewCustomMentorDesc(e.target.value)}
+                        placeholder="How they think, speak, or what they&apos;re known for…"
+                        rows={2}
+                        maxLength={2000}
+                        className="w-full px-3 py-1.5 text-sm rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-foreground resize-none"
+                      />
+                      {newCustomMentorErr ? (
+                        <p className="text-xs text-red-600 dark:text-red-400">{newCustomMentorErr}</p>
+                      ) : null}
+                      <button
+                        type="button"
+                        disabled={newCustomMentorBusy || !newCustomMentorName.trim()}
+                        onClick={() => {
+                          void (async () => {
+                            setNewCustomMentorErr(null);
+                            setNewCustomMentorBusy(true);
+                            try {
+                              const res = await fetch("/api/me/custom-mentors", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  name: newCustomMentorName.trim(),
+                                  description: newCustomMentorDesc.trim(),
+                                }),
+                              });
+                              const j = await res.json().catch(() => ({}));
+                              if (!res.ok) {
+                                setNewCustomMentorErr(
+                                  typeof j.error === "string" ? j.error : "Could not create mentor"
+                                );
+                                return;
+                              }
+                              setCustomMentors((prev) => [
+                                {
+                                  id: j.id,
+                                  name: j.name,
+                                  description: typeof j.description === "string" ? j.description : "",
+                                  category: typeof j.category === "string" ? j.category : "custom",
+                                },
+                                ...prev,
+                              ]);
+                              setNewCustomMentorName("");
+                              setNewCustomMentorDesc("");
+                            } finally {
+                              setNewCustomMentorBusy(false);
+                            }
+                          })();
+                        }}
+                        className="px-3 py-1.5 rounded-xl text-xs font-medium bg-foreground text-background hover:opacity-90 disabled:opacity-40 transition-opacity"
+                      >
+                        {newCustomMentorBusy ? "Adding…" : "Add mentor"}
+                      </button>
+                    </div>
+                  )}
                   <input
                     type="search"
                     placeholder="Search personas..."
@@ -16958,7 +16854,7 @@ export default function ChatPage() {
                     >
                       All
                     </button>
-                    {figuresData?.categories.map((cat) => (
+                    {mergedFiguresCatalog?.categories.map((cat) => (
                       <button
                         key={cat.id}
                         type="button"
@@ -16979,7 +16875,7 @@ export default function ChatPage() {
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">Failed to load personas.</p>
                   ) : (() => {
                     const q = figuresSearchQuery.toLowerCase().trim();
-                    let filtered = figuresData.figures;
+                    let filtered = mergedFiguresCatalog!.figures;
                     if (q) {
                       filtered = filtered.filter(
                         (f) =>
@@ -17033,9 +16929,124 @@ export default function ChatPage() {
                               >
                                 {isFollowing ? "✓" : "+"}
                               </button>
-                              <div className="flex-1 min-w-0 pr-10">
-                                <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">{f.name}</span>
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-3">{f.description}</p>
+                                                           <div className="flex-1 min-w-0 pr-10">
+                                {editingCustomMentorId === f.id ? (
+                                  <div className="space-y-2">
+                                    <input
+                                      type="text"
+                                      value={editMentorName}
+                                      onChange={(e) => setEditMentorName(e.target.value)}
+                                      className="w-full px-2 py-1 text-sm rounded-lg border border-neutral-200 dark:border-neutral-600 bg-background"
+                                      maxLength={120}
+                                    />
+                                    <textarea
+                                      value={editMentorDesc}
+                                      onChange={(e) => setEditMentorDesc(e.target.value)}
+                                      rows={3}
+                                      maxLength={2000}
+                                      className="w-full px-2 py-1 text-sm rounded-lg border border-neutral-200 dark:border-neutral-600 bg-background resize-none"
+                                    />
+                                    <div className="flex flex-wrap gap-2">
+                                      <button
+                                        type="button"
+                                        disabled={editMentorBusy || !editMentorName.trim()}
+                                        onClick={() => {
+                                          void (async () => {
+                                            setEditMentorBusy(true);
+                                            try {
+                                              const res = await fetch(
+                                                `/api/me/custom-mentors/${encodeURIComponent(f.id)}`,
+                                                {
+                                                  method: "PATCH",
+                                                  headers: { "Content-Type": "application/json" },
+                                                  body: JSON.stringify({
+                                                    name: editMentorName.trim(),
+                                                    description: editMentorDesc.trim(),
+                                                  }),
+                                                }
+                                              );
+                                              if (!res.ok) return;
+                                              const u = await res.json();
+                                              setCustomMentors((prev) =>
+                                                prev.map((m) =>
+                                                  m.id === u.id
+                                                    ? {
+                                                        ...m,
+                                                        name: u.name,
+                                                        description:
+                                                          typeof u.description === "string"
+                                                            ? u.description
+                                                            : "",
+                                                      }
+                                                    : m
+                                                )
+                                              );
+                                              setEditingCustomMentorId(null);
+                                            } finally {
+                                              setEditMentorBusy(false);
+                                            }
+                                          })();
+                                        }}
+                                        className="text-xs font-medium px-2 py-1 rounded-lg bg-foreground text-background disabled:opacity-40"
+                                      >
+                                        {editMentorBusy ? "Saving…" : "Save"}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingCustomMentorId(null)}
+                                        className="text-xs font-medium px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-600"
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100 line-clamp-1">
+                                      {f.name}
+                                    </span>
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-3">
+                                      {f.description}
+                                    </p>
+                                  </>
+                                )}
+                                {f.id.startsWith("cm_") &&
+                                editingCustomMentorId !== f.id &&
+                                !isAnonymous ? (
+                                  <div className="flex flex-wrap gap-3 mt-2 text-[11px] font-medium">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditingCustomMentorId(f.id);
+                                        setEditMentorName(f.name);
+                                        setEditMentorDesc(f.description);
+                                      }}
+                                      className="text-accent hover:underline"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!globalThis.confirm("Delete this mentor?")) return;
+                                        void (async () => {
+                                          const res = await fetch(
+                                            `/api/me/custom-mentors/${encodeURIComponent(f.id)}`,
+                                            { method: "DELETE" }
+                                          );
+                                          if (!res.ok) return;
+                                          setCustomMentors((prev) => prev.filter((m) => m.id !== f.id));
+                                          setFollowedFigureIds((prev) => prev.filter((x) => x !== f.id));
+                                        })();
+                                      }}
+                                      className="text-red-600 dark:text-red-400 hover:underline"
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                ) : null}
           </div>
             </div>
                           );
@@ -17807,7 +17818,7 @@ export default function ChatPage() {
                               type="button"
                               onClick={() => {
                                 playSelectionChime();
-                                const fig = figuresData?.figures?.find((f) => f.id === open.figureId);
+                                const fig = mergedFiguresCatalog?.figures?.find((f) => f.id === open.figureId);
                                 setTranscriptModalTranscript(null);
                                 setJournalMentorBubbleOpenId(null);
                                 startConversationFromMentorOneOnOne(
@@ -19804,12 +19815,12 @@ export default function ChatPage() {
                       )
                     }
                     figureIdToName={(() => {
-                      const m = new Map(figuresData?.figures.map((f) => [f.id, f.name]) ?? []);
+                      const m = new Map(mergedFiguresCatalog?.figures.map((f) => [f.id, f.name]) ?? []);
                       if (activeConversationFigure) m.set(activeConversationFigure.id, activeConversationFigure.name);
                       return m;
                     })()}
                     figureIdToDescription={(() => {
-                      const m = new Map(figuresData?.figures.map((f) => [f.id, f.description]) ?? []);
+                      const m = new Map(mergedFiguresCatalog?.figures.map((f) => [f.id, f.description]) ?? []);
                       if (activeConversationFigure?.description) m.set(activeConversationFigure.id, activeConversationFigure.description);
                       return m;
                     })()}
@@ -22076,7 +22087,7 @@ export default function ChatPage() {
                 placeholder={getLandingTranslations(language).mentorOneOnOneSearchPlaceholder}
                 className="w-full px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-600 bg-background text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
               />
-              {figuresData?.categories && figuresData.categories.length > 0 && (
+              {mergedFiguresCatalog?.categories && mergedFiguresCatalog.categories.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -22089,7 +22100,7 @@ export default function ChatPage() {
                   >
                     {getLandingTranslations(language).mentorOneOnOneAllCategories}
                   </button>
-                  {figuresData.categories.map((cat) => (
+                  {mergedFiguresCatalog.categories.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
@@ -22112,7 +22123,7 @@ export default function ChatPage() {
               </div>
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-              {!figuresData?.figures?.length ? (
+              {!mergedFiguresCatalog?.figures?.length ? (
                 <p className="text-sm text-neutral-500">Loading…</p>
               ) : mentorCatalogFilteredFigures.length === 0 ? (
                 <p className="text-sm text-neutral-500">No figures match.</p>
