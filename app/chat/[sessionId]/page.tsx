@@ -11300,8 +11300,8 @@ export default function ChatPage() {
           typeof data.error === "string" ? data.error : "Could not update sleep entry."
         );
       }
-      applySleepEntriesFromApi(data);
-      setSleepEntryEditModal(null);
+        applySleepEntriesFromApi(data);
+        setSleepEntryEditModal(null);
     } catch (err) {
       setSleepEditError(err instanceof Error ? err.message : "Could not update sleep entry.");
     } finally {
@@ -11330,8 +11330,8 @@ export default function ChatPage() {
           typeof data.error === "string" ? data.error : "Could not delete sleep entry."
         );
       }
-      applySleepEntriesFromApi(data);
-      setSleepEntryEditModal(null);
+        applySleepEntriesFromApi(data);
+        setSleepEntryEditModal(null);
     } catch (err) {
       setSleepEditError(err instanceof Error ? err.message : "Could not delete sleep entry.");
     } finally {
@@ -17949,7 +17949,7 @@ export default function ChatPage() {
                 Edit the enrichment prompt below to customize what future conversations will remember.
               </p>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
               {summarizeModal.chainOfThought && summarizeModal.chainOfThought.length > 0 && (
                 <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/50 p-3">
                   <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2.5">
@@ -18105,7 +18105,7 @@ export default function ChatPage() {
               </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+            <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
               {ltmDetailEditing && ltmEditDraft ? (
                 <div className="space-y-4">
                   <div>
@@ -18422,7 +18422,7 @@ export default function ChatPage() {
                     </Link>
                   </div>
               )}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-5 min-h-0 space-y-6">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-6 p-4 sm:p-5">
                 <section>
                   <h3 className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">Appearance</h3>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">Choose a background for your chat.</p>
@@ -18955,8 +18955,8 @@ export default function ChatPage() {
           ariaLabel={getLandingTranslations(language).nutritionGoalsModalTitle}
           maxWidthClass="sm:max-w-[min(94vw,420px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
-        >
-            <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
+          >
+            <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200 px-4 py-3 dark:border-neutral-700">
               <h2 className="text-base sm:text-lg font-semibold text-foreground">
                 {getLandingTranslations(language).nutritionGoalsModalTitle}
               </h2>
@@ -18989,7 +18989,7 @@ export default function ChatPage() {
               </div>
             </div>
             {goalsWizardActive && (
-              <div className="px-4 pt-3">
+              <div className="shrink-0 px-4 pt-3">
                 <div className="h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#295a8a] transition-all duration-300"
@@ -19002,7 +19002,7 @@ export default function ChatPage() {
                 </p>
               </div>
             )}
-            <div className="p-4 space-y-3 max-h-[70vh] overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-3">
               {goalsWizardStep === "age" && (
                 <div className="space-y-2">
                   <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardAgePrompt}</p>
@@ -19672,7 +19672,7 @@ export default function ChatPage() {
           zClass="z-[53]"
           maxWidthClass="sm:max-w-[min(94vw,640px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {getLandingTranslations(language).sleepInsightsModalTitle}
@@ -19690,7 +19690,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-y-auto space-y-3">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
               {sleepInsightsError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{sleepInsightsError}</p>
               )}
@@ -19774,7 +19774,7 @@ export default function ChatPage() {
           ariaLabel={getLandingTranslations(language).weeklySummaryModalTitle}
           maxWidthClass="sm:max-w-[min(94vw,760px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {getLandingTranslations(language).weeklySummaryModalTitle}
@@ -19822,7 +19822,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <div className="p-4 space-y-4 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-4 p-4">
               {weeklySummaryError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{weeklySummaryError}</p>
               )}
@@ -20007,7 +20007,7 @@ export default function ChatPage() {
           ariaLabel="Weight tracker"
           maxWidthClass="sm:max-w-[min(94vw,560px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">Weight Tracker</h2>
               <button
@@ -20023,7 +20023,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-4 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-4 p-4">
               {/* Current Weight + Goal Weight */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3">
@@ -20045,28 +20045,28 @@ export default function ChatPage() {
                 <div className="flex items-end gap-2">
                   <div className="flex-1 min-w-0">
                     <label className="block text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Current (kg)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={weightTrackerWeightInput}
-                      onChange={(e) => setWeightTrackerWeightInput(e.target.value)}
-                      disabled={weightTrackerSaving}
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={weightTrackerWeightInput}
+                        onChange={(e) => setWeightTrackerWeightInput(e.target.value)}
+                        disabled={weightTrackerSaving}
                       placeholder="e.g. 72.5"
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                  </div>
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
                   <div className="flex-1 min-w-0">
                     <label className="block text-[11px] text-neutral-500 dark:text-neutral-400 mb-1">Goal (kg)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={weightTrackerTargetInput}
-                      onChange={(e) => setWeightTrackerTargetInput(e.target.value)}
-                      disabled={weightTrackerSaving}
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={weightTrackerTargetInput}
+                        onChange={(e) => setWeightTrackerTargetInput(e.target.value)}
+                        disabled={weightTrackerSaving}
                       placeholder="e.g. 68"
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                  </div>
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                      />
+                    </div>
                   <button
                     type="button"
                     onClick={() => void saveWeightTrackerEntry()}
@@ -20075,24 +20075,24 @@ export default function ChatPage() {
                   >
                     {weightTrackerSaving ? "…" : "Save"}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setWeightTrackerAddOpen(false)}
-                    disabled={weightTrackerSaving}
+                    <button
+                      type="button"
+                      onClick={() => setWeightTrackerAddOpen(false)}
+                      disabled={weightTrackerSaving}
                     className="shrink-0 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
-                  >
+                    >
                     ✕
-                  </button>
+                    </button>
                 </div>
               ) : (
-                <button
-                  type="button"
+                    <button
+                      type="button"
                   onClick={() => setWeightTrackerAddOpen(true)}
                   disabled={weightTrackerSaving}
                   className="w-full rounded-2xl border border-[#c96442] py-2.5 text-sm font-medium text-[#c96442] dark:text-[#d97757] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e] transition-colors disabled:opacity-50"
                 >
                   Add Entry
-                </button>
+                    </button>
               )}
 
 
@@ -20108,7 +20108,7 @@ export default function ChatPage() {
               {weightTrackerError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{weightTrackerError}</p>
               )}
-            </div>
+                      </div>
         </LandingDashboardSheetFrame>
       )}
 
@@ -20136,7 +20136,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
               <p className="text-xs text-neutral-500 dark:text-neutral-400 -mt-1">
                 Logged for <span className="font-medium text-foreground">{headerCalendarLabel}</span> (calendar above)
               </p>
@@ -20166,7 +20166,7 @@ export default function ChatPage() {
                     className="min-w-0 flex-1 px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
                     placeholder="0.00"
                   />
-                </div>
+                  </div>
               </div>
               <div>
                 <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">What did you buy?</label>
@@ -20177,7 +20177,7 @@ export default function ChatPage() {
                   rows={3}
                   className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y min-h-[72px]"
                 />
-              </div>
+            </div>
               {spendTrackerError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{spendTrackerError}</p>
               )}
@@ -20198,8 +20198,8 @@ export default function ChatPage() {
                 >
                   {spendTrackerSaving ? "Saving…" : "Save"}
                 </button>
-              </div>
-            </div>
+          </div>
+        </div>
         </LandingDashboardSheetFrame>
       )}
 
@@ -20209,7 +20209,7 @@ export default function ChatPage() {
           ariaLabel="Nutrition day view"
           maxWidthClass="sm:max-w-[min(94vw,560px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">Day View</h2>
               <button
@@ -20224,7 +20224,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
               <p className="text-sm sm:text-base font-medium text-foreground mb-3">
                 {new Intl.DateTimeFormat(undefined, {
                   weekday: "long",
@@ -20287,7 +20287,7 @@ export default function ChatPage() {
           ariaLabel={landingActivityGroupModal.title}
           maxWidthClass="sm:max-w-[min(94vw,560px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">{landingActivityGroupModal.title}</h2>
                 <button
@@ -20302,7 +20302,7 @@ export default function ChatPage() {
                 </svg>
                 </button>
             </div>
-            <div className="p-4 space-y-2 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-2 p-4">
               {landingActivityGroupModal.items.map((item) => (
                 <div
                   key={`modal-${item.id}`}
@@ -20365,7 +20365,7 @@ export default function ChatPage() {
           ariaLabel="Edit sleep entry"
           maxWidthClass="sm:max-w-[min(94vw,420px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">Edit sleep</h2>
@@ -20392,11 +20392,11 @@ export default function ChatPage() {
                   <SleepDurationPicker
                     valueHours={sleepEditHoursInput}
                     onChangeHours={setSleepEditHoursInput}
-                    disabled={sleepEditSaving}
+                  disabled={sleepEditSaving}
                     className="w-full justify-center"
                     selectClassName="min-w-[4rem] appearance-none bg-transparent text-center text-sm font-medium tabular-nums text-foreground outline-none"
                     separatorClassName="text-sm font-medium tabular-nums text-neutral-500 dark:text-neutral-400"
-                  />
+                />
                 </div>
               </label>
               <label className="block">
@@ -20466,7 +20466,7 @@ export default function ChatPage() {
           ariaLabel="Choose journal type"
           maxWidthClass="sm:max-w-[min(94vw,440px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[90vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
               <h2 className="text-lg font-semibold text-foreground">
                 Choose journal type
@@ -20550,7 +20550,7 @@ export default function ChatPage() {
           ariaLabel={getLandingTranslations(language).journalEntryModalTitle}
           maxWidthClass="sm:max-w-[min(94vw,560px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground pr-2">
                 {LANDING_JOURNAL_MODAL_TITLE[selectedLandingJournalChip]}
@@ -20568,7 +20568,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {selectedLandingJournalChip === "gratitude"
                   ? "Capture specific moments you appreciate."
@@ -20794,7 +20794,7 @@ export default function ChatPage() {
                 </div>
               </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
               {/* Hidden file inputs — shared across choose & input steps */}
               <input
                 ref={calorieTrackerImageInputRef}
@@ -20940,11 +20940,11 @@ export default function ChatPage() {
                       name="calorie-tracker-items"
                       loading={calorieTrackerSuggestionsLoading}
                       fixture={
-                        <div className="space-y-2">
-                          {[1, 2, 3].map((i) => (
+                      <div className="space-y-2">
+                        {[1, 2, 3].map((i) => (
                             <div key={i} className="h-16 rounded-xl bg-[#e8e6dc] dark:bg-[#3d3d3a]" />
-                          ))}
-                        </div>
+                        ))}
+                      </div>
                       }
                     >
                     {calorieTrackerSuggestions.length > 0 ? (
@@ -21462,7 +21462,7 @@ export default function ChatPage() {
           zClass="z-[55]"
           maxWidthClass="sm:max-w-[min(94vw,640px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">
                 New Conversation
@@ -21482,7 +21482,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="px-4 py-4 flex-1 min-h-0 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4">
               <div className="rounded-3xl border border-neutral-200 dark:border-neutral-700 bg-background p-5">
                   <div className="text-center">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c96442] dark:text-[#d97757]">
@@ -21496,8 +21496,8 @@ export default function ChatPage() {
                   <div className="mt-6 divide-y divide-neutral-200 dark:divide-neutral-700">
                     <div className="flex items-center justify-between gap-4 py-4">
                       <span className="text-[15px] font-medium text-foreground">Show citations</span>
-                      <button
-                        type="button"
+                  <button
+                    type="button"
                         role="switch"
                         aria-checked={secondOrderCitationsEnabled}
                         aria-label="Show citations"
@@ -21511,17 +21511,17 @@ export default function ChatPage() {
                             secondOrderCitationsEnabled ? "translate-x-7" : "translate-x-1"
                           }`}
                         />
-                      </button>
-                    </div>
+                  </button>
+                </div>
 
                     <div className="flex items-center justify-between gap-4 py-4">
                       <span className="text-[15px] font-medium text-foreground">Detailed responses</span>
-                      <button
-                        type="button"
+                <button
+                  type="button"
                         role="switch"
                         aria-checked={newConversationResponseVerbosity === "detailed"}
                         aria-label="Detailed responses"
-                        onClick={() => {
+                  onClick={() => {
                           const next = newConversationResponseVerbosity === "detailed" ? "compact" : "detailed";
                           setNewConversationResponseVerbosity(next);
                           if (next === "detailed" && cavemanMode) setCavemanMode(false);
@@ -21537,14 +21537,14 @@ export default function ChatPage() {
                             newConversationResponseVerbosity === "detailed" ? "translate-x-7" : "translate-x-1"
                           }`}
                         />
-                      </button>
+                </button>
                     </div>
 
                     <div className="flex items-center justify-between gap-4 py-4">
                       <span className="text-[15px] font-medium text-foreground">Caveman mode</span>
-                      <button
-                        type="button"
-                        role="switch"
+                    <button
+                      type="button"
+                      role="switch"
                         aria-checked={cavemanMode}
                         aria-label="Caveman mode"
                         onClick={() => {
@@ -21561,22 +21561,22 @@ export default function ChatPage() {
                         }}
                         className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
                           cavemanMode ? "bg-[#D1833C]" : "bg-neutral-300 dark:bg-neutral-600"
-                        }`}
-                      >
-                        <span
+                      }`}
+                    >
+                      <span
                           className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
                             cavemanMode ? "translate-x-7" : "translate-x-1"
-                          }`}
-                        />
-                      </button>
-                    </div>
+                        }`}
+                      />
+                    </button>
                   </div>
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playSelectionChime();
-                      activeResponseVerbosityRef.current = newConversationResponseVerbosity;
+              <button
+                type="button"
+                onClick={() => {
+                  playSelectionChime();
+                  activeResponseVerbosityRef.current = newConversationResponseVerbosity;
                       startSecondOrderConversation(
                         !secondOrderCitationsEnabled,
                         newConversationResponseVerbosity
@@ -21587,27 +21587,27 @@ export default function ChatPage() {
                     <span>Start conversation</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
                       <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                    </svg>
-                  </button>
+                  </svg>
+              </button>
 
                   {sessions.length > 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playSelectionChime();
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSelectionChime();
                         clearReflectionQuickNoteBridge();
-                        setNewConversationChooserModalOpen(false);
+                  setNewConversationChooserModalOpen(false);
                         setLibraryPanelOpen("conversations");
                       }}
                       className="mt-4 flex w-full items-center justify-between gap-3 text-left text-neutral-600 transition-colors hover:text-foreground dark:text-neutral-400 dark:hover:text-neutral-200"
                     >
                       <span className="text-[15px]">
                         {sessions.length} past conversation{sessions.length === 1 ? "" : "s"}
-                      </span>
+                  </span>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
                         <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                      </svg>
-                    </button>
+                  </svg>
+              </button>
                   ) : null}
                 </div>
             </div>
@@ -21621,7 +21621,7 @@ export default function ChatPage() {
           zClass="z-50"
           maxWidthClass="sm:max-w-[min(94vw,640px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[92vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-foreground">
@@ -21643,7 +21643,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-6">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-6 p-4">
               <div className="space-y-3">
                 <button
                   type="button"
@@ -21741,7 +21741,7 @@ export default function ChatPage() {
           zClass="z-[56]"
           maxWidthClass="sm:max-w-[min(94vw,640px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">Ask mentors</h2>
               <button
@@ -21756,7 +21756,7 @@ export default function ChatPage() {
                 </svg>
               </button>
             </div>
-            <div className="p-4 space-y-3 overflow-y-auto">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
               <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2">
                 <p className="text-sm font-medium text-foreground">
                   What are you looking for help with?
@@ -21865,7 +21865,7 @@ export default function ChatPage() {
           zClass="z-[55]"
           maxWidthClass="sm:max-w-[min(94vw,640px)]"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 shrink-0">
               <h2 className="text-lg font-semibold text-foreground">
                 {getLandingTranslations(language).mentorOneOnOneModalTitle}
@@ -22036,7 +22036,7 @@ export default function ChatPage() {
                 )}
               </div>
             </div>
-            <div className="flex-1 min-h-0 overflow-y-auto p-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
               {!figuresData?.figures?.length ? (
                 <p className="text-sm text-neutral-500">Loading…</p>
               ) : mentorCatalogFilteredFigures.length === 0 ? (
@@ -22588,7 +22588,7 @@ export default function ChatPage() {
                     What do you want to remember? The AI will generate a summary and enrichment prompt for you to review and edit.
                   </p>
                 </div>
-                <div className="p-4 flex-1 overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
                   <textarea
                     value={ccCreateInput}
                     onChange={(e) => setCcCreateInput(e.target.value)}
@@ -22688,7 +22688,7 @@ export default function ChatPage() {
                       Edit the generated concept below, then click Save to add it to your custom concepts.
                     </p>
                   </div>
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
                         Title
@@ -23075,7 +23075,7 @@ export default function ChatPage() {
                       : "Paste reflective or journal text. We extract concepts and auto-tag them into frameworks. Extraction sends this text to the AI."}
                   </p>
                 </div>
-                <div className="p-4 flex-1 space-y-3 overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
                   {ccYoutubeError && (
                     <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
                   )}
@@ -23266,7 +23266,7 @@ export default function ChatPage() {
                     </p>
                   )}
                 </div>
-                <div className="p-4 flex-1 space-y-3 overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-3 p-4">
                   {ccYoutubeError && (
                     <p className="text-sm text-red-600 dark:text-red-400">{ccYoutubeError}</p>
                   )}
@@ -23423,7 +23423,7 @@ export default function ChatPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                   {ccYoutubeResult.groups.map((group, gi) => {
                     if (group.concepts.length === 0) return null;
                     return (
@@ -23658,7 +23658,7 @@ export default function ChatPage() {
               </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+            <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
               {ccDetailEditing && ccEditDraft && !ccDetailModal._id.startsWith("extracted-") ? (
                 <div className="space-y-4">
                   <div>
@@ -24199,7 +24199,7 @@ export default function ChatPage() {
                     Convert this {habitPromoteModal.sourceType === "concept" ? "concept" : "memory"} into a daily habit. The AI will suggest a name, description, how to follow through, and tips.
                   </p>
                 </div>
-                <div className="p-4 flex-1 overflow-y-auto space-y-4">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain space-y-4 p-4">
                   <div>
                     <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Language to generate in</label>
                     <select
@@ -24305,7 +24305,7 @@ export default function ChatPage() {
                       Edit the generated habit below, then click Save.
                     </p>
                   </div>
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
                         {getUiTranslations(language).habitLifeArea}
@@ -24469,7 +24469,7 @@ export default function ChatPage() {
                     {getUiTranslations(language).habitCreateInputHelper}
                   </p>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                   <div className="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-3 dark:border-neutral-600 dark:bg-neutral-950/70">
                     <p className="text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-300">
                       Find a new habit
@@ -24623,7 +24623,7 @@ export default function ChatPage() {
                       {getUiTranslations(language).habitCreateReviewHelper}
                     </p>
                   </div>
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Habit name</label>
                       <input
@@ -24786,43 +24786,45 @@ export default function ChatPage() {
           maxWidthClass="sm:max-w-md"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[88vh]"
         >
-          <div className="p-5">
-            <h3 className="mb-1 text-[15px] font-semibold text-neutral-900 dark:text-neutral-100">Link to a habit</h3>
-            <p className="mb-3 text-[12px] text-neutral-500 dark:text-neutral-400">Select habits this journal note relates to.</p>
+          <div className="flex min-h-0 flex-1 flex-col p-5">
+            <h3 className="mb-1 shrink-0 text-[15px] font-semibold text-neutral-900 dark:text-neutral-100">Link to a habit</h3>
+            <p className="mb-3 shrink-0 text-[12px] text-neutral-500 dark:text-neutral-400">Select habits this journal note relates to.</p>
             {availableHabitsForTagging.length === 0 ? (
-              <p className="py-3 text-center text-sm text-neutral-400">No hero or current-month habits found.</p>
+              <p className="min-h-0 flex-1 py-3 text-center text-sm text-neutral-400">No hero or current-month habits found.</p>
             ) : (
-              <div className="flex flex-wrap gap-2 pb-3">
-                {availableHabitsForTagging.map((h) => {
-                  const selected = habitTaggingSelected.includes(h._id);
-                  return (
-                    <button
-                      key={h._id}
-                      type="button"
-                      onClick={() => {
-                        setHabitTaggingSelected((prev) =>
-                          selected ? prev.filter((id) => id !== h._id) : [...prev, h._id]
-                        );
-                      }}
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors ${
-                        selected
-                          ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
-                          : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
-                      }`}
-                      aria-pressed={selected}
-                    >
-                      {selected ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
-                          <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
-                        </svg>
-                      ) : null}
-                      {h.name}
-                    </button>
-                  );
-                })}
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-2">
+                <div className="flex flex-wrap gap-2">
+                  {availableHabitsForTagging.map((h) => {
+                    const selected = habitTaggingSelected.includes(h._id);
+                    return (
+                      <button
+                        key={h._id}
+                        type="button"
+                        onClick={() => {
+                          setHabitTaggingSelected((prev) =>
+                            selected ? prev.filter((id) => id !== h._id) : [...prev, h._id]
+                          );
+                        }}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                          selected
+                            ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
+                            : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                        }`}
+                        aria-pressed={selected}
+                      >
+                        {selected ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
+                            <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
+                          </svg>
+                        ) : null}
+                        {h.name}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
-            <div className="flex items-center justify-end gap-2 pt-1">
+            <div className="mt-auto flex shrink-0 items-center justify-end gap-2 border-t border-neutral-200 pt-3 dark:border-neutral-700">
               <button
                 type="button"
                 onClick={() => setHabitTaggingRowId(null)}
@@ -24849,7 +24851,7 @@ export default function ChatPage() {
           zClass="z-[65]"
           maxWidthClass="sm:max-w-lg"
           maxHeightClass="max-h-[min(92dvh,900px)] sm:max-h-[85vh]"
-        >
+          >
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0 pr-2">
                 <h2 className="font-semibold text-lg truncate min-w-0">
@@ -25440,7 +25442,7 @@ export default function ChatPage() {
                 Name your framework and select concepts to include.
               </p>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">Framework name</label>
                 <input
@@ -25562,7 +25564,7 @@ export default function ChatPage() {
                     What should we call it? Name your framework or focus area (e.g. Finance, Career, Health).
                   </p>
                 </div>
-                <div className="p-4 flex-1 overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
                   <input
                     type="text"
                     value={cgCreateDomain}
@@ -25634,7 +25636,7 @@ export default function ChatPage() {
                     Suggested answers are pre-filled. Edit or clear any to tailor concepts for your &quot;{cgCreateDomain}&quot; framework.
                   </p>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
                   {cgCreateQuestions.map((q) => (
                     <div key={q} className="flex gap-2 items-start">
                       <div className="flex-1 min-w-0">
@@ -25735,7 +25737,7 @@ export default function ChatPage() {
                     Edit the generated concepts, then click Save to create your framework.
                   </p>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-6">
                   {cgCreateConcepts.map((c, i) => (
                     <div key={i} className="space-y-3">
                       <div className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide">
@@ -25864,7 +25866,7 @@ export default function ChatPage() {
                 ✕
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"

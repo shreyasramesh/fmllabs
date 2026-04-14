@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type MobileBottomTab =
@@ -120,36 +120,29 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       aria-label="Dashboard sections"
     >
-      <div className="flex min-h-[3.25rem] items-stretch overflow-x-auto overscroll-x-contain scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {TABS.map((tab, index) => {
+      <div className="flex min-h-[3.5rem] items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 pt-0.5 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {TABS.map((tab) => {
           const active = activeTab === tab.key;
           return (
-            <Fragment key={tab.key}>
-              {index > 0 ? (
-                <span
-                  aria-hidden
-                  className="pointer-events-none my-auto h-4 w-px shrink-0 self-center rounded-full bg-[#c96442]/22 dark:bg-[#d97757]/28"
-                />
-              ) : null}
-              <button
-                type="button"
-                onClick={() => onTabChange(tab.key)}
-                className={`flex min-w-0 flex-1 basis-0 flex-col items-center justify-center gap-1 px-0.5 py-2 transition-colors duration-200 active:opacity-80 ${
-                  active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-400"
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => onTabChange(tab.key)}
+              className={`flex min-w-[3.75rem] max-w-[5.5rem] shrink-0 flex-1 flex-col items-center justify-center gap-1 px-1.5 py-2 transition-colors duration-200 active:opacity-80 sm:min-w-0 sm:max-w-none ${
+                active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-400"
+              }`}
+              aria-label={tab.ariaLabel}
+              aria-current={active ? "page" : undefined}
+            >
+              <TabIcon tab={tab.key} active={active} />
+              <span
+                className={`line-clamp-2 w-full text-center text-[10px] font-medium leading-tight tracking-tight ${
+                  active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-500"
                 }`}
-                aria-label={tab.ariaLabel}
-                aria-current={active ? "page" : undefined}
               >
-                <TabIcon tab={tab.key} active={active} />
-                <span
-                  className={`w-full truncate text-center text-[9px] font-normal leading-none tracking-tight ${
-                    active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-500"
-                  }`}
-                >
-                  {tab.label}
-                </span>
-              </button>
-            </Fragment>
+                {tab.label}
+              </span>
+            </button>
           );
         })}
       </div>
