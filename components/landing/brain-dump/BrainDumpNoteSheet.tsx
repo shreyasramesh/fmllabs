@@ -1419,14 +1419,33 @@ export function BrainDumpCaptureView({
 
   const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
 
+  // Image review state — analyses are held here until the user confirms or discards
+  const [pendingImageAnalyses, setPendingImageAnalyses] = useState<JournalImageAnalysis[] | null>(null);
+  const [pendingImageEditText, setPendingImageEditText] = useState("");
+
   const handleImageAnalysesReady = useCallback((analyses: JournalImageAnalysis[]) => {
     const texts = analyses.map((a) => a.extractedText).filter(Boolean);
     if (texts.length === 0) return;
-    setSentenceDraft((prev) => {
-      const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
-      return prefix + texts.join("\n");
-    });
-  }, [setSentenceDraft]);
+    setPendingImageAnalyses(analyses);
+    setPendingImageEditText(texts.join("\n\n"));
+  }, []);
+
+  const handleImageReviewConfirm = useCallback(() => {
+    const text = pendingImageEditText.trim();
+    if (text) {
+      setSentenceDraft((prev) => {
+        const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
+        return prefix + text;
+      });
+    }
+    setPendingImageAnalyses(null);
+    setPendingImageEditText("");
+  }, [pendingImageEditText, setSentenceDraft]);
+
+  const handleImageReviewDiscard = useCallback(() => {
+    setPendingImageAnalyses(null);
+    setPendingImageEditText("");
+  }, []);
 
   // Category filter
   const [filterCategory, setFilterCategory] = React.useState<string | null>(null);
@@ -1725,6 +1744,93 @@ export function BrainDumpCaptureView({
           onAnalysesReady={handleImageAnalysesReady}
           disabled={draftDisabled}
         />
+
+        {/* Image-to-text review sheet — slides up after analysis completes */}
+        {pendingImageAnalyses ? (
+          <div
+            className="fixed inset-0 z-[58] flex flex-col justify-end"
+            onClick={handleImageReviewDiscard}
+          >
+            {/* scrim */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+
+            {/* sheet */}
+            <div
+              className="relative rounded-t-[1.5rem] border-t border-[#e8e6dc] bg-[#faf9f5] px-4 pb-[max(1.75rem,env(safe-area-inset-bottom,1.75rem))] pt-5 shadow-2xl dark:border-[#3d3d3a] dark:bg-[#1c1c1a]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* drag handle */}
+              <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[#d4d2c9] dark:bg-[#4d4c48]" />
+
+              {/* header */}
+              <div className="mb-3 flex items-center justify-between">
+                <p className="font-serif text-[15px] font-semibold text-[#141413] dark:text-[#faf9f5]">
+                  Review extracted text
+                </p>
+                <button
+                  type="button"
+                  onClick={handleImageReviewDiscard}
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-[#87867f] hover:bg-[#e8e6dc] dark:hover:bg-[#3d3d3a]"
+                  aria-label="Discard"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                    <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* thumbnails */}
+              {pendingImageAnalyses.some((a) => a.previewUrl) && (
+                <div className="mb-3 flex gap-2">
+                  {pendingImageAnalyses.map((a) =>
+                    a.previewUrl ? (
+                      <img
+                        key={a.id}
+                        src={a.previewUrl}
+                        alt=""
+                        className="h-16 w-16 rounded-xl border border-[#e8e6dc] object-cover dark:border-[#3d3d3a]"
+                      />
+                    ) : null
+                  )}
+                </div>
+              )}
+
+              {/* hint */}
+              <p className="mb-2 text-[12px] text-[#87867f] dark:text-[#5e5d59]">
+                Edit before adding to your note, or discard.
+              </p>
+
+              {/* editable extracted text */}
+              <textarea
+                value={pendingImageEditText}
+                onChange={(e) => setPendingImageEditText(e.target.value)}
+                rows={5}
+                autoFocus
+                className="mb-4 w-full resize-none rounded-xl border border-[#e8e6dc] bg-[#f5f4ed] px-3 py-2.5 text-[14px] leading-relaxed text-[#141413] outline-none transition focus:border-[#c96442]/50 focus:ring-2 focus:ring-[#c96442]/15 dark:border-[#3d3d3a] dark:bg-[#141413] dark:text-[#faf9f5]"
+              />
+
+              {/* actions */}
+              <div className="flex gap-2.5">
+                <button
+                  type="button"
+                  onClick={handleImageReviewDiscard}
+                  className="flex-1 rounded-xl border border-[#e8e6dc] py-2.5 text-[14px] font-medium text-[#5e5d59] transition hover:bg-[#e8e6dc] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+                >
+                  Discard
+                </button>
+                <button
+                  type="button"
+                  onClick={handleImageReviewConfirm}
+                  disabled={!pendingImageEditText.trim()}
+                  className="flex-[2] rounded-xl bg-[#c96442] py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[#a85535] disabled:opacity-40 dark:bg-[#d97757] dark:hover:bg-[#c96442]"
+                >
+                  Add to note
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 w-full flex-1 flex-col">
           {filterPills}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">

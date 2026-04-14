@@ -191,9 +191,13 @@ export function BrainDumpImageIngestBar({
   const thumbRounded = layout === "floating" ? "rounded-lg" : "rounded-xl";
   const floatingCol = layout === "floating";
 
+  const cameraInputId = "bdump-camera-input";
+  const galleryInputId = "bdump-gallery-input";
+
   const fileInputs = (
     <>
       <input
+        id={cameraInputId}
         ref={cameraRef}
         type="file"
         accept="image/*"
@@ -203,6 +207,7 @@ export function BrainDumpImageIngestBar({
         onChange={onCameraChange}
       />
       <input
+        id={galleryInputId}
         ref={galleryRef}
         type="file"
         accept="image/*"
@@ -250,24 +255,20 @@ export function BrainDumpImageIngestBar({
       ) : null}
 
       <div className={`flex items-center gap-2.5 ${floatingCol ? "justify-end" : "justify-center"}`}>
-        <button
-          type="button"
-          disabled={disabled || busy}
-          className={COMPACT_ICON_BTN}
-          onClick={() => cameraRef.current?.click()}
+        <label
+          htmlFor={cameraInputId}
           aria-label="Capture photo"
+          className={`${COMPACT_ICON_BTN} cursor-pointer ${disabled || busy ? "pointer-events-none opacity-45" : ""}`}
         >
           <CameraGlyph className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          disabled={disabled || busy}
-          className={COMPACT_ICON_BTN}
-          onClick={() => galleryRef.current?.click()}
+        </label>
+        <label
+          htmlFor={galleryInputId}
           aria-label="Add photos"
+          className={`${COMPACT_ICON_BTN} cursor-pointer ${disabled || busy ? "pointer-events-none opacity-45" : ""}`}
         >
           <PhotosGlyph className="h-4 w-4" />
-        </button>
+        </label>
       </div>
     </div>
   );
@@ -275,7 +276,6 @@ export function BrainDumpImageIngestBar({
   if (layout === "floating") {
     return (
       <>
-        {/* Inputs stay in the app subtree (not under the portal) so mobile WebViews reliably open the picker. */}
         {fileInputs}
         {!floatingPortalReady || typeof document === "undefined"
           ? null

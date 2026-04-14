@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Skeleton } from "boneyard-js/react";
+import { MathCurveLoader } from "@/components/MathCurveLoader";
 import type { BrainDumpCategory } from "@/lib/gemini";
 import {
   BrainDumpCaptureView,
@@ -107,6 +108,7 @@ export function LandingMobileQuickNoteTab({
           {error}
         </div>
       ) : null}
+      <MathCurveLoader visible={isLoading} />
       <Skeleton name="quick-note-tab" loading={isLoading} fixture={<QuickNoteFixture />}>
         <BrainDumpCaptureView
           captureEntries={captureEntries}

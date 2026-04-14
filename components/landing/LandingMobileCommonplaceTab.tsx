@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Skeleton } from "boneyard-js/react";
+import { MathCurveLoader } from "@/components/MathCurveLoader";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -430,6 +431,7 @@ export function LandingMobileCommonplaceTab() {
         </p>
       ) : null}
 
+      <MathCurveLoader visible={loading} />
       <Skeleton name="commonplace-list" loading={loading} fixture={<CommonplaceFixture />}>
         {entries.length === 0 ? (
           <EmptyState />
