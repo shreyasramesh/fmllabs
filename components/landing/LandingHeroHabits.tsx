@@ -53,6 +53,16 @@ function computeStreak(
   return streak;
 }
 
+function ConsistencyIcon() {
+  return (
+    <svg viewBox="0 0 12 12" className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden>
+      <path d="M2 9V6" />
+      <path d="M6 9V3" />
+      <path d="M10 9V5" />
+    </svg>
+  );
+}
+
 export const LandingHeroHabits = React.memo(function LandingHeroHabits({
   habits,
   completions,
@@ -147,9 +157,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
             {streak > 0 && (
               <span className="shrink-0 inline-flex items-center gap-0.5 rounded-full bg-[#c96442]/10 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[#c96442] dark:bg-[#d97757]/12 dark:text-[#d97757]">
                 {streak}
-                <svg viewBox="0 0 12 14" className="w-2.5 h-2.5" fill="#c96442" aria-hidden>
-                  <path d="M6 0C6 0 2 4.5 2 8a4 4 0 0 0 8 0C10 4.5 6 0 6 0Z" />
-                </svg>
+                <ConsistencyIcon />
               </span>
             )}
           </div>
@@ -182,9 +190,7 @@ export const LandingHeroHabits = React.memo(function LandingHeroHabits({
                 {streak > 0 && (
                   <span className="shrink-0 inline-flex items-center gap-0.5 rounded-full bg-[#c96442]/10 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[#c96442] dark:bg-[#d97757]/12 dark:text-[#d97757]">
                     {streak}
-                    <svg viewBox="0 0 12 14" className="w-2.5 h-2.5" fill="#c96442" aria-hidden>
-                      <path d="M6 0C6 0 2 4.5 2 8a4 4 0 0 0 8 0C10 4.5 6 0 6 0Z" />
-                    </svg>
+                    <ConsistencyIcon />
                   </span>
                 )}
               </button>
