@@ -24,12 +24,13 @@ interface LandingMobileTabBarProps {
 
 const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = [
   { key: "quickNote", label: "Notes", ariaLabel: "Quick Notes" },
-  { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace" },
+  { key: "nutrition", label: "Food", ariaLabel: "Nutrition" },
+  { key: "exercise", label: "Move", ariaLabel: "Exercise" },
+  { key: "spend", label: "Spend", ariaLabel: "Spend" },
   { key: "weight", label: "Weight", ariaLabel: "Weight" },
   { key: "sleep", label: "Sleep", ariaLabel: "Sleep" },
   { key: "habits", label: "Habits", ariaLabel: "Habits" },
-  { key: "nutrition", label: "Food", ariaLabel: "Nutrition" },
-  { key: "exercise", label: "Move", ariaLabel: "Exercise" },
+  { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace" },
   { key: "metacognition", label: "Meta", ariaLabel: "Metacognition" },
   { key: "andMore", label: "More", ariaLabel: "Library and more" },
 ];
