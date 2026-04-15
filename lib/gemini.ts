@@ -3412,7 +3412,8 @@ export type BrainDumpCategory =
   | "nutrition"
   | "exercise"
   | "weight"
-  | "sleep";
+  | "sleep"
+  | "spend";
 
 export interface BrainDumpResult {
   category: BrainDumpCategory;
@@ -3428,6 +3429,12 @@ export interface BrainDumpResult {
   weightKg?: number;
   sleepHours?: number;
   hrvMs?: number | null;
+  /** Spend entry: amount in the original currency (e.g. 12 for $12). */
+  spendAmount?: number;
+  /** ISO 4217 currency code, default "USD". */
+  spendCurrency?: string;
+  /** Short description of what was purchased / spent on. */
+  spendMemo?: string;
   /** When set (short-input bundled categorize), persist skips a second Gemini finalize call. */
   precomputedCalorieEstimate?: CalorieTrackingFinalizeResult;
 }
@@ -3444,6 +3451,7 @@ function normalizeBrainDumpEntry(
     "exercise",
     "weight",
     "sleep",
+    "spend",
   ];
   const category = validCategories.includes(parsed.category as BrainDumpCategory)
     ? (parsed.category as BrainDumpCategory)
@@ -3451,6 +3459,21 @@ function normalizeBrainDumpEntry(
 
   const toStr = (v: unknown) => (typeof v === "string" ? v.trim() : undefined);
   const toNum = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : undefined);
+
+  // Parse spend amount — accept number or dollar-prefixed string like "$12" or "12.50"
+  let spendAmount: number | undefined;
+  if (category === "spend") {
+    const raw = parsed.spendAmount;
+    if (typeof raw === "number" && Number.isFinite(raw) && raw > 0) {
+      spendAmount = raw;
+    } else if (typeof raw === "string") {
+      const n = Number.parseFloat(raw.replace(/[$,]/g, ""));
+      if (Number.isFinite(n) && n > 0) spendAmount = n;
+    }
+  }
+
+  const rawCurrency = typeof parsed.spendCurrency === "string" ? parsed.spendCurrency.trim().toUpperCase() : "";
+  const spendCurrency = /^[A-Z]{3}$/.test(rawCurrency) ? rawCurrency : "USD";
 
   const base: BrainDumpResult = {
     category,
@@ -3466,6 +3489,11 @@ function normalizeBrainDumpEntry(
     weightKg: toNum(parsed.weightKg),
     sleepHours: toNum(parsed.sleepHours),
     hrvMs: parsed.hrvMs === null ? null : toNum(parsed.hrvMs),
+    ...(category === "spend" && spendAmount != null ? {
+      spendAmount,
+      spendCurrency,
+      spendMemo: toStr(parsed.spendMemo) ?? toStr(parsed.title) ?? fallbackTitle,
+    } : {}),
   };
 
   const ceRaw = parsed.calorieEstimate;
@@ -3537,7 +3565,7 @@ SHORT INPUT — bundled calorie estimation (required):
   const result = await model.generateContent(
     `You are an AI assistant that categorizes a user's voice brain-dump into one or more structured entries.
 ${bundleCalorieBlock}
-Categories (same rules apply as before):
+Categories:
 1. "reflection" — journaling, emotions, reviewing the day, gratitude, processing experiences.
 2. "concept" — idea, mental model, framework, insight to remember.
 3. "experiment" — behavior change, habit, practice, challenge to try.
@@ -3545,10 +3573,13 @@ Categories (same rules apply as before):
 5. "exercise" — workout or physical activity logging.
 6. "weight" — body weight report.
 7. "sleep" — sleep duration/quality (and optional HRV).
+8. "spend" — purchase, expense, or money spent (any mention of a dollar amount, price, cost, or payment).
 
 IMPORTANT — Multiple entries:
-- If the transcript clearly contains DISTINCT items that belong to DIFFERENT categories (e.g. "I had pizza for lunch" AND "ran 5 miles" AND "feeling grateful today"), return SEPARATE entries — one JSON object per distinct item.
-- If the whole transcript is one coherent note (even if long), return a SINGLE entry.
+- If the transcript clearly contains DISTINCT items that belong to DIFFERENT categories, return SEPARATE entries — one JSON object per distinct item.
+- CRITICAL: When a note mentions both a food/drink AND a price (e.g. "I ate a $12 burger"), ALWAYS return TWO entries: one "spend" (the cost) and one "nutrition" (the food). The food/drink is logged for nutrition regardless of its price.
+- Similarly, "$15 coffee" → spend + nutrition; "paid $30 for a gym class" → spend + exercise.
+- If the whole transcript is one coherent note with no mixed categories, return a SINGLE entry.
 - Do not split a single meal or single workout into multiple entries.
 - Maximum 8 entries. Merge minor fragments with the closest entry.
 - Each entry must include "category", "title", and ALL required fields for that category (same as below).
@@ -3561,6 +3592,7 @@ Per-entry fields (match category):
 - "exercise": "exerciseText" (clean activity description for that item only).
 - "weight": "weightKg" (kg; convert lb via divide by 2.205, 1 decimal).
 - "sleep": "sleepHours", "hrvMs" (number or null).
+- "spend": "spendAmount" (numeric amount, no currency symbol), "spendCurrency" (ISO 4217 code, default "USD"), "spendMemo" (short description of what was purchased, max 120 chars).
 
 Return ONLY valid JSON:
 { "entries": [ { ... }, ... ] }

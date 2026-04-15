@@ -14,6 +14,7 @@ import {
 import type { BrainDumpCategory, BrainDumpResult, CalorieTrackingNutritionFacts } from "@/lib/gemini";
 import { completeExerciseFuelEstimate, finalizeCalorieTrackingEstimate } from "@/lib/gemini";
 import type { CalorieTrackingFinalizeResult } from "@/lib/gemini";
+import { formatSpendJournalTranscript, spendJournalTitle } from "@/lib/spend-journal";
 import { resolveJournalEntryDateParts } from "@/lib/journal-entry-date";
 import type { ClientQuickCalorieSnapshot } from "@/lib/quick-calorie-snapshot";
 
@@ -25,6 +26,7 @@ const VALID_CATEGORIES: BrainDumpCategory[] = [
   "exercise",
   "weight",
   "sleep",
+  "spend",
 ];
 
 function defaultNutritionFacts() {
@@ -119,6 +121,11 @@ export function validateBrainDumpFields(fields: BrainDumpResult): string | null 
     case "sleep":
       if (fields.sleepHours == null || !Number.isFinite(fields.sleepHours)) return "Valid sleep hours required";
       if (fields.sleepHours < 0 || fields.sleepHours > 24) return "Sleep hours out of range";
+      break;
+    case "spend":
+      if (fields.spendAmount == null || !Number.isFinite(fields.spendAmount) || fields.spendAmount <= 0)
+        return "Valid spend amount is required";
+      if (!fields.spendMemo?.trim()) return "Spend memo is required";
       break;
     default:
       return "Unknown category";
@@ -521,6 +528,18 @@ export async function persistBrainDumpFields(
   if (category === "weight") {
     const weightKg = Math.round(fields.weightKg! * 10) / 10;
     const saved = await addWeightEntry(userId, weightKg);
+    return { id: saved._id, category };
+  }
+
+  if (category === "spend") {
+    const amount = fields.spendAmount!;
+    const currency = fields.spendCurrency ?? "USD";
+    const memo = fields.spendMemo!.trim();
+    const journalTitle = spendJournalTitle(memo, amount, currency);
+    const transcriptText = formatSpendJournalTranscript(memo, { amount, currency });
+    const saved = await saveJournalTranscript(userId, transcriptText, journalTitle, entryDate, {
+      journalCategory: "spend",
+    });
     return { id: saved._id, category };
   }
 

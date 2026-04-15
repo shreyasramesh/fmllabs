@@ -16219,7 +16219,7 @@ export default function ChatPage() {
                             onSaved={(categories) => {
                               if (
                                 categories.some(
-                                  (c) => c === "reflection" || c === "nutrition" || c === "exercise"
+                                  (c) => c === "reflection" || c === "nutrition" || c === "exercise" || c === "spend"
                                 )
                               ) {
                                 refetchJournalTranscripts();
