@@ -63,6 +63,8 @@ interface LandingMobileQuickNoteTabProps {
   onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
   /** When true, hides the floating camera/gallery FAB (e.g. a modal is open on top). */
   hideImageIngestBar?: boolean;
+  /** Called when user pulls down to refresh. */
+  onRefresh?: () => Promise<void> | void;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -86,6 +88,7 @@ export function LandingMobileQuickNoteTab({
   onEditContextEntry,
   onReorderContextEntry,
   hideImageIngestBar = false,
+  onRefresh,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -144,6 +147,7 @@ export function LandingMobileQuickNoteTab({
           onEditContextEntry={onEditContextEntry}
           onReorderContextEntry={onReorderContextEntry}
           hideImageIngestBar={hideImageIngestBar}
+          onRefresh={onRefresh}
           daySummary={daySummary}
           journalStreak={journalStreak}
           prevDayWeightKg={prevDayWeightKg ?? null}

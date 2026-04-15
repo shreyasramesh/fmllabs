@@ -16229,6 +16229,11 @@ export default function ChatPage() {
                               if (categories.some((c) => c === "weight")) void fetchWeightTracker();
                               if (categories.some((c) => c === "sleep")) void refetchSleepEntries();
                             }}
+                            onRefresh={async () => {
+                              refetchJournalTranscripts();
+                              refetchSleepEntries();
+                              await fetchWeightTracker();
+                            }}
                           />
                         }
                       />

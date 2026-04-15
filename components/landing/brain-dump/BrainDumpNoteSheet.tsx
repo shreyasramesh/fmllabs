@@ -1395,6 +1395,8 @@ interface CaptureViewProps {
   onReorderContextEntry?: (rowId: string, newSortMs: number) => Promise<void>;
   /** When true, hides the floating camera/gallery buttons (e.g. a modal is open on top). */
   hideImageIngestBar?: boolean;
+  /** Pull-to-refresh callback — called when the user pulls down past the threshold. */
+  onRefresh?: () => Promise<void> | void;
 }
 
 type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
@@ -1446,6 +1448,7 @@ export function BrainDumpCaptureView({
   prevDaySleepH = null,
   onReorderContextEntry,
   hideImageIngestBar = false,
+  onRefresh,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -1454,6 +1457,44 @@ export function BrainDumpCaptureView({
   }, []);
 
   const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
+
+  // ─── Pull-to-refresh ───────────────────────────────────────────────────────
+  const PTR_THRESHOLD = 72;
+  const PTR_MAX_PULL = 110;
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const ptrTouchStartYRef = useRef<number | null>(null);
+  const [ptrPullY, setPtrPullY] = useState(0);
+  const [ptrRefreshing, setPtrRefreshing] = useState(false);
+
+  const handlePtrTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!onRefresh) return;
+    const container = scrollContainerRef.current;
+    if (!container || container.scrollTop > 0) return;
+    ptrTouchStartYRef.current = e.touches[0]?.clientY ?? null;
+  }, [onRefresh]);
+
+  const handlePtrTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!onRefresh || ptrTouchStartYRef.current === null || ptrRefreshing) return;
+    const dy = (e.touches[0]?.clientY ?? 0) - ptrTouchStartYRef.current;
+    if (dy <= 0) { setPtrPullY(0); return; }
+    // Rubber-band resistance
+    const pull = Math.min(PTR_MAX_PULL, dy * 0.45);
+    setPtrPullY(pull);
+  }, [onRefresh, ptrRefreshing]);
+
+  const handlePtrTouchEnd = useCallback(() => {
+    if (!onRefresh) return;
+    ptrTouchStartYRef.current = null;
+    if (ptrRefreshing) return;
+    if (ptrPullY >= PTR_THRESHOLD) {
+      setPtrRefreshing(true);
+      setPtrPullY(0);
+      void Promise.resolve(onRefresh()).finally(() => setPtrRefreshing(false));
+    } else {
+      setPtrPullY(0);
+    }
+  }, [onRefresh, ptrPullY, ptrRefreshing]);
+  // ──────────────────────────────────────────────────────────────────────────
 
   // Image review state — analyses are held here until the user confirms or discards
   const [pendingImageAnalyses, setPendingImageAnalyses] = useState<JournalImageAnalysis[] | null>(null);
@@ -2152,7 +2193,47 @@ export function BrainDumpCaptureView({
           : null}
 
         <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 min-w-0 w-full flex-1 flex-col">
-          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]">
+          <div
+            ref={scrollContainerRef}
+            className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]"
+            onTouchStart={handlePtrTouchStart}
+            onTouchMove={handlePtrTouchMove}
+            onTouchEnd={handlePtrTouchEnd}
+          >
+            {/* Pull-to-refresh indicator */}
+            {onRefresh ? (
+              <div
+                aria-hidden
+                style={{
+                  height: ptrRefreshing ? PTR_THRESHOLD : ptrPullY,
+                  transition: ptrPullY === 0 ? "height 0.25s ease" : undefined,
+                  overflow: "hidden",
+                }}
+                className="flex shrink-0 items-end justify-center"
+              >
+                <div
+                  style={{
+                    opacity: ptrRefreshing ? 1 : Math.min(1, ptrPullY / PTR_THRESHOLD),
+                    transform: ptrRefreshing
+                      ? "none"
+                      : `rotate(${Math.min(180, (ptrPullY / PTR_THRESHOLD) * 180)}deg)`,
+                    transition: ptrPullY === 0 ? "opacity 0.25s ease, transform 0.25s ease" : undefined,
+                  }}
+                  className="mb-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#e8e6dc] text-[#87867f] shadow-sm dark:bg-[#3d3d3a] dark:text-[#a09e97]"
+                >
+                  {ptrRefreshing ? (
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a10 10 0 100 10z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5v14M5 12l7 7 7-7" />
+                    </svg>
+                  )}
+                </div>
+              </div>
+            ) : null}
             {displayRows.length === 0 && captureEntries.length === 0 ? (
               <div className="flex flex-col items-center gap-1 py-8 text-center">
                 <p className="text-sm text-neutral-400 dark:text-neutral-500">Nothing logged yet</p>
