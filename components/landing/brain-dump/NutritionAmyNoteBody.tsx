@@ -481,7 +481,7 @@ export function DeleteEntryIcon({ className = "h-5 w-5" }: { className?: string 
 }
 
 const HABIT_PILL_INLINE =
-  "inline-flex items-center gap-0.5 rounded-full border border-violet-200 bg-violet-50 px-1 py-px text-[7px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+  "inline-flex items-center gap-0.5 rounded-full border border-[#c96442]/28 bg-[#c96442]/[0.09] px-1 py-px text-[7px] font-medium text-[#a85535] dark:border-[#d97757]/35 dark:bg-[#d97757]/12 dark:text-[#e8a088]";
 
 function HabitTagIcon({ className }: { className?: string }) {
   return (

@@ -10,6 +10,7 @@ import {
   type QuickNoteDaySummary,
 } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { useBrainDumpCapture } from "@/components/landing/brain-dump/useBrainDumpCapture";
+import type { LandingHabitCompletionMap } from "@/components/landing/types";
 
 // ─── Fixture: shown to boneyard CLI so it can snapshot real layout ─────────────
 function QuickNoteFixture() {
@@ -65,6 +66,11 @@ interface LandingMobileQuickNoteTabProps {
   hideImageIngestBar?: boolean;
   /** Called when user pulls down to refresh. */
   onRefresh?: () => Promise<void> | void;
+  /** Hero habits: bottom strip on Quick Notes to check off today. */
+  quickNoteHeroHabits?: Array<{ _id: string; name: string }>;
+  quickNoteHeroHabitCompletions?: LandingHabitCompletionMap;
+  onQuickNoteToggleHeroHabit?: (habitId: string, dateKey: string) => void;
+  onQuickNoteOpenHeroHabit?: (habitId: string) => void;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -89,6 +95,10 @@ export function LandingMobileQuickNoteTab({
   onReorderContextEntry,
   hideImageIngestBar = false,
   onRefresh,
+  quickNoteHeroHabits = [],
+  quickNoteHeroHabitCompletions = {},
+  onQuickNoteToggleHeroHabit,
+  onQuickNoteOpenHeroHabit,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -108,14 +118,19 @@ export function LandingMobileQuickNoteTab({
   }, [startRecording]);
 
   return (
-    <div className="flex min-h-0 min-w-0 w-full flex-col px-3 sm:px-4">
+    <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden px-3 sm:px-4 [&_[data-boneyard-content]]:flex [&_[data-boneyard-content]]:min-h-0 [&_[data-boneyard-content]]:flex-1 [&_[data-boneyard-content]]:flex-col">
       {error ? (
         <div className="mb-3 shrink-0 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
           {error}
         </div>
       ) : null}
       <MathCurveLoader visible={isLoading} />
-      <Skeleton name="quick-note-tab" loading={isLoading} fixture={<QuickNoteFixture />}>
+      <Skeleton
+        name="quick-note-tab"
+        loading={isLoading}
+        fixture={<QuickNoteFixture />}
+        className="flex min-h-0 min-w-0 flex-1 flex-col"
+      >
         <BrainDumpCaptureView
           captureEntries={captureEntries}
           setCaptureEntries={setCaptureEntries}
@@ -152,6 +167,10 @@ export function LandingMobileQuickNoteTab({
           journalStreak={journalStreak}
           prevDayWeightKg={prevDayWeightKg ?? null}
           prevDaySleepH={prevDaySleepH ?? null}
+          quickNoteHeroHabits={quickNoteHeroHabits}
+          quickNoteHeroHabitCompletions={quickNoteHeroHabitCompletions}
+          onQuickNoteToggleHeroHabit={onQuickNoteToggleHeroHabit}
+          onQuickNoteOpenHeroHabit={onQuickNoteOpenHeroHabit}
         />
       </Skeleton>
     </div>

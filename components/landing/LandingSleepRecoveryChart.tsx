@@ -222,11 +222,11 @@ export function LandingSleepRecoveryChart({
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div className="flex flex-col gap-5">
         {!chartsOnly ? (
-          <div className="flex flex-col items-center gap-1 text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c96442] dark:text-[#d97757]">
+          <div className="flex flex-col gap-1 text-left">
+            <p className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f] dark:text-[#87867f]">
               Sleep &amp; Recovery
             </p>
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
+            <h2 className="mt-0.5 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">
               Dial In Your Sleep
             </h2>
           </div>

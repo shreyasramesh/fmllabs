@@ -31,6 +31,13 @@ import type { HabitBucket } from "./habit-buckets";
 export type { HabitBucket } from "./habit-buckets";
 export { HABIT_BUCKET_IDS, isHabitBucket } from "./habit-buckets";
 
+/** Initial window for GET /api/sessions/[id] (older messages loaded on demand). */
+export const DEFAULT_MESSAGE_PAGE_SIZE = 150;
+/** Recent messages loaded per chat POST for model context (tail of thread). */
+export const CHAT_CONTEXT_MESSAGE_LIMIT = 200;
+/** Default page size for transcript list pagination. */
+export const DEFAULT_TRANSCRIPT_PAGE_SIZE = 200;
+
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/and-then-what";
 
 let client: MongoClient | null = null;
@@ -67,6 +74,11 @@ const MAX_POOL_SIZE = parseInt(process.env.MONGODB_MAX_POOL_SIZE || "10", 10) ||
 // Close idle connections after 60s to free up slots when traffic is bursty.
 const MAX_IDLE_TIME_MS = 60_000;
 
+/**
+ * Ops note: place the Atlas cluster in the same region as the app (e.g. Vercel deployment
+ * region) to avoid multi-hop latency. For many serverless instances, consider a shared cache
+ * (Redis/Upstash) for hot read paths—in-process TTL caches in this module are per-instance.
+ */
 export async function getDb(): Promise<Db> {
   if (db) return db;
   client = new MongoClient(uri, {
@@ -726,21 +738,151 @@ export async function getSession(sessionId: string, userId: string): Promise<(Se
   } as Session & { _id: string });
 }
 
-export async function getMessages(sessionId: string, userId: string): Promise<Message[]> {
-  const session = await getSession(sessionId, userId);
-  if (!session) return [];
-  const database = await getDb();
-  const messages = await database
-    .collection<Message>("messages")
-    .find({ sessionId })
-    .sort({ createdAt: 1 })
-    .toArray();
-  return messages.map((m) =>
+/** Cursor for loading older chat messages (compound sort: createdAt desc, _id desc). */
+export type MessagePaginationCursor = { createdAt: Date; _id: ObjectId };
+
+export function encodeMessagePaginationCursor(c: MessagePaginationCursor): string {
+  return Buffer.from(
+    JSON.stringify({ t: c.createdAt.getTime(), id: c._id.toString() }),
+    "utf8"
+  ).toString("base64url");
+}
+
+export function decodeMessagePaginationCursor(s: string): MessagePaginationCursor | null {
+  try {
+    const o = JSON.parse(Buffer.from(s, "base64url").toString("utf8")) as { t: unknown; id: unknown };
+    if (typeof o.t !== "number" || typeof o.id !== "string") return null;
+    return { createdAt: new Date(o.t), _id: new ObjectId(o.id) };
+  } catch {
+    return null;
+  }
+}
+
+export type GetMessagesOptions = {
+  /** When false, return only a recent window (see limit / beforeCursor). Default: full thread. */
+  fullHistory?: boolean;
+  limit?: number;
+  beforeCursor?: MessagePaginationCursor | null;
+  /** If provided, skips an extra sessions lookup (must be the result of getSession for this id). */
+  verifiedSession?: (Session & { _id: string }) | null;
+};
+
+export type MessagesRecentPage = {
+  messages: Message[];
+  hasMoreOlder: boolean;
+  /** Pass as `before` query param on GET /api/sessions/[id] to load older messages. */
+  nextCursor: string | null;
+};
+
+function decryptMessageDocs(docs: Message[]): Message[] {
+  return docs.map((m) =>
     decryptMessageFields({
       ...m,
       _id: m._id?.toString(),
     })
   );
+}
+
+/**
+ * Loads chat messages. Omit options or set fullHistory (default) for the entire thread.
+ * Pass fullHistory: false to fetch a recent tail or a page of older messages.
+ */
+export async function getMessages(
+  sessionId: string,
+  userId: string,
+  opts?: GetMessagesOptions
+): Promise<Message[]> {
+  const useRecentWindow =
+    opts != null &&
+    (opts.fullHistory === false || opts.limit != null || opts.beforeCursor != null);
+
+  let session = opts?.verifiedSession;
+  if (session === undefined) {
+    session = await getSession(sessionId, userId);
+  }
+  if (!session) return [];
+
+  const database = await getDb();
+
+  if (!useRecentWindow) {
+    const messages = await database
+      .collection<Message>("messages")
+      .find({ sessionId })
+      .sort({ createdAt: 1 })
+      .toArray();
+    return decryptMessageDocs(messages);
+  }
+
+  const limit = opts!.limit ?? DEFAULT_MESSAGE_PAGE_SIZE;
+  const filter: Record<string, unknown> = { sessionId };
+  if (opts!.beforeCursor) {
+    const t = opts!.beforeCursor.createdAt;
+    const oid = opts!.beforeCursor._id;
+    filter.$or = [{ createdAt: { $lt: t } }, { createdAt: t, _id: { $lt: oid } }];
+  }
+
+  const raw = await database
+    .collection<Message>("messages")
+    .find(filter)
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(limit)
+    .toArray();
+
+  const chronological = raw.slice().reverse();
+  return decryptMessageDocs(chronological);
+}
+
+/** Recent messages plus hasMore for session hydration (fetches limit+1 rows). */
+export async function getMessagesRecentPage(
+  sessionId: string,
+  userId: string,
+  args: {
+    limit: number;
+    beforeCursor?: MessagePaginationCursor | null;
+    verifiedSession?: (Session & { _id: string }) | null;
+  }
+): Promise<MessagesRecentPage> {
+  let session = args.verifiedSession;
+  if (session === undefined) {
+    session = await getSession(sessionId, userId);
+  }
+  if (!session) {
+    return { messages: [], hasMoreOlder: false, nextCursor: null };
+  }
+
+  const database = await getDb();
+  const filter: Record<string, unknown> = { sessionId };
+  if (args.beforeCursor) {
+    const t = args.beforeCursor.createdAt;
+    const oid = args.beforeCursor._id;
+    filter.$or = [{ createdAt: { $lt: t } }, { createdAt: t, _id: { $lt: oid } }];
+  }
+
+  const fetchN = args.limit + 1;
+  const raw = await database
+    .collection<Message>("messages")
+    .find(filter)
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(fetchN)
+    .toArray();
+
+  const hasMoreOlder = raw.length > args.limit;
+  const windowDocs = hasMoreOlder ? raw.slice(0, args.limit) : raw;
+  const chronological = windowDocs.slice().reverse();
+  const messages = decryptMessageDocs(chronological);
+  const oldest = windowDocs.length > 0 ? windowDocs[windowDocs.length - 1] : null;
+  const rawId = oldest ? (oldest as { _id?: ObjectId | string })._id : undefined;
+  const oldestOid = rawId ? (rawId instanceof ObjectId ? rawId : new ObjectId(String(rawId))) : null;
+  const nextCursor =
+    hasMoreOlder && oldest && oldestOid
+      ? encodeMessagePaginationCursor({ createdAt: oldest.createdAt, _id: oldestOid })
+      : null;
+  return { messages, hasMoreOlder, nextCursor };
+}
+
+export async function countMessages(sessionId: string): Promise<number> {
+  const database = await getDb();
+  return database.collection<Message>("messages").countDocuments({ sessionId });
 }
 
 export async function truncateMessagesAfter(
@@ -800,6 +942,38 @@ export async function appendMessage(
     createdAt: new Date(),
   }) as Message;
   await database.collection<Message>("messages").insertOne(doc);
+  await database.collection<SessionDoc>("sessions").updateOne(
+    { _id: id, userId },
+    { $set: { updatedAt: new Date() } }
+  );
+}
+
+/** Batch-insert chat lines with monotonic timestamps (single round trip + one session touch). */
+export async function appendMessagesBatch(
+  sessionId: string,
+  userId: string,
+  items: { role: "user" | "assistant"; content: string }[]
+): Promise<void> {
+  if (items.length === 0) return;
+  const database = await getDb();
+  let id: ObjectId;
+  try {
+    id = new ObjectId(sessionId);
+  } catch {
+    throw new Error("Invalid session ID");
+  }
+  const session = await database.collection<SessionDoc>("sessions").findOne({ _id: id, userId });
+  if (!session) throw new Error("Session not found");
+  const base = Date.now();
+  const docs = items.map((m, i) =>
+    encryptMessageFields({
+      sessionId,
+      role: m.role,
+      content: m.content,
+      createdAt: new Date(base + i),
+    }) as Message
+  );
+  await database.collection<Message>("messages").insertMany(docs);
   await database.collection<SessionDoc>("sessions").updateOne(
     { _id: id, userId },
     { $set: { updatedAt: new Date() } }
@@ -2069,6 +2243,72 @@ export async function getSavedTranscripts(
   ) as (SavedTranscript & { _id: string })[];
   transcriptsCache.set(cacheKey, result, TTL_2M);
   return result;
+}
+
+export type TranscriptPaginationCursor = { updatedAt: Date; _id: ObjectId };
+
+export function encodeTranscriptPaginationCursor(c: TranscriptPaginationCursor): string {
+  return Buffer.from(
+    JSON.stringify({ t: c.updatedAt.getTime(), id: c._id.toString() }),
+    "utf8"
+  ).toString("base64url");
+}
+
+export function decodeTranscriptPaginationCursor(s: string): TranscriptPaginationCursor | null {
+  try {
+    const o = JSON.parse(Buffer.from(s, "base64url").toString("utf8")) as { t: unknown; id: unknown };
+    if (typeof o.t !== "number" || typeof o.id !== "string") return null;
+    return { updatedAt: new Date(o.t), _id: new ObjectId(o.id) };
+  } catch {
+    return null;
+  }
+}
+
+export type SavedTranscriptsRecentPage = {
+  transcripts: (SavedTranscript & { _id: string })[];
+  hasMore: boolean;
+  nextCursor: string | null;
+};
+
+/** Paginated transcripts (not cached — use for API list endpoints). */
+export async function getSavedTranscriptsPage(
+  userId: string,
+  opts: {
+    sourceType?: "journal" | "youtube";
+    slim?: boolean;
+    limit: number;
+    beforeCursor?: TranscriptPaginationCursor | null;
+  }
+): Promise<SavedTranscriptsRecentPage> {
+  const database = await getDb();
+  const filter: Record<string, unknown> = { userId };
+  if (opts.sourceType) filter.sourceType = opts.sourceType;
+  if (opts.beforeCursor) {
+    const t = opts.beforeCursor.updatedAt;
+    const oid = opts.beforeCursor._id;
+    filter.$or = [{ updatedAt: { $lt: t } }, { updatedAt: t, _id: { $lt: oid } }];
+  }
+  const projection = opts.slim ? { extractedConcepts: 0 } : undefined;
+  let q = database
+    .collection<SavedTranscriptDoc>("transcripts")
+    .find(filter)
+    .sort({ updatedAt: -1, _id: -1 })
+    .limit(opts.limit + 1);
+  if (projection) q = q.project(projection);
+  const docs = await q.toArray();
+  const hasMore = docs.length > opts.limit;
+  const slice = hasMore ? docs.slice(0, opts.limit) : docs;
+  const transcripts = slice.map((d) =>
+    decryptTranscriptFields({ ...d, _id: d._id.toString() } as SavedTranscript & { _id: string })
+  ) as (SavedTranscript & { _id: string })[];
+  const oldest = slice[slice.length - 1];
+  const rawTid = oldest ? (oldest as { _id?: ObjectId | string })._id : undefined;
+  const oldestOid = rawTid ? (rawTid instanceof ObjectId ? rawTid : new ObjectId(String(rawTid))) : null;
+  const nextCursor =
+    hasMore && oldest && oldestOid
+      ? encodeTranscriptPaginationCursor({ updatedAt: oldest.updatedAt, _id: oldestOid })
+      : null;
+  return { transcripts, hasMore, nextCursor };
 }
 
 export async function getSavedTranscript(

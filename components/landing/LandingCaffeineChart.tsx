@@ -199,10 +199,10 @@ export function LandingCaffeineChart({ intakes, focusWindow }: LandingCaffeineCh
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-2">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c96442] dark:text-[#d97757]">
+          <p className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f] dark:text-[#87867f]">
             Caffeine
           </p>
-          <h2 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
+          <h2 className="mt-0.5 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">
             Caffeine Decay Curve
           </h2>
         </div>

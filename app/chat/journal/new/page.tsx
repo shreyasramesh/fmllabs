@@ -135,7 +135,7 @@ export default function JournalNewPage() {
     let cancelled = false;
     setLoadingEntries(true);
     setEntriesError(null);
-    fetch("/api/me/transcripts", { cache: "no-store" })
+    fetch("/api/me/transcripts?full=1", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data) => {
         if (cancelled) return;

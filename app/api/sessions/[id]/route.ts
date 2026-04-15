@@ -2,17 +2,21 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import {
   getSession,
-  getMessages,
+  getMessagesRecentPage,
   getLongTermMemory,
   deleteSession,
   addMentalModelTag,
   updateSession,
   expandSession,
+  DEFAULT_MESSAGE_PAGE_SIZE,
+  decodeMessagePaginationCursor,
+  type Message,
 } from "@/lib/db";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
+import { perfAsync } from "@/lib/perf-timing";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { userId } = await auth();
@@ -26,11 +30,40 @@ export async function GET(
     return NextResponse.json({ error: "Session ID required" }, { status: 400 });
   }
   try {
-    let session = await getSession(id, userId);
+    const url = new URL(request.url);
+    const limitRaw = url.searchParams.get("messagesLimit");
+    const limit =
+      limitRaw != null && limitRaw !== ""
+        ? Math.min(500, Math.max(1, parseInt(limitRaw, 10) || DEFAULT_MESSAGE_PAGE_SIZE))
+        : DEFAULT_MESSAGE_PAGE_SIZE;
+    const beforeParam = url.searchParams.get("before");
+    const beforeCursor = beforeParam ? decodeMessagePaginationCursor(beforeParam) : null;
+    if (beforeParam && !beforeCursor) {
+      return NextResponse.json({ error: "Invalid before cursor" }, { status: 400 });
+    }
+
+    let session = await perfAsync("GET /api/sessions/[id]", "getSession", () =>
+      getSession(id, userId)
+    );
     if (!session) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
-    let messages = session.isCollapsed ? [] : await getMessages(id, userId);
+    let messages: Message[] = [];
+    let messagesMeta: { hasMoreOlder: boolean; nextCursor: string | null } = {
+      hasMoreOlder: false,
+      nextCursor: null,
+    };
+    if (!session.isCollapsed) {
+      const page = await perfAsync("GET /api/sessions/[id]", "getMessagesRecentPage", () =>
+        getMessagesRecentPage(id, userId, {
+          limit,
+          beforeCursor: beforeCursor ?? undefined,
+          verifiedSession: session,
+        })
+      );
+      messages = page.messages;
+      messagesMeta = { hasMoreOlder: page.hasMoreOlder, nextCursor: page.nextCursor };
+    }
     let longTermMemory: Awaited<ReturnType<typeof getLongTermMemory>> = null;
     if (session.longTermMemoryId && session.isCollapsed) {
       longTermMemory = await getLongTermMemory(session.longTermMemoryId, userId);
@@ -38,12 +71,18 @@ export async function GET(
         // LTM was deleted; expand session and return full conversation
         await expandSession(id, userId);
         session = (await getSession(id, userId))!;
-        messages = await getMessages(id, userId);
+        const page = await getMessagesRecentPage(id, userId, {
+          limit,
+          verifiedSession: session,
+        });
+        messages = page.messages;
+        messagesMeta = { hasMoreOlder: page.hasMoreOlder, nextCursor: page.nextCursor };
       }
     }
     return NextResponse.json({
       session,
       messages,
+      messagesMeta,
       longTermMemory: longTermMemory ?? undefined,
     });
   } catch (err) {

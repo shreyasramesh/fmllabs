@@ -17,7 +17,6 @@ import { LandingMobileNutritionTab } from "@/components/landing/LandingMobileNut
 import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExerciseTab";
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
 import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
-import { LandingMobileHabitsTab } from "@/components/landing/LandingMobileHabitsTab";
 import { LandingMobileSpendTab } from "@/components/landing/LandingMobileSpendTab";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
@@ -177,10 +176,11 @@ function ModuleCard({
   description?: string;
   children: React.ReactNode;
 }) {
+  const hasDistinctTitle = title.trim().toLowerCase() !== eyebrow.trim().toLowerCase();
   return (
     <section className="landing-module-glass overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <h3 className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">{eyebrow}</h3>
-      {title && (
+      {title && hasDistinctTitle && (
         <p className="mt-0.5 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">{title}</p>
       )}
       {description && (
@@ -884,18 +884,6 @@ export function LandingShell({
             onOpenGoals={onOpenGoals}
           />
         );
-      case "habits":
-        return (
-          <LandingMobileHabitsTab
-            heroHabits={heroHabits}
-            heroHabitCompletions={heroHabitCompletions}
-            onToggleHabitCompletion={onToggleHabitCompletion}
-            onOpenHabitDetail={onOpenHabitDetail}
-            onReorderHeroHabits={onReorderHeroHabits}
-            onOpenHabits={onOpenHabits}
-            heroHabitsLabel={heroHabitsLabel}
-          />
-        );
       case "metacognition":
         return null;
       case "andMore":
@@ -906,8 +894,8 @@ export function LandingShell({
   return (
     <>
       {/* ===== Mobile tabbed layout ===== */}
-      <div className="w-full min-w-0 animate-fade-in-up md:hidden">
-        <div className="pb-20">
+      <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col animate-fade-in-up md:hidden">
+        <div className="flex min-h-0 flex-1 flex-col pb-20">
           {activeMobileTab !== "metacognition" ? (
             mobileTabContent
           ) : (
@@ -1064,7 +1052,7 @@ export function LandingShell({
       </div>
 
       {/* ===== Desktop stacked layout (unchanged) ===== */}
-    <div className="hidden md:block w-full max-w-[88rem] min-w-0 overflow-hidden space-y-4 animate-fade-in-up">
+    <div className="hidden md:block w-full max-w-[88rem] min-w-0 space-y-4 animate-fade-in-up">
       <LandingDateStrip hint={dateStripHint} items={dateItems} />
 
       {/* 1. Focus Canvas + Hero Habits + Quick Capture */}

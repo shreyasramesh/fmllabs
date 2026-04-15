@@ -9,13 +9,14 @@ interface LandingDateStripProps {
   items: LandingDateItem[];
 }
 
-/** After load/refresh, pan the strip horizontally so the current day (rightmost in the week) is in view. */
+/** After load/refresh, pan the strip horizontally on mobile so the current day is in view. */
 export function LandingDateStrip({ hint, items }: LandingDateStripProps) {
   const stripScrollRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const el = stripScrollRef.current;
     if (!el || items.length === 0) return;
+    if (window.matchMedia("(min-width: 768px)").matches) return;
     const scrollToToday = () => {
       const max = el.scrollWidth - el.clientWidth;
       if (max > 0) {
@@ -32,15 +33,15 @@ export function LandingDateStrip({ hint, items }: LandingDateStripProps) {
     <section className="landing-module-glass w-full overflow-hidden rounded-[1.75rem] border p-4 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
       <p className="text-sm text-[#4d4c48] dark:text-[#b0aea5] leading-relaxed">{hint}</p>
 
-      <div ref={stripScrollRef} className="mt-4 overflow-x-auto">
-        <div className="flex min-w-max gap-2 py-2 lg:grid lg:min-w-0 lg:grid-cols-7">
+      <div ref={stripScrollRef} className="mt-4 overflow-x-auto md:overflow-visible">
+        <div className="flex min-w-max gap-2 py-2 md:grid md:min-w-0 md:grid-cols-7">
           {items.map((item) => (
             <button
               key={item.key}
               type="button"
               onClick={item.onSelect}
               aria-pressed={item.selected}
-              className={`relative flex min-h-[78px] w-[74px] shrink-0 flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition-all lg:w-auto ${
+              className={`relative flex min-h-[78px] w-[74px] shrink-0 flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition-all md:w-auto ${
                 item.selected
                   ? "border-[#c96442] bg-[#f5f4ed] shadow-[rgba(201,100,66,0.12)_0px_0px_0px_1px,rgba(0,0,0,0.05)_0px_4px_16px] dark:border-[#d97757] dark:bg-[#30302e]"
                   : "border-[#e8e6dc] bg-[#faf9f5] hover:-translate-y-0.5 hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#141413] dark:hover:border-[#4d4c48] dark:hover:bg-[#30302e]"

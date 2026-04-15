@@ -11,7 +11,6 @@ export type MobileBottomTab =
   | "spend"
   | "weight"
   | "sleep"
-  | "habits"
   | "metacognition"
   | "andMore";
 
@@ -29,7 +28,6 @@ const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = 
   { key: "spend", label: "Spend", ariaLabel: "Spend" },
   { key: "weight", label: "Weight", ariaLabel: "Weight" },
   { key: "sleep", label: "Sleep", ariaLabel: "Sleep" },
-  { key: "habits", label: "Habits", ariaLabel: "Habits" },
   { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace" },
   { key: "metacognition", label: "Meta", ariaLabel: "Metacognition" },
   { key: "andMore", label: "More", ariaLabel: "Library and more" },
@@ -92,13 +90,6 @@ function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
       return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" className={cls}>
           <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-        </svg>
-      );
-    case "habits":
-      return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" className={cls}>
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
         </svg>
       );
     case "metacognition":

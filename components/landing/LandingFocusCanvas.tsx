@@ -116,6 +116,69 @@ function ActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: 
   );
 }
 
+function CompactActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-3 py-1.5 text-[11px] font-medium text-[#5e5d59] transition-colors hover:border-[#d1cfc5] hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:border-[#4d4c48] dark:hover:bg-[#3d3d3a]"
+    >
+      <span className="text-[#c96442] dark:text-[#d97757]">{icon}</span>
+      {label}
+    </button>
+  );
+}
+
+function scoreStatus(score: number): string {
+  if (score >= 8) return "Strong";
+  if (score >= 6) return "Solid";
+  if (score >= 4) return "Mixed";
+  return "Needs attention";
+}
+
+function DesktopScoreCard({
+  icon,
+  label,
+  score,
+  accent,
+  detail,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  score: number;
+  accent: string;
+  detail: string;
+}) {
+  return (
+    <div className="module-nested flex min-w-0 flex-col gap-2 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${accent}14`, color: accent }}>
+          {icon}
+        </span>
+        <div className="text-right">
+          <p className="text-lg font-semibold tabular-nums leading-none" style={{ color: accent }}>
+            {score}
+            <span className="ml-0.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-500">/10</span>
+          </p>
+          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">
+            {scoreStatus(score)}
+          </p>
+        </div>
+      </div>
+      <div className="min-w-0">
+        <p className="text-[12px] font-semibold text-foreground">{label}</p>
+        <p className="mt-0.5 text-[11px] leading-snug text-[#5e5d59] dark:text-[#87867f]">{detail}</p>
+      </div>
+      <div className="h-1.5 overflow-hidden rounded-full bg-neutral-200/80 dark:bg-neutral-800">
+        <div
+          className="h-full rounded-full transition-[width] duration-500 ease-out"
+          style={{ width: `${Math.max(0, Math.min(100, score * 10))}%`, backgroundColor: accent }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function LandingFocusCanvas({
   eyebrow,
   title,
@@ -247,34 +310,127 @@ export function LandingFocusCanvas({
     };
   }, [weeklySummary, nutritionGoals.caloriesTarget]);
 
+  const sleepHoursLabel =
+    sleepHours == null ? "Not logged" : `${Math.round(sleepHours * 10) / 10}h slept`;
+  const calorieDelta = nutritionGoals.caloriesTarget - caloriesConsumed;
+
+  const desktopHighlights = [
+    {
+      label: "Calories",
+      value: Math.round(caloriesConsumed).toLocaleString(),
+      detail: `of ${nutritionGoals.caloriesTarget.toLocaleString()} kcal`,
+    },
+    {
+      label: "Focus",
+      value: focusMinutes.toLocaleString(),
+      detail: `${focusSessions} session${focusSessions === 1 ? "" : "s"}`,
+    },
+    {
+      label: "Habits",
+      value: heroHabitCount > 0 ? `${heroHabitsCompletedToday}/${heroHabitCount}` : "0",
+      detail: heroHabitCount > 0 ? "completed today" : "no hero habits yet",
+    },
+    {
+      label: "Sleep",
+      value: sleepHours == null ? "—" : `${Math.round(sleepHours * 10) / 10}h`,
+      detail: sleepScoreProp != null ? `${sleepScoreProp}/100 score` : "not logged",
+    },
+  ];
+
+  const desktopScoreCards = [
+    {
+      label: "Nutrition",
+      score: score.nutritionScore,
+      accent: "#9A8872",
+      detail:
+        calorieDelta > 0
+          ? `${Math.round(calorieDelta).toLocaleString()} kcal left`
+          : calorieDelta < 0
+            ? `${Math.round(Math.abs(calorieDelta)).toLocaleString()} kcal over`
+            : "On target",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+          <path d="M12 23c-3.866 0-7-3.358-7-7.5 0-3.072 2.456-6.727 4.535-9.067A1.5 1.5 0 0 1 12 6.5c0 1-.5 2-1.5 3 2-1.5 3.5-4 4-6.5a1 1 0 0 1 1.735-.5C18.538 5.262 19 8.986 19 11.5c0 2.073-.493 4.14-1.692 5.69C15.87 19.195 14.085 21 12 23Z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Exercise",
+      score: score.exerciseScore,
+      accent: "#f97316",
+      detail: "Movement and activity today",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+          <path d="M18 20V6.5a2.5 2.5 0 0 0-5 0V20" />
+          <path d="M2 20h20" />
+          <path d="M6 20V9a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v11" />
+        </svg>
+      ),
+    },
+    {
+      label: "Focus",
+      score: score.focusScore,
+      accent: "#14b8a6",
+      detail: `${focusMinutes.toLocaleString()} min across ${focusSessions} session${focusSessions === 1 ? "" : "s"}`,
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      ),
+    },
+    {
+      label: "Habits",
+      score: score.habitsScore,
+      accent: "#c96442",
+      detail: heroHabitCount > 0 ? `${heroHabitsCompletedToday} of ${heroHabitCount} done today` : "No hero habits tracked",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      label: "Sleep",
+      score: score.sleepScore,
+      accent: "#6366f1",
+      detail: sleepHoursLabel,
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <section className="landing-module-glass w-full overflow-hidden rounded-[2rem] border p-4 sm:p-5">
       <div className="flex flex-col gap-5">
         {/* header */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c96442] dark:text-[#d97757]">
+        <div className="flex flex-col items-center gap-1 text-center">
+          <p className="truncate text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f] dark:text-[#87867f]">
             {eyebrow}
           </p>
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
+          <h2 className="mt-0.5 font-serif text-base font-medium text-[#141413] dark:text-[#faf9f5]">
             {title}
           </h2>
           {subtitle && (
-            <p className="max-w-2xl text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="mt-0.5 max-w-2xl text-[11px] leading-relaxed text-[#5e5d59] dark:text-[#87867f]">
               {subtitle}
             </p>
           )}
         </div>
 
-        {/* score ring or empty prompt */}
+        {/* mobile score ring / pills */}
         {score.empty ? (
           <button
             type="button"
             onClick={onDescribeFood}
-            className="flex flex-col items-center gap-2 py-4"
+            className="flex flex-col items-center gap-2 py-4 md:py-2"
           >
-            <div className="flex h-[148px] w-[148px] items-center justify-center rounded-full border-[11px] border-neutral-400/65 dark:border-neutral-500/55">
+            <div className="flex h-[148px] w-[148px] items-center justify-center rounded-full border-[11px] border-neutral-400/65 dark:border-neutral-500/55 md:h-[112px] md:w-[112px] md:border-[9px]">
               <div className="flex flex-col items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-400 dark:text-neutral-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-neutral-400 dark:text-neutral-500 md:h-6 md:w-6">
                   <path d="M12 5v14M5 12h14" />
                 </svg>
                 <span className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500">Start logging</span>
@@ -286,12 +442,56 @@ export function LandingFocusCanvas({
           </button>
         ) : (
           <>
-            <div className="flex justify-center">
+            <div className="flex justify-center md:hidden">
               <ScoreRing score={score.overall} label={score.label} size={148} strokeWidth={11} />
             </div>
 
-            {/* sub-score pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="hidden md:flex md:flex-col md:gap-3">
+              <div className="module-nested-muted grid gap-4 p-4 xl:grid-cols-[auto,minmax(0,1fr)] xl:items-center">
+                <div className="flex justify-center">
+                  <ScoreRing score={score.overall} label={score.label} size={112} strokeWidth={9} />
+                </div>
+                <div className="min-w-0 space-y-3">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#87867f] dark:text-[#87867f]">
+                      Day score
+                    </p>
+                    <p className="mt-1 text-lg font-semibold text-foreground">
+                      {score.overall}/100
+                    </p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-[#5e5d59] dark:text-[#87867f]">
+                      {score.label}. A compact read on nutrition, movement, focus, habits, and sleep.
+                    </p>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {desktopHighlights.map((item) => (
+                      <div key={item.label} className="rounded-2xl bg-white/75 px-3 py-2 dark:bg-[#2b2b28]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#87867f] dark:text-[#87867f]">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-[16px] font-semibold tabular-nums text-foreground">{item.value}</p>
+                        <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-2 md:grid-cols-2 2xl:grid-cols-5">
+                {desktopScoreCards.map((card) => (
+                  <DesktopScoreCard
+                    key={card.label}
+                    icon={card.icon}
+                    label={card.label}
+                    score={card.score}
+                    accent={card.accent}
+                    detail={card.detail}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 md:hidden">
               <ScorePill
                 icon={
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
@@ -349,8 +549,7 @@ export function LandingFocusCanvas({
           </>
         )}
 
-        {/* action buttons */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 md:hidden">
           <ActionButton
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
@@ -383,11 +582,10 @@ export function LandingFocusCanvas({
           />
         </div>
 
-        {/* macro bars */}
         <button
           type="button"
           onClick={onOpenNutrition}
-          className="relative rounded-[2rem] border border-[#e8e6dc] bg-[#faf9f5] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-[#3d3d3a] dark:bg-none dark:bg-[#30302e] sm:px-6"
+          className="relative rounded-[2rem] border border-[#e8e6dc] bg-[#faf9f5] px-4 py-5 text-left transition-opacity hover:opacity-90 dark:border-[#3d3d3a] dark:bg-none dark:bg-[#30302e] sm:px-6 md:hidden"
         >
           <div className="mx-auto max-w-[32rem] space-y-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
@@ -457,7 +655,6 @@ export function LandingFocusCanvas({
                   )}
                 </div>
 
-                {/* left / over indicator */}
                 <p className="text-[11px] font-medium tabular-nums">
                   {bar.overflow ? (
                     <span style={{ color: bar.overColor }}>
@@ -474,9 +671,94 @@ export function LandingFocusCanvas({
           </div>
         </button>
 
-        {/* 7-day calorie trend mini-chart */}
+        <div className="hidden md:grid md:gap-3">
+          <button
+            type="button"
+            onClick={onOpenNutrition}
+            className="module-nested-muted rounded-[1.6rem] p-4 text-left transition-opacity hover:opacity-90"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#87867f] dark:text-[#87867f]">
+                  Nutrition snapshot
+                </p>
+                <p className="mt-1 text-[14px] font-semibold text-foreground">
+                  {Math.round(caloriesConsumed).toLocaleString()} / {nutritionGoals.caloriesTarget.toLocaleString()} kcal
+                </p>
+                <p className="mt-1 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
+                  {calorieDelta > 0
+                    ? `${Math.round(calorieDelta).toLocaleString()} kcal left today`
+                    : calorieDelta < 0
+                      ? `${Math.round(Math.abs(calorieDelta)).toLocaleString()} kcal over today`
+                      : "Calories are right on target today"}
+                </p>
+              </div>
+              <span className="rounded-full border border-[#c96442]/30 bg-[#c96442]/10 px-2.5 py-1 text-[10px] font-medium text-[#c96442] dark:border-[#d97757]/35 dark:bg-[#d97757]/12 dark:text-[#d97757]">
+                Open nutrition
+              </span>
+            </div>
+
+            <div className="mt-3 grid gap-2 md:grid-cols-2 2xl:grid-cols-4">
+              {bars.map((bar) => (
+                <div key={bar.key} className="rounded-2xl bg-white/80 p-3 dark:bg-[#2b2b28]">
+                  <div className="flex items-center gap-1.5">
+                    <MacroIcon macroKey={bar.key} color={bar.color} />
+                    <span className="text-[11px] font-semibold text-foreground">{bar.label}</span>
+                  </div>
+                  <p className="mt-2 text-[14px] font-semibold tabular-nums" style={{ color: bar.overflow ? bar.overColor : bar.color }}>
+                    {bar.current}
+                    <span className="ml-1 text-[11px] font-medium text-neutral-400 dark:text-neutral-500">/ {bar.target} {bar.unit}</span>
+                  </p>
+                  <div className="mt-2 relative h-1.5 overflow-hidden rounded-full" style={{ backgroundColor: bar.trackColor }}>
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-500 ease-out"
+                      style={{
+                        width: `${Math.max(0, Math.min(100, bar.fillPct))}%`,
+                        backgroundColor: bar.overflow ? bar.overColor : bar.color,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </button>
+
+          <div className="flex flex-wrap gap-2">
+            <CompactActionButton
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              }
+              label="Search"
+              onClick={onSearchFood}
+            />
+            <CompactActionButton
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3" />
+                </svg>
+              }
+              label="Capture"
+              onClick={onCaptureFood}
+            />
+            <CompactActionButton
+              icon={
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" />
+                </svg>
+              }
+              label="Describe"
+              onClick={onDescribeFood}
+            />
+          </div>
+        </div>
+
         {trendOptions && (
-          <div className="module-chart-inset px-3 py-2">
+          <div className="module-chart-inset px-3 py-2 md:hidden">
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500 dark:text-neutral-400">
               Calories — 7 Day Trend
             </p>

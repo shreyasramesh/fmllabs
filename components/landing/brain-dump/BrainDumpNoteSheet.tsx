@@ -29,6 +29,7 @@ import {
   journalContextDotClass,
   journalTypeDotClass,
 } from "@/components/landing/brain-dump/journal-category-tag-styles";
+import type { LandingHabitCompletionMap } from "@/components/landing/types";
 
 export {
   JOURNAL_CATEGORY_DOT_BASE,
@@ -1246,9 +1247,9 @@ function JournalContextRowNoteStream({
   );
 }
 
-// ─── Habit tag pill colors ────────────────────────────────────────────────────
+// ─── Habit tag pill colors (match landing accent orange) ─────────────────────
 const HABIT_PILL_CLS =
-  "inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-medium text-violet-700 dark:border-violet-700/40 dark:bg-violet-950/40 dark:text-violet-300";
+  "inline-flex items-center gap-0.5 rounded-full border border-[#c96442]/28 bg-[#c96442]/[0.09] px-1.5 py-px text-[9px] font-medium text-[#a85535] dark:border-[#d97757]/35 dark:bg-[#d97757]/12 dark:text-[#e8a088]";
 
 function HabitTagIcon({ className }: { className?: string }) {
   return (
@@ -1282,15 +1283,15 @@ function HabitTagPicker({
             if (!h) return null;
             return (
               <span key={id} className={HABIT_PILL_CLS}>
-                <HabitTagIcon className="h-2.5 w-2.5 shrink-0" />
+                <HabitTagIcon className="h-2 w-2 shrink-0" />
                 {h.name}
                 <button
                   type="button"
                   onClick={() => onToggle(id)}
-                  className="ml-0.5 rounded-full p-0.5 hover:bg-violet-100 dark:hover:bg-violet-800/50"
+                  className="ml-0.5 rounded-full p-px hover:bg-[#c96442]/15 dark:hover:bg-[#d97757]/20"
                   aria-label={`Remove habit tag: ${h.name}`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2 w-2">
                     <path d="M5.28 4.22a.75.75 0 00-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 101.06 1.06L8 9.06l2.72 2.72a.75.75 0 101.06-1.06L9.06 8l2.72-2.72a.75.75 0 00-1.06-1.06L8 6.94 5.28 4.22z" />
                   </svg>
                 </button>
@@ -1303,20 +1304,20 @@ function HabitTagPicker({
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
-        className={`inline-flex w-fit items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors ${
+        className={`inline-flex w-fit items-center gap-0.5 rounded-full border px-2 py-px text-[10px] font-medium transition-colors ${
           hasSelected
-            ? "border-violet-200 bg-violet-50 text-violet-600 hover:bg-violet-100 dark:border-violet-700/40 dark:bg-violet-950/30 dark:text-violet-400 dark:hover:bg-violet-950/50"
+            ? "border-[#c96442]/40 bg-[#c96442]/10 text-[#a85535] hover:bg-[#c96442]/16 dark:border-[#d97757]/45 dark:bg-[#d97757]/14 dark:text-[#e8a088] dark:hover:bg-[#d97757]/22"
             : "border-neutral-200 bg-neutral-50 text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/50 dark:text-neutral-400 dark:hover:bg-neutral-800"
         }`}
         aria-expanded={open}
         aria-label="Link to a habit"
       >
-        <HabitTagIcon className="h-3 w-3 shrink-0" />
+        <HabitTagIcon className="h-2.5 w-2.5 shrink-0" />
         {hasSelected ? `${selectedIds.length} habit${selectedIds.length > 1 ? "s" : ""} linked` : "Link habit"}
       </button>
       {/* Picker dropdown */}
       {open ? (
-        <div className="mt-0.5 flex flex-wrap gap-1.5 rounded-xl border border-neutral-200 bg-white p-2 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="mt-0.5 flex flex-wrap gap-1 rounded-lg border border-neutral-200 bg-white p-1.5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
           {availableHabits.map((h) => {
             const selected = selectedIds.includes(h._id);
             return (
@@ -1324,15 +1325,15 @@ function HabitTagPicker({
                 key={h._id}
                 type="button"
                 onClick={() => { onToggle(h._id); }}
-                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                className={`inline-flex items-center gap-0.5 rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors ${
                   selected
-                    ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
-                    : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/30 dark:hover:text-violet-300"
+                    ? "border-[#c96442]/55 bg-[#c96442]/14 text-[#8f3f28] dark:border-[#d97757]/55 dark:bg-[#d97757]/18 dark:text-[#f0c4a8]"
+                    : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-[#c96442]/35 hover:bg-[#c96442]/[0.07] hover:text-[#a85535] dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-[#d97757]/40 dark:hover:bg-[#d97757]/12 dark:hover:text-[#e8a088]"
                 }`}
                 aria-pressed={selected}
               >
                 {selected ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
                     <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
                   </svg>
                 ) : null}
@@ -1340,6 +1341,143 @@ function HabitTagPicker({
               </button>
             );
           })}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function quickNoteHeroHabitsTodayKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function QuickNoteHeroHabitsBar({
+  habits,
+  completions,
+  onToggle,
+  onOpenHabitDetail,
+}: {
+  habits: Array<{ _id: string; name: string }>;
+  completions: LandingHabitCompletionMap;
+  onToggle: (habitId: string, dateKey: string) => void;
+  onOpenHabitDetail?: (habitId: string) => void;
+}) {
+  const today = useMemo(quickNoteHeroHabitsTodayKey, []);
+  const [expanded, setExpanded] = useState(false);
+  const rows = useMemo(
+    () =>
+      habits.map((h) => ({
+        ...h,
+        doneToday: (completions[h._id] ?? []).includes(today),
+      })),
+    [habits, completions, today]
+  );
+  const doneCount = rows.filter((r) => r.doneToday).length;
+  const total = rows.length;
+
+  return (
+    <div className="shrink-0 bg-transparent px-0 pb-[max(0.125rem,env(safe-area-inset-bottom,0px))] pt-1">
+      <div className="flex w-full min-w-0 items-center gap-1.5">
+        <div
+          className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90"
+          aria-hidden
+        />
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="inline-flex max-w-[min(100%,18rem)] shrink-0 items-center gap-0.5 rounded-full border border-[#c9c7bf]/90 bg-transparent px-2 py-1 text-[10px] font-medium text-[#4d4c48] shadow-none transition hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]"
+          aria-expanded={expanded}
+          aria-label={expanded ? "Hide hero habits" : "Show hero habits"}
+        >
+          <span className="text-center leading-tight">
+            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">
+              {doneCount} / {total}
+            </span>{" "}
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">
+              habits complete
+            </span>
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={`h-2.5 w-2.5 shrink-0 opacity-60 transition-transform ${expanded ? "rotate-180" : ""}`}
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+        <div
+          className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90"
+          aria-hidden
+        />
+      </div>
+      {expanded ? (
+        <div
+          className="mt-1.5 max-h-[min(36vh,260px)] overflow-y-auto rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55 [-webkit-overflow-scrolling:touch]"
+          role="list"
+        >
+          {rows.map((habit) => (
+            <div
+              key={habit._id}
+              role="listitem"
+              className="flex items-center gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55"
+            >
+              <button
+                type="button"
+                onClick={() => onToggle(habit._id, today)}
+                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
+                  habit.doneToday
+                    ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
+                    : "border-[#d4d2c9] dark:border-[#5e5d59]"
+                }`}
+                aria-label={habit.doneToday ? `Mark ${habit.name} not done` : `Complete ${habit.name}`}
+                aria-pressed={habit.doneToday}
+              >
+                {habit.doneToday ? (
+                  <svg
+                    viewBox="0 0 16 16"
+                    className="h-2.5 w-2.5"
+                    fill="none"
+                    stroke="#c96442"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3.5 8.5 6.5 11.5 12.5 5" />
+                  </svg>
+                ) : null}
+              </button>
+              {onOpenHabitDetail ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenHabitDetail(habit._id)}
+                  className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${
+                    habit.doneToday
+                      ? "text-[#87867f] line-through dark:text-[#5e5d59]"
+                      : "font-medium text-[#141413] hover:underline dark:text-[#faf9f5]"
+                  }`}
+                >
+                  {habit.name}
+                </button>
+              ) : (
+                <span
+                  className={`min-w-0 flex-1 text-left text-[12px] leading-snug ${
+                    habit.doneToday
+                      ? "text-[#87867f] line-through dark:text-[#5e5d59]"
+                      : "font-medium text-[#141413] dark:text-[#faf9f5]"
+                  }`}
+                >
+                  {habit.name}
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       ) : null}
     </div>
@@ -1397,6 +1535,11 @@ interface CaptureViewProps {
   hideImageIngestBar?: boolean;
   /** Pull-to-refresh callback — called when the user pulls down past the threshold. */
   onRefresh?: () => Promise<void> | void;
+  /** Hero habits strip at bottom of mobile Quick Notes (check off for today). */
+  quickNoteHeroHabits?: Array<{ _id: string; name: string }>;
+  quickNoteHeroHabitCompletions?: LandingHabitCompletionMap;
+  onQuickNoteToggleHeroHabit?: (habitId: string, dateKey: string) => void;
+  onQuickNoteOpenHeroHabit?: (habitId: string) => void;
 }
 
 type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
@@ -1449,6 +1592,10 @@ export function BrainDumpCaptureView({
   onReorderContextEntry,
   hideImageIngestBar = false,
   onRefresh,
+  quickNoteHeroHabits = [],
+  quickNoteHeroHabitCompletions = {},
+  onQuickNoteToggleHeroHabit,
+  onQuickNoteOpenHeroHabit,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -1957,7 +2104,7 @@ export function BrainDumpCaptureView({
 
   if (full) {
     return (
-      <>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <BrainDumpImageIngestBar
           layout="floating"
           hintText={sentenceDraft}
@@ -2192,10 +2339,10 @@ export function BrainDumpCaptureView({
             )
           : null}
 
-        <div className="flex h-[calc(100dvh-7.5rem-env(safe-area-inset-bottom,0px))] min-h-0 min-w-0 w-full flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">
           <div
             ref={scrollContainerRef}
-            className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden pb-24 [-webkit-overflow-scrolling:touch]"
+            className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-y-contain pb-14 [-webkit-overflow-scrolling:touch]"
             onTouchStart={handlePtrTouchStart}
             onTouchMove={handlePtrTouchMove}
             onTouchEnd={handlePtrTouchEnd}
@@ -2303,8 +2450,16 @@ export function BrainDumpCaptureView({
             ) : null}
             <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
+          {quickNoteHeroHabits.length > 0 && onQuickNoteToggleHeroHabit ? (
+            <QuickNoteHeroHabitsBar
+              habits={quickNoteHeroHabits}
+              completions={quickNoteHeroHabitCompletions}
+              onToggle={onQuickNoteToggleHeroHabit}
+              onOpenHabitDetail={onQuickNoteOpenHeroHabit}
+            />
+          ) : null}
         </div>
-      </>
+      </div>
     );
   }
 

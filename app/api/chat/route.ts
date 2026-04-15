@@ -4,6 +4,8 @@ import {
   getSession,
   getMessages,
   appendMessage,
+  appendMessagesBatch,
+  countMessages,
   createSession,
   updateSession,
   getEnrichmentPromptsWithIds,
@@ -11,6 +13,7 @@ import {
   getConceptGroupEnrichmentWithIds,
   getUserMentalModels,
   getUserSettings,
+  CHAT_CONTEXT_MESSAGE_LIMIT,
 } from "@/lib/db";
 import {
   loadMentalModelsIndex,
@@ -46,6 +49,7 @@ import {
   resolveUserDisplayNameForPrompt,
 } from "@/lib/user-display-name";
 import { rateLimitByUser, tooManyRequestsResponse } from "@/lib/rate-limit";
+import { perfAsync } from "@/lib/perf-timing";
 
 type ResponseVerbosity = "compact" | "detailed";
 
@@ -634,14 +638,26 @@ export async function POST(request: Request) {
       secondOrderMode = true;
     }
 
+    if (sessionId) {
+      session = (await getSession(sessionId, userId!)) ?? session;
+    }
+
     const [
       existingMessages,
+      dbMessageCount,
       ltmEnrichmentWithIdsRes,
       ccEnrichmentRes,
       conceptGroupEnrichmentRes,
       userMentalModelsRes,
     ] = await Promise.all([
-      getMessages(sessionId!, userId!),
+      perfAsync("POST /api/chat", "getMessages", () =>
+        getMessages(sessionId!, userId!, {
+          fullHistory: false,
+          limit: CHAT_CONTEXT_MESSAGE_LIMIT,
+          verifiedSession: session,
+        })
+      ),
+      perfAsync("POST /api/chat", "countMessages", () => countMessages(sessionId!)),
       getEnrichmentPromptsWithIds(userId!),
       getCustomConceptEnrichmentPromptsWithIds(userId!),
       getConceptGroupEnrichmentWithIds(userId!),
@@ -657,9 +673,9 @@ export async function POST(request: Request) {
         content: m.content,
       }));
     if (prepended.length > 0 && sessionId) {
-      for (const m of prepended) {
-        await appendMessage(sessionId, userId!, m.role as "user" | "assistant", m.content);
-      }
+      await perfAsync("POST /api/chat", "appendMessagesBatch", () =>
+        appendMessagesBatch(sessionId!, userId!, prepended)
+      );
     }
     messagesForModel = [
       ...prepended,
@@ -672,7 +688,7 @@ export async function POST(request: Request) {
     useMentorJournalBridge =
       !!mentorJournalBridgeFromBody &&
       !!mentorOneOnOne &&
-      existingMessages.length === 0;
+      dbMessageCount === 0;
     ltmEnrichmentWithIds = ltmEnrichmentWithIdsRes;
     ccEnrichmentWithIds = ccEnrichmentRes;
   }
@@ -690,7 +706,7 @@ export async function POST(request: Request) {
   }
 
   const convertedToDeep = !isAnonymous && !incognito && sessionId
-    ? (await getSession(sessionId, userId!))?.convertedToDeepConversation
+    ? session?.convertedToDeepConversation === true
     : false;
   if (mentorOneOnOne && activeCardPrompt) {
     return NextResponse.json(

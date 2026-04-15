@@ -34,7 +34,10 @@ export async function POST(
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
-    const messages = await getMessages(sessionId, userId);
+    const messages = await getMessages(sessionId, userId, {
+      fullHistory: true,
+      verifiedSession: session,
+    });
     if (messages.length < 2) {
       return NextResponse.json(
         { error: "Need at least 2 messages to summarize" },

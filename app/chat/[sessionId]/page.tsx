@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Skeleton } from "boneyard-js/react";
 import { useAuth, useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
@@ -321,6 +321,31 @@ interface Message {
 }
 
 type ResponseVerbosity = "compact" | "detailed";
+
+/** Follows `nextCursor` until `hasMore` is false (GET /api/me/transcripts paginated shape). */
+async function fetchAllPaginatedTranscripts(
+  buildUrl: (cursor: string | null) => string
+): Promise<unknown[]> {
+  const acc: unknown[] = [];
+  let cursor: string | null = null;
+  for (;;) {
+    const r = await fetch(buildUrl(cursor), { cache: "no-store" });
+    if (!r.ok) throw new Error("transcripts fetch failed");
+    const data = (await r.json()) as
+      | unknown[]
+      | { transcripts?: unknown[]; hasMore?: boolean; nextCursor?: string | null };
+    if (Array.isArray(data)) {
+      acc.push(...data);
+      break;
+    }
+    const batch = data.transcripts;
+    if (Array.isArray(batch)) acc.push(...batch);
+    if (!data.hasMore) break;
+    cursor = typeof data.nextCursor === "string" ? data.nextCursor : null;
+    if (!cursor) break;
+  }
+  return acc;
+}
 
 function processMessagesWithContext(msgs: Message[]): Message[] {
   return msgs.map((m) => {
@@ -3900,6 +3925,11 @@ export default function ChatPage() {
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  /** Paginated chat history: older messages exist on the server */
+  const [chatHistoryHasMore, setChatHistoryHasMore] = useState(false);
+  const [chatHistoryNextCursor, setChatHistoryNextCursor] = useState<string | null>(null);
+  const [loadingOlderChat, setLoadingOlderChat] = useState(false);
+  const chatScrollAnchorRef = useRef<{ scrollHeight: number } | null>(null);
   const [input, setInput] = useState("");
   const [landingPlaceholderIndex, setLandingPlaceholderIndex] = useState(0);
   const [landingPlaceholderText, setLandingPlaceholderText] = useState("");
@@ -4493,6 +4523,17 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const forwardDesktopLandingWheel = useCallback((e: React.WheelEvent<HTMLElement>) => {
+    if (messages.length !== 0 || incognitoMode) return;
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
+    const scrollEl = messagesScrollRef.current;
+    if (!scrollEl) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("[data-allow-own-scroll='true']")) return;
+    e.preventDefault();
+    scrollEl.scrollTop += e.deltaY;
+  }, [messages.length, incognitoMode]);
+
   // Selection actions are shown via context menu on right-click, not on selection.
 
   useEffect(() => {
@@ -4538,6 +4579,17 @@ export default function ChatPage() {
     }
     scrollToBottom();
   }, [messages, isLoading, scrollToBottom]);
+
+  useLayoutEffect(() => {
+    const anchor = chatScrollAnchorRef.current;
+    const el = messagesScrollRef.current;
+    if (!anchor || !el) return;
+    const delta = el.scrollHeight - anchor.scrollHeight;
+    chatScrollAnchorRef.current = null;
+    if (delta !== 0) {
+      el.scrollTop += delta;
+    }
+  }, [messages, loadingOlderChat]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -4832,9 +4884,13 @@ export default function ChatPage() {
       setTranscriptsLoaded(true);
       return;
     }
-    fetch(`/api/me/transcripts?sourceType=journal&slim=1&_t=${Date.now()}`, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((data) => setSavedJournalTranscripts(Array.isArray(data) ? data : []))
+    fetchAllPaginatedTranscripts((cursor) => {
+      const base = `/api/me/transcripts?sourceType=journal&slim=1&_t=${Date.now()}`;
+      return cursor ? `${base}&cursor=${encodeURIComponent(cursor)}` : base;
+    })
+      .then((rows) =>
+        setSavedJournalTranscripts(Array.isArray(rows) ? (rows as typeof savedJournalTranscripts) : [])
+      )
       .catch(() => setSavedJournalTranscripts([]))
       .finally(() => setTranscriptsLoaded(true));
   }, [isAnonymous]);
@@ -4845,11 +4901,77 @@ export default function ChatPage() {
       setSavedTranscripts([]);
       return;
     }
-    fetch(`/api/me/transcripts?_t=${Date.now()}`, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((data) => setSavedTranscripts(Array.isArray(data) ? data : []))
+    fetchAllPaginatedTranscripts((cursor) => {
+      const base = `/api/me/transcripts?_t=${Date.now()}`;
+      return cursor ? `${base}&cursor=${encodeURIComponent(cursor)}` : base;
+    })
+      .then((rows) => setSavedTranscripts(Array.isArray(rows) ? (rows as typeof savedTranscripts) : []))
       .catch(() => setSavedTranscripts([]));
   }, [isAnonymous]);
+
+  const loadOlderChatMessages = useCallback(async () => {
+    if (
+      !currentSessionId ||
+      isNew ||
+      incognitoMode ||
+      !chatHistoryHasMore ||
+      !chatHistoryNextCursor ||
+      loadingOlderChat
+    ) {
+      return;
+    }
+    const scrollEl = messagesScrollRef.current;
+    if (scrollEl) {
+      chatScrollAnchorRef.current = { scrollHeight: scrollEl.scrollHeight };
+    }
+    setLoadingOlderChat(true);
+    try {
+      const r = await fetch(
+        `/api/sessions/${currentSessionId}?before=${encodeURIComponent(chatHistoryNextCursor)}`
+      );
+      if (!r.ok) return;
+      const data = (await r.json()) as {
+        session?: Session;
+        messages?: Message[];
+        messagesMeta?: { hasMoreOlder?: boolean; nextCursor?: string | null };
+      };
+      const raw = data.messages ?? [];
+      const meta = data.messagesMeta;
+      if (raw.length === 0) {
+        setChatHistoryHasMore(false);
+        setChatHistoryNextCursor(null);
+        return;
+      }
+      const sess = data.session ?? currentSession;
+      if (!sess) return;
+      setMessages((prev) => [
+        ...enrichMessagesFromSession(processMessagesWithContext(raw), sess),
+        ...prev,
+      ]);
+      setChatHistoryHasMore(meta?.hasMoreOlder ?? false);
+      setChatHistoryNextCursor(meta?.nextCursor ?? null);
+    } catch {
+      /* ignore */
+    } finally {
+      setLoadingOlderChat(false);
+    }
+  }, [
+    currentSessionId,
+    currentSession,
+    chatHistoryHasMore,
+    chatHistoryNextCursor,
+    loadingOlderChat,
+    isNew,
+    incognitoMode,
+  ]);
+
+  const onChatMessagesScroll = useCallback(() => {
+    const el = messagesScrollRef.current;
+    if (!el || loadingOlderChat || !chatHistoryHasMore || !chatHistoryNextCursor) return;
+    if (el.scrollTop < 72) {
+      void loadOlderChatMessages();
+    }
+  }, [loadingOlderChat, chatHistoryHasMore, chatHistoryNextCursor, loadOlderChatMessages]);
 
   const [journalEntryJustSaved, setJournalEntryJustSaved] = useState(false);
 
@@ -7750,6 +7872,8 @@ export default function ChatPage() {
       }
       justCreatedSessionRef.current = null; // clear before fetching a different session
       setSessionLoading(true);
+      setChatHistoryHasMore(false);
+      setChatHistoryNextCursor(null);
       // Avoid stale 1:1 ref from a prior thread affecting composer voice until fetch returns.
       activeOneOnOneMentorRef.current = null;
       fetch(`/api/sessions/${sessionId}`)
@@ -7757,7 +7881,13 @@ export default function ChatPage() {
           if (!r.ok) throw new Error("Not found");
           return r.json();
         })
-        .then(({ session, messages: msgs, longTermMemory }) => {
+        .then((data: {
+          session: Session;
+          messages?: Message[];
+          messagesMeta?: { hasMoreOlder?: boolean; nextCursor?: string | null };
+          longTermMemory?: LongTermMemoryItem | null;
+        }) => {
+          const { session, messages: msgs, longTermMemory, messagesMeta } = data;
           setCurrentSessionId(session._id);
           setCurrentSession(session);
           activeResponseVerbosityRef.current = parseResponseVerbosity(session.responseVerbosity) ?? "compact";
@@ -7784,6 +7914,8 @@ export default function ChatPage() {
           setMessages(
             enrichMessagesFromSession(processMessagesWithContext(msgs || []), session)
           );
+          setChatHistoryHasMore(messagesMeta?.hasMoreOlder ?? false);
+          setChatHistoryNextCursor(messagesMeta?.nextCursor ?? null);
           setCollapsedSummary(session.isCollapsed && longTermMemory ? longTermMemory : null);
         })
         .catch(() => {
@@ -13599,24 +13731,6 @@ export default function ChatPage() {
             <ThemeToggle inverted={incognitoMode} />
             <button
               type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") window.location.reload();
-              }}
-              className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
-                incognitoMode ? "text-neutral-100 dark:text-neutral-900 hover:text-neutral-200 dark:hover:text-neutral-800 hover:bg-neutral-800 dark:hover:bg-neutral-200" : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              }`}
-              aria-label="Refresh app"
-              title="Refresh app"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M16.023 9.348h4.992V4.356" />
-                <path d="M2.985 19.644v-4.992h4.992" />
-                <path d="M4.929 7.5A9 9 0 0 1 18.62 6.76l2.395 2.588" />
-                <path d="M19.071 16.5A9 9 0 0 1 5.38 17.24l-2.395-2.588" />
-              </svg>
-            </button>
-            <button
-              type="button"
               onClick={() => setSettingsOpen(true)}
               data-tour="settings-button"
               className={`p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-xl transition-colors duration-300 ease-in-out ${
@@ -13724,7 +13838,7 @@ export default function ChatPage() {
       />
 
       {/* Main chat area */}
-      <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden" onWheelCapture={forwardDesktopLandingWheel}>
         {summarizeSuccess && (
           <div className="mx-4 mt-2 px-4 py-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-300 dark:border-neutral-600 text-sm font-medium text-neutral-700 dark:text-neutral-300 animate-celebrate flex items-center gap-2">
             <span className="text-lg">✨</span>
@@ -15550,6 +15664,7 @@ export default function ChatPage() {
         >
           <div
             ref={messagesScrollRef}
+            onScroll={onChatMessagesScroll}
             className={`flex-1 min-h-0 min-w-0 overflow-x-hidden overflow-y-auto flex flex-col mobile-hide-scrollbar hide-scrollbar ${
               !shouldHideBottomBar
                 ? "max-md:pb-[max(6.5rem,5.25rem+env(safe-area-inset-bottom,0px))] md:pb-0"
@@ -15597,11 +15712,20 @@ export default function ChatPage() {
                             method: "POST",
                           });
                           if (res.ok) {
-                            const { session, messages: msgs } = await fetch(
-                              `/api/sessions/${currentSessionId}`
-                            ).then((r) => r.json());
+                            const data = await fetch(`/api/sessions/${currentSessionId}`).then((r) =>
+                              r.json()
+                            );
+                            const { session, messages: msgs, messagesMeta } = data as {
+                              session: Session;
+                              messages?: Message[];
+                              messagesMeta?: { hasMoreOlder?: boolean; nextCursor?: string | null };
+                            };
                             setCurrentSession(session);
-                            setMessages(processMessagesWithContext(msgs || []));
+                            setMessages(
+                              enrichMessagesFromSession(processMessagesWithContext(msgs || []), session)
+                            );
+                            setChatHistoryHasMore(messagesMeta?.hasMoreOlder ?? false);
+                            setChatHistoryNextCursor(messagesMeta?.nextCursor ?? null);
                             setCollapsedSummary(null);
                             refetchSessions();
                           }
@@ -15763,15 +15887,19 @@ export default function ChatPage() {
               messages.length === 0
                 ? isAnonymous
                   ? "flex-1 min-h-0 flex flex-col items-center justify-start pt-8 pb-36 sm:pb-40 px-4 py-5"
-                  : `flex flex-col items-center justify-start ${
+                  : `flex min-h-0 w-full flex-1 flex-col items-center justify-start ${
                       !incognitoMode ? "pb-4 md:pb-6" : "flex-1 min-h-0 pb-36 sm:pb-40 md:pb-8"
                     } px-0 md:px-4 pt-1 md:pt-8`
                 : "px-3 py-4 sm:px-4 sm:py-5"
             }`}
           >
             {messages.length === 0 && (
-              <div className="flex w-full min-w-0 md:max-w-2xl lg:max-w-4xl flex-col items-center text-center px-0 md:px-4 overflow-x-hidden">
-                <div className={`flex w-full max-w-full min-w-0 flex-col items-center justify-start space-y-4 lg:space-y-5 ${isAnonymous ? "min-h-[calc(100dvh-12rem)]" : ""}`}>
+              <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col items-center text-center px-0 md:max-w-2xl md:px-4 lg:max-w-4xl overflow-x-hidden">
+                <div
+                  className={`flex w-full max-w-full min-w-0 flex-1 flex-col items-center justify-start space-y-4 lg:space-y-5 ${
+                    isAnonymous ? "min-h-[calc(100dvh-12rem)]" : "min-h-0"
+                  }`}
+                >
                 {mentorJournalBridgePending ? (
                   <div
                     className="flex flex-col items-center justify-center gap-4 py-16 sm:py-20 min-h-[40vh]"
@@ -16234,6 +16362,29 @@ export default function ChatPage() {
                               refetchSleepEntries();
                               await fetchWeightTracker();
                             }}
+                            quickNoteHeroHabits={
+                              isAnonymous || incognitoMode
+                                ? []
+                                : habits
+                                    .filter((h) => h.isHeroHabit)
+                                    .sort(
+                                      (a, b) =>
+                                        (a.heroHabitOrder ?? Infinity) - (b.heroHabitOrder ?? Infinity)
+                                    )
+                                    .map((h) => ({ _id: h._id, name: h.name }))
+                            }
+                            quickNoteHeroHabitCompletions={habitCompletions}
+                            onQuickNoteToggleHeroHabit={
+                              isAnonymous || incognitoMode ? undefined : handleToggleHabitCompletion
+                            }
+                            onQuickNoteOpenHeroHabit={
+                              isAnonymous || incognitoMode
+                                ? undefined
+                                : () => {
+                                    playSelectionChime();
+                                    setLibraryPanelOpen("habits");
+                                  }
+                            }
                           />
                         }
                       />
@@ -22627,9 +22778,18 @@ export default function ChatPage() {
                         setCollapsedSummary(null);
                         fetch(`/api/sessions/${sessionIdToRefetch}`)
                           .then((r) => r.json())
-                          .then(({ session, messages: msgs }) => {
+                          .then((data: {
+                            session: Session;
+                            messages?: Message[];
+                            messagesMeta?: { hasMoreOlder?: boolean; nextCursor?: string | null };
+                          }) => {
+                            const { session, messages: msgs, messagesMeta } = data;
                             setCurrentSession(session);
-                            setMessages(processMessagesWithContext(msgs || []));
+                            setMessages(
+                              enrichMessagesFromSession(processMessagesWithContext(msgs || []), session)
+                            );
+                            setChatHistoryHasMore(messagesMeta?.hasMoreOlder ?? false);
+                            setChatHistoryNextCursor(messagesMeta?.nextCursor ?? null);
                             setCollapsedSummary(null);
                           })
                           .catch(() => {});
@@ -24899,7 +25059,7 @@ export default function ChatPage() {
               <p className="min-h-0 flex-1 py-3 text-center text-sm text-neutral-400">No hero or current-month habits found.</p>
             ) : (
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-2">
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1">
                   {availableHabitsForTagging.map((h) => {
                     const selected = habitTaggingSelected.includes(h._id);
                     return (
@@ -24911,15 +25071,15 @@ export default function ChatPage() {
                             selected ? prev.filter((id) => id !== h._id) : [...prev, h._id]
                           );
                         }}
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                        className={`inline-flex items-center gap-0.5 rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors ${
                           selected
-                            ? "border-violet-400 bg-violet-100 text-violet-800 dark:border-violet-600 dark:bg-violet-950/60 dark:text-violet-200"
-                            : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-violet-300 hover:bg-violet-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                            ? "border-[#c96442]/55 bg-[#c96442]/14 text-[#8f3f28] dark:border-[#d97757]/55 dark:bg-[#d97757]/18 dark:text-[#f0c4a8]"
+                            : "border-neutral-200 bg-white text-neutral-600 hover:border-[#c96442]/35 hover:bg-[#c96442]/[0.07] hover:text-[#a85535] dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-[#d97757]/40 dark:hover:bg-[#d97757]/12 dark:hover:text-[#e8a088]"
                         }`}
                         aria-pressed={selected}
                       >
                         {selected ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
                             <path fillRule="evenodd" d="M12.416 3.376a.75.75 0 01.208 1.04l-5 7.5a.75.75 0 01-1.154.114l-3-3a.75.75 0 011.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 011.04-.207z" clipRule="evenodd" />
                           </svg>
                         ) : null}
@@ -24934,7 +25094,7 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={() => setHabitTaggingRowId(null)}
-                className="rounded-xl px-4 py-2 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-neutral-600 hover:bg-neutral-50 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
               >
                 Cancel
               </button>
@@ -24942,7 +25102,7 @@ export default function ChatPage() {
                 type="button"
                 disabled={habitTaggingSaving}
                 onClick={() => void saveHabitTags()}
-                className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-60"
+                className="rounded-full bg-[#c96442] px-3 py-1.5 text-[12px] font-medium text-white transition-colors hover:bg-[#a85535] disabled:opacity-60 dark:bg-[#d97757] dark:hover:bg-[#c96442]"
               >
                 {habitTaggingSaving ? "Saving…" : "Save"}
               </button>

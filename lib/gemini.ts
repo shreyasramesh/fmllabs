@@ -1316,7 +1316,7 @@ ${hintText || "(none)"}`,
       const weightKgGuess = parseWeightKgGuess(parsed.weightKgGuess);
       const sleepHoursGuess = parseSleepHoursGuess(parsed.sleepHoursGuess);
       const hrvMsGuess = parseHrvMsGuess(parsed.hrvMsGuess);
-      return {
+    return {
         ...base,
         imageKind,
         weightKgGuess,
@@ -1583,44 +1583,44 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
   } catch {
     /* fall through to fallback */
   }
-  return {
-    intent: "nutrition",
-    confidence: "low",
-    confidenceScore: 25,
-    assumptions: [],
-    reasoning: "",
-    nutritionItems: [],
-    exerciseItems: [],
+    return {
+      intent: "nutrition",
+      confidence: "low",
+      confidenceScore: 25,
+      assumptions: [],
+      reasoning: "",
+      nutritionItems: [],
+      exerciseItems: [],
     highlightSpans: [],
-    nutrition: {
-      calories: null,
-      proteinGrams: null,
-      carbsGrams: null,
-      fatGrams: null,
-      facts: {
-        totalCarbohydratesGrams: null,
-        dietaryFiberGrams: null,
-        sugarGrams: null,
-        addedSugarsGrams: null,
-        sugarAlcoholsGrams: null,
-        netCarbsGrams: null,
-        saturatedFatGrams: null,
-        transFatGrams: null,
-        polyunsaturatedFatGrams: null,
-        monounsaturatedFatGrams: null,
-        cholesterolMg: null,
-        sodiumMg: null,
-        calciumMg: null,
-        ironMg: null,
-        potassiumMg: null,
-        vitaminAIu: null,
-        vitaminCMg: null,
-        vitaminDMcg: null,
-        caffeineMg: null,
+      nutrition: {
+        calories: null,
+        proteinGrams: null,
+        carbsGrams: null,
+        fatGrams: null,
+        facts: {
+          totalCarbohydratesGrams: null,
+          dietaryFiberGrams: null,
+          sugarGrams: null,
+          addedSugarsGrams: null,
+          sugarAlcoholsGrams: null,
+          netCarbsGrams: null,
+          saturatedFatGrams: null,
+          transFatGrams: null,
+          polyunsaturatedFatGrams: null,
+          monounsaturatedFatGrams: null,
+          cholesterolMg: null,
+          sodiumMg: null,
+          calciumMg: null,
+          ironMg: null,
+          potassiumMg: null,
+          vitaminAIu: null,
+          vitaminCMg: null,
+          vitaminDMcg: null,
+          caffeineMg: null,
+        },
+        notes: "",
       },
-      notes: "",
-    },
-  };
+    };
 }
 
 export async function generateDailyLifeReport(
