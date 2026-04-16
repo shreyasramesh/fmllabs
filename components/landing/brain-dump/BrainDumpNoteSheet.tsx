@@ -1405,9 +1405,9 @@ function QuickNoteBottomStrip({
   onHabitToggle,
   onOpenHabitDetail,
   showNudges = false,
-  onNudgeCheck,
+  onNudgeInsert,
   showPrompts = false,
-  onPromptCheck,
+  onPromptInsert,
   imageIngestSlot,
 }: {
   habits?: Array<{ _id: string; name: string }>;
@@ -1415,9 +1415,9 @@ function QuickNoteBottomStrip({
   onHabitToggle?: (habitId: string, dateKey: string) => void;
   onOpenHabitDetail?: (habitId: string) => void;
   showNudges?: boolean;
-  onNudgeCheck?: (nudge: WellnessNudge) => Promise<void> | void;
+  onNudgeInsert?: (nudge: WellnessNudge) => void;
   showPrompts?: boolean;
-  onPromptCheck?: (prompt: JournalPrompt) => Promise<void> | void;
+  onPromptInsert?: (prompt: JournalPrompt) => void;
   imageIngestSlot?: React.ReactNode;
 }) {
   const [activePanel, setActivePanel] = useState<BottomStripPanel>(null);
@@ -1436,29 +1436,25 @@ function QuickNoteBottomStrip({
   const [nudgeActiveCategory, setNudgeActiveCategory] = useState<WellnessCategory>("oxytocin");
   const [nudgeCheckedIds, setNudgeCheckedIds] = useState<Set<string>>(new Set());
   const nudgeItems = NUDGES_BY_CATEGORY[nudgeActiveCategory];
-  const nudgesDone = WELLNESS_NUDGES_ALL_IDS.reduce((n, id) => n + (nudgeCheckedIds.has(id) ? 1 : 0), 0);
   const handleNudgeToggle = useCallback(
     (nudge: WellnessNudge) => {
-      if (nudgeCheckedIds.has(nudge.id)) return;
-      setNudgeCheckedIds((prev) => new Set(prev).add(nudge.id));
-      onNudgeCheck?.(nudge);
+      setNudgeCheckedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(nudge.id)) {
+          next.delete(nudge.id);
+        } else {
+          next.add(nudge.id);
+          onNudgeInsert?.(nudge);
+        }
+        return next;
+      });
     },
-    [nudgeCheckedIds, onNudgeCheck],
+    [onNudgeInsert],
   );
 
   // ── Prompts state ──
-  const [promptActiveCategory, setPromptActiveCategory] = useState<PromptCategory>("morning_evening");
-  const [promptCheckedIds, setPromptCheckedIds] = useState<Set<string>>(new Set());
+  const [promptActiveCategory, setPromptActiveCategory] = useState<PromptCategory>("morning_evening")
   const promptItems = PROMPTS_BY_CATEGORY[promptActiveCategory];
-  const promptsDone = promptCheckedIds.size;
-  const handlePromptToggle = useCallback(
-    (prompt: JournalPrompt) => {
-      if (promptCheckedIds.has(prompt.id)) return;
-      setPromptCheckedIds((prev) => new Set(prev).add(prompt.id));
-      onPromptCheck?.(prompt);
-    },
-    [promptCheckedIds, onPromptCheck],
-  );
 
   const pillCount = [showHabits, showNudges, showPrompts].filter(Boolean).length;
   if (pillCount === 0) return null;
@@ -1555,17 +1551,20 @@ function QuickNoteBottomStrip({
             })}
           </div>
           <div className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]" role="list">
-            {promptItems.map((prompt) => {
-              const done = promptCheckedIds.has(prompt.id);
-              return (
-                <div key={prompt.id} role="listitem" className="flex items-start gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55">
-                  <button type="button" onClick={() => handlePromptToggle(prompt)} className="mt-[3px]" aria-label={done ? `${prompt.prompt} — saved` : "Save prompt"} aria-pressed={done}>
-                    <CheckboxIcon done={done} />
-                  </button>
-                  <span className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${done ? "text-[#87867f] line-through dark:text-[#5e5d59]" : "font-medium text-[#141413] dark:text-[#faf9f5]"}`}>{prompt.prompt}</span>
-                </div>
-              );
-            })}
+            {promptItems.map((prompt) => (
+              <button
+                key={prompt.id}
+                type="button"
+                role="listitem"
+                onClick={() => onPromptInsert?.(prompt)}
+                className="flex w-full items-start gap-2 border-b border-[#e8e6dc]/80 px-2 py-1.5 text-left transition-colors last:border-b-0 active:bg-black/[0.04] dark:border-[#3d3d3a]/55 dark:active:bg-white/[0.06]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="mt-[2px] h-3.5 w-3.5 shrink-0 text-[#c96442] dark:text-[#d97757]">
+                  <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
+                </svg>
+                <span className="min-w-0 flex-1 text-[12px] font-medium leading-snug text-[#141413] dark:text-[#faf9f5]">{prompt.prompt}</span>
+              </button>
+            ))}
           </div>
         </div>
       ) : null}
@@ -1700,22 +1699,15 @@ export function BrainDumpCaptureView({
 
   const [habitPickerOpen, setHabitPickerOpen] = React.useState(false);
 
-  const handleNudgeSave = useCallback(
-    async (nudge: WellnessNudge) => {
-      if (onSaveLine) {
-        await onSaveLine(nudge.action, { status: "idle" });
-      }
+  const handleInsertIntoDraft = useCallback(
+    (text: string) => {
+      setSentenceDraft((prev) => {
+        const prefix = prev.trim() ? prev.trimEnd() + "\n" : "";
+        return prefix + text;
+      });
+      draftTextareaRef.current?.focus();
     },
-    [onSaveLine],
-  );
-
-  const handlePromptSave = useCallback(
-    async (prompt: JournalPrompt) => {
-      if (onSaveLine) {
-        await onSaveLine(prompt.prompt, { status: "idle" });
-      }
-    },
-    [onSaveLine],
+    [setSentenceDraft],
   );
 
   // ─── Pull-to-refresh ───────────────────────────────────────────────────────
@@ -2570,9 +2562,9 @@ export function BrainDumpCaptureView({
             onHabitToggle={onQuickNoteToggleHeroHabit}
             onOpenHabitDetail={onQuickNoteOpenHeroHabit}
             showNudges={showWellnessNudges}
-            onNudgeCheck={handleNudgeSave}
+            onNudgeInsert={(nudge) => handleInsertIntoDraft(nudge.action)}
             showPrompts={showJournalPrompts}
-            onPromptCheck={handlePromptSave}
+            onPromptInsert={(prompt) => handleInsertIntoDraft(prompt.prompt)}
             imageIngestSlot={
               hideImageIngestBar || !!pendingImageAnalyses ? null : (
                 <BrainDumpImageIngestBar
