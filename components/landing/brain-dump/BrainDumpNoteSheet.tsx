@@ -1464,9 +1464,9 @@ function QuickNoteBottomStrip({
   if (pillCount === 0) return null;
 
   return (
-    <div className="shrink-0 bg-transparent px-0 pb-[max(0.125rem,env(safe-area-inset-bottom,0px))] pt-1">
+    <div className="shrink-0 bg-transparent px-0 pb-0 pt-1">
       {/* ── pill row ── */}
-      <div className="flex w-full items-center justify-center gap-1.5 px-1">
+      <div className="flex w-full items-center gap-1.5 overflow-x-auto px-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {showHabits ? (
           <button type="button" onClick={() => togglePanel("habits")} className={`${PILL_BASE} ${activePanel === "habits" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "habits"}>
             <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{habitsDone}/{habitRows.length}</span>
