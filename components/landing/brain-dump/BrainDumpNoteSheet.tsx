@@ -1362,423 +1362,208 @@ function HabitTagPicker({
   );
 }
 
-function QuickNoteWellnessNudgeBar({
-  onNudgeCheck,
-}: {
-  onNudgeCheck?: (nudge: WellnessNudge) => Promise<void> | void;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<WellnessCategory>("oxytocin");
-  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
-  const nudges = NUDGES_BY_CATEGORY[activeCategory];
-  const activeMeta = WELLNESS_CATEGORY_META[activeCategory];
-
-  const checkedCount = WELLNESS_NUDGES_ALL_IDS.reduce((n, id) => n + (checkedIds.has(id) ? 1 : 0), 0);
-  const totalCount = WELLNESS_NUDGES_ALL_IDS.length;
-
-  const handleToggle = useCallback(
-    (nudge: WellnessNudge) => {
-      if (checkedIds.has(nudge.id)) return;
-      setCheckedIds((prev) => new Set(prev).add(nudge.id));
-      onNudgeCheck?.(nudge);
-    },
-    [checkedIds, onNudgeCheck],
-  );
-
-  return (
-    <div className="shrink-0 bg-transparent px-0 pb-0 pt-1">
-      {/* ── collapsed pill (same visual language as hero habits) ── */}
-      <div className="flex w-full min-w-0 items-center gap-1.5">
-        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="inline-flex max-w-[min(100%,18rem)] shrink-0 items-center gap-0.5 rounded-full border border-[#c9c7bf]/90 bg-transparent px-2 py-1 text-[10px] font-medium text-[#4d4c48] shadow-none transition hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]"
-          aria-expanded={expanded}
-          aria-label={expanded ? "Hide wellness nudges" : "Show wellness nudges"}
-        >
-          <span className="text-center leading-tight">
-            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">
-              {checkedCount} / {totalCount}
-            </span>{" "}
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">
-              no-screen daily nudges
-            </span>
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className={`h-2.5 w-2.5 shrink-0 opacity-60 transition-transform ${expanded ? "rotate-180" : ""}`}
-            aria-hidden
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
-      </div>
-
-      {/* ── expanded: category tabs + description + checklist ── */}
-      {expanded ? (
-        <div className="mt-1.5 overflow-hidden rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55">
-          {/* category tabs — highlighted labels */}
-          <div className="flex gap-0 overflow-x-auto border-b border-[#e8e6dc]/80 px-0.5 dark:border-[#3d3d3a]/55 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {WELLNESS_CATEGORIES.map((cat) => {
-              const meta = WELLNESS_CATEGORY_META[cat];
-              const active = cat === activeCategory;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActiveCategory(cat)}
-                  className="shrink-0 flex-1 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold text-[#141413] transition-colors dark:text-[#faf9f5]"
-                  aria-selected={active}
-                  role="tab"
-                >
-                  <span
-                    className="rounded-[2px] px-[3px] py-[1px]"
-                    style={{ backgroundColor: active ? meta.highlight : "transparent" }}
-                  >
-                    {meta.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* nudge checklist rows */}
-          <div
-            className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]"
-            role="list"
-          >
-            {nudges.map((nudge) => {
-              const done = checkedIds.has(nudge.id);
-              return (
-                <div
-                  key={nudge.id}
-                  role="listitem"
-                  className="flex items-center gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55"
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleToggle(nudge)}
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
-                      done
-                        ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
-                        : "border-[#d4d2c9] dark:border-[#5e5d59]"
-                    }`}
-                    aria-label={done ? `${nudge.action} — saved` : `Save ${nudge.action} as journal entry`}
-                    aria-pressed={done}
-                  >
-                    {done ? (
-                      <svg
-                        viewBox="0 0 16 16"
-                        className="h-2.5 w-2.5"
-                        fill="none"
-                        stroke="#c96442"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M3.5 8.5 6.5 11.5 12.5 5" />
-                      </svg>
-                    ) : null}
-                  </button>
-                  <span
-                    className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${
-                      done
-                        ? "text-[#87867f] line-through dark:text-[#5e5d59]"
-                        : "font-medium text-[#141413] dark:text-[#faf9f5]"
-                    }`}
-                  >
-                    {nudge.action}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
 const WELLNESS_NUDGES_ALL_IDS = Object.values(NUDGES_BY_CATEGORY).flat().map((n) => n.id);
-
-function QuickNoteJournalPromptsBar({
-  onPromptCheck,
-}: {
-  onPromptCheck?: (prompt: JournalPrompt) => Promise<void> | void;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<PromptCategory>("morning_evening");
-  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
-  const prompts = PROMPTS_BY_CATEGORY[activeCategory];
-
-  const checkedCount = checkedIds.size;
-
-  const handleToggle = useCallback(
-    (prompt: JournalPrompt) => {
-      if (checkedIds.has(prompt.id)) return;
-      setCheckedIds((prev) => new Set(prev).add(prompt.id));
-      onPromptCheck?.(prompt);
-    },
-    [checkedIds, onPromptCheck],
-  );
-
-  return (
-    <div className="shrink-0 bg-transparent px-0 pb-0 pt-1">
-      <div className="flex w-full min-w-0 items-center gap-1.5">
-        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="inline-flex max-w-[min(100%,18rem)] shrink-0 items-center gap-0.5 rounded-full border border-[#c9c7bf]/90 bg-transparent px-2 py-1 text-[10px] font-medium text-[#4d4c48] shadow-none transition hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]"
-          aria-expanded={expanded}
-          aria-label={expanded ? "Hide journal prompts" : "Show journal prompts"}
-        >
-          <span className="text-center leading-tight">
-            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">
-              {checkedCount} / {JOURNAL_PROMPTS_TOTAL}
-            </span>{" "}
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">
-              journal prompts
-            </span>
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className={`h-2.5 w-2.5 shrink-0 opacity-60 transition-transform ${expanded ? "rotate-180" : ""}`}
-            aria-hidden
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
-      </div>
-
-      {expanded ? (
-        <div className="mt-1.5 overflow-hidden rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55">
-          <div className="flex gap-0 overflow-x-auto border-b border-[#e8e6dc]/80 px-0.5 dark:border-[#3d3d3a]/55 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {PROMPT_CATEGORIES.map((cat) => {
-              const meta = PROMPT_CATEGORY_META[cat];
-              const active = cat === activeCategory;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActiveCategory(cat)}
-                  className="shrink-0 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold text-[#141413] transition-colors dark:text-[#faf9f5]"
-                  aria-selected={active}
-                  role="tab"
-                >
-                  <span
-                    className="rounded-[2px] px-[3px] py-[1px]"
-                    style={{ backgroundColor: active ? meta.highlight : "transparent" }}
-                  >
-                    {meta.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div
-            className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]"
-            role="list"
-          >
-            {prompts.map((prompt) => {
-              const done = checkedIds.has(prompt.id);
-              return (
-                <div
-                  key={prompt.id}
-                  role="listitem"
-                  className="flex items-start gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55"
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleToggle(prompt)}
-                    className={`mt-[3px] flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
-                      done
-                        ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
-                        : "border-[#d4d2c9] dark:border-[#5e5d59]"
-                    }`}
-                    aria-label={done ? `${prompt.prompt} — saved` : `Save prompt as journal entry`}
-                    aria-pressed={done}
-                  >
-                    {done ? (
-                      <svg
-                        viewBox="0 0 16 16"
-                        className="h-2.5 w-2.5"
-                        fill="none"
-                        stroke="#c96442"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M3.5 8.5 6.5 11.5 12.5 5" />
-                      </svg>
-                    ) : null}
-                  </button>
-                  <span
-                    className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${
-                      done
-                        ? "text-[#87867f] line-through dark:text-[#5e5d59]"
-                        : "font-medium text-[#141413] dark:text-[#faf9f5]"
-                    }`}
-                  >
-                    {prompt.prompt}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
 
 function quickNoteHeroHabitsTodayKey(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function QuickNoteHeroHabitsBar({
-  habits,
-  completions,
-  onToggle,
-  onOpenHabitDetail,
-}: {
-  habits: Array<{ _id: string; name: string }>;
-  completions: LandingHabitCompletionMap;
-  onToggle: (habitId: string, dateKey: string) => void;
-  onOpenHabitDetail?: (habitId: string) => void;
-}) {
-  const today = useMemo(quickNoteHeroHabitsTodayKey, []);
-  const [expanded, setExpanded] = useState(false);
-  const rows = useMemo(
-    () =>
-      habits.map((h) => ({
-        ...h,
-        doneToday: (completions[h._id] ?? []).includes(today),
-      })),
-    [habits, completions, today]
+type BottomStripPanel = "habits" | "nudges" | "prompts" | null;
+
+const PILL_BASE =
+  "inline-flex shrink-0 items-center gap-0.5 rounded-full border px-2 py-1 text-[10px] font-medium shadow-none transition";
+const PILL_INACTIVE =
+  "border-[#c9c7bf]/90 bg-transparent text-[#4d4c48] hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]";
+const PILL_ACTIVE =
+  "border-[#c96442]/50 bg-[#c96442]/[0.06] text-[#4d4c48] dark:border-[#d97757]/50 dark:bg-[#d97757]/[0.08] dark:text-[#b0aea5]";
+
+const PANEL_CONTAINER =
+  "mt-1.5 overflow-hidden rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55";
+
+function CheckboxIcon({ done }: { done: boolean }) {
+  return (
+    <span
+      className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
+        done
+          ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
+          : "border-[#d4d2c9] dark:border-[#5e5d59]"
+      }`}
+    >
+      {done ? (
+        <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" stroke="#c96442" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.5 8.5 6.5 11.5 12.5 5" />
+        </svg>
+      ) : null}
+    </span>
   );
-  const doneCount = rows.filter((r) => r.doneToday).length;
-  const total = rows.length;
+}
+
+function QuickNoteBottomStrip({
+  habits = [],
+  habitCompletions = {},
+  onHabitToggle,
+  onOpenHabitDetail,
+  showNudges = false,
+  onNudgeCheck,
+  showPrompts = false,
+  onPromptCheck,
+}: {
+  habits?: Array<{ _id: string; name: string }>;
+  habitCompletions?: LandingHabitCompletionMap;
+  onHabitToggle?: (habitId: string, dateKey: string) => void;
+  onOpenHabitDetail?: (habitId: string) => void;
+  showNudges?: boolean;
+  onNudgeCheck?: (nudge: WellnessNudge) => Promise<void> | void;
+  showPrompts?: boolean;
+  onPromptCheck?: (prompt: JournalPrompt) => Promise<void> | void;
+}) {
+  const [activePanel, setActivePanel] = useState<BottomStripPanel>(null);
+  const togglePanel = useCallback((p: BottomStripPanel) => setActivePanel((prev) => (prev === p ? null : p)), []);
+
+  // ── Habits state ──
+  const today = useMemo(quickNoteHeroHabitsTodayKey, []);
+  const habitRows = useMemo(
+    () => habits.map((h) => ({ ...h, doneToday: (habitCompletions[h._id] ?? []).includes(today) })),
+    [habits, habitCompletions, today],
+  );
+  const habitsDone = habitRows.filter((r) => r.doneToday).length;
+  const showHabits = habits.length > 0 && onHabitToggle != null;
+
+  // ── Nudges state ──
+  const [nudgeActiveCategory, setNudgeActiveCategory] = useState<WellnessCategory>("oxytocin");
+  const [nudgeCheckedIds, setNudgeCheckedIds] = useState<Set<string>>(new Set());
+  const nudgeItems = NUDGES_BY_CATEGORY[nudgeActiveCategory];
+  const nudgesDone = WELLNESS_NUDGES_ALL_IDS.reduce((n, id) => n + (nudgeCheckedIds.has(id) ? 1 : 0), 0);
+  const handleNudgeToggle = useCallback(
+    (nudge: WellnessNudge) => {
+      if (nudgeCheckedIds.has(nudge.id)) return;
+      setNudgeCheckedIds((prev) => new Set(prev).add(nudge.id));
+      onNudgeCheck?.(nudge);
+    },
+    [nudgeCheckedIds, onNudgeCheck],
+  );
+
+  // ── Prompts state ──
+  const [promptActiveCategory, setPromptActiveCategory] = useState<PromptCategory>("morning_evening");
+  const [promptCheckedIds, setPromptCheckedIds] = useState<Set<string>>(new Set());
+  const promptItems = PROMPTS_BY_CATEGORY[promptActiveCategory];
+  const promptsDone = promptCheckedIds.size;
+  const handlePromptToggle = useCallback(
+    (prompt: JournalPrompt) => {
+      if (promptCheckedIds.has(prompt.id)) return;
+      setPromptCheckedIds((prev) => new Set(prev).add(prompt.id));
+      onPromptCheck?.(prompt);
+    },
+    [promptCheckedIds, onPromptCheck],
+  );
+
+  const pillCount = [showHabits, showNudges, showPrompts].filter(Boolean).length;
+  if (pillCount === 0) return null;
 
   return (
     <div className="shrink-0 bg-transparent px-0 pb-[max(0.125rem,env(safe-area-inset-bottom,0px))] pt-1">
-      <div className="flex w-full min-w-0 items-center gap-1.5">
-        <div
-          className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90"
-          aria-hidden
-        />
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="inline-flex max-w-[min(100%,18rem)] shrink-0 items-center gap-0.5 rounded-full border border-[#c9c7bf]/90 bg-transparent px-2 py-1 text-[10px] font-medium text-[#4d4c48] shadow-none transition hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]"
-          aria-expanded={expanded}
-          aria-label={expanded ? "Hide hero habits" : "Show hero habits"}
-        >
-          <span className="text-center leading-tight">
-            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">
-              {doneCount} / {total}
-            </span>{" "}
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">
-              habits complete
-            </span>
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className={`h-2.5 w-2.5 shrink-0 opacity-60 transition-transform ${expanded ? "rotate-180" : ""}`}
-            aria-hidden
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-        <div
-          className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90"
-          aria-hidden
-        />
+      {/* ── pill row ── */}
+      <div className="flex w-full items-center justify-center gap-1.5 px-1">
+        {showHabits ? (
+          <button type="button" onClick={() => togglePanel("habits")} className={`${PILL_BASE} ${activePanel === "habits" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "habits"}>
+            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{habitsDone}/{habitRows.length}</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Habits</span>
+          </button>
+        ) : null}
+        {showNudges ? (
+          <button type="button" onClick={() => togglePanel("nudges")} className={`${PILL_BASE} ${activePanel === "nudges" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "nudges"}>
+            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{nudgesDone}/{WELLNESS_NUDGES_ALL_IDS.length}</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Nudges</span>
+          </button>
+        ) : null}
+        {showPrompts ? (
+          <button type="button" onClick={() => togglePanel("prompts")} className={`${PILL_BASE} ${activePanel === "prompts" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "prompts"}>
+            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{promptsDone}/{JOURNAL_PROMPTS_TOTAL}</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Prompts</span>
+          </button>
+        ) : null}
       </div>
-      {expanded ? (
-        <div
-          className="mt-1.5 max-h-[min(36vh,260px)] overflow-y-auto rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55 [-webkit-overflow-scrolling:touch]"
-          role="list"
-        >
-          {rows.map((habit) => (
-            <div
-              key={habit._id}
-              role="listitem"
-              className="flex items-center gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55"
-            >
-              <button
-                type="button"
-                onClick={() => onToggle(habit._id, today)}
-                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
-                  habit.doneToday
-                    ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
-                    : "border-[#d4d2c9] dark:border-[#5e5d59]"
-                }`}
-                aria-label={habit.doneToday ? `Mark ${habit.name} not done` : `Complete ${habit.name}`}
-                aria-pressed={habit.doneToday}
-              >
-                {habit.doneToday ? (
-                  <svg
-                    viewBox="0 0 16 16"
-                    className="h-2.5 w-2.5"
-                    fill="none"
-                    stroke="#c96442"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3.5 8.5 6.5 11.5 12.5 5" />
-                  </svg>
-                ) : null}
+
+      {/* ── Habits panel ── */}
+      {activePanel === "habits" ? (
+        <div className={`${PANEL_CONTAINER} mt-1.5 max-h-[min(36vh,260px)] overflow-y-auto [-webkit-overflow-scrolling:touch]`} role="list">
+          {habitRows.map((habit) => (
+            <div key={habit._id} role="listitem" className="flex items-center gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55">
+              <button type="button" onClick={() => onHabitToggle!(habit._id, today)} aria-label={habit.doneToday ? `Mark ${habit.name} not done` : `Complete ${habit.name}`} aria-pressed={habit.doneToday}>
+                <CheckboxIcon done={habit.doneToday} />
               </button>
               {onOpenHabitDetail ? (
-                <button
-                  type="button"
-                  onClick={() => onOpenHabitDetail(habit._id)}
-                  className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${
-                    habit.doneToday
-                      ? "text-[#87867f] line-through dark:text-[#5e5d59]"
-                      : "font-medium text-[#141413] hover:underline dark:text-[#faf9f5]"
-                  }`}
-                >
+                <button type="button" onClick={() => onOpenHabitDetail(habit._id)} className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${habit.doneToday ? "text-[#87867f] line-through dark:text-[#5e5d59]" : "font-medium text-[#141413] hover:underline dark:text-[#faf9f5]"}`}>
                   {habit.name}
                 </button>
               ) : (
-                <span
-                  className={`min-w-0 flex-1 text-left text-[12px] leading-snug ${
-                    habit.doneToday
-                      ? "text-[#87867f] line-through dark:text-[#5e5d59]"
-                      : "font-medium text-[#141413] dark:text-[#faf9f5]"
-                  }`}
-                >
+                <span className={`min-w-0 flex-1 text-left text-[12px] leading-snug ${habit.doneToday ? "text-[#87867f] line-through dark:text-[#5e5d59]" : "font-medium text-[#141413] dark:text-[#faf9f5]"}`}>
                   {habit.name}
                 </span>
               )}
             </div>
           ))}
+        </div>
+      ) : null}
+
+      {/* ── Nudges panel ── */}
+      {activePanel === "nudges" ? (
+        <div className={PANEL_CONTAINER}>
+          <div className="flex gap-0 overflow-x-auto border-b border-[#e8e6dc]/80 px-0.5 dark:border-[#3d3d3a]/55 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {WELLNESS_CATEGORIES.map((cat) => {
+              const meta = WELLNESS_CATEGORY_META[cat];
+              const active = cat === nudgeActiveCategory;
+              return (
+                <button key={cat} type="button" onClick={() => setNudgeActiveCategory(cat)} className="shrink-0 flex-1 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold text-[#141413] transition-colors dark:text-[#faf9f5]" aria-selected={active} role="tab">
+                  <span className="rounded-[2px] px-[3px] py-[1px]" style={{ backgroundColor: active ? meta.highlight : "transparent" }}>{meta.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]" role="list">
+            {nudgeItems.map((nudge) => {
+              const done = nudgeCheckedIds.has(nudge.id);
+              return (
+                <div key={nudge.id} role="listitem" className="flex items-center gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55">
+                  <button type="button" onClick={() => handleNudgeToggle(nudge)} aria-label={done ? `${nudge.action} — saved` : `Save ${nudge.action}`} aria-pressed={done}>
+                    <CheckboxIcon done={done} />
+                  </button>
+                  <span className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${done ? "text-[#87867f] line-through dark:text-[#5e5d59]" : "font-medium text-[#141413] dark:text-[#faf9f5]"}`}>{nudge.action}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
+      {/* ── Prompts panel ── */}
+      {activePanel === "prompts" ? (
+        <div className={PANEL_CONTAINER}>
+          <div className="flex gap-0 overflow-x-auto border-b border-[#e8e6dc]/80 px-0.5 dark:border-[#3d3d3a]/55 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {PROMPT_CATEGORIES.map((cat) => {
+              const meta = PROMPT_CATEGORY_META[cat];
+              const active = cat === promptActiveCategory;
+              return (
+                <button key={cat} type="button" onClick={() => setPromptActiveCategory(cat)} className="shrink-0 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold text-[#141413] transition-colors dark:text-[#faf9f5]" aria-selected={active} role="tab">
+                  <span className="rounded-[2px] px-[3px] py-[1px]" style={{ backgroundColor: active ? meta.highlight : "transparent" }}>{meta.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]" role="list">
+            {promptItems.map((prompt) => {
+              const done = promptCheckedIds.has(prompt.id);
+              return (
+                <div key={prompt.id} role="listitem" className="flex items-start gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55">
+                  <button type="button" onClick={() => handlePromptToggle(prompt)} className="mt-[3px]" aria-label={done ? `${prompt.prompt} — saved` : "Save prompt"} aria-pressed={done}>
+                    <CheckboxIcon done={done} />
+                  </button>
+                  <span className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${done ? "text-[#87867f] line-through dark:text-[#5e5d59]" : "font-medium text-[#141413] dark:text-[#faf9f5]"}`}>{prompt.prompt}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       ) : null}
     </div>
@@ -2776,20 +2561,16 @@ export function BrainDumpCaptureView({
             ) : null}
             <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
-          {quickNoteHeroHabits.length > 0 && onQuickNoteToggleHeroHabit ? (
-            <QuickNoteHeroHabitsBar
-              habits={quickNoteHeroHabits}
-              completions={quickNoteHeroHabitCompletions}
-              onToggle={onQuickNoteToggleHeroHabit}
-              onOpenHabitDetail={onQuickNoteOpenHeroHabit}
-            />
-          ) : null}
-          {showWellnessNudges ? (
-            <QuickNoteWellnessNudgeBar onNudgeCheck={handleNudgeSave} />
-          ) : null}
-          {showJournalPrompts ? (
-            <QuickNoteJournalPromptsBar onPromptCheck={handlePromptSave} />
-          ) : null}
+          <QuickNoteBottomStrip
+            habits={quickNoteHeroHabits}
+            habitCompletions={quickNoteHeroHabitCompletions}
+            onHabitToggle={onQuickNoteToggleHeroHabit}
+            onOpenHabitDetail={onQuickNoteOpenHeroHabit}
+            showNudges={showWellnessNudges}
+            onNudgeCheck={handleNudgeSave}
+            showPrompts={showJournalPrompts}
+            onPromptCheck={handlePromptSave}
+          />
         </div>
       </div>
     );
