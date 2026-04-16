@@ -66,6 +66,19 @@ function SourcesGlyph({ className }: { className?: string }) {
   );
 }
 
+function ManualAnalyzeButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-blue-200/80 bg-blue-50/80 px-2.5 py-0.5 text-[13px] font-medium text-blue-600 transition-colors active:bg-blue-100 dark:border-blue-800/60 dark:bg-blue-950/40 dark:text-blue-400 dark:active:bg-blue-900/50"
+    >
+      <SparklesIcon className="h-3.5 w-3.5 shrink-0" />
+      Analyze
+    </button>
+  );
+}
+
 function LineRightMeta({ meta }: { meta: LineMeta }) {
   if (meta.status === "idle") return <span className="inline-block min-w-[4rem]" aria-hidden />;
 
@@ -324,6 +337,7 @@ export function CaptureDraftSentenceRow({
   textAreaRef,
   variant = "compact",
   showEstimateDetailTap = false,
+  manualEstimate = false,
 }: {
   draft: string;
   onDraftValue: (raw: string) => void;
@@ -335,16 +349,29 @@ export function CaptureDraftSentenceRow({
   variant?: "compact" | "fullScreen";
   /** When true, tap the estimate column to open details while still typing (Quick Note tab). */
   showEstimateDetailTap?: boolean;
+  /** When true, don't auto-fire nutrition estimate — show an Analyze button instead (mobile). */
+  manualEstimate?: boolean;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
   /** Mobile Quick Note: avoid autoFocus so the OS keyboard stays closed until the user taps the field. */
   const [draftTextareaFocused, setDraftTextareaFocused] = useState(false);
+  const [analyzeRequested, setAnalyzeRequested] = useState(false);
+
+  useEffect(() => {
+    if (manualEstimate) setAnalyzeRequested(false);
+  }, [draft, manualEstimate]);
+
   const trimmedDraft = draft.trim();
   const estimateNutrition = shouldRunQuickEstimate(draft);
   const estimateSleep = looksLikeSleepSentence(draft);
   const showEstimateColumn = shouldShowQuickNoteEstimateColumn(draft);
+  const showAnalyzeButton = manualEstimate && estimateNutrition && Boolean(trimmedDraft) && !analyzeRequested;
   /** Keep showing calories while textarea is disabled (save in flight); do not reset estimate to idle. */
-  const meta = useNutritionLineEstimate(draft, Boolean(trimmedDraft) && estimateNutrition, Boolean(trimmedDraft) && estimateSleep);
+  const meta = useNutritionLineEstimate(
+    draft,
+    Boolean(trimmedDraft) && estimateNutrition && (!manualEstimate || analyzeRequested),
+    Boolean(trimmedDraft) && estimateSleep,
+  );
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -379,12 +406,13 @@ export function CaptureDraftSentenceRow({
       ? "w-max appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-0.5 pt-0 text-right text-[13px] shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30"
       : "w-max appearance-none justify-self-end self-start whitespace-nowrap rounded-lg border-0 bg-transparent px-1 pt-0.5 text-right shadow-none outline-none ring-0 transition-colors hover:bg-neutral-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#295a8a]/25 disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-800/50 dark:focus-visible:ring-blue-400/30";
 
-  const rightCol =
-    showEstimateColumn || !draft.trim() ? (
-      <LineRightMeta meta={meta} />
-    ) : (
-      <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
-    );
+  const rightCol = showAnalyzeButton ? (
+    <ManualAnalyzeButton onClick={() => setAnalyzeRequested(true)} />
+  ) : showEstimateColumn || !draft.trim() ? (
+    <LineRightMeta meta={meta} />
+  ) : (
+    <span className="text-[15px] text-neutral-400 dark:text-neutral-500">—</span>
+  );
 
   const showIdleCaret =
     variant === "fullScreen" &&
@@ -497,13 +525,17 @@ export function CapturePersistedEntryRow({
   onDelete,
   disabled = false,
   habitsById = {},
+  manualEstimate = false,
 }: {
   entry: BrainDumpCaptureEntry;
   onDelete: (id: string) => void;
   disabled?: boolean;
   habitsById?: Record<string, string>;
+  /** When true, don't auto-fire nutrition estimate — show an Analyze button instead (mobile). */
+  manualEstimate?: boolean;
 }) {
   const [detailOpen, setDetailOpen] = useState(false);
+  const [analyzeRequested, setAnalyzeRequested] = useState(false);
   const trimmed = entry.text.trim();
   const isPending = entry.saveState === "pending";
   const rowDisabled = disabled || isPending;
@@ -512,9 +544,11 @@ export function CapturePersistedEntryRow({
     entry.frozenMeta.status !== "done" &&
     shouldShowQuickNoteEstimateColumn(entry.text) &&
     Boolean(trimmed);
+  const wantsNutritionApi = useLive && shouldRunQuickEstimate(entry.text);
+  const showPersistedAnalyzeButton = manualEstimate && wantsNutritionApi && !analyzeRequested && entry.frozenMeta.status !== "done";
   const liveMeta = useNutritionLineEstimate(
     entry.text,
-    useLive && shouldRunQuickEstimate(entry.text),
+    wantsNutritionApi && (!manualEstimate || analyzeRequested),
     useLive && looksLikeSleepSentence(entry.text)
   );
   const meta =
@@ -565,7 +599,9 @@ export function CapturePersistedEntryRow({
           aria-live="polite"
           aria-label="View estimate details for this line"
         >
-          {isPending ? (
+          {showPersistedAnalyzeButton ? (
+            <ManualAnalyzeButton onClick={() => { setAnalyzeRequested(true); }} />
+          ) : isPending ? (
             meta.status !== "idle" ? (
               <LineRightMeta meta={meta} />
             ) : (
