@@ -1464,7 +1464,7 @@ function QuickNoteBottomStrip({
   return (
     <div className="shrink-0 bg-transparent px-0 pb-[max(0.125rem,env(safe-area-inset-bottom,0px))] pt-1">
       {/* ── pill row ── */}
-      <div className="flex w-full items-center justify-center gap-1.5 px-1">
+      <div className="flex w-full items-center justify-center gap-1.5 overflow-x-auto px-1 pr-[4.5rem] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {showHabits ? (
           <button type="button" onClick={() => togglePanel("habits")} className={`${PILL_BASE} ${activePanel === "habits" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "habits"}>
             <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{habitsDone}/{habitRows.length}</span>
@@ -1473,7 +1473,7 @@ function QuickNoteBottomStrip({
         ) : null}
         {showNudges ? (
           <button type="button" onClick={() => togglePanel("nudges")} className={`${PILL_BASE} ${activePanel === "nudges" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "nudges"}>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Neurochemical Nudges</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Neuro Nudges</span>
           </button>
         ) : null}
         {showPrompts ? (
