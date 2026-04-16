@@ -2617,9 +2617,6 @@ export function BrainDumpCaptureView({
             ) : null}
             <div ref={quickNoteStreamEndRef} className="h-px w-full shrink-0 scroll-mt-12" aria-hidden />
           </div>
-          {showWellnessNudges ? (
-            <QuickNoteWellnessNudgeBar onNudgeCheck={handleNudgeSave} />
-          ) : null}
           {quickNoteHeroHabits.length > 0 && onQuickNoteToggleHeroHabit ? (
             <QuickNoteHeroHabitsBar
               habits={quickNoteHeroHabits}
@@ -2627,6 +2624,9 @@ export function BrainDumpCaptureView({
               onToggle={onQuickNoteToggleHeroHabit}
               onOpenHabitDetail={onQuickNoteOpenHeroHabit}
             />
+          ) : null}
+          {showWellnessNudges ? (
+            <QuickNoteWellnessNudgeBar onNudgeCheck={handleNudgeSave} />
           ) : null}
         </div>
       </div>
