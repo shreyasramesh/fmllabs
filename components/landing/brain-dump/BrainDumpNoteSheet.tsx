@@ -1408,6 +1408,7 @@ function QuickNoteBottomStrip({
   onNudgeCheck,
   showPrompts = false,
   onPromptCheck,
+  imageIngestSlot,
 }: {
   habits?: Array<{ _id: string; name: string }>;
   habitCompletions?: LandingHabitCompletionMap;
@@ -1417,6 +1418,7 @@ function QuickNoteBottomStrip({
   onNudgeCheck?: (nudge: WellnessNudge) => Promise<void> | void;
   showPrompts?: boolean;
   onPromptCheck?: (prompt: JournalPrompt) => Promise<void> | void;
+  imageIngestSlot?: React.ReactNode;
 }) {
   const [activePanel, setActivePanel] = useState<BottomStripPanel>(null);
   const togglePanel = useCallback((p: BottomStripPanel) => setActivePanel((prev) => (prev === p ? null : p)), []);
@@ -1464,7 +1466,7 @@ function QuickNoteBottomStrip({
   return (
     <div className="shrink-0 bg-transparent px-0 pb-[max(0.125rem,env(safe-area-inset-bottom,0px))] pt-1">
       {/* ── pill row ── */}
-      <div className="flex w-full items-center justify-center gap-1.5 overflow-x-auto px-1 pr-[4.5rem] [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex w-full items-center justify-center gap-1.5 px-1">
         {showHabits ? (
           <button type="button" onClick={() => togglePanel("habits")} className={`${PILL_BASE} ${activePanel === "habits" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "habits"}>
             <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{habitsDone}/{habitRows.length}</span>
@@ -1480,6 +1482,9 @@ function QuickNoteBottomStrip({
           <button type="button" onClick={() => togglePanel("prompts")} className={`${PILL_BASE} ${activePanel === "prompts" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "prompts"}>
             <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Journal Ideas</span>
           </button>
+        ) : null}
+        {imageIngestSlot ? (
+          <div className="ml-auto shrink-0">{imageIngestSlot}</div>
         ) : null}
       </div>
 
@@ -2218,7 +2223,7 @@ export function BrainDumpCaptureView({
           hintText={sentenceDraft}
           onAnalysesReady={handleImageAnalysesReady}
           disabled={draftDisabled}
-          hidden={hideImageIngestBar || !!pendingImageAnalyses}
+          hidden
         />
 
         {/* Image-to-text review — portaled to body so fixed positioning is viewport-relative (LandingShell uses transform animations that trap fixed children). */}
@@ -2568,6 +2573,16 @@ export function BrainDumpCaptureView({
             onNudgeCheck={handleNudgeSave}
             showPrompts={showJournalPrompts}
             onPromptCheck={handlePromptSave}
+            imageIngestSlot={
+              hideImageIngestBar || !!pendingImageAnalyses ? null : (
+                <BrainDumpImageIngestBar
+                  layout="inline"
+                  hintText={sentenceDraft}
+                  onAnalysesReady={handleImageAnalysesReady}
+                  disabled={draftDisabled}
+                />
+              )
+            }
           />
         </div>
       </div>
