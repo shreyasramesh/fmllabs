@@ -37,6 +37,14 @@ import {
   type WellnessCategory,
   type WellnessNudge,
 } from "@/lib/wellness-nudges";
+import {
+  PROMPT_CATEGORIES,
+  PROMPT_CATEGORY_META,
+  PROMPTS_BY_CATEGORY,
+  JOURNAL_PROMPTS_TOTAL,
+  type PromptCategory,
+  type JournalPrompt,
+} from "@/lib/journal-prompts";
 
 export {
   JOURNAL_CATEGORY_DOT_BASE,
@@ -1501,6 +1509,145 @@ function QuickNoteWellnessNudgeBar({
 
 const WELLNESS_NUDGES_ALL_IDS = Object.values(NUDGES_BY_CATEGORY).flat().map((n) => n.id);
 
+function QuickNoteJournalPromptsBar({
+  onPromptCheck,
+}: {
+  onPromptCheck?: (prompt: JournalPrompt) => Promise<void> | void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<PromptCategory>("morning_evening");
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+  const prompts = PROMPTS_BY_CATEGORY[activeCategory];
+
+  const checkedCount = checkedIds.size;
+
+  const handleToggle = useCallback(
+    (prompt: JournalPrompt) => {
+      if (checkedIds.has(prompt.id)) return;
+      setCheckedIds((prev) => new Set(prev).add(prompt.id));
+      onPromptCheck?.(prompt);
+    },
+    [checkedIds, onPromptCheck],
+  );
+
+  return (
+    <div className="shrink-0 bg-transparent px-0 pb-0 pt-1">
+      <div className="flex w-full min-w-0 items-center gap-1.5">
+        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="inline-flex max-w-[min(100%,18rem)] shrink-0 items-center gap-0.5 rounded-full border border-[#c9c7bf]/90 bg-transparent px-2 py-1 text-[10px] font-medium text-[#4d4c48] shadow-none transition hover:border-[#c96442]/45 hover:bg-black/[0.04] dark:border-[#5e5d59]/90 dark:text-[#b0aea5] dark:hover:border-[#d97757]/50 dark:hover:bg-white/[0.05]"
+          aria-expanded={expanded}
+          aria-label={expanded ? "Hide journal prompts" : "Show journal prompts"}
+        >
+          <span className="text-center leading-tight">
+            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">
+              {checkedCount} / {JOURNAL_PROMPTS_TOTAL}
+            </span>{" "}
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">
+              journal prompts
+            </span>
+          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={`h-2.5 w-2.5 shrink-0 opacity-60 transition-transform ${expanded ? "rotate-180" : ""}`}
+            aria-hidden
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+        <div className="h-px min-w-[0.75rem] flex-1 bg-[#c9c7bf]/90 dark:bg-[#4d4c48]/90" aria-hidden />
+      </div>
+
+      {expanded ? (
+        <div className="mt-1.5 overflow-hidden rounded-lg border border-[#e8e6dc]/70 bg-[#faf9f5]/65 shadow-none backdrop-blur-[6px] dark:border-[#3d3d3a]/70 dark:bg-[#141413]/55">
+          <div className="flex gap-0 overflow-x-auto border-b border-[#e8e6dc]/80 px-0.5 dark:border-[#3d3d3a]/55 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {PROMPT_CATEGORIES.map((cat) => {
+              const meta = PROMPT_CATEGORY_META[cat];
+              const active = cat === activeCategory;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setActiveCategory(cat)}
+                  className="shrink-0 whitespace-nowrap px-2.5 py-1.5 text-[11px] font-semibold text-[#141413] transition-colors dark:text-[#faf9f5]"
+                  aria-selected={active}
+                  role="tab"
+                >
+                  <span
+                    className="rounded-[2px] px-[3px] py-[1px]"
+                    style={{ backgroundColor: active ? meta.highlight : "transparent" }}
+                  >
+                    {meta.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            className="max-h-[min(36vh,280px)] overflow-y-auto [-webkit-overflow-scrolling:touch]"
+            role="list"
+          >
+            {prompts.map((prompt) => {
+              const done = checkedIds.has(prompt.id);
+              return (
+                <div
+                  key={prompt.id}
+                  role="listitem"
+                  className="flex items-start gap-1.5 border-b border-[#e8e6dc]/80 px-2 py-1.5 last:border-b-0 dark:border-[#3d3d3a]/55"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleToggle(prompt)}
+                    className={`mt-[3px] flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-all ${
+                      done
+                        ? "border-[#c96442]/45 bg-[#c96442]/10 dark:border-[#d97757]/45 dark:bg-[#d97757]/12"
+                        : "border-[#d4d2c9] dark:border-[#5e5d59]"
+                    }`}
+                    aria-label={done ? `${prompt.prompt} — saved` : `Save prompt as journal entry`}
+                    aria-pressed={done}
+                  >
+                    {done ? (
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="h-2.5 w-2.5"
+                        fill="none"
+                        stroke="#c96442"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3.5 8.5 6.5 11.5 12.5 5" />
+                      </svg>
+                    ) : null}
+                  </button>
+                  <span
+                    className={`min-w-0 flex-1 text-left text-[12px] leading-snug transition-colors ${
+                      done
+                        ? "text-[#87867f] line-through dark:text-[#5e5d59]"
+                        : "font-medium text-[#141413] dark:text-[#faf9f5]"
+                    }`}
+                  >
+                    {prompt.prompt}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function quickNoteHeroHabitsTodayKey(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -1696,6 +1843,8 @@ interface CaptureViewProps {
   onQuickNoteOpenHeroHabit?: (habitId: string) => void;
   /** When true, show daily wellness nudge bar (mobile Quick Notes). */
   showWellnessNudges?: boolean;
+  /** When true, show journal prompts bar (mobile Quick Notes). */
+  showJournalPrompts?: boolean;
 }
 
 type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
@@ -1753,6 +1902,7 @@ export function BrainDumpCaptureView({
   onQuickNoteToggleHeroHabit,
   onQuickNoteOpenHeroHabit,
   showWellnessNudges = false,
+  showJournalPrompts = false,
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -1766,6 +1916,15 @@ export function BrainDumpCaptureView({
     async (nudge: WellnessNudge) => {
       if (onSaveLine) {
         await onSaveLine(nudge.action, { status: "idle" });
+      }
+    },
+    [onSaveLine],
+  );
+
+  const handlePromptSave = useCallback(
+    async (prompt: JournalPrompt) => {
+      if (onSaveLine) {
+        await onSaveLine(prompt.prompt, { status: "idle" });
       }
     },
     [onSaveLine],
@@ -2627,6 +2786,9 @@ export function BrainDumpCaptureView({
           ) : null}
           {showWellnessNudges ? (
             <QuickNoteWellnessNudgeBar onNudgeCheck={handleNudgeSave} />
+          ) : null}
+          {showJournalPrompts ? (
+            <QuickNoteJournalPromptsBar onPromptCheck={handlePromptSave} />
           ) : null}
         </div>
       </div>

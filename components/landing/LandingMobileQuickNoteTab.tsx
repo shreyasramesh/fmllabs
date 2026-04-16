@@ -73,6 +73,8 @@ interface LandingMobileQuickNoteTabProps {
   onQuickNoteOpenHeroHabit?: (habitId: string) => void;
   /** When true, show daily wellness nudge bar (mobile Quick Notes). */
   showWellnessNudges?: boolean;
+  /** When true, show journal prompts bar (mobile Quick Notes). */
+  showJournalPrompts?: boolean;
 }
 
 export function LandingMobileQuickNoteTab({
@@ -102,6 +104,7 @@ export function LandingMobileQuickNoteTab({
   onQuickNoteToggleHeroHabit,
   onQuickNoteOpenHeroHabit,
   showWellnessNudges = true,
+  showJournalPrompts = true,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -175,6 +178,7 @@ export function LandingMobileQuickNoteTab({
           onQuickNoteToggleHeroHabit={onQuickNoteToggleHeroHabit}
           onQuickNoteOpenHeroHabit={onQuickNoteOpenHeroHabit}
           showWellnessNudges={showWellnessNudges}
+          showJournalPrompts={showJournalPrompts}
         />
       </Skeleton>
     </div>
