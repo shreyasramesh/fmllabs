@@ -1468,19 +1468,17 @@ function QuickNoteBottomStrip({
         {showHabits ? (
           <button type="button" onClick={() => togglePanel("habits")} className={`${PILL_BASE} ${activePanel === "habits" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "habits"}>
             <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{habitsDone}/{habitRows.length}</span>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Habits</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Daily Habits</span>
           </button>
         ) : null}
         {showNudges ? (
           <button type="button" onClick={() => togglePanel("nudges")} className={`${PILL_BASE} ${activePanel === "nudges" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "nudges"}>
-            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{nudgesDone}/{WELLNESS_NUDGES_ALL_IDS.length}</span>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Nudges</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Neurochemical Nudges</span>
           </button>
         ) : null}
         {showPrompts ? (
           <button type="button" onClick={() => togglePanel("prompts")} className={`${PILL_BASE} ${activePanel === "prompts" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "prompts"}>
-            <span className="tabular-nums text-[#c96442] dark:text-[#d97757]">{promptsDone}/{JOURNAL_PROMPTS_TOTAL}</span>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Prompts</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Journal Ideas</span>
           </button>
         ) : null}
       </div>
