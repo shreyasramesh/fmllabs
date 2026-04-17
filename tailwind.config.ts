@@ -115,6 +115,39 @@ export default {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "1", transform: "scale(1.04)" },
         },
+        "life-dot-in": {
+          from: { opacity: "0", transform: "scale(0)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
+        "life-number-in": {
+          from: { opacity: "0", transform: "translateY(12px) scale(0.95)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "life-hero-flip": {
+          "0%": { opacity: "1", transform: "rotateX(0deg) scale(1)" },
+          "40%": { opacity: "0", transform: "rotateX(90deg) scale(0.92)" },
+          "60%": { opacity: "0", transform: "rotateX(-90deg) scale(0.92)" },
+          "100%": { opacity: "1", transform: "rotateX(0deg) scale(1)" },
+        },
+        "life-glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 6px 2px rgba(201,100,66,0.35)" },
+          "50%": { boxShadow: "0 0 14px 4px rgba(201,100,66,0.55)" },
+        },
+        "life-card-in": {
+          from: { opacity: "0", transform: "translateY(16px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "life-quote-in": {
+          from: { opacity: "0", transform: "translateX(20px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        "life-quote-out": {
+          from: { opacity: "1", transform: "translateX(0)" },
+          to: { opacity: "0", transform: "translateX(-20px)" },
+        },
+        "life-progress-fill": {
+          from: { width: "0%" },
+        },
       },
       animation: {
         blink: "blink 1s step-end infinite",
@@ -130,6 +163,14 @@ export default {
         "description-out": "description-out 0.2s ease-out forwards",
         "shooting-star": "shooting-star 1.2s ease-out forwards",
         "tour-breathe": "tour-breathe 2s ease-in-out infinite",
+        "life-dot-in": "life-dot-in 0.3s cubic-bezier(0.34,1.56,0.64,1) both",
+        "life-number-in": "life-number-in 0.5s cubic-bezier(0.22,1,0.36,1) both",
+        "life-hero-flip": "life-hero-flip 0.5s cubic-bezier(0.4,0,0.2,1) both",
+        "life-glow-pulse": "life-glow-pulse 2.5s ease-in-out infinite",
+        "life-card-in": "life-card-in 0.45s cubic-bezier(0.22,1,0.36,1) both",
+        "life-quote-in": "life-quote-in 0.3s ease-out both",
+        "life-quote-out": "life-quote-out 0.2s ease-in both",
+        "life-progress-fill": "life-progress-fill 1s cubic-bezier(0.22,1,0.36,1) both",
       },
     },
   },

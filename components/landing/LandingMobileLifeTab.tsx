@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 import type {
   LifeCalendarData,
@@ -32,7 +32,7 @@ const LIFE_QUOTES = [
 ];
 
 // ---------------------------------------------------------------------------
-// Your Life in Years — dot grid (10 columns, ~8 rows for 80yr)
+// Your Life in Years — dot grid with staggered pop-in animation
 // ---------------------------------------------------------------------------
 
 const LifeInYearsGrid = React.memo(function LifeInYearsGrid({
@@ -47,8 +47,8 @@ const LifeInYearsGrid = React.memo(function LifeInYearsGrid({
   const aheadYears = lifeExpectancyYears - currentYearIndex - 1;
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f] dark:text-[#87867f]">
+    <div className="animate-life-card-in space-y-3" style={{ animationDelay: "200ms" }}>
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
         Your Life in Years
       </h3>
       <div
@@ -61,24 +61,25 @@ const LifeInYearsGrid = React.memo(function LifeInYearsGrid({
           return (
             <span
               key={i}
-              className={`block h-6 w-6 rounded-full transition-colors ${
+              className={`block h-6 w-6 rounded-full opacity-0 animate-life-dot-in ${
                 isLived
                   ? "bg-[#c96442] dark:bg-[#d97757]"
                   : isThisYear
-                    ? "bg-[#c96442]/70 ring-2 ring-[#c96442]/40 dark:bg-[#d97757]/70 dark:ring-[#d97757]/40"
+                    ? "bg-[#c96442]/70 animate-life-glow-pulse dark:bg-[#d97757]/70"
                     : "bg-[#e8e6dc] dark:bg-[#3d3d3a]"
               }`}
+              style={{ animationDelay: `${i * 12}ms` }}
             />
           );
         })}
       </div>
-      <div className="flex items-center justify-center gap-4 text-[11px]">
+      <div className="flex items-center justify-center gap-4 text-[11px] animate-fade-in" style={{ animationDelay: `${lifeExpectancyYears * 12 + 100}ms` }}>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#c96442] dark:bg-[#d97757]" />
           <span className="text-[#5e5d59] dark:text-[#87867f]">Years lived ({currentYearIndex})</span>
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#c96442]/70 ring-1 ring-[#c96442]/40 dark:bg-[#d97757]/70 dark:ring-[#d97757]/40" />
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#c96442]/70 dark:bg-[#d97757]/70 animate-life-glow-pulse" />
           <span className="text-[#5e5d59] dark:text-[#87867f]">This year</span>
         </span>
         <span className="flex items-center gap-1.5">
@@ -102,7 +103,7 @@ function LifeInWeeksCounter({
   weeksTotal: number;
 }) {
   return (
-    <div className="flex items-baseline justify-between rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+    <div className="flex items-baseline justify-between rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 opacity-0 animate-life-card-in dark:border-[#3d3d3a] dark:bg-[#30302e]" style={{ animationDelay: "350ms" }}>
       <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
         Your Life in Weeks
       </span>
@@ -114,7 +115,7 @@ function LifeInWeeksCounter({
 }
 
 // ---------------------------------------------------------------------------
-// Your Life in Numbers — large stat cards
+// Your Life in Numbers — staggered large stat cards
 // ---------------------------------------------------------------------------
 
 function LifeInNumbers({
@@ -136,15 +137,15 @@ function LifeInNumbers({
   const daysRemaining = Math.max(0, Math.round(totalDays - daysLived));
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 opacity-0 animate-life-card-in" style={{ animationDelay: "450ms" }}>
       <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
         Your Life in Numbers
       </h3>
       <div className="space-y-2">
-        <BigStatRow value={daysLived.toLocaleString()} label="days lived" />
-        <BigStatRow value={hoursExperienced.toLocaleString()} label="hours experienced" />
-        <BigStatRow value={weeksLived.toLocaleString()} label="weeks behind you" />
-        <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-4 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+        <BigStatRow value={daysLived.toLocaleString()} label="days lived" delay={500} />
+        <BigStatRow value={hoursExperienced.toLocaleString()} label="hours experienced" delay={580} />
+        <BigStatRow value={weeksLived.toLocaleString()} label="weeks behind you" delay={660} />
+        <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-4 opacity-0 animate-life-number-in dark:border-[#3d3d3a] dark:bg-[#30302e]" style={{ animationDelay: "740ms" }}>
           <span className="text-3xl font-black tabular-nums text-foreground">
             {percentLived.toFixed(0)}%
           </span>
@@ -153,8 +154,8 @@ function LifeInNumbers({
           </span>
           <div className="mt-1 h-2 w-full max-w-[200px] overflow-hidden rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]">
             <div
-              className="h-full rounded-full bg-foreground transition-all"
-              style={{ width: `${Math.min(100, percentLived)}%` }}
+              className="h-full rounded-full bg-foreground animate-life-progress-fill"
+              style={{ width: `${Math.min(100, percentLived)}%`, animationDelay: "900ms" }}
             />
           </div>
           <span className="mt-1 font-mono text-[12px] tabular-nums text-[#87867f]">
@@ -166,9 +167,12 @@ function LifeInNumbers({
   );
 }
 
-function BigStatRow({ value, label }: { value: string; label: string }) {
+function BigStatRow({ value, label, delay }: { value: string; label: string; delay: number }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+    <div
+      className="flex flex-col items-center rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 opacity-0 animate-life-number-in dark:border-[#3d3d3a] dark:bg-[#30302e]"
+      style={{ animationDelay: `${delay}ms` }}
+    >
       <span className="text-2xl font-black tabular-nums tracking-tight text-foreground">
         {value}
       </span>
@@ -178,7 +182,7 @@ function BigStatRow({ value, label }: { value: string; label: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// Year Progress — toggleable hero, progress bar, weeks-of-year dot grid
+// Year Progress — toggleable hero with flip animation
 // ---------------------------------------------------------------------------
 
 const YearProgressSection = React.memo(function YearProgressSection({
@@ -187,16 +191,20 @@ const YearProgressSection = React.memo(function YearProgressSection({
   yearProgress: YearProgressData;
 }) {
   const [showDaysRemaining, setShowDaysRemaining] = useState(false);
+  const [flipKey, setFlipKey] = useState(0);
   const year = new Date().getFullYear();
   const daysRemaining = yearProgress.daysInYear - yearProgress.dayOfYear;
   const currentWeek = Math.ceil(yearProgress.dayOfYear / 7);
   const totalWeeks = Math.ceil(yearProgress.daysInYear / 7);
   const progressBarPct = (yearProgress.dayOfYear / yearProgress.daysInYear) * 100;
 
-  const toggle = useCallback(() => setShowDaysRemaining((v) => !v), []);
+  const toggle = useCallback(() => {
+    setShowDaysRemaining((v) => !v);
+    setFlipKey((k) => k + 1);
+  }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 opacity-0 animate-life-card-in" style={{ animationDelay: "50ms" }}>
       <div className="flex items-center justify-between">
         <span className="rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-3 py-1 text-[12px] font-semibold text-foreground dark:border-[#3d3d3a] dark:bg-[#30302e]">
           {year}
@@ -204,7 +212,7 @@ const YearProgressSection = React.memo(function YearProgressSection({
         <button
           type="button"
           onClick={toggle}
-          className="rounded-full border border-[#e8e6dc] p-1.5 text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+          className="rounded-full border border-[#e8e6dc] p-1.5 text-[#5e5d59] transition-all duration-200 hover:scale-110 hover:bg-[#f0eee6] active:scale-95 dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
           aria-label="Toggle view"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -213,29 +221,34 @@ const YearProgressSection = React.memo(function YearProgressSection({
         </button>
       </div>
 
-      {/* Hero number */}
       <button
         type="button"
         onClick={toggle}
         className="flex w-full flex-col items-center gap-1 py-2"
+        style={{ perspective: "600px" }}
       >
-        <span className="text-6xl font-black tabular-nums tracking-tighter text-foreground">
+        <span
+          key={flipKey}
+          className="text-6xl font-black tabular-nums tracking-tighter text-foreground animate-life-hero-flip"
+        >
           {showDaysRemaining ? daysRemaining : `${Math.round(yearProgress.percentElapsed)}%`}
         </span>
-        <span className="text-[13px] text-[#5e5d59] dark:text-[#87867f]">
+        <span
+          key={`label-${flipKey}`}
+          className="text-[13px] text-[#5e5d59] opacity-0 animate-fade-in dark:text-[#87867f]"
+          style={{ animationDelay: "250ms" }}
+        >
           {showDaysRemaining ? "days remaining" : "of the year complete"}
         </span>
       </button>
 
-      {/* Progress bar */}
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]">
         <div
-          className="h-full rounded-full bg-foreground transition-all duration-500"
-          style={{ width: `${progressBarPct}%` }}
+          className="h-full rounded-full bg-foreground animate-life-progress-fill"
+          style={{ width: `${progressBarPct}%`, animationDelay: "150ms" }}
         />
       </div>
 
-      {/* Weeks-of-year dot grid */}
       <div className="overflow-x-auto py-1">
         <div
           className="mx-auto grid gap-[3px]"
@@ -251,13 +264,14 @@ const YearProgressSection = React.memo(function YearProgressSection({
             return (
               <span
                 key={i}
-                className={`block h-2 w-2 rounded-full transition-all ${
+                className={`block h-2 w-2 rounded-full opacity-0 animate-life-dot-in ${
                   isCurrent
-                    ? "bg-[#c96442] shadow-[0_0_6px_2px_rgba(201,100,66,0.5)] dark:bg-[#d97757] dark:shadow-[0_0_6px_2px_rgba(217,119,87,0.5)]"
+                    ? "bg-[#c96442] animate-life-glow-pulse dark:bg-[#d97757]"
                     : isLived
                       ? "bg-foreground/80"
                       : "bg-[#e8e6dc]/60 dark:bg-[#3d3d3a]/60"
                 }`}
+                style={{ animationDelay: `${200 + i * 6}ms` }}
               />
             );
           })}
@@ -268,26 +282,39 @@ const YearProgressSection = React.memo(function YearProgressSection({
 });
 
 // ---------------------------------------------------------------------------
-// Inspirational Quote Carousel
+// Inspirational Quote Carousel with slide transitions
 // ---------------------------------------------------------------------------
 
 function QuoteCarousel() {
   const [index, setIndex] = useState(() => Math.floor(Math.random() * LIFE_QUOTES.length));
+  const [animClass, setAnimClass] = useState("animate-life-quote-in");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const quote = LIFE_QUOTES[index % LIFE_QUOTES.length]!;
 
+  const navigate = useCallback((dir: 1 | -1) => {
+    setAnimClass("animate-life-quote-out");
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setIndex((i) => (i + dir + LIFE_QUOTES.length) % LIFE_QUOTES.length);
+      setAnimClass("animate-life-quote-in");
+    }, 200);
+  }, []);
+
+  useEffect(() => () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }, []);
+
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5]/80 px-3 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]/80">
+    <div className="flex items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5]/80 px-3 py-3 opacity-0 animate-life-card-in dark:border-[#3d3d3a] dark:bg-[#30302e]/80" style={{ animationDelay: "800ms" }}>
       <button
         type="button"
-        onClick={() => setIndex((i) => (i - 1 + LIFE_QUOTES.length) % LIFE_QUOTES.length)}
-        className="shrink-0 p-0.5 text-[#87867f] transition-colors hover:text-foreground"
+        onClick={() => navigate(-1)}
+        className="shrink-0 rounded-full p-1 text-[#87867f] transition-all duration-200 hover:scale-110 hover:text-foreground active:scale-90"
         aria-label="Previous quote"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
           <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
         </svg>
       </button>
-      <div className="min-w-0 flex-1 text-center">
+      <div className={`min-w-0 flex-1 text-center ${animClass}`} key={index}>
         <p className="line-clamp-2 text-[12px] italic leading-relaxed text-[#4d4c48] dark:text-[#b0aea5]">
           &ldquo;{quote.text}&rdquo;
         </p>
@@ -297,8 +324,8 @@ function QuoteCarousel() {
       </div>
       <button
         type="button"
-        onClick={() => setIndex((i) => (i + 1) % LIFE_QUOTES.length)}
-        className="shrink-0 p-0.5 text-[#87867f] transition-colors hover:text-foreground"
+        onClick={() => navigate(1)}
+        className="shrink-0 rounded-full p-1 text-[#87867f] transition-all duration-200 hover:scale-110 hover:text-foreground active:scale-90"
         aria-label="Next quote"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
@@ -316,13 +343,18 @@ function QuoteCarousel() {
 function CountdownCard({
   countdown,
   onDelete,
+  delay,
 }: {
   countdown: LifeCountdown;
   onDelete: () => void;
+  delay: number;
 }) {
   const absRemaining = Math.abs(countdown.daysRemaining);
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+    <div
+      className="flex items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 opacity-0 animate-life-card-in transition-all duration-200 hover:shadow-md dark:border-[#3d3d3a] dark:bg-[#30302e]"
+      style={{ animationDelay: `${delay}ms` }}
+    >
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] font-semibold text-foreground">
           {countdown.label}
@@ -343,7 +375,7 @@ function CountdownCard({
       <button
         type="button"
         onClick={onDelete}
-        className="shrink-0 rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
+        className="shrink-0 rounded-full p-1 text-neutral-400 transition-all duration-200 hover:scale-110 hover:bg-red-50 hover:text-red-500 active:scale-90 dark:hover:bg-red-950/30 dark:hover:text-red-400"
         aria-label={`Delete ${countdown.label}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
@@ -380,7 +412,7 @@ function AddCountdownForm({
         type="button"
         onClick={() => setOpen(true)}
         disabled={disabled}
-        className="w-full rounded-2xl border border-dashed border-[#d1cfc5] py-3 text-[13px] font-medium text-[#5e5d59] transition-colors hover:border-[#c96442] hover:text-[#c96442] disabled:opacity-40 dark:border-[#4d4c48] dark:text-[#87867f] dark:hover:border-[#d97757] dark:hover:text-[#d97757]"
+        className="w-full rounded-2xl border border-dashed border-[#d1cfc5] py-3 text-[13px] font-medium text-[#5e5d59] transition-all duration-200 hover:border-[#c96442] hover:text-[#c96442] hover:shadow-sm active:scale-[0.98] disabled:opacity-40 dark:border-[#4d4c48] dark:text-[#87867f] dark:hover:border-[#d97757] dark:hover:text-[#d97757]"
       >
         + Add countdown
       </button>
@@ -388,34 +420,35 @@ function AddCountdownForm({
   }
 
   return (
-    <div className="space-y-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] p-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+    <div className="space-y-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] p-3 animate-life-card-in dark:border-[#3d3d3a] dark:bg-[#30302e]">
       <input
         type="text"
         value={label}
         onChange={(e) => setLabel(e.target.value)}
         placeholder="Countdown name"
         maxLength={100}
-        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
+        autoFocus
+        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none transition-shadow focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
       />
       <input
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
+        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none transition-shadow focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
       />
       <div className="flex gap-2">
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!label.trim() || !date}
-          className="flex-1 rounded-xl border border-[#c96442] bg-[#f5f4ed] py-2 text-[13px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] disabled:opacity-40 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
+          className="flex-1 rounded-xl border border-[#c96442] bg-[#f5f4ed] py-2 text-[13px] font-semibold text-[#4d4c48] transition-all duration-200 hover:bg-[#e8e6dc] hover:shadow-sm active:scale-[0.97] disabled:opacity-40 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
         >
           Save
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="flex-1 rounded-xl border border-[#e8e6dc] py-2 text-[13px] font-medium text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+          className="flex-1 rounded-xl border border-[#e8e6dc] py-2 text-[13px] font-medium text-[#5e5d59] transition-all duration-200 hover:bg-[#f0eee6] active:scale-[0.97] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
         >
           Cancel
         </button>
@@ -450,7 +483,7 @@ const FireTrackerSection = React.memo(function FireTrackerSection({
   const offset = circumference * (1 - Math.min(1, fire.percentComplete / 100));
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 opacity-0 animate-life-card-in" style={{ animationDelay: "900ms" }}>
       <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
         FIRE Tracker
       </h3>
@@ -476,7 +509,8 @@ const FireTrackerSection = React.memo(function FireTrackerSection({
               r={normalizedRadius}
               cx={radius}
               cy={radius}
-              className="text-emerald-500 transition-all duration-500 dark:text-emerald-400"
+              className="text-emerald-500 dark:text-emerald-400"
+              style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)" }}
             />
           </svg>
           <div className="min-w-0 flex-1">
@@ -502,7 +536,7 @@ const FireTrackerSection = React.memo(function FireTrackerSection({
         <button
           type="button"
           onClick={onOpenGoals}
-          className="mt-3 w-full rounded-xl border border-[#e8e6dc] py-2 text-[12px] font-medium text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+          className="mt-3 w-full rounded-xl border border-[#e8e6dc] py-2 text-[12px] font-medium text-[#5e5d59] transition-all duration-200 hover:bg-[#f0eee6] hover:shadow-sm active:scale-[0.98] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
         >
           Edit FIRE settings
         </button>
@@ -513,7 +547,7 @@ const FireTrackerSection = React.memo(function FireTrackerSection({
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-2 dark:border-[#3d3d3a] dark:bg-[#141413]">
+    <div className="rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-2 transition-shadow duration-200 hover:shadow-sm dark:border-[#3d3d3a] dark:bg-[#141413]">
       <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
       <p className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">{label}</p>
     </div>
@@ -545,17 +579,17 @@ function BirthdayOnboarding({
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-8 text-center dark:border-[#3d3d3a] dark:bg-[#30302e]">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10 text-[#c96442] dark:text-[#d97757]">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-8 text-center animate-life-card-in dark:border-[#3d3d3a] dark:bg-[#30302e]">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10 text-[#c96442] animate-life-glow-pulse dark:text-[#d97757]">
         <path d="M5 22h14" />
         <path d="M5 2h14" />
         <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
         <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
       </svg>
-      <h3 className="font-serif text-lg font-medium text-foreground">
+      <h3 className="font-serif text-lg font-medium text-foreground opacity-0 animate-life-number-in" style={{ animationDelay: "150ms" }}>
         See your life in weeks
       </h3>
-      <p className="max-w-xs text-[12px] leading-relaxed text-[#5e5d59] dark:text-[#87867f]">
+      <p className="max-w-xs text-[12px] leading-relaxed text-[#5e5d59] opacity-0 animate-life-number-in dark:text-[#87867f]" style={{ animationDelay: "250ms" }}>
         Enter your date of birth to visualize your life as a grid of weeks.
         This data stays private and is only used for the calendar.
       </p>
@@ -564,13 +598,15 @@ function BirthdayOnboarding({
         value={dateInput}
         onChange={(e) => setDateInput(e.target.value)}
         max={new Date().toISOString().slice(0, 10)}
-        className="w-full max-w-[200px] rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-center text-[14px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
+        className="w-full max-w-[200px] rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-center text-[14px] text-foreground opacity-0 animate-life-number-in outline-none transition-shadow focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
+        style={{ animationDelay: "350ms" }}
       />
       <button
         type="button"
         onClick={handleSave}
         disabled={!dateInput}
-        className="w-full max-w-[200px] rounded-xl border border-[#c96442] bg-[#f5f4ed] py-2.5 text-[14px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] disabled:opacity-40 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
+        className="w-full max-w-[200px] rounded-xl border border-[#c96442] bg-[#f5f4ed] py-2.5 text-[14px] font-semibold text-[#4d4c48] opacity-0 animate-life-number-in transition-all duration-200 hover:bg-[#e8e6dc] hover:shadow-md active:scale-[0.97] disabled:opacity-40 dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
+        style={{ animationDelay: "450ms" }}
       >
         Save birthday
       </button>
@@ -609,8 +645,7 @@ export function LandingMobileLifeTab({
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-4">
-      {/* Goal config pill */}
-      <div className="flex justify-center">
+      <div className="flex justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0ms" }}>
         <GoalConfigPill
           label={
             lifeCalendar.birthday
@@ -623,22 +658,18 @@ export function LandingMobileLifeTab({
 
       {lifeCalendar.birthday ? (
         <>
-          {/* 1. Year Progress — hero section */}
           <YearProgressSection yearProgress={yearProgress} />
 
-          {/* 2. Your Life in Years — dot grid */}
           <LifeInYearsGrid
             lifeExpectancyYears={lifeCalendar.lifeExpectancyYears}
             yearsLived={yearsLived}
           />
 
-          {/* 3. Your Life in Weeks — counter */}
           <LifeInWeeksCounter
             weeksLived={lifeCalendar.weeksLived}
             weeksTotal={lifeCalendar.weeksTotal}
           />
 
-          {/* 4. Your Life in Numbers */}
           <LifeInNumbers
             weeksLived={lifeCalendar.weeksLived}
             percentLived={lifeCalendar.percentLived}
@@ -646,14 +677,13 @@ export function LandingMobileLifeTab({
             lifeExpectancyYears={lifeCalendar.lifeExpectancyYears}
           />
 
-          {/* 5. Inspirational Quote */}
           <QuoteCarousel />
 
-          {/* CTA */}
           <button
             type="button"
             onClick={onOpenGoals}
-            className="w-full rounded-2xl border-2 border-[#e8e6dc] bg-[#faf9f5] py-3.5 text-[15px] font-bold text-foreground transition-colors active:scale-[0.98] dark:border-[#3d3d3a] dark:bg-[#30302e]"
+            className="w-full rounded-2xl border-2 border-[#e8e6dc] bg-[#faf9f5] py-3.5 text-[15px] font-bold text-foreground opacity-0 animate-life-card-in transition-all duration-200 hover:shadow-lg active:scale-[0.97] dark:border-[#3d3d3a] dark:bg-[#30302e]"
+            style={{ animationDelay: "850ms" }}
           >
             Let&apos;s Make Them Count
           </button>
@@ -662,16 +692,16 @@ export function LandingMobileLifeTab({
         <BirthdayOnboarding onSetBirthday={onSetBirthday} />
       )}
 
-      {/* Custom Countdowns */}
       <div className="space-y-2">
-        <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
+        <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f] opacity-0 animate-fade-in" style={{ animationDelay: "950ms" }}>
           Countdowns
         </h3>
-        {sortedCountdowns.map((cd) => (
+        {sortedCountdowns.map((cd, i) => (
           <CountdownCard
             key={cd.id}
             countdown={cd}
             onDelete={() => onDeleteCountdown(cd.id)}
+            delay={1000 + i * 80}
           />
         ))}
         <AddCountdownForm
@@ -680,11 +710,10 @@ export function LandingMobileLifeTab({
         />
       </div>
 
-      {/* FIRE Tracker */}
       {fireTracker ? (
         <FireTrackerSection fire={fireTracker} onOpenGoals={onOpenGoals} />
       ) : (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-6 text-center dark:border-[#3d3d3a] dark:bg-[#30302e]">
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-6 text-center opacity-0 animate-life-card-in dark:border-[#3d3d3a] dark:bg-[#30302e]" style={{ animationDelay: "1100ms" }}>
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
             FIRE Tracker
           </h3>
@@ -694,7 +723,7 @@ export function LandingMobileLifeTab({
           <button
             type="button"
             onClick={onOpenGoals}
-            className="mt-1 rounded-xl border border-[#c96442] bg-[#f5f4ed] px-4 py-2 text-[13px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
+            className="mt-1 rounded-xl border border-[#c96442] bg-[#f5f4ed] px-4 py-2 text-[13px] font-semibold text-[#4d4c48] transition-all duration-200 hover:bg-[#e8e6dc] hover:shadow-md active:scale-[0.97] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
           >
             Set up FIRE goals
           </button>
