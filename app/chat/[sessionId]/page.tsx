@@ -4077,12 +4077,29 @@ export default function ChatPage() {
     exerciseSessionMinutes: String(DEFAULT_EXERCISE_SESSION_GOAL_MINUTES),
     exerciseDaysOn: String(DEFAULT_EXERCISE_GOAL_DAYS_ON),
     exerciseDaysOff: String(DEFAULT_EXERCISE_GOAL_DAYS_OFF),
+    birthday: "",
+    lifeExpectancyYears: "80",
+    fireSavingsCurrent: "",
+    fireTargetAmount: "",
+    fireMonthlyContribution: "",
+    fireAnnualReturnPct: "",
+    fireCurrentAge: "",
+    fireTargetRetirementAge: "",
   }));
   const [spendBudgetUsd, setSpendBudgetUsd] = useState<number | null>(null);
   const [sleepHoursGoal, setSleepHoursGoal] = useState(DEFAULT_SLEEP_HOURS_GOAL);
   const [exerciseSessionGoalMinutes, setExerciseSessionGoalMinutes] = useState(DEFAULT_EXERCISE_SESSION_GOAL_MINUTES);
   const [exerciseGoalDaysOn, setExerciseGoalDaysOn] = useState(DEFAULT_EXERCISE_GOAL_DAYS_ON);
   const [exerciseGoalDaysOff, setExerciseGoalDaysOff] = useState(DEFAULT_EXERCISE_GOAL_DAYS_OFF);
+  const [lifeBirthday, setLifeBirthday] = useState<string | null>(null);
+  const [lifeExpectancyYears, setLifeExpectancyYears] = useState(80);
+  const [fireSavingsCurrent, setFireSavingsCurrent] = useState<number | null>(null);
+  const [fireTargetAmount, setFireTargetAmount] = useState<number | null>(null);
+  const [fireMonthlyContribution, setFireMonthlyContribution] = useState<number | null>(null);
+  const [fireAnnualReturnPct, setFireAnnualReturnPct] = useState<number | null>(null);
+  const [fireCurrentAge, setFireCurrentAge] = useState<number | null>(null);
+  const [fireTargetRetirementAge, setFireTargetRetirementAge] = useState<number | null>(null);
+  const [lifeCountdowns, setLifeCountdowns] = useState<Array<{ id: string; label: string; targetDate: string }>>([]);
   const [goalsSaving, setGoalsSaving] = useState(false);
   const [goalsSaveError, setGoalsSaveError] = useState<string | null>(null);
   const [goalsWizardActive, setGoalsWizardActive] = useState(false);
@@ -6655,6 +6672,84 @@ export default function ChatPage() {
     () => Math.max(200, Math.round(nutritionGoals.caloriesTarget * 0.2)),
     [nutritionGoals.caloriesTarget]
   );
+
+  const lifeCalendarData = useMemo(() => {
+    const weeksTotal = lifeExpectancyYears * 52;
+    if (!lifeBirthday) return { birthday: null, lifeExpectancyYears, weeksLived: 0, weeksTotal, percentLived: 0 };
+    const birthdayMs = new Date(lifeBirthday + "T00:00:00").getTime();
+    const weeksLived = Math.max(0, Math.floor((Date.now() - birthdayMs) / (7 * 24 * 60 * 60 * 1000)));
+    return {
+      birthday: lifeBirthday,
+      lifeExpectancyYears,
+      weeksLived: Math.min(weeksLived, weeksTotal),
+      weeksTotal,
+      percentLived: weeksTotal > 0 ? (Math.min(weeksLived, weeksTotal) / weeksTotal) * 100 : 0,
+    };
+  }, [lifeBirthday, lifeExpectancyYears]);
+
+  const yearProgressData = useMemo(() => {
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+    const isLeap = (y: number) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+    const daysInYear = isLeap(now.getFullYear()) ? 366 : 365;
+    return { dayOfYear, daysInYear, percentElapsed: (dayOfYear / daysInYear) * 100 };
+  }, []);
+
+  const computedLifeCountdowns = useMemo(() => {
+    const now = Date.now();
+    return lifeCountdowns.map((cd) => {
+      const targetMs = new Date(cd.targetDate + "T00:00:00").getTime();
+      const diffMs = targetMs - now;
+      const daysRemaining = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+      return { ...cd, daysRemaining, isPast: daysRemaining < 0 };
+    });
+  }, [lifeCountdowns]);
+
+  const fireTrackerData = useMemo(() => {
+    if (
+      fireSavingsCurrent == null || fireTargetAmount == null ||
+      fireMonthlyContribution == null || fireAnnualReturnPct == null ||
+      fireCurrentAge == null || fireTargetRetirementAge == null ||
+      fireTargetAmount <= 0
+    ) return null;
+
+    const percentComplete = Math.min(100, (fireSavingsCurrent / fireTargetAmount) * 100);
+
+    let projectedYearsToTarget: number | null = null;
+    if (fireSavingsCurrent < fireTargetAmount && fireMonthlyContribution > 0) {
+      const monthlyRate = fireAnnualReturnPct / 100 / 12;
+      if (monthlyRate > 0) {
+        const months = Math.log(
+          (fireTargetAmount * monthlyRate + fireMonthlyContribution) /
+          (fireSavingsCurrent * monthlyRate + fireMonthlyContribution)
+        ) / Math.log(1 + monthlyRate);
+        projectedYearsToTarget = months > 0 ? months / 12 : null;
+      } else {
+        projectedYearsToTarget = (fireTargetAmount - fireSavingsCurrent) / (fireMonthlyContribution * 12);
+      }
+    }
+
+    let stage: "building" | "growing" | "accelerating" | "approaching" | "reached";
+    if (percentComplete >= 95) stage = "reached";
+    else if (percentComplete >= 65) stage = "approaching";
+    else if (percentComplete >= 40) stage = "accelerating";
+    else if (percentComplete >= 20) stage = "growing";
+    else stage = "building";
+
+    return {
+      savingsCurrent: fireSavingsCurrent,
+      targetAmount: fireTargetAmount,
+      monthlyContribution: fireMonthlyContribution,
+      annualReturnPct: fireAnnualReturnPct,
+      currentAge: fireCurrentAge,
+      targetRetirementAge: fireTargetRetirementAge,
+      percentComplete,
+      projectedYearsToTarget,
+      stage,
+    };
+  }, [fireSavingsCurrent, fireTargetAmount, fireMonthlyContribution, fireAnnualReturnPct, fireCurrentAge, fireTargetRetirementAge]);
+
   const selectedLandingDayNutrition = useMemo(
     () =>
       summarizeNutritionForDay(
@@ -8873,6 +8968,42 @@ export default function ChatPage() {
     }
   }, [isLoading, currentSessionId, router, refetchSessions, refetchScore, messages, messages.length, sessions.length, dismissOnboarding, mentalModelsIndex, longTermMemories, customConcepts, conceptGroups, isAnonymous, incognitoMode, pendingCardContext, pendingOneOnOneMentor, pendingSecondOrder, multiMentorMode, selectedMentorFigureIds, replaceComposerInput]);
 
+  const handleAddLifeCountdown = useCallback(async (label: string, targetDate: string) => {
+    const id = Math.random().toString(36).slice(2, 10);
+    const next = [...lifeCountdowns, { id, label, targetDate }].slice(0, 5);
+    setLifeCountdowns(next);
+    try {
+      await fetch("/api/me/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lifeCountdowns: next }),
+      });
+    } catch { /* silent */ }
+  }, [lifeCountdowns]);
+
+  const handleDeleteLifeCountdown = useCallback(async (id: string) => {
+    const next = lifeCountdowns.filter((c) => c.id !== id);
+    setLifeCountdowns(next);
+    try {
+      await fetch("/api/me/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lifeCountdowns: next }),
+      });
+    } catch { /* silent */ }
+  }, [lifeCountdowns]);
+
+  const handleSetBirthday = useCallback(async (birthday: string) => {
+    setLifeBirthday(birthday);
+    try {
+      await fetch("/api/me/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ birthday }),
+      });
+    } catch { /* silent */ }
+  }, []);
+
   const handleFindNewHabit = useCallback((bucket: HabitBucket) => {
     const bucketPrompts: Record<HabitBucket, string> = {
       creative:
@@ -9201,6 +9332,14 @@ export default function ChatPage() {
           exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
           exerciseDaysOn: String(nextExerciseGoalDaysOn),
           exerciseDaysOff: String(nextExerciseGoalDaysOff),
+          birthday: typeof data?.birthday === "string" ? data.birthday : "",
+          lifeExpectancyYears: typeof data?.lifeExpectancyYears === "number" ? String(data.lifeExpectancyYears) : "80",
+          fireSavingsCurrent: typeof data?.fireSavingsCurrent === "number" ? String(data.fireSavingsCurrent) : "",
+          fireTargetAmount: typeof data?.fireTargetAmount === "number" ? String(data.fireTargetAmount) : "",
+          fireMonthlyContribution: typeof data?.fireMonthlyContribution === "number" ? String(data.fireMonthlyContribution) : "",
+          fireAnnualReturnPct: typeof data?.fireAnnualReturnPct === "number" ? String(data.fireAnnualReturnPct) : "",
+          fireCurrentAge: typeof data?.fireCurrentAge === "number" ? String(data.fireCurrentAge) : "",
+          fireTargetRetirementAge: typeof data?.fireTargetRetirementAge === "number" ? String(data.fireTargetRetirementAge) : "",
         });
         const nextNutritionGoalIntent =
           typeof data?.nutritionGoalIntent === "string"
@@ -9223,6 +9362,15 @@ export default function ChatPage() {
         if (typeof data?.cavemanMode === "boolean") {
           setCavemanMode(data.cavemanMode);
         }
+        if (typeof data?.birthday === "string") setLifeBirthday(data.birthday);
+        if (typeof data?.lifeExpectancyYears === "number") setLifeExpectancyYears(data.lifeExpectancyYears);
+        if (typeof data?.fireSavingsCurrent === "number") setFireSavingsCurrent(data.fireSavingsCurrent);
+        if (typeof data?.fireTargetAmount === "number") setFireTargetAmount(data.fireTargetAmount);
+        if (typeof data?.fireMonthlyContribution === "number") setFireMonthlyContribution(data.fireMonthlyContribution);
+        if (typeof data?.fireAnnualReturnPct === "number") setFireAnnualReturnPct(data.fireAnnualReturnPct);
+        if (typeof data?.fireCurrentAge === "number") setFireCurrentAge(data.fireCurrentAge);
+        if (typeof data?.fireTargetRetirementAge === "number") setFireTargetRetirementAge(data.fireTargetRetirementAge);
+        if (Array.isArray(data?.lifeCountdowns)) setLifeCountdowns(data.lifeCountdowns);
       })
       .catch(() => {});
     return () => {
@@ -9388,6 +9536,14 @@ export default function ChatPage() {
       exerciseSessionMinutes: String(exerciseSessionGoalMinutes),
       exerciseDaysOn: String(exerciseGoalDaysOn),
       exerciseDaysOff: String(exerciseGoalDaysOff),
+      birthday: lifeBirthday ?? "",
+      lifeExpectancyYears: String(lifeExpectancyYears),
+      fireSavingsCurrent: fireSavingsCurrent != null ? String(fireSavingsCurrent) : "",
+      fireTargetAmount: fireTargetAmount != null ? String(fireTargetAmount) : "",
+      fireMonthlyContribution: fireMonthlyContribution != null ? String(fireMonthlyContribution) : "",
+      fireAnnualReturnPct: fireAnnualReturnPct != null ? String(fireAnnualReturnPct) : "",
+      fireCurrentAge: fireCurrentAge != null ? String(fireCurrentAge) : "",
+      fireTargetRetirementAge: fireTargetRetirementAge != null ? String(fireTargetRetirementAge) : "",
     });
     const derivedPercents = deriveMacroPercentsFromGoals(nutritionGoals);
     skipGoalsMacroRecalculateRef.current = true;
@@ -9421,6 +9577,14 @@ export default function ChatPage() {
     exerciseSessionGoalMinutes,
     sleepHoursGoal,
     spendBudgetUsd,
+    lifeBirthday,
+    lifeExpectancyYears,
+    fireSavingsCurrent,
+    fireTargetAmount,
+    fireMonthlyContribution,
+    fireAnnualReturnPct,
+    fireCurrentAge,
+    fireTargetRetirementAge,
   ]);
 
   const saveNutritionGoals = useCallback(async () => {
@@ -9505,6 +9669,14 @@ export default function ChatPage() {
           nutritionFatLossMethod,
           nutritionMethodConfig,
           nutritionGoalIntent: nextNutritionGoalIntent,
+          ...(goalsDraft.birthday ? { birthday: goalsDraft.birthday } : {}),
+          lifeExpectancyYears: Math.max(50, Math.min(120, Math.round(parseFloat(goalsDraft.lifeExpectancyYears) || 80))),
+          ...(goalsDraft.fireSavingsCurrent.trim() ? { fireSavingsCurrent: Math.max(0, parseFloat(goalsDraft.fireSavingsCurrent.replace(/,/g, "")) || 0) } : {}),
+          ...(goalsDraft.fireTargetAmount.trim() ? { fireTargetAmount: Math.max(0, parseFloat(goalsDraft.fireTargetAmount.replace(/,/g, "")) || 0) } : {}),
+          ...(goalsDraft.fireMonthlyContribution.trim() ? { fireMonthlyContribution: Math.max(0, parseFloat(goalsDraft.fireMonthlyContribution.replace(/,/g, "")) || 0) } : {}),
+          ...(goalsDraft.fireAnnualReturnPct.trim() ? { fireAnnualReturnPct: Math.max(0, Math.min(30, parseFloat(goalsDraft.fireAnnualReturnPct) || 0)) } : {}),
+          ...(goalsDraft.fireCurrentAge.trim() ? { fireCurrentAge: Math.max(1, Math.min(120, Math.round(parseFloat(goalsDraft.fireCurrentAge) || 0))) } : {}),
+          ...(goalsDraft.fireTargetRetirementAge.trim() ? { fireTargetRetirementAge: Math.max(1, Math.min(120, Math.round(parseFloat(goalsDraft.fireTargetRetirementAge) || 0))) } : {}),
         }),
       });
       if (!res.ok) {
@@ -9519,7 +9691,16 @@ export default function ChatPage() {
       if (spendPatch.goalDailySpendUsd !== undefined) {
         setSpendBudgetUsd(spendPatch.goalDailySpendUsd);
       }
-      setGoalsDraft({
+      if (goalsDraft.birthday) setLifeBirthday(goalsDraft.birthday);
+      setLifeExpectancyYears(Math.max(50, Math.min(120, Math.round(parseFloat(goalsDraft.lifeExpectancyYears) || 80))));
+      if (goalsDraft.fireSavingsCurrent.trim()) setFireSavingsCurrent(Math.max(0, parseFloat(goalsDraft.fireSavingsCurrent.replace(/,/g, "")) || 0));
+      if (goalsDraft.fireTargetAmount.trim()) setFireTargetAmount(Math.max(0, parseFloat(goalsDraft.fireTargetAmount.replace(/,/g, "")) || 0));
+      if (goalsDraft.fireMonthlyContribution.trim()) setFireMonthlyContribution(Math.max(0, parseFloat(goalsDraft.fireMonthlyContribution.replace(/,/g, "")) || 0));
+      if (goalsDraft.fireAnnualReturnPct.trim()) setFireAnnualReturnPct(Math.max(0, Math.min(30, parseFloat(goalsDraft.fireAnnualReturnPct) || 0)));
+      if (goalsDraft.fireCurrentAge.trim()) setFireCurrentAge(Math.max(1, Math.min(120, Math.round(parseFloat(goalsDraft.fireCurrentAge) || 0))));
+      if (goalsDraft.fireTargetRetirementAge.trim()) setFireTargetRetirementAge(Math.max(1, Math.min(120, Math.round(parseFloat(goalsDraft.fireTargetRetirementAge) || 0))));
+      setGoalsDraft((prev) => ({
+        ...prev,
         caloriesTarget: String(nextGoals.caloriesTarget),
         carbsGrams: String(nextGoals.carbsGrams),
         proteinGrams: String(nextGoals.proteinGrams),
@@ -9532,7 +9713,7 @@ export default function ChatPage() {
         exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
         exerciseDaysOn: String(nextExerciseGoalDaysOn),
         exerciseDaysOff: String(nextExerciseGoalDaysOff),
-      });
+      }));
       setNutritionGoalIntent(nextNutritionGoalIntent);
       setGoalsModalOpen(false);
     } catch {
@@ -16310,6 +16491,13 @@ export default function ChatPage() {
                         exerciseGoalDaysOff={exerciseGoalDaysOff}
                         sleepHoursGoal={sleepHoursGoal}
                         spendBudgetUsd={spendBudgetUsd}
+                        lifeCalendarData={lifeCalendarData}
+                        yearProgressData={yearProgressData}
+                        lifeCountdowns={computedLifeCountdowns}
+                        fireTrackerData={fireTrackerData}
+                        onAddLifeCountdown={handleAddLifeCountdown}
+                        onDeleteLifeCountdown={handleDeleteLifeCountdown}
+                        onSetBirthday={handleSetBirthday}
                         menuTourOnAndMoreTab={hideMobileSidebarDrawerForLanding}
                         mobileLibraryTabOpenerRef={landingMobileLibraryOpenerRef}
                         mobileAndMore={renderSidebarLibraryScroll({
@@ -19774,6 +19962,164 @@ export default function ChatPage() {
                     </div>
                     <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                       Exercise tab will use these alongside your calorie-burn goal.
+                    </p>
+                  </div>
+
+                  {/* Life Calendar Settings */}
+                  <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 space-y-3">
+                    <p className="text-sm font-semibold text-foreground">Life Calendar</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Birthday
+                        </label>
+                        <input
+                          type="date"
+                          value={goalsDraft.birthday}
+                          max={new Date().toISOString().slice(0, 10)}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, birthday: e.target.value }))
+                          }
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Life expectancy (yr)
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={50}
+                          max={120}
+                          step={1}
+                          value={goalsDraft.lifeExpectancyYears}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, lifeExpectancyYears: e.target.value }))
+                          }
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Used for the life-in-weeks grid on the Life tab.
+                    </p>
+                  </div>
+
+                  {/* FIRE Tracker Settings */}
+                  <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 space-y-3">
+                    <p className="text-sm font-semibold text-foreground">FIRE Tracker</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Current savings ($)
+                        </label>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={goalsDraft.fireSavingsCurrent}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireSavingsCurrent: e.target.value }))
+                          }
+                          placeholder="e.g. 50000"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Target amount ($)
+                        </label>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={goalsDraft.fireTargetAmount}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireTargetAmount: e.target.value }))
+                          }
+                          placeholder="e.g. 1000000"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Monthly contribution ($)
+                        </label>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={goalsDraft.fireMonthlyContribution}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireMonthlyContribution: e.target.value }))
+                          }
+                          placeholder="e.g. 2000"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Annual return (%)
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min={0}
+                          max={30}
+                          step={0.1}
+                          value={goalsDraft.fireAnnualReturnPct}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireAnnualReturnPct: e.target.value }))
+                          }
+                          placeholder="e.g. 7"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Current age
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          max={120}
+                          step={1}
+                          value={goalsDraft.fireCurrentAge}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireCurrentAge: e.target.value }))
+                          }
+                          placeholder="e.g. 30"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                          Target retirement age
+                        </label>
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          max={120}
+                          step={1}
+                          value={goalsDraft.fireTargetRetirementAge}
+                          onChange={(e) =>
+                            setGoalsDraft((prev) => ({ ...prev, fireTargetRetirementAge: e.target.value }))
+                          }
+                          placeholder="e.g. 45"
+                          disabled={goalsSaving}
+                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                      Track your progress toward financial independence on the Life tab.
                     </p>
                   </div>
                   {goalsCalculatorRationale && (

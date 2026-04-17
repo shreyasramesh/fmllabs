@@ -12,6 +12,7 @@ export type MobileBottomTab =
   | "weight"
   | "sleep"
   | "metacognition"
+  | "life"
   | "andMore";
 
 interface LandingMobileTabBarProps {
@@ -36,6 +37,7 @@ export const MOBILE_BOTTOM_TABS: ReadonlyArray<{
   { key: "sleep", label: "Sleep", ariaLabel: "Sleep", description: "Track sleep duration, HRV, and recovery." },
   { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace", description: "Save quotes and build a commonplace book." },
   { key: "metacognition", label: "Meta", ariaLabel: "Metacognition", description: "Chat with mentors and run metacognition sessions." },
+  { key: "life", label: "Life", ariaLabel: "Life Calendar", description: "Visualize your life in weeks, track goals, and plan for financial freedom." },
   { key: "andMore", label: "More", ariaLabel: "Library and more", description: "Habits, groups, mental models, long-term memory, and more." },
 ];
 
@@ -104,6 +106,15 @@ export function MobileTabIcon({ tab, active }: { tab: MobileBottomTab; active: b
           <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
           <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
           <path d="M12 18v-3" />
+        </svg>
+      );
+    case "life":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <path d="M5 22h14" />
+          <path d="M5 2h14" />
+          <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+          <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
         </svg>
       );
     case "andMore":

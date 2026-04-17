@@ -264,6 +264,72 @@ export async function PATCH(request: Request) {
       updates.reminderPreferences = normalizeReminderPreferences(body.reminderPreferences);
     }
 
+    if (body.birthday !== undefined) {
+      if (typeof body.birthday === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.birthday)) {
+        const d = new Date(body.birthday + "T00:00:00Z");
+        const now = new Date();
+        const minDate = new Date(now.getFullYear() - 120, now.getMonth(), now.getDate());
+        if (!isNaN(d.getTime()) && d < now && d >= minDate) {
+          updates.birthday = body.birthday;
+        }
+      } else if (body.birthday === null || body.birthday === "") {
+        updates.birthday = undefined;
+      }
+    }
+    if (body.lifeExpectancyYears !== undefined) {
+      const v = parseNumberish(body.lifeExpectancyYears);
+      if (v !== null) {
+        updates.lifeExpectancyYears = Math.max(50, Math.min(120, Math.round(v)));
+      }
+    }
+    if (body.fireSavingsCurrent !== undefined) {
+      const v = parseNumberish(body.fireSavingsCurrent);
+      if (v !== null) updates.fireSavingsCurrent = Math.max(0, v);
+    }
+    if (body.fireTargetAmount !== undefined) {
+      const v = parseNumberish(body.fireTargetAmount);
+      if (v !== null) updates.fireTargetAmount = Math.max(0, v);
+    }
+    if (body.fireMonthlyContribution !== undefined) {
+      const v = parseNumberish(body.fireMonthlyContribution);
+      if (v !== null) updates.fireMonthlyContribution = Math.max(0, v);
+    }
+    if (body.fireAnnualReturnPct !== undefined) {
+      const v = parseNumberish(body.fireAnnualReturnPct);
+      if (v !== null) updates.fireAnnualReturnPct = Math.max(0, Math.min(30, v));
+    }
+    if (body.fireCurrentAge !== undefined) {
+      const v = parseNumberish(body.fireCurrentAge);
+      if (v !== null) updates.fireCurrentAge = Math.max(1, Math.min(120, Math.round(v)));
+    }
+    if (body.fireTargetRetirementAge !== undefined) {
+      const v = parseNumberish(body.fireTargetRetirementAge);
+      if (v !== null) updates.fireTargetRetirementAge = Math.max(1, Math.min(120, Math.round(v)));
+    }
+    if (body.lifeCountdowns !== undefined) {
+      if (Array.isArray(body.lifeCountdowns)) {
+        const cleaned = body.lifeCountdowns
+          .filter(
+            (c: unknown): c is { id: string; label: string; targetDate: string } =>
+              typeof c === "object" &&
+              c !== null &&
+              typeof (c as Record<string, unknown>).id === "string" &&
+              typeof (c as Record<string, unknown>).label === "string" &&
+              typeof (c as Record<string, unknown>).targetDate === "string" &&
+              /^\d{4}-\d{2}-\d{2}$/.test((c as Record<string, unknown>).targetDate as string),
+          )
+          .slice(0, 5)
+          .map((c) => ({
+            id: c.id.slice(0, 36),
+            label: c.label.trim().slice(0, 100),
+            targetDate: c.targetDate,
+          }));
+        updates.lifeCountdowns = cleaned;
+      } else if (body.lifeCountdowns === null) {
+        updates.lifeCountdowns = undefined;
+      }
+    }
+
     if (Object.keys(updates).length === 0) {
       const current = await getUserSettings(userId);
       return NextResponse.json(current ?? {});

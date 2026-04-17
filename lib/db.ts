@@ -609,6 +609,28 @@ export interface UserSettings {
     weight: { enabled: boolean; hour: number; minute: number; days: number[] };
     mentalModel: { enabled: boolean; hour: number; minute: number; days: number[] };
   };
+  /** ISO date string (YYYY-MM-DD) for the life-in-weeks calendar. */
+  birthday?: string;
+  /** Expected lifespan in years for the life calendar grid (default 80, range 50-120). */
+  lifeExpectancyYears?: number;
+  /** FIRE tracker: current total savings (USD). */
+  fireSavingsCurrent?: number;
+  /** FIRE tracker: target nest-egg amount (USD). */
+  fireTargetAmount?: number;
+  /** FIRE tracker: monthly savings contribution (USD). */
+  fireMonthlyContribution?: number;
+  /** FIRE tracker: expected annual return percentage (e.g. 7 for 7%). */
+  fireAnnualReturnPct?: number;
+  /** FIRE tracker: user's current age (derived from birthday or manually set). */
+  fireCurrentAge?: number;
+  /** FIRE tracker: target retirement age. */
+  fireTargetRetirementAge?: number;
+  /** Up to 5 custom countdowns displayed in the Life tab. */
+  lifeCountdowns?: Array<{
+    id: string;
+    label: string;
+    targetDate: string;
+  }>;
   updatedAt: Date;
 }
 

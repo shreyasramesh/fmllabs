@@ -174,3 +174,41 @@ export interface LandingFoodSuggestion {
   carbsGrams: number | null;
   fatGrams: number | null;
 }
+
+/** Pre-computed life-in-weeks calendar data for the Life tab. */
+export interface LifeCalendarData {
+  birthday: string | null;
+  lifeExpectancyYears: number;
+  weeksLived: number;
+  weeksTotal: number;
+  percentLived: number;
+}
+
+/** Current-year progress for the Life tab ring visualization. */
+export interface YearProgressData {
+  dayOfYear: number;
+  daysInYear: number;
+  percentElapsed: number;
+}
+
+/** A single custom countdown in the Life tab. */
+export interface LifeCountdown {
+  id: string;
+  label: string;
+  targetDate: string;
+  daysRemaining: number;
+  isPast: boolean;
+}
+
+/** FIRE tracker data for the Life tab. */
+export interface FireTrackerData {
+  savingsCurrent: number;
+  targetAmount: number;
+  monthlyContribution: number;
+  annualReturnPct: number;
+  currentAge: number;
+  targetRetirementAge: number;
+  percentComplete: number;
+  projectedYearsToTarget: number | null;
+  stage: "building" | "growing" | "accelerating" | "approaching" | "reached";
+}

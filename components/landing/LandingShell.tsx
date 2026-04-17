@@ -19,6 +19,7 @@ import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExer
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
 import { LandingMobileSleepTab } from "@/components/landing/LandingMobileSleepTab";
 import { LandingMobileSpendTab } from "@/components/landing/LandingMobileSpendTab";
+import { LandingMobileLifeTab } from "@/components/landing/LandingMobileLifeTab";
 import { SleepDurationPicker } from "@/components/landing/SleepDurationPicker";
 import { formatSleepDuration, roundSleepHoursToMinute } from "@/lib/sleep-duration";
 import { useTheme } from "@/components/ThemeProvider";
@@ -26,7 +27,9 @@ import type { HabitBucket } from "@/lib/habit-buckets";
 import type {
   CaffeineFocusWindow,
   CaffeineIntake,
-
+  FireTrackerData,
+  LifeCalendarData,
+  LifeCountdown,
   LandingActivityGroupSummary,
   LandingDateItem,
   LandingFigureSummary,
@@ -41,6 +44,7 @@ import type {
   LandingTimelineEvent,
   LandingWeeklySummaryPreview,
   LandingWeightPoint,
+  YearProgressData,
 } from "@/components/landing/types";
 
 /** Scroll offset when jumping to #sec-* (sticky in-app chrome + safe area). */
@@ -472,6 +476,20 @@ interface LandingShellProps {
   isAnonymous?: boolean;
   /** Called when an anonymous visitor taps a feature card — host opens a sign-in modal. */
   onAnonymousFeatureClick?: () => void;
+  /** Pre-computed life-in-weeks calendar data for the Life tab. */
+  lifeCalendarData: LifeCalendarData;
+  /** Current year progress data. */
+  yearProgressData: YearProgressData;
+  /** Custom countdowns (up to 5). */
+  lifeCountdowns: LifeCountdown[];
+  /** FIRE tracker data; null when unconfigured. */
+  fireTrackerData: FireTrackerData | null;
+  /** Add a new custom countdown. */
+  onAddLifeCountdown: (label: string, targetDate: string) => void;
+  /** Delete a custom countdown by id. */
+  onDeleteLifeCountdown: (id: string) => void;
+  /** Set the user's birthday (ISO date string). */
+  onSetBirthday: (birthday: string) => void;
 }
 
 export function LandingShell({
@@ -634,6 +652,13 @@ export function LandingShell({
   menuTourOnAndMoreTab = false,
   isAnonymous = false,
   onAnonymousFeatureClick,
+  lifeCalendarData,
+  yearProgressData,
+  lifeCountdowns,
+  fireTrackerData,
+  onAddLifeCountdown,
+  onDeleteLifeCountdown,
+  onSetBirthday,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
@@ -897,6 +922,19 @@ export function LandingShell({
         );
       case "metacognition":
         return null;
+      case "life":
+        return (
+          <LandingMobileLifeTab
+            lifeCalendar={lifeCalendarData}
+            yearProgress={yearProgressData}
+            countdowns={lifeCountdowns}
+            fireTracker={fireTrackerData}
+            onOpenGoals={onOpenGoals}
+            onAddCountdown={onAddLifeCountdown}
+            onDeleteCountdown={onDeleteLifeCountdown}
+            onSetBirthday={onSetBirthday}
+          />
+        );
       case "andMore":
         return mobileAndMore ?? null;
     }
@@ -1540,6 +1578,88 @@ export function LandingShell({
               </div>
             </>}
           </Skeleton>
+        </ModuleCard>
+      </div>
+
+      {/* Life Calendar — memento mori & FIRE tracker */}
+      <div id="sec-life" className={SECTION_SCROLL_MARGIN}>
+        <ModuleCard eyebrow="Life Calendar" title="Life Calendar" description="Visualize your time. Make every week count.">
+          {lifeCalendarData.birthday ? (
+            <div className="space-y-4">
+              <div className="overflow-x-auto">
+                <div
+                  className="mx-auto"
+                  style={{ maxWidth: (3 + 1) * 52 + "px" }}
+                >
+                  <div
+                    className="grid"
+                    style={{
+                      gridTemplateColumns: `repeat(52, 3px)`,
+                      gap: "1px",
+                    }}
+                  >
+                    {Array.from({ length: Math.ceil(lifeCalendarData.weeksTotal / 52) * 52 }, (_, i) => {
+                      if (i >= lifeCalendarData.weeksTotal) return <span key={i} />;
+                      const lived = i < lifeCalendarData.weeksLived;
+                      return (
+                        <span
+                          key={i}
+                          className={`block rounded-full ${
+                            lived
+                              ? "bg-[#c96442] dark:bg-[#d97757]"
+                              : "bg-[#e8e6dc] dark:bg-[#3d3d3a]"
+                          }`}
+                          style={{ width: 3, height: 3 }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-[#5e5d59] dark:text-[#87867f]">
+                <span>{lifeCalendarData.weeksLived.toLocaleString()} weeks lived</span>
+                <span>{(lifeCalendarData.weeksTotal - lifeCalendarData.weeksLived).toLocaleString()} remaining</span>
+                <span>{lifeCalendarData.percentLived.toFixed(1)}%</span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col items-center gap-1 rounded-xl border border-[#e8e6dc] bg-[#faf9f5] p-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+                  <span className="text-lg font-bold tabular-nums text-foreground">
+                    {yearProgressData.percentElapsed.toFixed(1)}%
+                  </span>
+                  <span className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">
+                    {new Date().getFullYear()} Progress · Day {yearProgressData.dayOfYear}
+                  </span>
+                </div>
+                {fireTrackerData && (
+                  <div className="flex flex-col items-center gap-1 rounded-xl border border-[#e8e6dc] bg-[#faf9f5] p-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+                    <span className="text-lg font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
+                      {fireTrackerData.percentComplete.toFixed(1)}%
+                    </span>
+                    <span className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">
+                      FIRE{fireTrackerData.projectedYearsToTarget != null ? ` · ~${fireTrackerData.projectedYearsToTarget.toFixed(1)} yr` : ""}
+                    </span>
+                  </div>
+                )}
+              </div>
+              {lifeCountdowns.length > 0 && (
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">Countdowns</p>
+                  {lifeCountdowns.map((cd) => (
+                    <div key={cd.id} className="flex items-center justify-between rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-1.5 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+                      <span className="truncate text-[12px] font-medium text-foreground">{cd.label}</span>
+                      <span className="shrink-0 text-[11px] tabular-nums text-[#5e5d59] dark:text-[#87867f]">
+                        {cd.isPast ? `${Math.abs(cd.daysRemaining)}d ago` : `${cd.daysRemaining}d`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="py-4 text-center text-[13px] text-[#87867f] dark:text-neutral-500">
+              Set your birthday in Goals to visualize your life in weeks.
+            </p>
+          )}
         </ModuleCard>
       </div>
 
