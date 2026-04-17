@@ -644,7 +644,7 @@ export function LandingMobileLifeTab({
   }, [lifeCalendar.birthday]);
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-4">
+    <div className="flex flex-col gap-6 px-4 pb-8">
       <div className="flex justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0ms" }}>
         <GoalConfigPill
           label={

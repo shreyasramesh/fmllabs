@@ -79,7 +79,7 @@ export function LandingMobileSleepTab({
   }
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-4">
+    <div className="flex flex-col gap-5 px-4 pb-8">
       <div className="space-y-3">
         <div className="flex justify-center">
           <GoalConfigPill

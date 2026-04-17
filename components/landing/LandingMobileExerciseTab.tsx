@@ -124,7 +124,7 @@ export function LandingMobileExerciseTab({
   }, [weeklySummary]);
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-4">
+    <div className="flex flex-col gap-6 px-4 pb-8">
       <div className="flex justify-center">
         <GoalConfigPill
           label={`Goal: ${exerciseBurnGoalKcal.toLocaleString()} kcal · ${exerciseSessionGoalMinutes}m · ${exerciseGoalDaysOn} on / ${exerciseGoalDaysOff} off`}

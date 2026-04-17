@@ -944,7 +944,9 @@ export function LandingShell({
     <>
       {/* ===== Mobile tabbed layout ===== */}
       <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col animate-fade-in-up md:hidden">
-        <div className={`flex min-h-0 flex-1 flex-col ${isAnonymous ? "" : "pb-20"}`}>
+        <div
+          className={`flex min-h-0 flex-1 flex-col ${isAnonymous ? "" : "pb-[calc(5rem+env(safe-area-inset-bottom,0px))]"}`}
+        >
           {isAnonymous ? (
             <LandingAnonymousFeatureGrid
               onFeatureClick={() => onAnonymousFeatureClick?.()}
@@ -952,7 +954,7 @@ export function LandingShell({
           ) : activeMobileTab !== "metacognition" ? (
             mobileTabContent
           ) : (
-            <div className="space-y-4 px-4">
+            <div className="space-y-4 px-4 pb-8">
               {/* Thought of the Day */}
               {thoughtOfTheDay && (
                 <LandingThoughtOfTheDayBanner

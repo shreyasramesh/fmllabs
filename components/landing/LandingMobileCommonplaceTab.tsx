@@ -410,7 +410,7 @@ export function LandingMobileCommonplaceTab() {
   }, []);
 
   return (
-    <div className="flex min-h-0 w-full flex-col px-3 sm:px-4">
+    <div className="flex min-h-0 w-full flex-col px-3 pb-8 sm:px-4">
       {/* Header */}
       <div className="mb-3 flex items-baseline gap-2">
         <h2 className="text-base font-semibold text-[#141413] dark:text-[#faf9f5]">

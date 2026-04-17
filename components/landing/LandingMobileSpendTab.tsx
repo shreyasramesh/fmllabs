@@ -41,7 +41,7 @@ export function LandingMobileSpendTab({
       : [];
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-4">
+    <div className="flex flex-col gap-5 px-4 pb-8">
       <LandingMobileGoalsCard
         rows={spendGoalRows}
         emptyHint="Set an optional daily USD budget under Daily goals (or open Goals below) to track spend against it."

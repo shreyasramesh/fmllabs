@@ -156,7 +156,7 @@ export function LandingMobileWeightTab({
       : null;
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-4">
+    <div className="flex flex-col gap-5 px-4 pb-8">
       {/* Header */}
       <div className="space-y-3">
         <div className="flex justify-center">
