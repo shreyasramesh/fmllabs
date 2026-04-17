@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { GoalConfigPill } from "@/components/landing/GoalConfigPill";
 import type {
   LifeCalendarData,
@@ -20,128 +20,294 @@ interface LandingMobileLifeTabProps {
   onSetBirthday: (birthday: string) => void;
 }
 
+const LIFE_QUOTES = [
+  { text: "The bad news is time flies. The good news is you're the pilot.", author: "Michael Altshuler" },
+  { text: "It is not that we have a short time to live, but that we waste a great deal of it.", author: "Seneca" },
+  { text: "The cost of a thing is the amount of life you exchange for it.", author: "Henry David Thoreau" },
+  { text: "How we spend our days is, of course, how we spend our lives.", author: "Annie Dillard" },
+  { text: "You could leave life right now. Let that determine what you do and say and think.", author: "Marcus Aurelius" },
+  { text: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
+  { text: "Lost time is never found again.", author: "Benjamin Franklin" },
+  { text: "The trouble is, you think you have time.", author: "Jack Kornfield" },
+];
+
 // ---------------------------------------------------------------------------
-// Life Calendar Dot Grid
+// Your Life in Years — dot grid (10 columns, ~8 rows for 80yr)
 // ---------------------------------------------------------------------------
 
-const GRID_COLS = 52;
+const LifeInYearsGrid = React.memo(function LifeInYearsGrid({
+  lifeExpectancyYears,
+  yearsLived,
+}: {
+  lifeExpectancyYears: number;
+  yearsLived: number;
+}) {
+  const cols = 10;
+  const currentYearIndex = Math.floor(yearsLived);
+  const aheadYears = lifeExpectancyYears - currentYearIndex - 1;
 
-const LifeCalendarGrid = React.memo(function LifeCalendarGrid({
+  return (
+    <div className="space-y-3">
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f] dark:text-[#87867f]">
+        Your Life in Years
+      </h3>
+      <div
+        className="grid justify-center gap-[6px]"
+        style={{ gridTemplateColumns: `repeat(${cols}, 24px)` }}
+      >
+        {Array.from({ length: lifeExpectancyYears }, (_, i) => {
+          const isLived = i < currentYearIndex;
+          const isThisYear = i === currentYearIndex;
+          return (
+            <span
+              key={i}
+              className={`block h-6 w-6 rounded-full transition-colors ${
+                isLived
+                  ? "bg-[#c96442] dark:bg-[#d97757]"
+                  : isThisYear
+                    ? "bg-[#c96442]/70 ring-2 ring-[#c96442]/40 dark:bg-[#d97757]/70 dark:ring-[#d97757]/40"
+                    : "bg-[#e8e6dc] dark:bg-[#3d3d3a]"
+              }`}
+            />
+          );
+        })}
+      </div>
+      <div className="flex items-center justify-center gap-4 text-[11px]">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#c96442] dark:bg-[#d97757]" />
+          <span className="text-[#5e5d59] dark:text-[#87867f]">Years lived ({currentYearIndex})</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#c96442]/70 ring-1 ring-[#c96442]/40 dark:bg-[#d97757]/70 dark:ring-[#d97757]/40" />
+          <span className="text-[#5e5d59] dark:text-[#87867f]">This year</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]" />
+          <span className="text-[#5e5d59] dark:text-[#87867f]">Ahead ({Math.max(0, aheadYears)})</span>
+        </span>
+      </div>
+    </div>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Your Life in Weeks — compact counter
+// ---------------------------------------------------------------------------
+
+function LifeInWeeksCounter({
   weeksLived,
   weeksTotal,
-  percentLived,
 }: {
   weeksLived: number;
   weeksTotal: number;
-  percentLived: number;
 }) {
-  const rows = Math.ceil(weeksTotal / GRID_COLS);
-  const dotSize = weeksTotal > 4160 ? 3 : 4;
-  const gap = weeksTotal > 4160 ? 1 : 1.5;
+  return (
+    <div className="flex items-baseline justify-between rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+      <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
+        Your Life in Weeks
+      </span>
+      <span className="font-mono text-[13px] font-semibold tabular-nums text-foreground">
+        Week {weeksLived.toLocaleString()} of {weeksTotal.toLocaleString()}
+      </span>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Your Life in Numbers — large stat cards
+// ---------------------------------------------------------------------------
+
+function LifeInNumbers({
+  weeksLived,
+  percentLived,
+  birthday,
+  lifeExpectancyYears,
+}: {
+  weeksLived: number;
+  percentLived: number;
+  birthday: string;
+  lifeExpectancyYears: number;
+}) {
+  const birthdayMs = new Date(birthday + "T00:00:00").getTime();
+  const nowMs = Date.now();
+  const daysLived = Math.floor((nowMs - birthdayMs) / (24 * 60 * 60 * 1000));
+  const hoursExperienced = daysLived * 24;
+  const totalDays = lifeExpectancyYears * 365.25;
+  const daysRemaining = Math.max(0, Math.round(totalDays - daysLived));
 
   return (
-    <div className="landing-module-glass rounded-2xl border p-3">
-      <div
-        className="mx-auto overflow-x-auto"
-        style={{ maxWidth: (dotSize + gap) * GRID_COLS + "px" }}
+    <div className="space-y-3">
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
+        Your Life in Numbers
+      </h3>
+      <div className="space-y-2">
+        <BigStatRow value={daysLived.toLocaleString()} label="days lived" />
+        <BigStatRow value={hoursExperienced.toLocaleString()} label="hours experienced" />
+        <BigStatRow value={weeksLived.toLocaleString()} label="weeks behind you" />
+        <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-4 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+          <span className="text-3xl font-black tabular-nums text-foreground">
+            {percentLived.toFixed(0)}%
+          </span>
+          <span className="text-[12px] text-[#5e5d59] dark:text-[#87867f]">
+            of your life has passed
+          </span>
+          <div className="mt-1 h-2 w-full max-w-[200px] overflow-hidden rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]">
+            <div
+              className="h-full rounded-full bg-foreground transition-all"
+              style={{ width: `${Math.min(100, percentLived)}%` }}
+            />
+          </div>
+          <span className="mt-1 font-mono text-[12px] tabular-nums text-[#87867f]">
+            {daysRemaining.toLocaleString()} days remaining
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BigStatRow({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+      <span className="text-2xl font-black tabular-nums tracking-tight text-foreground">
+        {value}
+      </span>
+      <span className="text-[12px] text-[#5e5d59] dark:text-[#87867f]">{label}</span>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Year Progress — toggleable hero, progress bar, weeks-of-year dot grid
+// ---------------------------------------------------------------------------
+
+const YearProgressSection = React.memo(function YearProgressSection({
+  yearProgress,
+}: {
+  yearProgress: YearProgressData;
+}) {
+  const [showDaysRemaining, setShowDaysRemaining] = useState(false);
+  const year = new Date().getFullYear();
+  const daysRemaining = yearProgress.daysInYear - yearProgress.dayOfYear;
+  const currentWeek = Math.ceil(yearProgress.dayOfYear / 7);
+  const totalWeeks = Math.ceil(yearProgress.daysInYear / 7);
+  const progressBarPct = (yearProgress.dayOfYear / yearProgress.daysInYear) * 100;
+
+  const toggle = useCallback(() => setShowDaysRemaining((v) => !v), []);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="rounded-full border border-[#e8e6dc] bg-[#faf9f5] px-3 py-1 text-[12px] font-semibold text-foreground dark:border-[#3d3d3a] dark:bg-[#30302e]">
+          {year}
+        </span>
+        <button
+          type="button"
+          onClick={toggle}
+          className="rounded-full border border-[#e8e6dc] p-1.5 text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+          aria-label="Toggle view"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Hero number */}
+      <button
+        type="button"
+        onClick={toggle}
+        className="flex w-full flex-col items-center gap-1 py-2"
       >
+        <span className="text-6xl font-black tabular-nums tracking-tighter text-foreground">
+          {showDaysRemaining ? daysRemaining : `${Math.round(yearProgress.percentElapsed)}%`}
+        </span>
+        <span className="text-[13px] text-[#5e5d59] dark:text-[#87867f]">
+          {showDaysRemaining ? "days remaining" : "of the year complete"}
+        </span>
+      </button>
+
+      {/* Progress bar */}
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]">
         <div
-          className="grid"
+          className="h-full rounded-full bg-foreground transition-all duration-500"
+          style={{ width: `${progressBarPct}%` }}
+        />
+      </div>
+
+      {/* Weeks-of-year dot grid */}
+      <div className="overflow-x-auto py-1">
+        <div
+          className="mx-auto grid gap-[3px]"
           style={{
-            gridTemplateColumns: `repeat(${GRID_COLS}, ${dotSize}px)`,
-            gap: `${gap}px`,
+            gridTemplateColumns: `repeat(${totalWeeks}, 8px)`,
+            maxWidth: totalWeeks * 11 + "px",
           }}
         >
-          {Array.from({ length: rows * GRID_COLS }, (_, i) => {
-            if (i >= weeksTotal) return <span key={i} />;
-            const lived = i < weeksLived;
+          {Array.from({ length: totalWeeks }, (_, i) => {
+            const weekNum = i + 1;
+            const isLived = weekNum < currentWeek;
+            const isCurrent = weekNum === currentWeek;
             return (
               <span
                 key={i}
-                className={`block rounded-full ${
-                  lived
-                    ? "bg-[#c96442] dark:bg-[#d97757]"
-                    : "bg-[#e8e6dc] dark:bg-[#3d3d3a]"
+                className={`block h-2 w-2 rounded-full transition-all ${
+                  isCurrent
+                    ? "bg-[#c96442] shadow-[0_0_6px_2px_rgba(201,100,66,0.5)] dark:bg-[#d97757] dark:shadow-[0_0_6px_2px_rgba(217,119,87,0.5)]"
+                    : isLived
+                      ? "bg-foreground/80"
+                      : "bg-[#e8e6dc]/60 dark:bg-[#3d3d3a]/60"
                 }`}
-                style={{ width: dotSize, height: dotSize }}
               />
             );
           })}
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-between text-[11px] text-[#5e5d59] dark:text-[#87867f]">
-        <span>{weeksLived.toLocaleString()} weeks lived</span>
-        <span>{(weeksTotal - weeksLived).toLocaleString()} remaining</span>
-      </div>
-      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#e8e6dc] dark:bg-[#3d3d3a]">
-        <div
-          className="h-full rounded-full bg-[#c96442] transition-all dark:bg-[#d97757]"
-          style={{ width: `${Math.min(100, percentLived)}%` }}
-        />
-      </div>
-      <p className="mt-1 text-center text-[11px] font-medium text-[#4d4c48] dark:text-[#b0aea5]">
-        {percentLived.toFixed(1)}% lived
-      </p>
     </div>
   );
 });
 
 // ---------------------------------------------------------------------------
-// Year Progress Ring
+// Inspirational Quote Carousel
 // ---------------------------------------------------------------------------
 
-const YearProgressRing = React.memo(function YearProgressRing({
-  yearProgress,
-}: {
-  yearProgress: YearProgressData;
-}) {
-  const radius = 60;
-  const stroke = 8;
-  const normalizedRadius = radius - stroke / 2;
-  const circumference = 2 * Math.PI * normalizedRadius;
-  const offset = circumference * (1 - yearProgress.percentElapsed / 100);
-  const year = new Date().getFullYear();
+function QuoteCarousel() {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * LIFE_QUOTES.length));
+  const quote = LIFE_QUOTES[index % LIFE_QUOTES.length]!;
 
   return (
-    <div className="landing-module-glass flex flex-col items-center rounded-2xl border p-4">
-      <svg height={radius * 2} width={radius * 2} className="-rotate-90">
-        <circle
-          stroke="currentColor"
-          fill="transparent"
-          strokeWidth={stroke}
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-          className="text-[#e8e6dc] dark:text-[#3d3d3a]"
-        />
-        <circle
-          stroke="currentColor"
-          fill="transparent"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={`${circumference} ${circumference}`}
-          strokeDashoffset={offset}
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-          className="text-[#c96442] transition-all duration-500 dark:text-[#d97757]"
-        />
-      </svg>
-      <div className="-mt-[76px] mb-[20px] flex flex-col items-center">
-        <span className="text-3xl font-bold tabular-nums text-foreground">
-          {yearProgress.percentElapsed.toFixed(1)}%
-        </span>
-        <span className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
-          {year} Progress
-        </span>
+    <div className="flex items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5]/80 px-3 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]/80">
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i - 1 + LIFE_QUOTES.length) % LIFE_QUOTES.length)}
+        className="shrink-0 p-0.5 text-[#87867f] transition-colors hover:text-foreground"
+        aria-label="Previous quote"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+        </svg>
+      </button>
+      <div className="min-w-0 flex-1 text-center">
+        <p className="line-clamp-2 text-[12px] italic leading-relaxed text-[#4d4c48] dark:text-[#b0aea5]">
+          &ldquo;{quote.text}&rdquo;
+        </p>
+        <p className="mt-0.5 text-[11px] text-[#87867f]">
+          &mdash; {quote.author}
+        </p>
       </div>
-      <div className="mt-1 flex w-full justify-between text-[11px] text-[#5e5d59] dark:text-[#87867f]">
-        <span>Day {yearProgress.dayOfYear}</span>
-        <span>{yearProgress.daysInYear - yearProgress.dayOfYear} days left</span>
-      </div>
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i + 1) % LIFE_QUOTES.length)}
+        className="shrink-0 p-0.5 text-[#87867f] transition-colors hover:text-foreground"
+        aria-label="Next quote"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+        </svg>
+      </button>
     </div>
   );
-});
+}
 
 // ---------------------------------------------------------------------------
 // Custom Countdowns
@@ -156,7 +322,7 @@ function CountdownCard({
 }) {
   const absRemaining = Math.abs(countdown.daysRemaining);
   return (
-    <div className="landing-module-glass flex items-center gap-3 rounded-2xl border px-4 py-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
       <div className="min-w-0 flex-1">
         <p className="truncate text-[13px] font-semibold text-foreground">
           {countdown.label}
@@ -222,20 +388,20 @@ function AddCountdownForm({
   }
 
   return (
-    <div className="landing-module-glass space-y-2 rounded-2xl border p-3">
+    <div className="space-y-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] p-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
       <input
         type="text"
         value={label}
         onChange={(e) => setLabel(e.target.value)}
         placeholder="Countdown name"
         maxLength={100}
-        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
+        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
       />
       <input
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
+        className="w-full rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-[13px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
       />
       <div className="flex gap-2">
         <button
@@ -284,80 +450,70 @@ const FireTrackerSection = React.memo(function FireTrackerSection({
   const offset = circumference * (1 - Math.min(1, fire.percentComplete / 100));
 
   return (
-    <div className="landing-module-glass rounded-2xl border p-4">
-      <h3 className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">
+    <div className="space-y-3">
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
         FIRE Tracker
       </h3>
-      <div className="mt-3 flex items-center gap-4">
-        <svg height={radius * 2} width={radius * 2} className="-rotate-90 shrink-0">
-          <circle
-            stroke="currentColor"
-            fill="transparent"
-            strokeWidth={stroke}
-            r={normalizedRadius}
-            cx={radius}
-            cy={radius}
-            className="text-[#e8e6dc] dark:text-[#3d3d3a]"
-          />
-          <circle
-            stroke="currentColor"
-            fill="transparent"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={`${circumference} ${circumference}`}
-            strokeDashoffset={offset}
-            r={normalizedRadius}
-            cx={radius}
-            cy={radius}
-            className="text-emerald-500 transition-all duration-500 dark:text-emerald-400"
-          />
-        </svg>
-        <div className="min-w-0 flex-1">
-          <p className="text-2xl font-bold tabular-nums text-foreground">
-            {fire.percentComplete.toFixed(1)}%
-          </p>
-          <p className="text-[12px] font-medium text-emerald-600 dark:text-emerald-400">
-            {FIRE_STAGE_LABELS[fire.stage]}
-          </p>
-          {fire.projectedYearsToTarget != null && (
-            <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
-              ~{fire.projectedYearsToTarget.toFixed(1)} years to target
+      <div className="rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] p-4 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+        <div className="flex items-center gap-4">
+          <svg height={radius * 2} width={radius * 2} className="-rotate-90 shrink-0">
+            <circle
+              stroke="currentColor"
+              fill="transparent"
+              strokeWidth={stroke}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+              className="text-[#e8e6dc] dark:text-[#3d3d3a]"
+            />
+            <circle
+              stroke="currentColor"
+              fill="transparent"
+              strokeWidth={stroke}
+              strokeLinecap="round"
+              strokeDasharray={`${circumference} ${circumference}`}
+              strokeDashoffset={offset}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+              className="text-emerald-500 transition-all duration-500 dark:text-emerald-400"
+            />
+          </svg>
+          <div className="min-w-0 flex-1">
+            <p className="text-2xl font-bold tabular-nums text-foreground">
+              {fire.percentComplete.toFixed(1)}%
             </p>
-          )}
+            <p className="text-[12px] font-medium text-emerald-600 dark:text-emerald-400">
+              {FIRE_STAGE_LABELS[fire.stage]}
+            </p>
+            {fire.projectedYearsToTarget != null && (
+              <p className="mt-0.5 text-[11px] text-[#5e5d59] dark:text-[#87867f]">
+                ~{fire.projectedYearsToTarget.toFixed(1)} years to target
+              </p>
+            )}
+          </div>
         </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <StatTile label="Saved" value={formatCurrency(fire.savingsCurrent)} />
+          <StatTile label="Target" value={formatCurrency(fire.targetAmount)} />
+          <StatTile label="Monthly" value={formatCurrency(fire.monthlyContribution)} />
+          <StatTile label="Return" value={`${fire.annualReturnPct}% / yr`} />
+        </div>
+        <button
+          type="button"
+          onClick={onOpenGoals}
+          className="mt-3 w-full rounded-xl border border-[#e8e6dc] py-2 text-[12px] font-medium text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
+        >
+          Edit FIRE settings
+        </button>
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <StatTile
-          label="Saved"
-          value={formatCurrency(fire.savingsCurrent)}
-        />
-        <StatTile
-          label="Target"
-          value={formatCurrency(fire.targetAmount)}
-        />
-        <StatTile
-          label="Monthly"
-          value={formatCurrency(fire.monthlyContribution)}
-        />
-        <StatTile
-          label="Return"
-          value={`${fire.annualReturnPct}% / yr`}
-        />
-      </div>
-      <button
-        type="button"
-        onClick={onOpenGoals}
-        className="mt-3 w-full rounded-xl border border-[#e8e6dc] py-2 text-[12px] font-medium text-[#5e5d59] transition-colors hover:bg-[#f0eee6] dark:border-[#3d3d3a] dark:text-[#87867f] dark:hover:bg-[#3d3d3a]"
-      >
-        Edit FIRE settings
-      </button>
     </div>
   );
 });
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-2 dark:border-[#3d3d3a] dark:bg-[#30302e]">
+    <div className="rounded-lg border border-[#e8e6dc] bg-[#faf9f5] px-2.5 py-2 dark:border-[#3d3d3a] dark:bg-[#141413]">
       <p className="text-sm font-semibold tabular-nums text-foreground">{value}</p>
       <p className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">{label}</p>
     </div>
@@ -389,7 +545,7 @@ function BirthdayOnboarding({
   }
 
   return (
-    <div className="landing-module-glass flex flex-col items-center gap-3 rounded-2xl border px-4 py-8 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-8 text-center dark:border-[#3d3d3a] dark:bg-[#30302e]">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-10 w-10 text-[#c96442] dark:text-[#d97757]">
         <path d="M5 22h14" />
         <path d="M5 2h14" />
@@ -408,7 +564,7 @@ function BirthdayOnboarding({
         value={dateInput}
         onChange={(e) => setDateInput(e.target.value)}
         max={new Date().toISOString().slice(0, 10)}
-        className="w-full max-w-[200px] rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-center text-[14px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#30302e]"
+        className="w-full max-w-[200px] rounded-xl border border-[#e8e6dc] bg-[#faf9f5] px-3 py-2 text-center text-[14px] text-foreground outline-none focus:border-[#c96442] focus:ring-2 focus:ring-[#c96442]/25 dark:border-[#3d3d3a] dark:bg-[#141413]"
       />
       <button
         type="button"
@@ -445,43 +601,70 @@ export function LandingMobileLifeTab({
     [countdowns],
   );
 
+  const yearsLived = useMemo(() => {
+    if (!lifeCalendar.birthday) return 0;
+    const bMs = new Date(lifeCalendar.birthday + "T00:00:00").getTime();
+    return (Date.now() - bMs) / (365.25 * 24 * 60 * 60 * 1000);
+  }, [lifeCalendar.birthday]);
+
   return (
-    <div className="flex flex-col gap-5 px-4 pb-4">
-      {/* Header */}
-      <div className="space-y-3">
-        <div className="flex justify-center">
-          <GoalConfigPill
-            label={
-              lifeCalendar.birthday
-                ? `Life expectancy: ${lifeCalendar.lifeExpectancyYears} yr`
-                : "Set birthday"
-            }
-            onClick={onOpenGoals}
-          />
-        </div>
-        <h2 className="text-xl font-bold text-foreground">Life Calendar</h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          Visualize your time. Make every week count.
-        </p>
+    <div className="flex flex-col gap-6 px-4 pb-4">
+      {/* Goal config pill */}
+      <div className="flex justify-center">
+        <GoalConfigPill
+          label={
+            lifeCalendar.birthday
+              ? `Life expectancy: ${lifeCalendar.lifeExpectancyYears} yr`
+              : "Set birthday"
+          }
+          onClick={onOpenGoals}
+        />
       </div>
 
-      {/* Life Calendar Grid */}
       {lifeCalendar.birthday ? (
-        <LifeCalendarGrid
-          weeksLived={lifeCalendar.weeksLived}
-          weeksTotal={lifeCalendar.weeksTotal}
-          percentLived={lifeCalendar.percentLived}
-        />
+        <>
+          {/* 1. Year Progress — hero section */}
+          <YearProgressSection yearProgress={yearProgress} />
+
+          {/* 2. Your Life in Years — dot grid */}
+          <LifeInYearsGrid
+            lifeExpectancyYears={lifeCalendar.lifeExpectancyYears}
+            yearsLived={yearsLived}
+          />
+
+          {/* 3. Your Life in Weeks — counter */}
+          <LifeInWeeksCounter
+            weeksLived={lifeCalendar.weeksLived}
+            weeksTotal={lifeCalendar.weeksTotal}
+          />
+
+          {/* 4. Your Life in Numbers */}
+          <LifeInNumbers
+            weeksLived={lifeCalendar.weeksLived}
+            percentLived={lifeCalendar.percentLived}
+            birthday={lifeCalendar.birthday}
+            lifeExpectancyYears={lifeCalendar.lifeExpectancyYears}
+          />
+
+          {/* 5. Inspirational Quote */}
+          <QuoteCarousel />
+
+          {/* CTA */}
+          <button
+            type="button"
+            onClick={onOpenGoals}
+            className="w-full rounded-2xl border-2 border-[#e8e6dc] bg-[#faf9f5] py-3.5 text-[15px] font-bold text-foreground transition-colors active:scale-[0.98] dark:border-[#3d3d3a] dark:bg-[#30302e]"
+          >
+            Let&apos;s Make Them Count
+          </button>
+        </>
       ) : (
         <BirthdayOnboarding onSetBirthday={onSetBirthday} />
       )}
 
-      {/* Year Progress */}
-      <YearProgressRing yearProgress={yearProgress} />
-
       {/* Custom Countdowns */}
       <div className="space-y-2">
-        <h3 className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">
+        <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
           Countdowns
         </h3>
         {sortedCountdowns.map((cd) => (
@@ -501,8 +684,8 @@ export function LandingMobileLifeTab({
       {fireTracker ? (
         <FireTrackerSection fire={fireTracker} onOpenGoals={onOpenGoals} />
       ) : (
-        <div className="landing-module-glass flex flex-col items-center gap-2 rounded-2xl border px-4 py-6 text-center">
-          <h3 className="text-[10px] font-medium uppercase tracking-[0.5px] text-[#87867f]">
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-[#e8e6dc] bg-[#faf9f5] px-4 py-6 text-center dark:border-[#3d3d3a] dark:bg-[#30302e]">
+          <h3 className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#87867f]">
             FIRE Tracker
           </h3>
           <p className="text-[12px] text-[#5e5d59] dark:text-[#87867f]">
