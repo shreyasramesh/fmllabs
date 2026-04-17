@@ -3407,7 +3407,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences" | "birthday" | "lifeExpectancyYears" | "fireSavingsCurrent" | "fireTargetAmount" | "fireMonthlyContribution" | "fireAnnualReturnPct" | "fireCurrentAge" | "fireTargetRetirementAge" | "lifeCountdowns">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();

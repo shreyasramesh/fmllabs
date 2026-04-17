@@ -319,7 +319,7 @@ export async function PATCH(request: Request) {
               /^\d{4}-\d{2}-\d{2}$/.test((c as Record<string, unknown>).targetDate as string),
           )
           .slice(0, 5)
-          .map((c) => ({
+          .map((c: { id: string; label: string; targetDate: string }) => ({
             id: c.id.slice(0, 36),
             label: c.label.trim().slice(0, 100),
             targetDate: c.targetDate,
