@@ -13,6 +13,7 @@ import { LandingThoughtOfTheDayBanner } from "@/components/landing/LandingThough
 import { LandingTimelineCard } from "@/components/landing/LandingTimelineCard";
 import { LandingHeroHabits } from "@/components/landing/LandingHeroHabits";
 import { LandingMobileTabBar, type MobileBottomTab } from "@/components/landing/LandingMobileTabBar";
+import { LandingAnonymousFeatureGrid } from "@/components/landing/LandingAnonymousFeatureGrid";
 import { LandingMobileNutritionTab } from "@/components/landing/LandingMobileNutritionTab";
 import { LandingMobileExerciseTab } from "@/components/landing/LandingMobileExerciseTab";
 import { LandingMobileWeightTab } from "@/components/landing/LandingMobileWeightTab";
@@ -463,6 +464,14 @@ interface LandingShellProps {
   mobileLibraryTabOpenerRef?: React.MutableRefObject<(() => void) | null>;
   /** Mobile landing: point feature tour "menu" step at More tab instead of header hamburger. */
   menuTourOnAndMoreTab?: boolean;
+  /**
+   * When true, the mobile landing body is replaced with a feature grid that
+   * prompts the visitor to sign in. The bottom tab bar is also hidden since
+   * every feature surfaces the same sign-in CTA via {@link onAnonymousFeatureClick}.
+   */
+  isAnonymous?: boolean;
+  /** Called when an anonymous visitor taps a feature card — host opens a sign-in modal. */
+  onAnonymousFeatureClick?: () => void;
 }
 
 export function LandingShell({
@@ -623,6 +632,8 @@ export function LandingShell({
   mobileAndMore,
   mobileLibraryTabOpenerRef,
   menuTourOnAndMoreTab = false,
+  isAnonymous = false,
+  onAnonymousFeatureClick,
 }: LandingShellProps) {
   const { theme } = useTheme();
   const chartDark = theme === "dark";
@@ -895,8 +906,12 @@ export function LandingShell({
     <>
       {/* ===== Mobile tabbed layout ===== */}
       <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col animate-fade-in-up md:hidden">
-        <div className="flex min-h-0 flex-1 flex-col pb-20">
-          {activeMobileTab !== "metacognition" ? (
+        <div className={`flex min-h-0 flex-1 flex-col ${isAnonymous ? "" : "pb-20"}`}>
+          {isAnonymous ? (
+            <LandingAnonymousFeatureGrid
+              onFeatureClick={() => onAnonymousFeatureClick?.()}
+            />
+          ) : activeMobileTab !== "metacognition" ? (
             mobileTabContent
           ) : (
             <div className="space-y-4 px-4">
@@ -1044,11 +1059,13 @@ export function LandingShell({
             </div>
           )}
         </div>
-        <LandingMobileTabBar
-          activeTab={activeMobileTab}
-          onTabChange={setActiveMobileTab}
-          menuTourOnAndMore={menuTourOnAndMoreTab}
-        />
+        {!isAnonymous && (
+          <LandingMobileTabBar
+            activeTab={activeMobileTab}
+            onTabChange={setActiveMobileTab}
+            menuTourOnAndMore={menuTourOnAndMoreTab}
+          />
+        )}
       </div>
 
       {/* ===== Desktop stacked layout (unchanged) ===== */}

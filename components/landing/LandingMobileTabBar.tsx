@@ -21,19 +21,25 @@ interface LandingMobileTabBarProps {
   menuTourOnAndMore?: boolean;
 }
 
-const TABS: Array<{ key: MobileBottomTab; label: string; ariaLabel: string }> = [
-  { key: "quickNote", label: "Notes", ariaLabel: "Quick Notes" },
-  { key: "nutrition", label: "Food", ariaLabel: "Nutrition" },
-  { key: "exercise", label: "Move", ariaLabel: "Exercise" },
-  { key: "spend", label: "Spend", ariaLabel: "Spend" },
-  { key: "weight", label: "Weight", ariaLabel: "Weight" },
-  { key: "sleep", label: "Sleep", ariaLabel: "Sleep" },
-  { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace" },
-  { key: "metacognition", label: "Meta", ariaLabel: "Metacognition" },
-  { key: "andMore", label: "More", ariaLabel: "Library and more" },
+export const MOBILE_BOTTOM_TABS: ReadonlyArray<{
+  key: MobileBottomTab;
+  label: string;
+  ariaLabel: string;
+  /** Short marketing blurb used by the anonymous feature grid. */
+  description: string;
+}> = [
+  { key: "quickNote", label: "Notes", ariaLabel: "Quick Notes", description: "Capture journals, reflections, and quick notes." },
+  { key: "nutrition", label: "Food", ariaLabel: "Nutrition", description: "Log meals and track calories, protein, and carbs." },
+  { key: "exercise", label: "Move", ariaLabel: "Exercise", description: "Record workouts and see daily movement." },
+  { key: "spend", label: "Spend", ariaLabel: "Spend", description: "Track purchases and stay within your budget." },
+  { key: "weight", label: "Weight", ariaLabel: "Weight", description: "Log weight entries and watch your trend." },
+  { key: "sleep", label: "Sleep", ariaLabel: "Sleep", description: "Track sleep duration, HRV, and recovery." },
+  { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace", description: "Save quotes and build a commonplace book." },
+  { key: "metacognition", label: "Meta", ariaLabel: "Metacognition", description: "Chat with mentors and run metacognition sessions." },
+  { key: "andMore", label: "More", ariaLabel: "Library and more", description: "Habits, groups, mental models, long-term memory, and more." },
 ];
 
-function TabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
+export function MobileTabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {
   const cls = `h-4 w-4 shrink-0 transition-[color,opacity] duration-200 ${active ? "text-[#c96442] opacity-100 dark:text-[#d97757]" : "text-neutral-500 opacity-65 dark:text-neutral-400"}`;
   const sw = "1.5";
 
@@ -126,7 +132,7 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
       aria-label="Dashboard sections"
     >
       <div className="flex min-h-[3.5rem] items-stretch gap-1.5 overflow-x-auto overscroll-x-contain px-2 pt-0.5 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {TABS.map((tab) => {
+        {MOBILE_BOTTOM_TABS.map((tab) => {
           const active = activeTab === tab.key;
           return (
             <button
@@ -140,7 +146,7 @@ export const LandingMobileTabBar = React.memo(function LandingMobileTabBar({
               aria-label={tab.ariaLabel}
               aria-current={active ? "page" : undefined}
             >
-              <TabIcon tab={tab.key} active={active} />
+              <MobileTabIcon tab={tab.key} active={active} />
               <span
                 className={`line-clamp-2 w-full text-center text-[10px] font-medium leading-tight tracking-tight ${
                   active ? "text-[#c96442] dark:text-[#d97757]" : "text-neutral-500 dark:text-neutral-500"

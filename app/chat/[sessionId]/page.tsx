@@ -15936,6 +15936,8 @@ export default function ChatPage() {
                   <>
                 {!incognitoMode && (
                       <LandingShell
+                        isAnonymous={isAnonymous}
+                        onAnonymousFeatureClick={() => setSignInFeaturesModalOpen(true)}
                         dashboardScrollRootRef={messagesScrollRef}
                         dateItems={landingDateStripItems}
                         dateStripHint={landingTranslations.landingDateStripHint}
@@ -22354,7 +22356,7 @@ export default function ChatPage() {
               </button>
             </div>
 
-            <div className="mt-4 max-h-[55vh] overflow-y-auto space-y-2 pr-1">
+            <div className="mt-4 max-h-[45vh] overflow-y-auto space-y-2 pr-1">
               {signInFeatures.map((item) => (
                 <div
                   key={`feature-modal-${item.label}`}
@@ -22369,6 +22371,23 @@ export default function ChatPage() {
                   </p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-5 flex flex-col gap-2 border-t border-neutral-200 pt-4 dark:border-neutral-700 sm:flex-row">
+              <Link
+                href="/sign-in"
+                onClick={() => setSignInFeaturesModalOpen(false)}
+                className="flex-1 rounded-xl border-2 border-neutral-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-foreground transition-colors hover:border-accent/55 hover:text-accent dark:border-neutral-600 dark:bg-neutral-900 dark:hover:border-accent/60"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/sign-up"
+                onClick={() => setSignInFeaturesModalOpen(false)}
+                className="flex-1 rounded-xl bg-foreground px-4 py-2.5 text-center text-sm font-semibold text-background transition-opacity hover:opacity-90"
+              >
+                Create account
+              </Link>
             </div>
           </div>
         </div>
