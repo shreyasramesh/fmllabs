@@ -5,42 +5,38 @@ import React from "react";
 interface BorderBeamProps {
   /** Animation duration in seconds. */
   duration?: number;
-  /** Border width in pixels. */
-  borderWidth?: number;
   /** Additional CSS class on the outer wrapper. */
   className?: string;
 }
 
 /**
- * Animated multi-color border beam with a tight diffused glow along the edge.
+ * Subtle animated multi-color border glow inspired by Apple Intelligence.
+ * A soft pastel spectrum sweeps along the container edge.
  * Parent must have `position: relative` and a `border-radius`.
  */
 export const BorderBeam = React.memo(function BorderBeam({
   duration = 8,
-  borderWidth = 2,
   className = "",
 }: BorderBeamProps) {
   const gradient =
-    "conic-gradient(from 0deg, #f97316 0%, #ec4899 14%, #a855f7 28%, #6366f1 42%, transparent 50%, transparent 65%, #3b82f6 72%, #a855f7 80%, #ec4899 88%, #f97316 100%)";
-
-  const glowSpread = 6;
+    "conic-gradient(from 0deg, rgba(249,115,22,0.6) 0%, rgba(236,72,153,0.5) 14%, rgba(168,85,247,0.5) 28%, rgba(99,102,241,0.4) 42%, transparent 50%, transparent 65%, rgba(59,130,246,0.4) 72%, rgba(168,85,247,0.5) 80%, rgba(236,72,153,0.5) 88%, rgba(249,115,22,0.6) 100%)";
 
   return (
     <>
-      {/* Diffused glow — masked to a thin ring so it only bleeds near the border */}
+      {/* Soft outer glow */}
       <div
         className={`pointer-events-none absolute z-[1] rounded-[inherit] ${className}`.trim()}
         aria-hidden
         style={{
-          inset: -glowSpread,
+          inset: -3,
           overflow: "hidden",
-          padding: glowSpread + borderWidth + glowSpread,
+          padding: 10,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
-          filter: "blur(6px)",
-          opacity: 0.45,
+          filter: "blur(4px)",
+          opacity: 0.55,
         }}
       >
         <div
@@ -49,17 +45,18 @@ export const BorderBeam = React.memo(function BorderBeam({
         />
       </div>
 
-      {/* Sharp border ring */}
+      {/* Thin crisp border line */}
       <div
         className="pointer-events-none absolute inset-0 z-[1] rounded-[inherit]"
         aria-hidden
         style={{
-          padding: borderWidth,
+          padding: 1,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
           overflow: "hidden",
+          opacity: 0.7,
         }}
       >
         <div
