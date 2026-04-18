@@ -430,7 +430,7 @@ export function CaptureDraftSentenceRow({
         aria-busy={disabled || undefined}
       >
         <BorderBeam duration={12} />
-        <div className="relative z-[2] min-h-0 min-w-0">
+        <div className="relative z-[2] min-h-0 min-w-0 pl-2 pt-1">
           <textarea
             ref={setRefs}
             value={draft}
