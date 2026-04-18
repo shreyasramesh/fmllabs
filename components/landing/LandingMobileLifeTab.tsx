@@ -203,10 +203,10 @@ function LifeInYears({ lifeExpectancyYears, yearsLived }: { lifeExpectancyYears:
               key={i}
               className={`block rounded-full opacity-0 animate-life-dot-in ${
                 lived
-                  ? "bg-foreground"
+                  ? "bg-accent"
                   : thisYear
-                    ? "bg-foreground/50 ring-[1.5px] ring-foreground/30 animate-life-glow-pulse"
-                    : "bg-neutral-200"
+                    ? "bg-accent/50 ring-[1.5px] ring-accent/30 animate-life-glow-pulse"
+                    : "bg-foreground/90"
               }`}
               style={{ width: dotSize, height: dotSize, animationDelay: `${i * 15}ms` }}
             />
@@ -214,9 +214,9 @@ function LifeInYears({ lifeExpectancyYears, yearsLived }: { lifeExpectancyYears:
         })}
       </div>
       <div className="mt-4 flex items-center justify-center gap-5 text-[10px] opacity-0 animate-fade-in" style={{ animationDelay: `${lifeExpectancyYears * 15 + 100}ms` }}>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-foreground" /><span className="text-neutral-500">Years lived ({cur})</span></span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-foreground/50 ring-1 ring-foreground/30 animate-life-glow-pulse" /><span className="text-neutral-500">This year</span></span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-neutral-200" /><span className="text-neutral-500">Ahead ({ahead})</span></span>
+        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-accent" /><span className="text-neutral-500">Years lived ({cur})</span></span>
+        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-accent/50 ring-1 ring-accent/30 animate-life-glow-pulse" /><span className="text-neutral-500">This year</span></span>
+        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-foreground/90" /><span className="text-neutral-500">Ahead ({ahead})</span></span>
       </div>
     </div>
   );
@@ -418,11 +418,11 @@ function FireCard({ fire, onEdit }: { fire: FireTrackerData; onEdit: () => void 
       <div className="flex items-center gap-3">
         <svg height={r * 2} width={r * 2} className="-rotate-90 shrink-0">
           <circle stroke="currentColor" fill="transparent" strokeWidth={sw} r={nr} cx={r} cy={r} className="text-neutral-200" />
-          <circle stroke="currentColor" fill="transparent" strokeWidth={sw} strokeLinecap="round" strokeDasharray={`${c} ${c}`} strokeDashoffset={off} r={nr} cx={r} cy={r} className="text-emerald-500 dark:text-emerald-400" style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)" }} />
+          <circle stroke="currentColor" fill="transparent" strokeWidth={sw} strokeLinecap="round" strokeDasharray={`${c} ${c}`} strokeDashoffset={off} r={nr} cx={r} cy={r} className="text-accent" style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)" }} />
         </svg>
         <div className="min-w-0 flex-1">
           <p className="text-xl font-black tabular-nums text-foreground">{fire.percentComplete.toFixed(1)}%</p>
-          <p className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">{FIRE_STAGES[fire.stage]}</p>
+          <p className="text-[11px] font-medium text-accent">{FIRE_STAGES[fire.stage]}</p>
           {fire.projectedYearsToTarget != null && <p className="text-[10px] text-neutral-500">~{fire.projectedYearsToTarget.toFixed(1)} yr to target</p>}
         </div>
       </div>

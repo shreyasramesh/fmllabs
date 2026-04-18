@@ -1634,7 +1634,7 @@ export function LandingShell({
                 </div>
                 {fireTrackerData && (
                   <div className="flex flex-col items-center gap-1 rounded-xl border border-[#e8e6dc] bg-[#faf9f5] p-3 dark:border-[#3d3d3a] dark:bg-[#30302e]">
-                    <span className="text-lg font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
+                    <span className="text-lg font-bold tabular-nums text-accent">
                       {fireTrackerData.percentComplete.toFixed(1)}%
                     </span>
                     <span className="text-[10px] text-[#5e5d59] dark:text-[#87867f]">
