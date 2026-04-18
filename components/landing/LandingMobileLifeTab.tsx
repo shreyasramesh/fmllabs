@@ -97,21 +97,14 @@ export function LandingMobileLifeTab({
       </div>
 
       <Reveal delay={0}><TodaySection /></Reveal>
-      <Reveal delay={80}><LifeInYears lifeExpectancyYears={lifeCalendar.lifeExpectancyYears} yearsLived={yearsLived} /></Reveal>
-
-      <Reveal delay={160}>
-        <div className="border-t border-neutral-200 px-5 py-4">
-          <div className="flex items-baseline justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent">Your Life in Weeks</span>
-            <span className="font-mono text-[13px] font-bold tabular-nums text-foreground">Week {lifeCalendar.weeksLived.toLocaleString()} of {lifeCalendar.weeksTotal.toLocaleString()}</span>
-          </div>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-200">
-              <div className="h-full rounded-full bg-accent animate-life-progress-fill" style={{ width: `${Math.min(100, lifeCalendar.percentLived)}%`, animationDelay: "300ms" }} />
-            </div>
-            <span className="shrink-0 text-[11px] font-bold tabular-nums text-foreground">{lifeCalendar.percentLived.toFixed(1)}%</span>
-          </div>
-        </div>
+      <Reveal delay={80}>
+        <LifeDotsSection
+          lifeExpectancyYears={lifeCalendar.lifeExpectancyYears}
+          yearsLived={yearsLived}
+          weeksLived={lifeCalendar.weeksLived}
+          weeksTotal={lifeCalendar.weeksTotal}
+          percentLived={lifeCalendar.percentLived}
+        />
       </Reveal>
 
       <Reveal delay={240}><YearProgress yearProgress={yearProgress} /></Reveal>
@@ -181,42 +174,141 @@ function TodaySection() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Your Life in Years
+// Life Dots — tappable to cycle between Years, Months, Weeks
 // ═══════════════════════════════════════════════════════════════════════════
 
-function LifeInYears({ lifeExpectancyYears, yearsLived }: { lifeExpectancyYears: number; yearsLived: number }) {
-  const cur = Math.floor(yearsLived);
-  const ahead = Math.max(0, lifeExpectancyYears - cur - 1);
-  const cols = 10;
-  const dotSize = lifeExpectancyYears > 100 ? 18 : 22;
-  const gap = lifeExpectancyYears > 100 ? 4 : 5;
+type DotsMode = "years" | "months" | "weeks";
+const DOTS_MODES: DotsMode[] = ["years", "months", "weeks"];
+const DOTS_LABELS: Record<DotsMode, string> = { years: "Years", months: "Months", weeks: "Weeks" };
+
+function LifeDotsSection({
+  lifeExpectancyYears,
+  yearsLived,
+  weeksLived,
+  weeksTotal,
+  percentLived,
+}: {
+  lifeExpectancyYears: number;
+  yearsLived: number;
+  weeksLived: number;
+  weeksTotal: number;
+  percentLived: number;
+}) {
+  const [mode, setMode] = useState<DotsMode>("years");
+
+  const cycle = useCallback(() => {
+    setMode((m) => DOTS_MODES[(DOTS_MODES.indexOf(m) + 1) % DOTS_MODES.length]!);
+  }, []);
+
+  const monthsLived = Math.floor(yearsLived * 12);
+  const monthsTotal = lifeExpectancyYears * 12;
+
+  const total = mode === "years" ? lifeExpectancyYears : mode === "months" ? monthsTotal : weeksTotal;
+  const lived = mode === "years" ? Math.floor(yearsLived) : mode === "months" ? monthsLived : weeksLived;
+  const current = lived;
+  const ahead = Math.max(0, total - current - 1);
+  const unitLabel = mode === "years" ? "year" : mode === "months" ? "month" : "week";
+
+  let cols: number, dotSize: number, gap: number;
+  if (mode === "years") {
+    cols = 10;
+    dotSize = lifeExpectancyYears > 100 ? 18 : 22;
+    gap = lifeExpectancyYears > 100 ? 4 : 5;
+  } else if (mode === "months") {
+    cols = 12;
+    dotSize = 8;
+    gap = 2;
+  } else {
+    cols = 52;
+    dotSize = 4;
+    gap = 1;
+  }
+
+  const staggerMs = mode === "years" ? 15 : mode === "months" ? 2 : 0.3;
+  const maxStagger = 600;
 
   return (
     <div className="border-t border-neutral-200 px-5 py-5">
-      <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-accent">Your Life in Years</p>
-      <div className="mx-auto grid" style={{ gridTemplateColumns: `repeat(${cols}, ${dotSize}px)`, gap: `${gap}px`, maxWidth: cols * (dotSize + gap) + "px" }}>
-        {Array.from({ length: lifeExpectancyYears }, (_, i) => {
-          const lived = i < cur;
-          const thisYear = i === cur;
-          return (
-            <span
-              key={i}
-              className={`block rounded-full opacity-0 animate-life-dot-in ${
-                lived
-                  ? "bg-accent"
-                  : thisYear
-                    ? "border-[3px] border-accent bg-background shadow-[0_0_12px_3px_var(--accent)] animate-life-glow-pulse"
-                    : "bg-neutral-300 dark:bg-neutral-700"
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent">
+          Your Life in {DOTS_LABELS[mode]}
+        </p>
+        <div className="flex gap-1">
+          {DOTS_MODES.map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition-all duration-200 ${
+                mode === m
+                  ? "bg-accent text-white"
+                  : "text-neutral-500 hover:text-accent active:scale-95"
               }`}
-              style={{ width: dotSize, height: dotSize, animationDelay: `${i * 15}ms` }}
-            />
-          );
-        })}
+            >
+              {DOTS_LABELS[m]}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="mt-4 flex items-center justify-center gap-5 text-[10px] opacity-0 animate-fade-in" style={{ animationDelay: `${lifeExpectancyYears * 15 + 100}ms` }}>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-accent" /><span className="text-neutral-500">Years lived ({cur})</span></span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full border-[2px] border-accent bg-background shadow-[0_0_6px_2px_var(--accent)] animate-life-glow-pulse" /><span className="text-neutral-500">This year</span></span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-neutral-300 dark:bg-neutral-700" /><span className="text-neutral-500">Ahead ({ahead})</span></span>
+
+      <button
+        type="button"
+        onClick={cycle}
+        className="mx-auto block w-full"
+        aria-label={`Showing life in ${mode}, tap to switch`}
+      >
+        <div
+          className="mx-auto grid"
+          key={mode}
+          style={{
+            gridTemplateColumns: `repeat(${cols}, ${dotSize}px)`,
+            gap: `${gap}px`,
+            maxWidth: cols * (dotSize + gap) + "px",
+          }}
+        >
+          {Array.from({ length: total }, (_, i) => {
+            const isLived = i < current;
+            const isCurrent = i === current;
+            const delay = Math.min(i * staggerMs, maxStagger);
+            return (
+              <span
+                key={i}
+                className={`block rounded-full opacity-0 animate-life-dot-in ${
+                  isLived
+                    ? "bg-accent"
+                    : isCurrent
+                      ? "border-[2px] border-accent bg-background shadow-[0_0_8px_2px_var(--accent)] animate-life-glow-pulse"
+                      : "bg-neutral-300 dark:bg-neutral-700"
+                }`}
+                style={{ width: dotSize, height: dotSize, animationDelay: `${delay}ms` }}
+              />
+            );
+          })}
+        </div>
+      </button>
+
+      <div className="mt-3 flex items-center justify-between text-[10px]">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-accent" />
+            <span className="text-neutral-500">{current.toLocaleString()} lived</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full border-[1.5px] border-accent bg-background" />
+            <span className="text-neutral-500">This {unitLabel}</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+            <span className="text-neutral-500">{ahead.toLocaleString()} ahead</span>
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-2 flex items-center gap-2">
+        <div className="h-1 flex-1 overflow-hidden rounded-full bg-neutral-200">
+          <div className="h-full rounded-full bg-accent animate-life-progress-fill" style={{ width: `${Math.min(100, percentLived)}%`, animationDelay: "300ms" }} />
+        </div>
+        <span className="shrink-0 text-[11px] font-bold tabular-nums text-foreground">{percentLived.toFixed(1)}%</span>
       </div>
     </div>
   );
