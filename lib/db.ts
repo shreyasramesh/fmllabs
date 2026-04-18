@@ -3399,6 +3399,15 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     cavemanMode: doc.cavemanMode,
     preferredName: doc.preferredName,
     reminderPreferences: doc.reminderPreferences as UserSettings["reminderPreferences"],
+    birthday: doc.birthday,
+    lifeExpectancyYears: doc.lifeExpectancyYears,
+    fireSavingsCurrent: doc.fireSavingsCurrent,
+    fireTargetAmount: doc.fireTargetAmount,
+    fireMonthlyContribution: doc.fireMonthlyContribution,
+    fireAnnualReturnPct: doc.fireAnnualReturnPct,
+    fireCurrentAge: doc.fireCurrentAge,
+    fireTargetRetirementAge: doc.fireTargetRetirementAge,
+    lifeCountdowns: doc.lifeCountdowns,
     updatedAt: doc.updatedAt,
   });
   settingsCache.set(userId, settings, TTL_5M);
@@ -3467,6 +3476,15 @@ export async function upsertUserSettings(
     leaderboardOptIn: result.leaderboardOptIn,
     preferredName: result.preferredName,
     reminderPreferences: result.reminderPreferences as UserSettings["reminderPreferences"],
+    birthday: result.birthday,
+    lifeExpectancyYears: result.lifeExpectancyYears,
+    fireSavingsCurrent: result.fireSavingsCurrent,
+    fireTargetAmount: result.fireTargetAmount,
+    fireMonthlyContribution: result.fireMonthlyContribution,
+    fireAnnualReturnPct: result.fireAnnualReturnPct,
+    fireCurrentAge: result.fireCurrentAge,
+    fireTargetRetirementAge: result.fireTargetRetirementAge,
+    lifeCountdowns: result.lifeCountdowns,
     updatedAt: result.updatedAt,
   });
 }
