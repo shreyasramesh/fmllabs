@@ -12,8 +12,7 @@ interface BorderBeamProps {
 }
 
 /**
- * Animated multi-color border beam with diffused glow, inspired by Apple Intelligence.
- * Two layers: a sharp masked border ring + a blurred halo underneath.
+ * Animated multi-color border beam with a tight diffused glow along the edge.
  * Parent must have `position: relative` and a `border-radius`.
  */
 export const BorderBeam = React.memo(function BorderBeam({
@@ -24,17 +23,24 @@ export const BorderBeam = React.memo(function BorderBeam({
   const gradient =
     "conic-gradient(from 0deg, #f97316 0%, #ec4899 14%, #a855f7 28%, #6366f1 42%, transparent 50%, transparent 65%, #3b82f6 72%, #a855f7 80%, #ec4899 88%, #f97316 100%)";
 
+  const glowSpread = 6;
+
   return (
     <>
-      {/* Diffused glow layer — sits behind the sharp border */}
+      {/* Diffused glow — masked to a thin ring so it only bleeds near the border */}
       <div
         className={`pointer-events-none absolute z-[1] rounded-[inherit] ${className}`.trim()}
         aria-hidden
         style={{
-          inset: -4,
+          inset: -glowSpread,
           overflow: "hidden",
-          filter: "blur(10px)",
-          opacity: 0.5,
+          padding: glowSpread + borderWidth + glowSpread,
+          WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          maskComposite: "exclude",
+          filter: "blur(6px)",
+          opacity: 0.45,
         }}
       >
         <div
@@ -43,9 +49,9 @@ export const BorderBeam = React.memo(function BorderBeam({
         />
       </div>
 
-      {/* Sharp border ring — masked to show only the edge */}
+      {/* Sharp border ring */}
       <div
-        className={`pointer-events-none absolute inset-0 z-[1] rounded-[inherit]`}
+        className="pointer-events-none absolute inset-0 z-[1] rounded-[inherit]"
         aria-hidden
         style={{
           padding: borderWidth,
