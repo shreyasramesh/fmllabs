@@ -424,7 +424,7 @@ export function CaptureDraftSentenceRow({
   return (
     <>
       <div
-        className={`relative overflow-hidden rounded-xl ${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
+        className={`relative rounded-xl ${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
           disabled ? "pointer-events-none select-none opacity-[0.52] transition-opacity duration-200" : ""
         }`}
         aria-busy={disabled || undefined}

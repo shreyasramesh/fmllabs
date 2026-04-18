@@ -113,7 +113,7 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div
-      className="relative flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-hidden rounded-2xl border-[1px] border-neutral-400/80 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2 pr-1 sm:pr-1.5"
+      className="relative flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-visible rounded-2xl border-[1px] border-neutral-400/80 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2 pr-1 sm:pr-1.5"
       data-tour="input-area"
     >
       <BorderBeam duration={10} />
