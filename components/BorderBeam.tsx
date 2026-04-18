@@ -13,8 +13,8 @@ interface Metrics {
   radius: number;
 }
 
-const MIN_BEAM = 84;
-const MAX_BEAM = 176;
+const MIN_BEAM = 252;
+const MAX_BEAM = 528;
 const INSET = 1.2;
 const START = 0.18;
 
@@ -106,7 +106,7 @@ export const BorderBeam = React.memo(function BorderBeam({
   const beamLen = useMemo(() => {
     if (!m.width || !m.height) return MIN_BEAM;
     const perim = 2 * (m.width + m.height);
-    return clamp(Math.round(m.width * 0.28), MIN_BEAM, Math.min(MAX_BEAM, perim * 0.2));
+    return clamp(Math.round(m.width * 0.84), MIN_BEAM, Math.min(MAX_BEAM, perim * 0.45));
   }, [m.width, m.height]);
 
   useEffect(() => {
