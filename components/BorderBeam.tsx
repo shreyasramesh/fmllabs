@@ -12,8 +12,8 @@ interface BorderBeamProps {
 }
 
 /**
- * Animated border beam inspired by Apple Intelligence glow.
- * Renders a thin light beam that travels along the container edge.
+ * Animated multi-color border beam inspired by Apple Intelligence glow.
+ * A spectrum of orange, pink, purple, and blue travels along the edge.
  * Parent must have `position: relative` and a `border-radius`.
  */
 export const BorderBeam = React.memo(function BorderBeam({
@@ -38,7 +38,7 @@ export const BorderBeam = React.memo(function BorderBeam({
         className="absolute inset-[-100%] animate-border-beam"
         style={{
           background:
-            "conic-gradient(from 0deg, transparent 0%, transparent 60%, var(--accent) 70%, color-mix(in srgb, var(--accent) 80%, white) 73%, var(--accent) 76%, transparent 85%, transparent 100%)",
+            "conic-gradient(from 0deg, #f97316 0%, #ec4899 14%, #a855f7 28%, #6366f1 42%, transparent 50%, transparent 65%, #3b82f6 72%, #a855f7 80%, #ec4899 88%, #f97316 100%)",
           animationDuration: `${duration}s`,
         }}
       />
