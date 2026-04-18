@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { BorderBeam } from "@/components/BorderBeam";
 import { SparklesIcon } from "@/components/SharedIcons";
 import {
   flushSentencesFromTyping,
@@ -423,12 +424,13 @@ export function CaptureDraftSentenceRow({
   return (
     <>
       <div
-        className={`${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
+        className={`relative overflow-hidden rounded-xl ${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
           disabled ? "pointer-events-none select-none opacity-[0.52] transition-opacity duration-200" : ""
         }`}
         aria-busy={disabled || undefined}
       >
-        <div className="relative min-h-0 min-w-0">
+        <BorderBeam duration={12} />
+        <div className="relative z-[2] min-h-0 min-w-0">
           <textarea
             ref={setRefs}
             value={draft}
@@ -460,7 +462,7 @@ export function CaptureDraftSentenceRow({
             type="button"
             disabled={disabled || !draft.trim()}
             onClick={() => setDetailOpen(true)}
-            className={openDetailBtn}
+            className={`relative z-[2] ${openDetailBtn}`}
             aria-label={draft.trim() ? "View estimate details for this line" : "Estimate details"}
             aria-live="polite"
           >

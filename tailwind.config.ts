@@ -148,6 +148,10 @@ export default {
         "life-progress-fill": {
           from: { width: "0%" },
         },
+        "border-beam-rotate": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         blink: "blink 1s step-end infinite",
@@ -171,6 +175,7 @@ export default {
         "life-quote-in": "life-quote-in 0.3s ease-out both",
         "life-quote-out": "life-quote-out 0.2s ease-in both",
         "life-progress-fill": "life-progress-fill 1s cubic-bezier(0.22,1,0.36,1) both",
+        "border-beam": "border-beam-rotate 8s linear infinite",
       },
     },
   },

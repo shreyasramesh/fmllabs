@@ -2,6 +2,7 @@
 
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { MentionInput, type ConceptGroupOption, type CustomConceptOption, type LongTermMemoryOption, type MentalModelOption } from "@/components/MentionInput";
+import { BorderBeam } from "@/components/BorderBeam";
 import { VoiceInputButton } from "@/components/VoiceInputButton";
 import type { LanguageCode } from "@/lib/languages";
 
@@ -112,10 +113,11 @@ export const ChatComposer = memo(function ChatComposer({
 
   return (
     <div
-      className="flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-visible rounded-2xl border-[1px] border-neutral-400/80 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2 pr-1 sm:pr-1.5"
+      className="relative flex min-h-[52px] w-full min-w-0 max-w-2xl items-stretch overflow-hidden rounded-2xl border-[1px] border-neutral-400/80 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 sm:min-h-[60px] lg:max-w-4xl py-1.5 sm:py-2 pr-1 sm:pr-1.5"
       data-tour="input-area"
     >
-      <div className="flex-1 min-w-0 flex items-stretch px-3">
+      <BorderBeam duration={10} />
+      <div className="relative z-[2] flex-1 min-w-0 flex items-stretch px-3">
         <MentionInput
           inputRef={inputRef}
           value={draft}
@@ -139,7 +141,7 @@ export const ChatComposer = memo(function ChatComposer({
         />
       </div>
       <div
-        className={`relative shrink-0 pl-2 pr-3 sm:pr-4 flex flex-col ${
+        className={`relative z-[2] shrink-0 pl-2 pr-3 sm:pr-4 flex flex-col ${
           showVoiceButton ? "w-[108px] sm:w-[120px]" : "w-[60px] sm:w-16"
         }`}
       >
