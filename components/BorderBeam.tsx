@@ -185,35 +185,35 @@ export const BorderBeam = React.memo(function BorderBeam({
           fill="none"
         >
           <defs>
-            <filter id={fgId} x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="5.5" />
+            <filter id={fgId} x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.8" />
             </filter>
-            <filter id={fmId} x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="2.2" />
+            <filter id={fmId} x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.1" />
             </filter>
 
             <linearGradient ref={glowGradRef} id={gId} gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="rgba(156,196,255,0)" />
-              <stop offset="14%" stopColor="rgba(156,196,255,0.5)" />
-              <stop offset="36%" stopColor="rgba(191,165,255,0.58)" />
-              <stop offset="64%" stopColor="rgba(238,163,220,0.58)" />
-              <stop offset="88%" stopColor="rgba(255,194,146,0.48)" />
+              <stop offset="14%" stopColor="rgba(156,196,255,0.32)" />
+              <stop offset="36%" stopColor="rgba(191,165,255,0.38)" />
+              <stop offset="64%" stopColor="rgba(238,163,220,0.38)" />
+              <stop offset="88%" stopColor="rgba(255,194,146,0.3)" />
               <stop offset="100%" stopColor="rgba(255,194,146,0)" />
             </linearGradient>
             <linearGradient ref={midGradRef} id={mId} gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="rgba(178,210,255,0)" />
-              <stop offset="14%" stopColor="rgba(178,210,255,0.72)" />
-              <stop offset="38%" stopColor="rgba(200,178,255,0.82)" />
-              <stop offset="66%" stopColor="rgba(242,178,222,0.84)" />
-              <stop offset="90%" stopColor="rgba(255,200,160,0.7)" />
+              <stop offset="14%" stopColor="rgba(178,210,255,0.52)" />
+              <stop offset="38%" stopColor="rgba(200,178,255,0.6)" />
+              <stop offset="66%" stopColor="rgba(242,178,222,0.6)" />
+              <stop offset="90%" stopColor="rgba(255,200,160,0.5)" />
               <stop offset="100%" stopColor="rgba(255,200,160,0)" />
             </linearGradient>
             <linearGradient ref={coreGradRef} id={cId} gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="rgba(190,218,255,0)" />
-              <stop offset="12%" stopColor="rgba(190,218,255,0.92)" />
-              <stop offset="38%" stopColor="rgba(210,190,255,0.96)" />
-              <stop offset="66%" stopColor="rgba(248,188,228,0.97)" />
-              <stop offset="90%" stopColor="rgba(255,210,178,0.92)" />
+              <stop offset="12%" stopColor="rgba(190,218,255,0.88)" />
+              <stop offset="38%" stopColor="rgba(210,190,255,0.92)" />
+              <stop offset="66%" stopColor="rgba(248,188,228,0.92)" />
+              <stop offset="90%" stopColor="rgba(255,210,178,0.88)" />
               <stop offset="100%" stopColor="rgba(255,210,178,0)" />
             </linearGradient>
           </defs>
@@ -226,16 +226,16 @@ export const BorderBeam = React.memo(function BorderBeam({
             fill="none"
           />
 
-          {/* Outer glow – wide, heavily blurred */}
+          {/* Outer glow – tight, lightly blurred */}
           <path
             ref={glowRef}
             d={pathD}
             stroke={`url(#${gId})`}
-            strokeWidth={9}
+            strokeWidth={5}
             fill="none"
             filter={`url(#${fgId})`}
             strokeLinecap="round"
-            opacity={0.4}
+            opacity={0.3}
           />
 
           {/* Mid glow */}
@@ -243,11 +243,11 @@ export const BorderBeam = React.memo(function BorderBeam({
             ref={midRef}
             d={pathD}
             stroke={`url(#${mId})`}
-            strokeWidth={4.5}
+            strokeWidth={2.5}
             fill="none"
             filter={`url(#${fmId})`}
             strokeLinecap="round"
-            opacity={0.65}
+            opacity={0.5}
           />
 
           {/* Core crisp line */}
@@ -255,10 +255,10 @@ export const BorderBeam = React.memo(function BorderBeam({
             ref={coreRef}
             d={pathD}
             stroke={`url(#${cId})`}
-            strokeWidth={1.5}
+            strokeWidth={1.4}
             fill="none"
             strokeLinecap="round"
-            opacity={0.92}
+            opacity={0.88}
           />
 
           {/* Hidden path for measurement */}
