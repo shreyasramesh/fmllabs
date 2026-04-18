@@ -10,8 +10,7 @@ interface BorderBeamProps {
 }
 
 /**
- * Subtle animated multi-color border glow inspired by Apple Intelligence.
- * A soft pastel spectrum sweeps along the container edge.
+ * A single animated multi-color beam that sweeps along the container border.
  * Parent must have `position: relative` and a `border-radius`.
  */
 export const BorderBeam = React.memo(function BorderBeam({
@@ -19,11 +18,11 @@ export const BorderBeam = React.memo(function BorderBeam({
   className = "",
 }: BorderBeamProps) {
   const gradient =
-    "conic-gradient(from 0deg, rgba(249,115,22,0.6) 0%, rgba(236,72,153,0.5) 14%, rgba(168,85,247,0.5) 28%, rgba(99,102,241,0.4) 42%, transparent 50%, transparent 65%, rgba(59,130,246,0.4) 72%, rgba(168,85,247,0.5) 80%, rgba(236,72,153,0.5) 88%, rgba(249,115,22,0.6) 100%)";
+    "conic-gradient(from 0deg, transparent 0%, transparent 70%, rgba(59,130,246,0.45) 75%, rgba(168,85,247,0.5) 80%, rgba(236,72,153,0.5) 85%, rgba(249,115,22,0.55) 90%, transparent 95%, transparent 100%)";
 
   return (
     <>
-      {/* Soft outer glow */}
+      {/* Soft glow halo */}
       <div
         className={`pointer-events-none absolute z-[1] rounded-[inherit] ${className}`.trim()}
         aria-hidden
@@ -36,7 +35,7 @@ export const BorderBeam = React.memo(function BorderBeam({
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
           filter: "blur(4px)",
-          opacity: 0.55,
+          opacity: 0.5,
         }}
       >
         <div
@@ -45,7 +44,7 @@ export const BorderBeam = React.memo(function BorderBeam({
         />
       </div>
 
-      {/* Thin crisp border line */}
+      {/* Thin crisp border */}
       <div
         className="pointer-events-none absolute inset-0 z-[1] rounded-[inherit]"
         aria-hidden
@@ -56,7 +55,7 @@ export const BorderBeam = React.memo(function BorderBeam({
           mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           maskComposite: "exclude",
           overflow: "hidden",
-          opacity: 0.7,
+          opacity: 0.65,
         }}
       >
         <div
