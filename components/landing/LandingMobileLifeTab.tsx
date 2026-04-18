@@ -206,7 +206,7 @@ function LifeInYears({ lifeExpectancyYears, yearsLived }: { lifeExpectancyYears:
                   ? "bg-accent"
                   : thisYear
                     ? "bg-accent/50 ring-[1.5px] ring-accent/30 animate-life-glow-pulse"
-                    : "bg-foreground/90"
+                    : "bg-neutral-300 dark:bg-neutral-700"
               }`}
               style={{ width: dotSize, height: dotSize, animationDelay: `${i * 15}ms` }}
             />
@@ -216,7 +216,7 @@ function LifeInYears({ lifeExpectancyYears, yearsLived }: { lifeExpectancyYears:
       <div className="mt-4 flex items-center justify-center gap-5 text-[10px] opacity-0 animate-fade-in" style={{ animationDelay: `${lifeExpectancyYears * 15 + 100}ms` }}>
         <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-accent" /><span className="text-neutral-500">Years lived ({cur})</span></span>
         <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-accent/50 ring-1 ring-accent/30 animate-life-glow-pulse" /><span className="text-neutral-500">This year</span></span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-foreground/90" /><span className="text-neutral-500">Ahead ({ahead})</span></span>
+        <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-neutral-300 dark:bg-neutral-700" /><span className="text-neutral-500">Ahead ({ahead})</span></span>
       </div>
     </div>
   );
