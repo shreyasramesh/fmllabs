@@ -19,6 +19,7 @@ import {
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
 import { DailyGoalChipsCard } from "@/components/landing/brain-dump/DailyGoalChipsCard";
+import { BorderBeam } from "@/components/BorderBeam";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping, normalizeQuickNoteBodyForMatch } from "@/components/landing/brain-dump/sentence-entries";
@@ -2460,10 +2461,11 @@ export function BrainDumpCaptureView({
             )
           : null}
 
-        <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">
+        <div className="group/typing-glow relative flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden rounded-2xl">
+          <BorderBeam duration={12} />
           <div
             ref={scrollContainerRef}
-            className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-y-contain pb-14 [-webkit-overflow-scrolling:touch]"
+            className="relative z-[2] flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-y-contain pb-14 [-webkit-overflow-scrolling:touch]"
             onTouchStart={handlePtrTouchStart}
             onTouchMove={handlePtrTouchMove}
             onTouchEnd={handlePtrTouchEnd}
