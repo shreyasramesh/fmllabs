@@ -42,6 +42,7 @@ export type EntryEstimateModalMeta =
       facts?: CalorieTrackingNutritionFacts | null;
       confidenceScore: number;
       highlightSpans?: QuickNoteHighlightSegment[];
+      dietaryFlags?: { tag: string; label: string; severity: "info" | "warning" | "concern"; tip: string }[];
     };
 
 function macroLabel(g: number | null, suffix: string): string {
@@ -319,6 +320,31 @@ export function EntryEstimateDetailModal({
                         </li>
                       ))}
                     </ul>
+                  </div>
+                )}
+
+                {meta.dietaryFlags && meta.dietaryFlags.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                      Feedback
+                    </p>
+                    <div className="space-y-1.5">
+                      {meta.dietaryFlags.map((flag, i) => (
+                        <div
+                          key={i}
+                          className={`rounded-xl border px-3 py-2 text-sm ${
+                            flag.severity === "concern"
+                              ? "border-red-200/80 bg-red-50/60 text-red-800 dark:border-red-800/30 dark:bg-red-950/30 dark:text-red-200"
+                              : flag.severity === "warning"
+                                ? "border-amber-200/80 bg-amber-50/60 text-amber-800 dark:border-amber-800/30 dark:bg-amber-950/30 dark:text-amber-200"
+                                : "border-blue-200/80 bg-blue-50/60 text-blue-800 dark:border-blue-800/30 dark:bg-blue-950/30 dark:text-blue-200"
+                          }`}
+                        >
+                          <p className="font-medium text-xs">{flag.label}</p>
+                          <p className="text-xs mt-0.5 opacity-80">{flag.tip}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

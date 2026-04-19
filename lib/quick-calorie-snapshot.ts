@@ -5,7 +5,7 @@
 
 import type { QuickNoteHighlightSegment } from "@/lib/quick-note-highlights";
 import { validateHighlightSegments } from "@/lib/quick-note-highlights";
-import type { CalorieTrackingNutritionFacts } from "@/lib/gemini";
+import type { CalorieTrackingNutritionFacts, DietaryFlag } from "@/lib/gemini";
 
 const MAX_SOURCE = 2000;
 
@@ -24,6 +24,7 @@ export type ClientQuickCalorieSnapshot = {
   facts?: CalorieTrackingNutritionFacts | null;
   reasoning: string;
   highlightSpans?: QuickNoteHighlightSegment[];
+  dietaryFlags?: DietaryFlag[];
 };
 
 function toStr(v: unknown): string | undefined {
@@ -96,5 +97,24 @@ export function parseClientQuickCalorieSnapshot(raw: unknown): ClientQuickCalori
     facts: parseFacts(o.facts),
     reasoning: toStr(o.reasoning) ?? "",
     highlightSpans,
+    dietaryFlags: Array.isArray(o.dietaryFlags)
+      ? (o.dietaryFlags as Record<string, unknown>[])
+          .filter(
+            (f) =>
+              f &&
+              typeof f === "object" &&
+              typeof f.tag === "string" &&
+              typeof f.label === "string" &&
+              typeof f.tip === "string" &&
+              (f.severity === "info" || f.severity === "warning" || f.severity === "concern"),
+          )
+          .map((f) => ({
+            tag: (f.tag as string).slice(0, 40),
+            label: (f.label as string).slice(0, 60),
+            severity: f.severity as DietaryFlag["severity"],
+            tip: (f.tip as string).slice(0, 200),
+          }))
+          .slice(0, 5)
+      : [],
   };
 }

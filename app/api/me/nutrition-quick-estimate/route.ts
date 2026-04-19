@@ -75,6 +75,7 @@ export async function POST(request: Request) {
       facts: result.nutrition?.facts ?? null,
       confidenceScore: result.confidenceScore,
       highlightSpans: result.highlightSpans ?? [],
+      dietaryFlags: result.dietaryFlags ?? [],
     });
   } catch (err) {
     console.error("nutrition-quick-estimate failed:", err);

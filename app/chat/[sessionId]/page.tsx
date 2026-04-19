@@ -2401,14 +2401,11 @@ function chartBaseOptions(isDark = false): Highcharts.Options {
 }
 
 type GoalsWizardStep =
-  | "age"
-  | "weight"
+  | "body_basics"
   | "goal"
-  | "method"
-  | "height"
-  | "gender"
-  | "target_weight"
-  | "pace"
+  | "lifestyle"
+  | "nutrition_habits"
+  | "pace_method"
   | "daily_goals";
 
 type GoalsWizardGender = "male" | "female";
@@ -2423,15 +2420,29 @@ type NutritionMethodConfig = {
 type WeightUnit = "kg" | "lb";
 type HeightUnit = "ft" | "cm";
 
+type ActivityLevel = "sedentary" | "lightly_active" | "moderately_active" | "very_active";
+type DailyStepsRange = "under_3k" | "3k_5k" | "5k_7k" | "7k_10k" | "over_10k";
+type ExerciseFrequency = "never" | "1_2_week" | "3_4_week" | "5_plus_week";
+type SleepQuality = "great" | "okay" | "poor" | "terrible";
+type StressLevel = "low" | "moderate" | "high" | "very_high";
+type MealsPerDay = "1_2" | "3" | "4_5" | "irregular";
+type SnackingFrequency = "rarely" | "once_daily" | "multiple_daily" | "constant";
+type WaterIntake = "under_4_cups" | "4_6_cups" | "7_8_cups" | "over_8_cups";
+type NutritionChallenge =
+  | "overeating"
+  | "late_night_eating"
+  | "sugary_drinks"
+  | "processed_food"
+  | "skipping_meals"
+  | "low_protein"
+  | "low_vegetables";
+
 const GOALS_WIZARD_STEPS: GoalsWizardStep[] = [
-  "age",
-  "weight",
+  "body_basics",
   "goal",
-  "method",
-  "height",
-  "gender",
-  "target_weight",
-  "pace",
+  "lifestyle",
+  "nutrition_habits",
+  "pace_method",
   "daily_goals",
 ];
 
@@ -2448,6 +2459,15 @@ type GoalsWizardProfile = {
   targetWeightValue: string;
   targetWeightUnit: WeightUnit;
   pace: GoalsWizardPace;
+  activityLevel: ActivityLevel;
+  dailySteps: DailyStepsRange;
+  exerciseFrequency: ExerciseFrequency;
+  sleepQuality: SleepQuality;
+  stressLevel: StressLevel;
+  mealsPerDay: MealsPerDay;
+  snackingFrequency: SnackingFrequency;
+  waterIntake: WaterIntake;
+  nutritionChallenges: NutritionChallenge[];
 };
 
 function truncateJournalListPreview(text: string | undefined, max = JOURNAL_LIST_PREVIEW_MAX): string {
@@ -3147,6 +3167,15 @@ function createDefaultGoalsWizardProfile(): GoalsWizardProfile {
     targetWeightValue: "68",
     targetWeightUnit: "kg",
     pace: "extreme",
+    activityLevel: "lightly_active",
+    dailySteps: "3k_5k",
+    exerciseFrequency: "1_2_week",
+    sleepQuality: "okay",
+    stressLevel: "moderate",
+    mealsPerDay: "3",
+    snackingFrequency: "once_daily",
+    waterIntake: "4_6_cups",
+    nutritionChallenges: [],
   };
 }
 
@@ -4132,6 +4161,19 @@ export default function ChatPage() {
     };
   } | null>(null);
   const skipGoalsMacroRecalculateRef = useRef(false);
+  const [dailyGoalsConfirmed, setDailyGoalsConfirmed] = useState(false);
+  const handleConfirmDailyGoals = useCallback(async (data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] }) => {
+    setDailyGoalsConfirmed(true);
+    if (isAnonymous || incognitoMode) return;
+    try {
+      await fetch("/api/me/daily-goals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+    } catch { /* best-effort */ }
+  }, [isAnonymous, incognitoMode]);
+  const handleSkipDailyGoals = useCallback(() => { setDailyGoalsConfirmed(true); }, []);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
@@ -9669,6 +9711,15 @@ export default function ChatPage() {
           nutritionFatLossMethod,
           nutritionMethodConfig,
           nutritionGoalIntent: nextNutritionGoalIntent,
+          nutritionActivityLevel: goalsWizardProfile.activityLevel,
+          nutritionDailySteps: goalsWizardProfile.dailySteps,
+          nutritionExerciseFrequency: goalsWizardProfile.exerciseFrequency,
+          nutritionSleepQuality: goalsWizardProfile.sleepQuality,
+          nutritionStressLevel: goalsWizardProfile.stressLevel,
+          nutritionMealsPerDay: goalsWizardProfile.mealsPerDay,
+          nutritionSnackingFrequency: goalsWizardProfile.snackingFrequency,
+          nutritionWaterIntake: goalsWizardProfile.waterIntake,
+          nutritionChallenges: goalsWizardProfile.nutritionChallenges,
           ...(goalsDraft.birthday ? { birthday: goalsDraft.birthday } : {}),
           lifeExpectancyYears: Math.max(50, Math.min(120, Math.round(parseFloat(goalsDraft.lifeExpectancyYears) || 80))),
           ...(goalsDraft.fireSavingsCurrent.trim() ? { fireSavingsCurrent: Math.max(0, parseFloat(goalsDraft.fireSavingsCurrent.replace(/,/g, "")) || 0) } : {}),
@@ -9789,7 +9840,7 @@ export default function ChatPage() {
     }
   }, [incognitoMode, isAnonymous, userId]);
 
-  const goalsWizardStep = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
+  const goalsWizardStep = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "body_basics";
 
   const goalsRecommendedRangeLabel = useMemo(() => {
     const weightKg = kgFromWeightInput(goalsWizardProfile.weightValue, goalsWizardProfile.weightUnit);
@@ -9849,6 +9900,15 @@ export default function ChatPage() {
           nutritionFatLossMethods,
           nutritionFatLossMethod,
           nutritionMethodConfig,
+          activityLevel: goalsWizardProfile.activityLevel,
+          dailySteps: goalsWizardProfile.dailySteps,
+          exerciseFrequency: goalsWizardProfile.exerciseFrequency,
+          sleepQuality: goalsWizardProfile.sleepQuality,
+          stressLevel: goalsWizardProfile.stressLevel,
+          mealsPerDay: goalsWizardProfile.mealsPerDay,
+          snackingFrequency: goalsWizardProfile.snackingFrequency,
+          waterIntake: goalsWizardProfile.waterIntake,
+          nutritionChallenges: goalsWizardProfile.nutritionChallenges,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -9959,8 +10019,8 @@ export default function ChatPage() {
 
   const handleGoalsWizardNext = useCallback(async () => {
     setGoalsWizardError(null);
-    const step = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "age";
-    if (step === "pace") {
+    const step = GOALS_WIZARD_STEPS[goalsWizardStepIndex] ?? "body_basics";
+    if (step === "pace_method") {
       const ok = await runGoalsFinishCalculation();
       if (!ok) return;
       setGoalsWizardStepIndex(GOALS_WIZARD_STEPS.indexOf("daily_goals"));
@@ -16575,6 +16635,12 @@ export default function ChatPage() {
                                     setLibraryPanelOpen("habits");
                                   }
                             }
+                            dailyGoalsConfirmed={dailyGoalsConfirmed}
+                            onConfirmDailyGoals={isAnonymous || incognitoMode ? undefined : handleConfirmDailyGoals}
+                            onSkipDailyGoals={handleSkipDailyGoals}
+                            goalCaloriesTarget={nutritionGoals.caloriesTarget}
+                            goalExerciseSessionMinutes={exerciseSessionGoalMinutes}
+                            goalNutritionChallenges={[]}
                           />
                         }
                       />
@@ -19440,309 +19506,208 @@ export default function ChatPage() {
               </div>
             )}
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 space-y-3">
-              {goalsWizardStep === "age" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardAgePrompt}</p>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min={12}
-                    max={100}
-                    value={goalsWizardProfile.age}
-                    onChange={(e) => setGoalsWizardProfile((prev) => ({ ...prev, age: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                  />
-                </div>
-              )}
-
-              {goalsWizardStep === "weight" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardWeightPrompt}</p>
-                  <div className="grid grid-cols-[1fr_auto] gap-2">
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      value={goalsWizardProfile.weightValue}
-                      onChange={(e) =>
-                        setGoalsWizardProfile((prev) => ({ ...prev, weightValue: e.target.value }))
-                      }
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                    <select
-                      value={goalsWizardProfile.weightUnit}
-                      onChange={(e) =>
-                        setGoalsWizardProfile((prev) => ({ ...prev, weightUnit: e.target.value as WeightUnit }))
-                      }
-                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    >
-                      <option value="kg">kg</option>
-                      <option value="lb">lb</option>
-                    </select>
+              {goalsWizardStep === "body_basics" && (
+                <div className="space-y-4">
+                  <p className="text-xl font-semibold text-center">Tell us about yourself</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">Age</label>
+                      <input type="number" inputMode="numeric" min={12} max={100} value={goalsWizardProfile.age} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, age: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">Gender</label>
+                      <div className="flex gap-1.5">
+                        {(["male", "female"] as const).map((g) => (
+                          <button key={g} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, gender: g }))} className={`flex-1 px-2 py-2 rounded-xl border text-sm capitalize ${goalsWizardProfile.gender === g ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{g}</button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400">Height</label>
+                    <div className="grid grid-cols-[1fr_auto] gap-2">
+                      {goalsWizardProfile.heightUnit === "ft" ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="number" inputMode="numeric" value={goalsWizardProfile.heightFeet} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, heightFeet: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" placeholder="ft" />
+                          <input type="number" inputMode="numeric" value={goalsWizardProfile.heightInches} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, heightInches: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" placeholder="in" />
+                        </div>
+                      ) : (
+                        <input type="number" inputMode="numeric" value={goalsWizardProfile.heightCm} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, heightCm: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" placeholder="cm" />
+                      )}
+                      <select value={goalsWizardProfile.heightUnit} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, heightUnit: e.target.value as HeightUnit }))} className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm">
+                        <option value="ft">ft</option>
+                        <option value="cm">cm</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400">Current weight</label>
+                    <div className="grid grid-cols-[1fr_auto] gap-2">
+                      <input type="number" inputMode="decimal" value={goalsWizardProfile.weightValue} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, weightValue: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" />
+                      <select value={goalsWizardProfile.weightUnit} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, weightUnit: e.target.value as WeightUnit }))} className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm">
+                        <option value="kg">kg</option>
+                        <option value="lb">lb</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               )}
 
               {goalsWizardStep === "goal" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardGoalPrompt}</p>
+                <div className="space-y-4">
+                  <p className="text-xl font-semibold text-center">{getLandingTranslations(language).nutritionGoalsWizardGoalPrompt}</p>
                   {([
                     ["lose_weight", getLandingTranslations(language).nutritionGoalsWizardLoseWeight],
                     ["maintain_weight", getLandingTranslations(language).nutritionGoalsWizardMaintainWeight],
                     ["gain_weight", getLandingTranslations(language).nutritionGoalsWizardGainWeight],
                   ] as const).map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, goal: value }))}
-                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
-                        goalsWizardProfile.goal === value
-                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
-                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      {label}
-                    </button>
+                    <button key={value} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, goal: value }))} className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm ${goalsWizardProfile.goal === value ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}>{label}</button>
                   ))}
-                </div>
-              )}
-
-              {goalsWizardStep === "method" && (
-                <div className="space-y-3">
-                  <p className="text-2xl font-medium text-center">
-                    {getLandingTranslations(language).nutritionGoalsWizardMethodPrompt}
-                  </p>
-                  {([
-                    [
-                      "calorie_counting",
-                      getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingLabel,
-                      getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingDesc,
-                    ],
-                    [
-                      "intermittent_fasting",
-                      getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingLabel,
-                      getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingDesc,
-                    ],
-                    [
-                      "diet_based",
-                      getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedLabel,
-                      getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedDesc,
-                    ],
-                  ] as const).map(([value, label, desc]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() =>
-                        setNutritionFatLossMethods((prev) => {
-                          const exists = prev.includes(value);
-                          if (exists) {
-                            const next = prev.filter((m) => m !== value);
-                            return next.length > 0 ? next : [DEFAULT_NUTRITION_FAT_LOSS_METHOD];
-                          }
-                          return [...prev, value].slice(0, 3);
-                        })
-                      }
-                      className={`w-full text-left px-3 py-2 rounded-xl border transition-colors ${
-                        nutritionFatLossMethods.includes(value)
-                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
-                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      <p className="text-sm font-medium text-foreground">{label}</p>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">{desc}</p>
-                    </button>
-                  ))}
-
-                  {nutritionFatLossMethods.includes("intermittent_fasting") && (
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
-                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                        {getLandingTranslations(language).nutritionGoalsWizardFastingWindowLabel}
-                      </label>
-                      <input
-                        type="number"
-                        inputMode="numeric"
-                        min={4}
-                        max={16}
-                        step={1}
-                        value={nutritionMethodConfig.intermittentFastingEatingWindowHours}
-                        onChange={(e) =>
-                          setNutritionMethodConfig((prev) => ({
-                            ...prev,
-                            intermittentFastingEatingWindowHours: clampToRange(
-                              toNumericInputValue(e.target.value) ?? DEFAULT_FASTING_EATING_WINDOW_HOURS,
-                              4,
-                              16
-                            ),
-                          }))
-                        }
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                      />
-                    </div>
-                  )}
-
-                  {nutritionFatLossMethods.includes("diet_based") && (
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
-                      <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                        {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLabel}
-                      </label>
-                      <select
-                        value={nutritionMethodConfig.dietBasedTemplate}
-                        onChange={(e) =>
-                          setNutritionMethodConfig((prev) => ({
-                            ...prev,
-                            dietBasedTemplate: (e.target.value as NutritionDietTemplate) || DEFAULT_DIET_BASED_TEMPLATE,
-                          }))
-                        }
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                      >
-                        <option value="balanced">
-                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateBalanced}
-                        </option>
-                        <option value="low_carb">
-                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowCarb}
-                        </option>
-                        <option value="high_protein">
-                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateHighProtein}
-                        </option>
-                        <option value="low_fat">
-                          {getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowFat}
-                        </option>
+                  <div className="pt-2 space-y-1">
+                    <label className="block text-xs text-neutral-500 dark:text-neutral-400">Target weight</label>
+                    {goalsRecommendedRangeLabel && (
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Recommended: {goalsRecommendedRangeLabel}</p>
+                    )}
+                    <div className="grid grid-cols-[1fr_auto] gap-2">
+                      <input type="number" inputMode="decimal" value={goalsWizardProfile.targetWeightValue} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, targetWeightValue: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" />
+                      <select value={goalsWizardProfile.targetWeightUnit} onChange={(e) => setGoalsWizardProfile((p) => ({ ...p, targetWeightUnit: e.target.value as WeightUnit }))} className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm">
+                        <option value="kg">kg</option>
+                        <option value="lb">lb</option>
                       </select>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
 
-              {goalsWizardStep === "height" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardHeightPrompt}</p>
-                  <div className="grid grid-cols-[1fr_auto] gap-2">
-                    {goalsWizardProfile.heightUnit === "ft" ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        <input
-                          type="number"
-                          inputMode="numeric"
-                          value={goalsWizardProfile.heightFeet}
-                          onChange={(e) =>
-                            setGoalsWizardProfile((prev) => ({ ...prev, heightFeet: e.target.value }))
-                          }
-                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                          placeholder="ft"
-                        />
-                        <input
-                          type="number"
-                          inputMode="numeric"
-                          value={goalsWizardProfile.heightInches}
-                          onChange={(e) =>
-                            setGoalsWizardProfile((prev) => ({ ...prev, heightInches: e.target.value }))
-                          }
-                          className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                          placeholder="in"
-                        />
+              {goalsWizardStep === "lifestyle" && (
+                <div className="space-y-4">
+                  <p className="text-xl font-semibold text-center">Your lifestyle</p>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Activity level</label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {([["sedentary", "Sedentary"], ["lightly_active", "Lightly active"], ["moderately_active", "Moderately active"], ["very_active", "Very active"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, activityLevel: v }))} className={`px-2.5 py-2 rounded-xl border text-xs ${goalsWizardProfile.activityLevel === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Daily steps</label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {([["under_3k", "<3k"], ["3k_5k", "3-5k"], ["5k_7k", "5-7k"], ["7k_10k", "7-10k"], ["over_10k", "10k+"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, dailySteps: v }))} className={`px-2 py-2 rounded-xl border text-xs ${goalsWizardProfile.dailySteps === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Exercise frequency</label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {([["never", "Never"], ["1_2_week", "1-2x/week"], ["3_4_week", "3-4x/week"], ["5_plus_week", "5+/week"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, exerciseFrequency: v }))} className={`px-2.5 py-2 rounded-xl border text-xs ${goalsWizardProfile.exerciseFrequency === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Sleep quality</label>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {([["great", "Great"], ["okay", "Okay"], ["poor", "Poor"], ["terrible", "Bad"]] as const).map(([v, l]) => (
+                          <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, sleepQuality: v }))} className={`px-2 py-1.5 rounded-xl border text-xs ${goalsWizardProfile.sleepQuality === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                        ))}
                       </div>
-                    ) : (
-                      <input
-                        type="number"
-                        inputMode="numeric"
-                        value={goalsWizardProfile.heightCm}
-                        onChange={(e) =>
-                          setGoalsWizardProfile((prev) => ({ ...prev, heightCm: e.target.value }))
-                        }
-                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                        placeholder="cm"
-                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Stress level</label>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {([["low", "Low"], ["moderate", "Med"], ["high", "High"], ["very_high", "V. high"]] as const).map(([v, l]) => (
+                          <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, stressLevel: v }))} className={`px-2 py-1.5 rounded-xl border text-xs ${goalsWizardProfile.stressLevel === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {goalsWizardStep === "nutrition_habits" && (
+                <div className="space-y-4">
+                  <p className="text-xl font-semibold text-center">Your eating habits</p>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Meals per day</label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {([["1_2", "1-2"], ["3", "3"], ["4_5", "4-5"], ["irregular", "Varies"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, mealsPerDay: v }))} className={`px-2 py-2 rounded-xl border text-xs ${goalsWizardProfile.mealsPerDay === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Snacking</label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {([["rarely", "Rarely"], ["once_daily", "Once/day"], ["multiple_daily", "A few/day"], ["constant", "Constant"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, snackingFrequency: v }))} className={`px-2.5 py-2 rounded-xl border text-xs ${goalsWizardProfile.snackingFrequency === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Water intake</label>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {([["under_4_cups", "<4"], ["4_6_cups", "4-6"], ["7_8_cups", "7-8"], ["over_8_cups", "8+"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, waterIntake: v }))} className={`px-2 py-2 rounded-xl border text-xs ${goalsWizardProfile.waterIntake === v ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l} cups</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">Biggest challenges (select all that apply)</label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {([["overeating", "Overeating"], ["late_night_eating", "Late-night eating"], ["sugary_drinks", "Sugary drinks"], ["processed_food", "Processed food"], ["skipping_meals", "Skipping meals"], ["low_protein", "Low protein"], ["low_vegetables", "Not enough veggies"]] as const).map(([v, l]) => (
+                        <button key={v} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, nutritionChallenges: p.nutritionChallenges.includes(v) ? p.nutritionChallenges.filter((c) => c !== v) : [...p.nutritionChallenges, v] }))} className={`px-2.5 py-2 rounded-xl border text-xs text-left ${goalsWizardProfile.nutritionChallenges.includes(v) ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600"}`}>{l}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {goalsWizardStep === "pace_method" && (
+                <div className="space-y-4">
+                  <p className="text-xl font-semibold text-center">Pace & method</p>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">{getLandingTranslations(language).nutritionGoalsWizardPacePrompt}</label>
+                    {([
+                      ["extreme", getLandingTranslations(language).nutritionGoalsWizardPaceExtreme],
+                      ["moderate", getLandingTranslations(language).nutritionGoalsWizardPaceModerate],
+                      ["mild", getLandingTranslations(language).nutritionGoalsWizardPaceMild],
+                    ] as const).map(([value, label]) => (
+                      <button key={value} type="button" onClick={() => setGoalsWizardProfile((p) => ({ ...p, pace: value }))} className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm ${goalsWizardProfile.pace === value ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25 font-medium" : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}>{label}</button>
+                    ))}
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300">{getLandingTranslations(language).nutritionGoalsWizardMethodPrompt}</label>
+                    {([
+                      ["calorie_counting", getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingLabel, getLandingTranslations(language).nutritionGoalsWizardMethodCalorieCountingDesc],
+                      ["intermittent_fasting", getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingLabel, getLandingTranslations(language).nutritionGoalsWizardMethodIntermittentFastingDesc],
+                      ["diet_based", getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedLabel, getLandingTranslations(language).nutritionGoalsWizardMethodDietBasedDesc],
+                    ] as const).map(([value, label, desc]) => (
+                      <button key={value} type="button" onClick={() => setNutritionFatLossMethods((prev) => { const exists = prev.includes(value); if (exists) { const next = prev.filter((m) => m !== value); return next.length > 0 ? next : [DEFAULT_NUTRITION_FAT_LOSS_METHOD]; } return [...prev, value].slice(0, 3); })} className={`w-full text-left px-3 py-2 rounded-xl border transition-colors ${nutritionFatLossMethods.includes(value) ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25" : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}>
+                        <p className="text-sm font-medium text-foreground">{label}</p>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">{desc}</p>
+                      </button>
+                    ))}
+                    {nutritionFatLossMethods.includes("intermittent_fasting") && (
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400">{getLandingTranslations(language).nutritionGoalsWizardFastingWindowLabel}</label>
+                        <input type="number" inputMode="numeric" min={4} max={16} step={1} value={nutritionMethodConfig.intermittentFastingEatingWindowHours} onChange={(e) => setNutritionMethodConfig((prev) => ({ ...prev, intermittentFastingEatingWindowHours: clampToRange(toNumericInputValue(e.target.value) ?? DEFAULT_FASTING_EATING_WINDOW_HOURS, 4, 16) }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm" />
+                      </div>
                     )}
-                    <select
-                      value={goalsWizardProfile.heightUnit}
-                      onChange={(e) =>
-                        setGoalsWizardProfile((prev) => ({ ...prev, heightUnit: e.target.value as HeightUnit }))
-                      }
-                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    >
-                      <option value="ft">ft</option>
-                      <option value="cm">cm</option>
-                    </select>
+                    {nutritionFatLossMethods.includes("diet_based") && (
+                      <div className="rounded-xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-1 bg-neutral-50/60 dark:bg-neutral-900/40">
+                        <label className="block text-xs text-neutral-500 dark:text-neutral-400">{getLandingTranslations(language).nutritionGoalsWizardDietTemplateLabel}</label>
+                        <select value={nutritionMethodConfig.dietBasedTemplate} onChange={(e) => setNutritionMethodConfig((prev) => ({ ...prev, dietBasedTemplate: (e.target.value as NutritionDietTemplate) || DEFAULT_DIET_BASED_TEMPLATE }))} className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm">
+                          <option value="balanced">{getLandingTranslations(language).nutritionGoalsWizardDietTemplateBalanced}</option>
+                          <option value="low_carb">{getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowCarb}</option>
+                          <option value="high_protein">{getLandingTranslations(language).nutritionGoalsWizardDietTemplateHighProtein}</option>
+                          <option value="low_fat">{getLandingTranslations(language).nutritionGoalsWizardDietTemplateLowFat}</option>
+                        </select>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-
-              {goalsWizardStep === "gender" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardGenderPrompt}</p>
-                  {([
-                    ["male", getLandingTranslations(language).nutritionGoalsWizardMale],
-                    ["female", getLandingTranslations(language).nutritionGoalsWizardFemale],
-                  ] as const).map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, gender: value }))}
-                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
-                        goalsWizardProfile.gender === value
-                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
-                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {goalsWizardStep === "target_weight" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">
-                    {getLandingTranslations(language).nutritionGoalsWizardTargetWeightPrompt}
-                  </p>
-                  {goalsRecommendedRangeLabel && (
-                    <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-                      Recommended range: {goalsRecommendedRangeLabel}
-                    </p>
-                  )}
-                  <div className="grid grid-cols-[1fr_auto] gap-2">
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      value={goalsWizardProfile.targetWeightValue}
-                      onChange={(e) =>
-                        setGoalsWizardProfile((prev) => ({ ...prev, targetWeightValue: e.target.value }))
-                      }
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    />
-                    <select
-                      value={goalsWizardProfile.targetWeightUnit}
-                      onChange={(e) =>
-                        setGoalsWizardProfile((prev) => ({ ...prev, targetWeightUnit: e.target.value as WeightUnit }))
-                      }
-                      className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"
-                    >
-                      <option value="kg">kg</option>
-                      <option value="lb">lb</option>
-                    </select>
-                  </div>
-                </div>
-              )}
-
-              {goalsWizardStep === "pace" && (
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-center">{getLandingTranslations(language).nutritionGoalsWizardPacePrompt}</p>
-                  {([
-                    ["extreme", getLandingTranslations(language).nutritionGoalsWizardPaceExtreme],
-                    ["moderate", getLandingTranslations(language).nutritionGoalsWizardPaceModerate],
-                    ["mild", getLandingTranslations(language).nutritionGoalsWizardPaceMild],
-                  ] as const).map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setGoalsWizardProfile((prev) => ({ ...prev, pace: value }))}
-                      className={`w-full text-left px-3 py-2 rounded-xl border text-sm ${
-                        goalsWizardProfile.pace === value
-                          ? "border-[#295a8a] bg-[#295a8a]/10 dark:bg-[#295a8a]/25"
-                          : "border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
                 </div>
               )}
 
@@ -20248,7 +20213,7 @@ export default function ChatPage() {
                     disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
                     className="px-4 py-2 rounded-xl text-sm font-medium bg-[#295a8a] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    {goalsWizardStep === "pace"
+                    {goalsWizardStep === "pace_method"
                       ? getLandingTranslations(language).nutritionGoalsWizardFinish
                       : getLandingTranslations(language).nutritionGoalsWizardNext}
                   </button>

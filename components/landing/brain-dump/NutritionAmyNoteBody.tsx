@@ -80,6 +80,24 @@ function ManualAnalyzeButton({ onClick }: { onClick: () => void }) {
   );
 }
 
+function TopDietaryFlagPill({ meta }: { meta: LineMeta }) {
+  if (meta.status !== "done" || !meta.dietaryFlags?.length) return null;
+  const top = meta.dietaryFlags.find((f) => f.severity === "concern")
+    ?? meta.dietaryFlags.find((f) => f.severity === "warning");
+  if (!top) return null;
+  return (
+    <span
+      className={`inline-block max-w-[6rem] truncate rounded-md px-1.5 py-0.5 text-[10px] font-medium leading-tight ${
+        top.severity === "concern"
+          ? "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+          : "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+      }`}
+    >
+      {top.label}
+    </span>
+  );
+}
+
 function LineRightMeta({ meta }: { meta: LineMeta }) {
   if (meta.status === "idle") return <span className="inline-block min-w-[4rem]" aria-hidden />;
 
@@ -117,24 +135,31 @@ function LineRightMeta({ meta }: { meta: LineMeta }) {
           <SparklesIcon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
           ~+{Math.round(calories)} cal
         </span>
+        <TopDietaryFlagPill meta={meta} />
       </span>
     );
   }
 
   if (burn != null) {
     return (
-      <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
-        <SparklesIcon className="h-4 w-4 shrink-0" />
-        ~−{Math.round(burn)} cal
+      <span className="inline-flex flex-col items-end gap-0.5">
+        <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
+          <SparklesIcon className="h-4 w-4 shrink-0" />
+          ~−{Math.round(burn)} cal
+        </span>
+        <TopDietaryFlagPill meta={meta} />
       </span>
     );
   }
 
   if (calories != null) {
     return (
-      <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-blue-500 dark:text-blue-400">
-        <SparklesIcon className="h-4 w-4 shrink-0" />
-        ~{Math.round(calories)} cal
+      <span className="inline-flex flex-col items-end gap-0.5">
+        <span className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-medium tabular-nums text-blue-500 dark:text-blue-400">
+          <SparklesIcon className="h-4 w-4 shrink-0" />
+          ~{Math.round(calories)} cal
+        </span>
+        <TopDietaryFlagPill meta={meta} />
       </span>
     );
   }
@@ -219,6 +244,7 @@ function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSle
             facts?: CalorieTrackingNutritionFacts | null;
             confidenceScore?: number;
             highlightSpans?: QuickNoteHighlightSegment[];
+            dietaryFlags?: { tag: string; label: string; severity: "info" | "warning" | "concern"; tip: string }[];
           };
           if (ac.signal.aborted) return;
 
@@ -275,6 +301,7 @@ function useNutritionLineEstimate(line: string, runNutritionApi: boolean, runSle
                 ? Math.round(data.confidenceScore)
                 : 0,
             highlightSpans,
+            dietaryFlags: Array.isArray(data.dietaryFlags) ? data.dietaryFlags : [],
           });
         } catch {
           if (!ac.signal.aborted) setMeta({ status: "idle" });

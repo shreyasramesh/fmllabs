@@ -223,6 +223,15 @@ export async function POST(request: Request) {
       nutritionFatLossMethod?: unknown;
       nutritionFatLossMethods?: unknown;
       nutritionMethodConfig?: unknown;
+      activityLevel?: unknown;
+      dailySteps?: unknown;
+      exerciseFrequency?: unknown;
+      sleepQuality?: unknown;
+      stressLevel?: unknown;
+      mealsPerDay?: unknown;
+      snackingFrequency?: unknown;
+      waterIntake?: unknown;
+      nutritionChallenges?: unknown;
     };
     const { selectedMethods: nutritionFatLossMethods, primaryMethod: nutritionFatLossMethod } =
       normalizeFatLossMethods(body.nutritionFatLossMethod, body.nutritionFatLossMethods);
@@ -247,6 +256,19 @@ export async function POST(request: Request) {
       ) {
         return NextResponse.json({ error: "Invalid profile values." }, { status: 400 });
       }
+      const lifestyleContext = {
+        activityLevel: typeof body.activityLevel === "string" ? body.activityLevel : undefined,
+        dailySteps: typeof body.dailySteps === "string" ? body.dailySteps : undefined,
+        exerciseFrequency: typeof body.exerciseFrequency === "string" ? body.exerciseFrequency : undefined,
+        sleepQuality: typeof body.sleepQuality === "string" ? body.sleepQuality : undefined,
+        stressLevel: typeof body.stressLevel === "string" ? body.stressLevel : undefined,
+        mealsPerDay: typeof body.mealsPerDay === "string" ? body.mealsPerDay : undefined,
+        snackingFrequency: typeof body.snackingFrequency === "string" ? body.snackingFrequency : undefined,
+        waterIntake: typeof body.waterIntake === "string" ? body.waterIntake : undefined,
+        nutritionChallenges: Array.isArray(body.nutritionChallenges)
+          ? body.nutritionChallenges.filter((c: unknown): c is string => typeof c === "string")
+          : undefined,
+      };
       const normalizedInput = {
         age: clamp(age, 12, 100),
         gender: body.gender,
@@ -255,6 +277,7 @@ export async function POST(request: Request) {
         targetWeightKg: Math.max(35, Math.min(280, Math.round(targetWeightKg * 10) / 10)),
         goal: body.goal,
         pace: body.pace,
+        ...lifestyleContext,
       } as const;
 
       const fallbackCalories = estimateFallbackCalories(normalizedInput);

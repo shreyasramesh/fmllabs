@@ -410,6 +410,13 @@ export interface CalorieTrackingExerciseItem {
   durationMinutes: number | null;
 }
 
+export interface DietaryFlag {
+  tag: string;
+  label: string;
+  severity: "info" | "warning" | "concern";
+  tip: string;
+}
+
 export interface CalorieTrackingFinalizeResult {
   intent: CalorieTrackingIntent;
   confidence: "low" | "medium" | "high";
@@ -420,6 +427,7 @@ export interface CalorieTrackingFinalizeResult {
   exerciseItems: CalorieTrackingExerciseItem[];
   /** Merged regex + item names + model spans (regex wins on overlap). */
   highlightSpans: QuickNoteHighlightSegment[];
+  dietaryFlags: DietaryFlag[];
   nutrition?: {
     calories: number | null;
     proteinGrams: number | null;
@@ -692,6 +700,15 @@ export interface NutritionGoalsProfileInput {
   targetWeightKg: number;
   goal: "lose_weight" | "maintain_weight" | "gain_weight";
   pace: "extreme" | "moderate" | "mild";
+  activityLevel?: string;
+  dailySteps?: string;
+  exerciseFrequency?: string;
+  sleepQuality?: string;
+  stressLevel?: string;
+  mealsPerDay?: string;
+  snackingFrequency?: string;
+  waterIntake?: string;
+  nutritionChallenges?: string[];
 }
 
 export interface NutritionGoalsResult {
@@ -836,6 +853,28 @@ export function tryParseCalorieTrackingFinalizePayload(
 
     const highlightSpans = normalizeApiHighlightSpans(highlightSourceText, p.highlightSpans);
 
+    const validSeverities = new Set(["info", "warning", "concern"]);
+    const dietaryFlags: DietaryFlag[] = Array.isArray(p.dietaryFlags)
+      ? (p.dietaryFlags as Record<string, unknown>[])
+          .filter(
+            (f) =>
+              f &&
+              typeof f === "object" &&
+              typeof f.tag === "string" &&
+              typeof f.label === "string" &&
+              typeof f.severity === "string" &&
+              validSeverities.has(f.severity) &&
+              typeof f.tip === "string",
+          )
+          .map((f) => ({
+            tag: (f.tag as string).slice(0, 40),
+            label: (f.label as string).slice(0, 60),
+            severity: f.severity as DietaryFlag["severity"],
+            tip: (f.tip as string).slice(0, 200),
+          }))
+          .slice(0, 5)
+      : [];
+
     return {
       intent,
       confidence,
@@ -845,6 +884,7 @@ export function tryParseCalorieTrackingFinalizePayload(
       nutritionItems,
       exerciseItems,
       highlightSpans,
+      dietaryFlags,
       nutrition,
       exercise,
     };
@@ -1551,6 +1591,14 @@ Return ONLY valid JSON with exactly this shape:
       "kind": "temporal" | "duration" | "distance" | "nutrition" | "weight" | "sleep" | "spend",
       "reason": "very short explanation of why this phrase matters"
     }
+  ],
+  "dietaryFlags": [
+    {
+      "tag": "high-sugar" | "low-protein" | "high-sodium" | "late-night" | "large-portion" | "no-vegetables" | "sugary-drink" | "processed-food" | "unbalanced-macros" | "skipping-fiber" | "high-calorie",
+      "label": "Short human-readable label (3-5 words)",
+      "severity": "info" | "warning" | "concern",
+      "tip": "One actionable sentence of advice"
+    }
   ]
 }
 
@@ -1566,6 +1614,7 @@ Rules:
 - For nutrition facts, provide your best realistic estimate per field when nutrition exists.
 - Keep assumptions concise and grounded.
 - highlightSpans: Identify salient fragments in the Original input only. Use 0-based start and end (end exclusive), JavaScript string indices (UTF-16 code units). Each kind must be one of: temporal, duration, distance, nutrition, weight, sleep, spend. Do not overlap spans. Prefer short meaningful phrases (times, durations, distances, food/drink mentions, activities, sleep, money). Each span must include a concise plain-English "reason" suitable for a hover tooltip or mobile tap explanation. Omit if nothing clear.
+- dietaryFlags: Flag anything nutritionally concerning about this entry. Only flag items that are genuinely noteworthy — do NOT flag perfectly normal meals. severity: "concern" for clearly unhealthy, "warning" for worth watching, "info" for neutral tips. Each tip must be one short actionable sentence. Return [] if nothing concerning.
 
 Original input:
 ${text}
@@ -1592,6 +1641,7 @@ ${answers.length ? answers.map((a, i) => `${i + 1}. ${a}`).join("\n") : "(none)"
       nutritionItems: [],
       exerciseItems: [],
     highlightSpans: [],
+    dietaryFlags: [],
       nutrition: {
         calories: null,
         proteinGrams: null,
@@ -2215,7 +2265,7 @@ Profile:
 - Current weight: ${input.currentWeightKg} kg
 - Target weight: ${input.targetWeightKg} kg
 - Goal: ${input.goal}
-- Pace: ${input.pace}`
+- Pace: ${input.pace}${input.activityLevel ? `\n- Activity level: ${input.activityLevel}` : ""}${input.dailySteps ? `\n- Daily steps: ${input.dailySteps}` : ""}${input.exerciseFrequency ? `\n- Exercise frequency: ${input.exerciseFrequency}` : ""}${input.sleepQuality ? `\n- Sleep quality: ${input.sleepQuality}` : ""}${input.stressLevel ? `\n- Stress level: ${input.stressLevel}` : ""}${input.mealsPerDay ? `\n- Meals per day: ${input.mealsPerDay}` : ""}${input.snackingFrequency ? `\n- Snacking: ${input.snackingFrequency}` : ""}${input.waterIntake ? `\n- Water intake: ${input.waterIntake}` : ""}${input.nutritionChallenges?.length ? `\n- Nutrition challenges: ${input.nutritionChallenges.join(", ")}` : ""}`
   );
   if (usageContext) recordGeminiUsageFromResult(result, usageContext);
   const raw = result.response.text().trim();

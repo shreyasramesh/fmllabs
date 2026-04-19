@@ -229,6 +229,21 @@ export async function PATCH(request: Request) {
         updates.nutritionGoalIntent = body.nutritionGoalIntent.trim().slice(0, NUTRITION_GOAL_INTENT_MAX);
       }
     }
+    for (const key of [
+      "nutritionActivityLevel", "nutritionDailySteps", "nutritionExerciseFrequency",
+      "nutritionSleepQuality", "nutritionStressLevel", "nutritionMealsPerDay",
+      "nutritionSnackingFrequency", "nutritionWaterIntake",
+    ] as const) {
+      if (typeof body[key] === "string") {
+        (updates as Record<string, unknown>)[key] = (body[key] as string).slice(0, 50);
+      }
+    }
+    if (Array.isArray(body.nutritionChallenges)) {
+      updates.nutritionChallenges = body.nutritionChallenges
+        .filter((c: unknown): c is string => typeof c === "string")
+        .map((c: string) => c.slice(0, 50))
+        .slice(0, 10);
+    }
     if (body.background !== undefined) {
       if (isValidBackground(body.background)) {
         updates.background = body.background;

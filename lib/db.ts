@@ -595,6 +595,16 @@ export interface UserSettings {
   nutritionMethodConfig?: NutritionMethodConfig;
   /** User-entered natural-language objective for nutrition coaching. */
   nutritionGoalIntent?: string;
+  /** Lifestyle/habit questionnaire answers from the concise onboarding wizard. */
+  nutritionActivityLevel?: string;
+  nutritionDailySteps?: string;
+  nutritionExerciseFrequency?: string;
+  nutritionSleepQuality?: string;
+  nutritionStressLevel?: string;
+  nutritionMealsPerDay?: string;
+  nutritionSnackingFrequency?: string;
+  nutritionWaterIntake?: string;
+  nutritionChallenges?: string[];
   /** When true, user appears on the global XP leaderboard */
   leaderboardOptIn?: boolean;
   /** When true, Gemini responds in ultra-terse caveman style to save tokens. */
@@ -2947,6 +2957,33 @@ export async function deleteFocusEntry(id: string, userId: string): Promise<bool
   return result.deletedCount > 0;
 }
 
+export interface DailyGoalDoc {
+  userId: string;
+  dayKey: string;
+  caloriesTarget: number;
+  exercisePlan: string;
+  focusAreas: string[];
+  confirmedAt: Date;
+}
+
+export async function getDailyGoal(userId: string, dayKey: string): Promise<DailyGoalDoc | null> {
+  const db = await getDb();
+  return db.collection<DailyGoalDoc>("user_daily_goals").findOne({ userId, dayKey });
+}
+
+export async function upsertDailyGoal(
+  userId: string,
+  dayKey: string,
+  data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] },
+): Promise<void> {
+  const db = await getDb();
+  await db.collection<DailyGoalDoc>("user_daily_goals").updateOne(
+    { userId, dayKey },
+    { $set: { ...data, userId, dayKey, confirmedAt: new Date() } },
+    { upsert: true },
+  );
+}
+
 export async function addSleepEntry(
   userId: string,
   input: {
@@ -3416,7 +3453,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences" | "birthday" | "lifeExpectancyYears" | "fireSavingsCurrent" | "fireTargetAmount" | "fireMonthlyContribution" | "fireAnnualReturnPct" | "fireCurrentAge" | "fireTargetRetirementAge" | "lifeCountdowns">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "nutritionActivityLevel" | "nutritionDailySteps" | "nutritionExerciseFrequency" | "nutritionSleepQuality" | "nutritionStressLevel" | "nutritionMealsPerDay" | "nutritionSnackingFrequency" | "nutritionWaterIntake" | "nutritionChallenges" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences" | "birthday" | "lifeExpectancyYears" | "fireSavingsCurrent" | "fireTargetAmount" | "fireMonthlyContribution" | "fireAnnualReturnPct" | "fireCurrentAge" | "fireTargetRetirementAge" | "lifeCountdowns">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();

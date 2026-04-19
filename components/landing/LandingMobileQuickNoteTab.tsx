@@ -75,6 +75,12 @@ interface LandingMobileQuickNoteTabProps {
   showWellnessNudges?: boolean;
   /** When true, show journal prompts bar (mobile Quick Notes). */
   showJournalPrompts?: boolean;
+  dailyGoalsConfirmed?: boolean;
+  onConfirmDailyGoals?: (data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] }) => void;
+  onSkipDailyGoals?: () => void;
+  goalCaloriesTarget?: number;
+  goalExerciseSessionMinutes?: number;
+  goalNutritionChallenges?: string[];
 }
 
 export function LandingMobileQuickNoteTab({
@@ -105,6 +111,12 @@ export function LandingMobileQuickNoteTab({
   onQuickNoteOpenHeroHabit,
   showWellnessNudges = true,
   showJournalPrompts = true,
+  dailyGoalsConfirmed,
+  onConfirmDailyGoals,
+  onSkipDailyGoals,
+  goalCaloriesTarget,
+  goalExerciseSessionMinutes,
+  goalNutritionChallenges,
 }: LandingMobileQuickNoteTabProps) {
   const {
     phase,
@@ -179,6 +191,12 @@ export function LandingMobileQuickNoteTab({
           onQuickNoteOpenHeroHabit={onQuickNoteOpenHeroHabit}
           showWellnessNudges={showWellnessNudges}
           showJournalPrompts={showJournalPrompts}
+          dailyGoalsConfirmed={dailyGoalsConfirmed}
+          onConfirmDailyGoals={onConfirmDailyGoals}
+          onSkipDailyGoals={onSkipDailyGoals}
+          goalCaloriesTarget={goalCaloriesTarget}
+          goalExerciseSessionMinutes={goalExerciseSessionMinutes}
+          goalNutritionChallenges={goalNutritionChallenges}
         />
       </Skeleton>
     </div>

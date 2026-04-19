@@ -18,6 +18,7 @@ import {
   NOTES_LIKE_TEXTAREA,
   type BrainDumpCaptureEntry,
 } from "@/components/landing/brain-dump/NutritionAmyNoteBody";
+import { DailyGoalChipsCard } from "@/components/landing/brain-dump/DailyGoalChipsCard";
 import { SparklesIcon } from "@/components/SharedIcons";
 import type { EntryEstimateModalMeta } from "@/components/landing/brain-dump/EntryEstimateDetailModal";
 import { flushSentencesFromTyping, normalizeQuickNoteBodyForMatch } from "@/components/landing/brain-dump/sentence-entries";
@@ -1632,6 +1633,15 @@ interface CaptureViewProps {
   showWellnessNudges?: boolean;
   /** When true, show journal prompts bar (mobile Quick Notes). */
   showJournalPrompts?: boolean;
+  /** Whether the user has already confirmed today's daily goals. */
+  dailyGoalsConfirmed?: boolean;
+  /** Callback when user confirms or skips daily goals. */
+  onConfirmDailyGoals?: (data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] }) => void;
+  onSkipDailyGoals?: () => void;
+  /** User's overall goals (for pre-filling daily goal chips). */
+  goalCaloriesTarget?: number;
+  goalExerciseSessionMinutes?: number;
+  goalNutritionChallenges?: string[];
 }
 
 type ImageReviewDestination = "quick_note" | "commonplace" | "weight" | "sleep";
@@ -1690,6 +1700,12 @@ export function BrainDumpCaptureView({
   onQuickNoteOpenHeroHabit,
   showWellnessNudges = false,
   showJournalPrompts = false,
+  dailyGoalsConfirmed = false,
+  onConfirmDailyGoals,
+  onSkipDailyGoals,
+  goalCaloriesTarget = 2000,
+  goalExerciseSessionMinutes = 30,
+  goalNutritionChallenges = [],
 }: CaptureViewProps) {
   const draftMetaRef = useRef<EntryEstimateModalMeta>({ status: "idle" });
   const draftTextareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -2486,7 +2502,17 @@ export function BrainDumpCaptureView({
                 </div>
               </div>
             ) : null}
-            {displayRows.length === 0 && captureEntries.length === 0 ? (
+            {displayRows.length === 0 && captureEntries.length === 0 && !dailyGoalsConfirmed && onConfirmDailyGoals && onSkipDailyGoals ? (
+              <div className="px-1 pt-2 pb-1">
+                <DailyGoalChipsCard
+                  defaultCalories={goalCaloriesTarget}
+                  defaultExerciseMinutes={goalExerciseSessionMinutes}
+                  nutritionChallenges={goalNutritionChallenges}
+                  onConfirm={onConfirmDailyGoals}
+                  onSkip={onSkipDailyGoals}
+                />
+              </div>
+            ) : displayRows.length === 0 && captureEntries.length === 0 ? (
               <div className="flex flex-col items-center gap-1 py-8 text-center">
                 <p className="text-sm text-neutral-400 dark:text-neutral-500">Nothing logged yet</p>
                 <p className="text-xs text-neutral-300 dark:text-neutral-600">Start typing below to add your first entry</p>
