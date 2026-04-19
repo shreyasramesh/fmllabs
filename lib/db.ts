@@ -577,7 +577,9 @@ export interface UserSettings {
   goalCarbsGrams?: number;
   goalProteinGrams?: number;
   goalFatGrams?: number;
-  /** Daily food spending budget in USD for the food spend tracker. */
+  /** Weekly food spending budget in USD for the food spend tracker. */
+  goalWeeklySpendUsd?: number;
+  /** @deprecated Use goalWeeklySpendUsd instead. */
   goalDailySpendUsd?: number;
   /** Nightly sleep target used for weekly sleep bank copy and sleep tab goals. */
   goalSleepHours?: number;
@@ -3421,6 +3423,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
     goalCarbsGrams: doc.goalCarbsGrams,
     goalProteinGrams: doc.goalProteinGrams,
     goalFatGrams: doc.goalFatGrams,
+    goalWeeklySpendUsd: doc.goalWeeklySpendUsd ?? doc.goalDailySpendUsd,
     goalDailySpendUsd: doc.goalDailySpendUsd,
     goalSleepHours: doc.goalSleepHours,
     goalExerciseSessionMinutes: doc.goalExerciseSessionMinutes,
@@ -3453,7 +3456,7 @@ export async function getUserSettings(userId: string): Promise<UserSettings | nu
 
 export async function upsertUserSettings(
   userId: string,
-  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "nutritionActivityLevel" | "nutritionDailySteps" | "nutritionExerciseFrequency" | "nutritionSleepQuality" | "nutritionStressLevel" | "nutritionMealsPerDay" | "nutritionSnackingFrequency" | "nutritionWaterIntake" | "nutritionChallenges" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences" | "birthday" | "lifeExpectancyYears" | "fireSavingsCurrent" | "fireTargetAmount" | "fireMonthlyContribution" | "fireAnnualReturnPct" | "fireCurrentAge" | "fireTargetRetirementAge" | "lifeCountdowns">>
+  updates: Partial<Pick<UserSettings, "theme" | "language" | "userType" | "ttsSpeed" | "clonedVoiceId" | "clonedVoiceName" | "clonedVoices" | "background" | "goalCaloriesTarget" | "goalCarbsGrams" | "goalProteinGrams" | "goalFatGrams" | "goalWeeklySpendUsd" | "goalDailySpendUsd" | "goalSleepHours" | "goalExerciseSessionMinutes" | "goalExerciseDaysOn" | "goalExerciseDaysOff" | "nutritionFatLossMethod" | "nutritionFatLossMethods" | "nutritionMethodConfig" | "nutritionGoalIntent" | "nutritionActivityLevel" | "nutritionDailySteps" | "nutritionExerciseFrequency" | "nutritionSleepQuality" | "nutritionStressLevel" | "nutritionMealsPerDay" | "nutritionSnackingFrequency" | "nutritionWaterIntake" | "nutritionChallenges" | "followedFigureIds" | "leaderboardOptIn" | "cavemanMode" | "preferredName" | "reminderPreferences" | "birthday" | "lifeExpectancyYears" | "fireSavingsCurrent" | "fireTargetAmount" | "fireMonthlyContribution" | "fireAnnualReturnPct" | "fireCurrentAge" | "fireTargetRetirementAge" | "lifeCountdowns">>
 ): Promise<UserSettings> {
   settingsCache.invalidate(userId);
   const database = await getDb();
@@ -3499,6 +3502,7 @@ export async function upsertUserSettings(
     goalCarbsGrams: result.goalCarbsGrams,
     goalProteinGrams: result.goalProteinGrams,
     goalFatGrams: result.goalFatGrams,
+    goalWeeklySpendUsd: result.goalWeeklySpendUsd ?? result.goalDailySpendUsd,
     goalDailySpendUsd: result.goalDailySpendUsd,
     goalSleepHours: result.goalSleepHours,
     goalExerciseSessionMinutes: result.goalExerciseSessionMinutes,

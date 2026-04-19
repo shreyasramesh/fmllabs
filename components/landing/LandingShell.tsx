@@ -454,8 +454,10 @@ interface LandingShellProps {
   exerciseGoalDaysOff: number;
   /** Mobile sleep tab: nightly sleep hour target (e.g. 8). */
   sleepHoursGoal: number;
-  /** Mobile spend tab: optional USD daily cap from settings; null shows hint to set in Goals. */
+  /** Mobile spend tab: weekly USD food budget from settings; null shows hint to set in Goals. */
   spendBudgetUsd: number | null;
+  /** Weekly food spend total (USD) for the current week. */
+  weeklySpentUsd?: number;
   /** Scroll container for the dashboard (e.g. chat messages column) — powers section scroll-spy. */
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
   /** Mobile first tab: full-screen quick capture (brain dump) UI. */
@@ -644,6 +646,7 @@ export function LandingShell({
   exerciseGoalDaysOff,
   sleepHoursGoal,
   spendBudgetUsd,
+  weeklySpentUsd = 0,
   dashboardScrollRootRef,
   mobileQuickNote,
   mobileCommonplace,
@@ -883,7 +886,8 @@ export function LandingShell({
             spendDaySummary={spendDaySummary}
             selectedDayLabel={selectedDayLabel}
             onOpenSpend={onOpenSpend}
-            spendBudgetUsd={spendBudgetUsd}
+            weeklySpendBudgetUsd={spendBudgetUsd}
+            weeklySpentUsd={weeklySpentUsd}
             onOpenGoals={onOpenGoals}
           />
         );
@@ -1271,7 +1275,7 @@ export function LandingShell({
             )}
             <div className="module-nested-muted mt-3 p-2.5 space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-semibold text-foreground">Food spend today</p>
+                <p className="text-[11px] font-semibold text-foreground">Food spend this week</p>
                 <button
                   type="button"
                   onClick={onOpenSpend}

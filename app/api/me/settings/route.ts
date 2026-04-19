@@ -177,6 +177,12 @@ export async function PATCH(request: Request) {
         updates.goalFatGrams = clampGoalMacro(v);
       }
     }
+    if (body.goalWeeklySpendUsd !== undefined) {
+      const v = parseNumberish(body.goalWeeklySpendUsd);
+      if (v !== null) {
+        updates.goalWeeklySpendUsd = clampGoalSpendUsd(v);
+      }
+    }
     if (body.goalDailySpendUsd !== undefined) {
       const v = parseNumberish(body.goalDailySpendUsd);
       if (v !== null) {

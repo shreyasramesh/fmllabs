@@ -3050,6 +3050,60 @@ function summarizeSpendForDay(
   return totalByCurrency;
 }
 
+function getWeekDayKeys(anchorDayKey: string): string[] {
+  const parts = anchorDayKey.split("-").map(Number);
+  const anchor = new Date(parts[0], parts[1] - 1, parts[2]);
+  const dayOfWeek = anchor.getDay();
+  const monday = new Date(anchor);
+  monday.setDate(anchor.getDate() - ((dayOfWeek + 6) % 7));
+  const keys: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    keys.push(toDayKey(d));
+  }
+  return keys;
+}
+
+function summarizeSpendForWeek(
+  entries: Array<{
+    sourceType?: "youtube" | "journal";
+    transcriptText?: string;
+    journalCategory?: "nutrition" | "exercise" | "spend";
+    journalEntryYear?: number;
+    journalEntryMonth?: number;
+    journalEntryDay?: number;
+    createdAt?: string;
+  }>,
+  anchorDayKey: string,
+): Record<string, number> {
+  const weekKeys = new Set(getWeekDayKeys(anchorDayKey));
+  const totalByCurrency: Record<string, number> = {};
+  for (const t of entries) {
+    if (t.sourceType !== "journal" || t.journalCategory !== "spend" || !t.transcriptText) continue;
+    let itemDayKey: string | null = null;
+    if (
+      typeof t.journalEntryYear === "number" &&
+      typeof t.journalEntryMonth === "number" &&
+      typeof t.journalEntryDay === "number"
+    ) {
+      itemDayKey = toDayKey(new Date(t.journalEntryYear, t.journalEntryMonth - 1, t.journalEntryDay));
+    } else if (t.createdAt) {
+      const d = new Date(t.createdAt);
+      if (!Number.isNaN(d.getTime())) itemDayKey = toDayKey(d);
+    }
+    if (!itemDayKey || !weekKeys.has(itemDayKey)) continue;
+    const parsed = parseSpendAmountFromJournalText(t.transcriptText);
+    if (!parsed) continue;
+    const c = parsed.currency;
+    totalByCurrency[c] = (totalByCurrency[c] ?? 0) + parsed.amount;
+  }
+  for (const k of Object.keys(totalByCurrency)) {
+    totalByCurrency[k] = Math.round(totalByCurrency[k]! * 100) / 100;
+  }
+  return totalByCurrency;
+}
+
 function hasMeaningfulNutritionData(snapshot: {
   caloriesFood: number;
   caloriesExercise: number;
@@ -4101,7 +4155,7 @@ export default function ChatPage() {
     carbsGrams: String(DEFAULT_NUTRITION_GOALS.carbsGrams),
     proteinGrams: String(DEFAULT_NUTRITION_GOALS.proteinGrams),
     fatGrams: String(DEFAULT_NUTRITION_GOALS.fatGrams),
-    dailySpendUsd: "",
+    weeklySpendUsd: "",
     sleepHoursGoal: String(DEFAULT_SLEEP_HOURS_GOAL),
     exerciseSessionMinutes: String(DEFAULT_EXERCISE_SESSION_GOAL_MINUTES),
     exerciseDaysOn: String(DEFAULT_EXERCISE_GOAL_DAYS_ON),
@@ -7152,6 +7206,10 @@ export default function ChatPage() {
     () => summarizeSpendForDay(journalEntriesSorted, selectedLandingDayKey),
     [journalEntriesSorted, selectedLandingDayKey]
   );
+  const selectedLandingWeekSpendTotals = useMemo(
+    () => summarizeSpendForWeek(journalEntriesSorted, selectedLandingDayKey),
+    [journalEntriesSorted, selectedLandingDayKey]
+  );
   const selectedLandingDayRecentSpend = useMemo(() => {
     const results: { id: string; label: string; amount: number; currency: string; time: string }[] = [];
     for (const t of journalEntriesSorted) {
@@ -9328,7 +9386,7 @@ export default function ChatPage() {
           ),
         };
         setNutritionGoals(nextGoals);
-        const rawSpend = data?.goalDailySpendUsd;
+        const rawSpend = data?.goalWeeklySpendUsd ?? data?.goalDailySpendUsd;
         const nextSpend =
           typeof rawSpend === "number" &&
           Number.isFinite(rawSpend) &&
@@ -9369,7 +9427,7 @@ export default function ChatPage() {
           carbsGrams: String(nextGoals.carbsGrams),
           proteinGrams: String(nextGoals.proteinGrams),
           fatGrams: String(nextGoals.fatGrams),
-          dailySpendUsd: nextSpend != null ? String(nextSpend) : "",
+          weeklySpendUsd: nextSpend != null ? String(nextSpend) : "",
           sleepHoursGoal: String(nextSleepHoursGoal),
           exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
           exerciseDaysOn: String(nextExerciseGoalDaysOn),
@@ -9573,7 +9631,7 @@ export default function ChatPage() {
       carbsGrams: String(nutritionGoals.carbsGrams),
       proteinGrams: String(nutritionGoals.proteinGrams),
       fatGrams: String(nutritionGoals.fatGrams),
-      dailySpendUsd: spendBudgetUsd != null ? String(spendBudgetUsd) : "",
+      weeklySpendUsd: spendBudgetUsd != null ? String(spendBudgetUsd) : "",
       sleepHoursGoal: String(sleepHoursGoal),
       exerciseSessionMinutes: String(exerciseSessionGoalMinutes),
       exerciseDaysOn: String(exerciseGoalDaysOn),
@@ -9682,12 +9740,12 @@ export default function ChatPage() {
       GOAL_EXERCISE_DAYS_MIN,
       GOAL_EXERCISE_DAYS_MAX
     );
-    const spendTrim = goalsDraft.dailySpendUsd.trim();
-    const spendPatch: { goalDailySpendUsd?: number } = {};
+    const spendTrim = goalsDraft.weeklySpendUsd.trim();
+    const spendPatch: { goalWeeklySpendUsd?: number } = {};
     if (spendTrim !== "") {
       const pv = parseFloat(spendTrim.replace(/,/g, ""));
       if (Number.isFinite(pv) && pv >= GOAL_SPEND_USD_MIN) {
-        spendPatch.goalDailySpendUsd =
+        spendPatch.goalWeeklySpendUsd =
           Math.round(Math.min(GOAL_SPEND_USD_MAX, pv) * 100) / 100;
       }
     }
@@ -9739,8 +9797,8 @@ export default function ChatPage() {
       setExerciseSessionGoalMinutes(nextExerciseSessionGoalMinutes);
       setExerciseGoalDaysOn(nextExerciseGoalDaysOn);
       setExerciseGoalDaysOff(nextExerciseGoalDaysOff);
-      if (spendPatch.goalDailySpendUsd !== undefined) {
-        setSpendBudgetUsd(spendPatch.goalDailySpendUsd);
+      if (spendPatch.goalWeeklySpendUsd !== undefined) {
+        setSpendBudgetUsd(spendPatch.goalWeeklySpendUsd);
       }
       if (goalsDraft.birthday) setLifeBirthday(goalsDraft.birthday);
       setLifeExpectancyYears(Math.max(50, Math.min(120, Math.round(parseFloat(goalsDraft.lifeExpectancyYears) || 80))));
@@ -9756,10 +9814,10 @@ export default function ChatPage() {
         carbsGrams: String(nextGoals.carbsGrams),
         proteinGrams: String(nextGoals.proteinGrams),
         fatGrams: String(nextGoals.fatGrams),
-        dailySpendUsd:
-          spendPatch.goalDailySpendUsd !== undefined
-            ? String(spendPatch.goalDailySpendUsd)
-            : goalsDraft.dailySpendUsd,
+        weeklySpendUsd:
+          spendPatch.goalWeeklySpendUsd !== undefined
+            ? String(spendPatch.goalWeeklySpendUsd)
+            : goalsDraft.weeklySpendUsd,
         sleepHoursGoal: String(nextSleepHoursGoal),
         exerciseSessionMinutes: String(nextExerciseSessionGoalMinutes),
         exerciseDaysOn: String(nextExerciseGoalDaysOn),
@@ -16551,6 +16609,7 @@ export default function ChatPage() {
                         exerciseGoalDaysOff={exerciseGoalDaysOff}
                         sleepHoursGoal={sleepHoursGoal}
                         spendBudgetUsd={spendBudgetUsd}
+                        weeklySpentUsd={selectedLandingWeekSpendTotals.USD ?? 0}
                         lifeCalendarData={lifeCalendarData}
                         yearProgressData={yearProgressData}
                         lifeCountdowns={computedLifeCountdowns}
@@ -19825,7 +19884,7 @@ export default function ChatPage() {
                   </div>
                   <div>
                     <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      Daily food budget (USD)
+                      Weekly food budget (USD)
                     </label>
                     <input
                       type="number"
@@ -19834,9 +19893,9 @@ export default function ChatPage() {
                       max={GOAL_SPEND_USD_MAX}
                       step={0.01}
                       placeholder={`Min ${GOAL_SPEND_USD_MIN}`}
-                      value={goalsDraft.dailySpendUsd}
+                      value={goalsDraft.weeklySpendUsd}
                       onChange={(e) =>
-                        setGoalsDraft((prev) => ({ ...prev, dailySpendUsd: e.target.value }))
+                        setGoalsDraft((prev) => ({ ...prev, weeklySpendUsd: e.target.value }))
                       }
                       disabled={goalsSaving || goalsRecalculateLoading}
                       className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm"

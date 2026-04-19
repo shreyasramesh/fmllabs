@@ -9,7 +9,8 @@ interface LandingMobileSpendTabProps {
   spendDaySummary: LandingSpendDaySummary;
   selectedDayLabel: string;
   onOpenSpend: () => void;
-  spendBudgetUsd: number | null;
+  weeklySpendBudgetUsd: number | null;
+  weeklySpentUsd: number;
   onOpenGoals: () => void;
 }
 
@@ -17,23 +18,23 @@ export function LandingMobileSpendTab({
   spendDaySummary,
   selectedDayLabel,
   onOpenSpend,
-  spendBudgetUsd,
+  weeklySpendBudgetUsd,
+  weeklySpentUsd,
   onOpenGoals,
 }: LandingMobileSpendTabProps) {
   const empty =
     Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
     spendDaySummary.recentEntries.length === 0;
 
-  const spentUsd = spendDaySummary.totalsByCurrency.USD ?? 0;
   const spendGoalRows =
-    spendBudgetUsd != null && spendBudgetUsd > 0
+    weeklySpendBudgetUsd != null && weeklySpendBudgetUsd > 0
       ? [
           {
-            key: "usd",
-            label: "Food spend (USD)",
+            key: "usd-week",
+            label: "This week (USD)",
             icon: "\u0024",
-            current: spentUsd,
-            target: spendBudgetUsd,
+            current: weeklySpentUsd,
+            target: weeklySpendBudgetUsd,
             unit: "",
             mode: "spendCap" as const,
           },
@@ -44,7 +45,7 @@ export function LandingMobileSpendTab({
     <div className="flex flex-col gap-5 px-4 pb-8">
       <LandingMobileGoalsCard
         rows={spendGoalRows}
-        emptyHint="Set a daily food budget under Goals to track your food spending against it."
+        emptyHint="Set a weekly food budget under Goals to track your food spending."
         onViewDetails={onOpenGoals}
         detailsLabel="Open goals"
       />
@@ -54,7 +55,7 @@ export function LandingMobileSpendTab({
           <div>
             <p className="text-[15px] font-bold text-foreground">Food spending</p>
             <p className="mt-0.5 text-[12px] text-neutral-500 dark:text-neutral-400">
-              Totals for {selectedDayLabel}
+              Today &middot; {selectedDayLabel}
             </p>
           </div>
           <button
