@@ -20090,93 +20090,11 @@ export default function ChatPage() {
                   {goalsCalculatorRationale && (
                     <p className="text-xs text-neutral-600 dark:text-neutral-400">{goalsCalculatorRationale}</p>
                   )}
-                  <div className="pt-1 space-y-2">
-                    <label className="block text-xs text-neutral-500 dark:text-neutral-400">
-                      What do you want to achieve?
-                    </label>
-                    <BufferedTextarea
-                      value={goalsCoachIntentDraft}
-                      syncRevision={goalsCoachIntentDraftRevision}
-                      onValueChange={setGoalsCoachIntentDraft}
-                      onImmediateValueChange={(nextValue) => {
-                        goalsCoachIntentDraftRef.current = nextValue;
-                      }}
-                      disabled={goalsSaving || goalsCalculatorLoading || goalsRecalculateLoading || goalsCoachLoading}
-                      rows={3}
-                      maxLength={500}
-                      placeholder="Example: I want steady fat loss while preserving muscle and reducing late-night snacking."
-                      className="w-full px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-600 bg-background text-sm resize-y"
-                    />
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                        {goalsCoachIntentDraft.length}/500
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => void runGoalsCoachHelp()}
-                        disabled={
-                          goalsSaving ||
-                          goalsCalculatorLoading ||
-                          goalsRecalculateLoading ||
-                          goalsCoachLoading ||
-                          !goalsCoachIntentDraft.trim()
-                        }
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#295a8a] text-white hover:opacity-90 transition-opacity disabled:opacity-50"
-                      >
-                        {goalsCoachLoading ? "Working..." : "I need some help"}
-                      </button>
-                    </div>
-                  </div>
                 </div>
               )}
 
               {goalsSaveError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{goalsSaveError}</p>
-              )}
-              {goalsCoachError && (
-                <p className="text-sm text-red-600 dark:text-red-400">{goalsCoachError}</p>
-              )}
-              {goalsCoachResult && (
-                <div className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-3 space-y-2 bg-neutral-50/60 dark:bg-neutral-900/40">
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">{goalsCoachResult.periodLabel}</p>
-                  <p className="text-sm text-neutral-700 dark:text-neutral-200">{goalsCoachResult.guidance.summary}</p>
-                  {goalsCoachResult.guidance.badPatterns.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-foreground mb-1">Patterns to watch</p>
-                      <ul className="space-y-1">
-                        {goalsCoachResult.guidance.badPatterns.map((item, idx) => (
-                          <li key={`goals-help-bad-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {goalsCoachResult.guidance.keepInMind.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-foreground mb-1">Keep in mind</p>
-                      <ul className="space-y-1">
-                        {goalsCoachResult.guidance.keepInMind.map((item, idx) => (
-                          <li key={`goals-help-keep-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {goalsCoachResult.guidance.onTrackNuggets.length > 0 && (
-                    <div>
-                      <p className="text-xs font-semibold text-foreground mb-1">Useful nuggets</p>
-                      <ul className="space-y-1">
-                        {goalsCoachResult.guidance.onTrackNuggets.map((item, idx) => (
-                          <li key={`goals-help-nugget-${idx}`} className="text-sm text-neutral-700 dark:text-neutral-200">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
               )}
               {goalsWizardError && (
                 <p className="text-sm text-red-600 dark:text-red-400">{goalsWizardError}</p>
