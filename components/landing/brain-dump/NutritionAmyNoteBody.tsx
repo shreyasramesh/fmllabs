@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { BorderBeam } from "@/components/BorderBeam";
 import { SparklesIcon } from "@/components/SharedIcons";
 import {
   flushSentencesFromTyping,
@@ -450,11 +451,12 @@ export function CaptureDraftSentenceRow({
   return (
     <>
       <div
-        className={`relative rounded-xl ${AMY_ENTRY_ROW_GRID} min-h-0 ${variant === "fullScreen" ? "items-start py-0.5" : "flex-1 py-1.5"} ${
+        className={`group/typing-glow relative rounded-xl ${AMY_ENTRY_ROW_GRID} ${variant === "fullScreen" ? "items-start py-3 min-h-[5.5rem]" : "flex-1 py-1.5 min-h-0"} ${
           disabled ? "pointer-events-none select-none opacity-[0.52] transition-opacity duration-200" : ""
         }`}
         aria-busy={disabled || undefined}
       >
+        <BorderBeam duration={12} />
         <div className="relative z-[2] min-h-0 min-w-0 pl-3 pt-1.5">
           <textarea
             ref={setRefs}
