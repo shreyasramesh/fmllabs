@@ -3789,7 +3789,7 @@ const LANDING_JOURNAL_CARD_DESCRIPTION: Record<LandingJournalChipKey, string> = 
   weight: "Track progress with a simple trend chart.",
   gratitude: "Capture one thing you appreciate today.",
   exercise: "Track workouts, intensity, and duration quickly.",
-  spend: "Log purchases and see what you spent today.",
+  spend: "Track what you spend on food and drinks.",
   reflection: "Note what worked and what to improve next.",
 };
 
@@ -19825,7 +19825,7 @@ export default function ChatPage() {
                   </div>
                   <div>
                     <label className="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">
-                      Daily spend budget (USD, optional)
+                      Daily food budget (USD)
                     </label>
                     <input
                       type="number"

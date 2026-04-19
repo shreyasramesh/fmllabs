@@ -3623,12 +3623,12 @@ Categories:
 5. "exercise" — workout or physical activity logging.
 6. "weight" — body weight report.
 7. "sleep" — sleep duration/quality (and optional HRV).
-8. "spend" — purchase, expense, or money spent (any mention of a dollar amount, price, cost, or payment).
+8. "spend" — money spent on food or drinks (grocery shopping, restaurant bills, coffee, takeout, meal delivery). Only log food-related spending; ignore non-food purchases.
 
 IMPORTANT — Multiple entries:
 - If the transcript clearly contains DISTINCT items that belong to DIFFERENT categories, return SEPARATE entries — one JSON object per distinct item.
-- CRITICAL: When a note mentions both a food/drink AND a price (e.g. "I ate a $12 burger"), ALWAYS return TWO entries: one "spend" (the cost) and one "nutrition" (the food). The food/drink is logged for nutrition regardless of its price.
-- Similarly, "$15 coffee" → spend + nutrition; "paid $30 for a gym class" → spend + exercise.
+- CRITICAL: When a note mentions both a food/drink AND a price (e.g. "I ate a $12 burger"), ALWAYS return TWO entries: one "spend" (the food cost) and one "nutrition" (the food). The food/drink is logged for nutrition regardless of its price.
+- Similarly, "$15 coffee" → spend + nutrition. Non-food spending like "$30 gym class" → exercise only (no spend entry).
 - If the whole transcript is one coherent note with no mixed categories, return a SINGLE entry.
 - Do not split a single meal or single workout into multiple entries.
 - Maximum 8 entries. Merge minor fragments with the closest entry.
@@ -3642,7 +3642,7 @@ Per-entry fields (match category):
 - "exercise": "exerciseText" (clean activity description for that item only).
 - "weight": "weightKg" (kg; convert lb via divide by 2.205, 1 decimal).
 - "sleep": "sleepHours", "hrvMs" (number or null).
-- "spend": "spendAmount" (numeric amount, no currency symbol), "spendCurrency" (ISO 4217 code, default "USD"), "spendMemo" (short description of what was purchased, max 120 chars).
+- "spend": "spendAmount" (numeric amount, no currency symbol), "spendCurrency" (ISO 4217 code, default "USD"), "spendMemo" (short description of the food/drink purchased, max 120 chars).
 
 Return ONLY valid JSON:
 { "entries": [ { ... }, ... ] }

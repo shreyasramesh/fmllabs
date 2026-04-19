@@ -577,7 +577,7 @@ export interface UserSettings {
   goalCarbsGrams?: number;
   goalProteinGrams?: number;
   goalFatGrams?: number;
-  /** Optional daily spend cap in USD for dashboard spend goals (mobile). */
+  /** Daily food spending budget in USD for the food spend tracker. */
   goalDailySpendUsd?: number;
   /** Nightly sleep target used for weekly sleep bank copy and sleep tab goals. */
   goalSleepHours?: number;

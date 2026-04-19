@@ -1271,7 +1271,7 @@ export function LandingShell({
             )}
             <div className="module-nested-muted mt-3 p-2.5 space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-semibold text-foreground">Spent today</p>
+                <p className="text-[11px] font-semibold text-foreground">Food spend today</p>
                 <button
                   type="button"
                   onClick={onOpenSpend}
@@ -1283,7 +1283,7 @@ export function LandingShell({
               {Object.keys(spendDaySummary.totalsByCurrency).length === 0 &&
               spendDaySummary.recentEntries.length === 0 ? (
                 <p className="text-[11px] text-[#5e5d59] dark:text-[#87867f]">
-                  No purchases logged for {selectedDayLabel}.
+                  No food purchases logged for {selectedDayLabel}.
                 </p>
               ) : (
                 <>

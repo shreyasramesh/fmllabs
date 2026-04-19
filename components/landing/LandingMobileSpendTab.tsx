@@ -30,7 +30,7 @@ export function LandingMobileSpendTab({
       ? [
           {
             key: "usd",
-            label: "Spend (USD)",
+            label: "Food spend (USD)",
             icon: "\u0024",
             current: spentUsd,
             target: spendBudgetUsd,
@@ -44,7 +44,7 @@ export function LandingMobileSpendTab({
     <div className="flex flex-col gap-5 px-4 pb-8">
       <LandingMobileGoalsCard
         rows={spendGoalRows}
-        emptyHint="Set an optional daily USD budget under Daily goals (or open Goals below) to track spend against it."
+        emptyHint="Set a daily food budget under Goals to track your food spending against it."
         onViewDetails={onOpenGoals}
         detailsLabel="Open goals"
       />
@@ -52,7 +52,7 @@ export function LandingMobileSpendTab({
       <div className="landing-module-glass rounded-2xl border px-4 py-4">
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
-            <p className="text-[15px] font-bold text-foreground">Spend</p>
+            <p className="text-[15px] font-bold text-foreground">Food spending</p>
             <p className="mt-0.5 text-[12px] text-neutral-500 dark:text-neutral-400">
               Totals for {selectedDayLabel}
             </p>
@@ -62,13 +62,13 @@ export function LandingMobileSpendTab({
             onClick={onOpenSpend}
             className="shrink-0 rounded-xl border border-[#c96442]/60 bg-[#f5f4ed] px-3 py-2 text-[12px] font-semibold text-[#4d4c48] transition-colors hover:bg-[#e8e6dc] dark:border-[#d97757] dark:bg-[#30302e] dark:text-[#b0aea5] dark:hover:bg-[#3d3d3a]"
           >
-            Log purchase
+            Log food purchase
           </button>
         </div>
 
         {empty ? (
           <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
-            No purchases for {selectedDayLabel}.
+            No food purchases logged for {selectedDayLabel}.
           </p>
         ) : (
           <div className="space-y-3">
