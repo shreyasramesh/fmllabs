@@ -49,13 +49,13 @@ export const DailyGoalChipsCard = memo(function DailyGoalChipsCard({
   }, [calories, exercisePlan, onConfirm, selectedFocus]);
 
   return (
-    <div className="rounded-2xl border border-neutral-200/80 dark:border-neutral-700/80 bg-white dark:bg-neutral-900 p-4 space-y-3 shadow-sm animate-fade-in-up">
-      <p className="text-sm font-semibold text-foreground">Today&apos;s plan</p>
+    <div className="rounded-2xl border border-[#e8e6dc] bg-gradient-to-b from-[#faf9f5] to-[#f5f4ed] p-4 space-y-3.5 shadow-sm animate-fade-in-up dark:border-[#4d4c48] dark:from-[#1e1d1b] dark:to-[#1a1918]">
+      <p className="text-sm font-semibold text-[#30302e] dark:text-[#e8e6dc]">Today&apos;s plan</p>
 
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50/70 px-3 py-1.5 text-xs font-medium text-blue-700 dark:border-blue-800/40 dark:bg-blue-950/30 dark:text-blue-300 transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/40"
+          className="inline-flex items-center gap-1.5 rounded-full border border-[#c96442]/30 bg-[#c96442]/10 px-3 py-1.5 text-xs font-semibold text-[#b05530] transition-colors hover:bg-[#c96442]/18 dark:border-[#d97757]/25 dark:bg-[#d97757]/12 dark:text-[#d97757] dark:hover:bg-[#d97757]/20"
           onClick={() => {
             const next = prompt("Calorie target for today:", String(calories));
             if (next) {
@@ -64,7 +64,9 @@ export const DailyGoalChipsCard = memo(function DailyGoalChipsCard({
             }
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5"><path d="M5.75 7.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zM5 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0zm5.75-2.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5zM10 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0zM8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" /><path fillRule="evenodd" d="M4.5 1A2.5 2.5 0 0 0 2 3.5v9A2.5 2.5 0 0 0 4.5 15h7a2.5 2.5 0 0 0 2.5-2.5v-9A2.5 2.5 0 0 0 11.5 1h-7zM3.5 3.5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-9z" clipRule="evenodd" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+            <path d="M15.98 1.804a1 1 0 0 0-1.96 0l-.24 1.192a1 1 0 0 1-.784.785l-1.192.238a1 1 0 0 0 0 1.962l1.192.238a1 1 0 0 1 .785.785l.238 1.192a1 1 0 0 0 1.962 0l.238-1.192a1 1 0 0 1 .785-.785l1.192-.238a1 1 0 0 0 0-1.962l-1.192-.238a1 1 0 0 1-.785-.785l-.238-1.192ZM6.949 5.684a1 1 0 0 0-1.898 0L4.45 7.89a1 1 0 0 1-.683.748l-2.122.636a1 1 0 0 0 0 1.898l2.122.636a1 1 0 0 1 .683.748l.601 2.205a1 1 0 0 0 1.898 0l.601-2.205a1 1 0 0 1 .683-.748l2.122-.636a1 1 0 0 0 0-1.898l-2.122-.636a1 1 0 0 1-.683-.748L6.95 5.684Z" />
+          </svg>
           {calories} kcal
         </button>
 
@@ -72,8 +74,8 @@ export const DailyGoalChipsCard = memo(function DailyGoalChipsCard({
           type="button"
           className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
             exercisePlan
-              ? "border-emerald-200/80 bg-emerald-50/70 text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-950/30 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
-              : "border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              ? "border-[#c96442]/25 bg-[#c96442]/8 text-[#b05530] hover:bg-[#c96442]/15 dark:border-[#d97757]/20 dark:bg-[#d97757]/8 dark:text-[#d97757] dark:hover:bg-[#d97757]/15"
+              : "border-[#d1cfc5] text-[#87867f] hover:bg-[#e8e6dc]/60 dark:border-[#4d4c48] dark:text-[#87867f] dark:hover:bg-[#30302e]/60"
           }`}
           onClick={() => {
             if (exercisePlan) {
@@ -83,23 +85,25 @@ export const DailyGoalChipsCard = memo(function DailyGoalChipsCard({
             }
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5"><path d="M6.75 2.5a.75.75 0 0 0-1.5 0v1.956a4.002 4.002 0 0 0-1.291 6.454l.584.584A.75.75 0 0 0 5.6 10.44l-.584-.584a2.5 2.5 0 0 1 .807-4.04A.75.75 0 0 0 6.75 5V2.5zm2.5 0a.75.75 0 0 1 1.5 0v1.956a4.002 4.002 0 0 1 1.291 6.454l-.584.584a.75.75 0 0 1-1.06-1.06l.584-.585a2.5 2.5 0 0 0-.807-4.04A.75.75 0 0 1 9.25 5V2.5z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+            <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clipRule="evenodd" />
+          </svg>
           {exercisePlan || "No exercise"}
         </button>
       </div>
 
-      <div className="space-y-1">
-        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-medium">Focus areas</p>
+      <div className="space-y-1.5">
+        <p className="text-[11px] text-[#87867f] dark:text-[#b0aea5] font-medium uppercase tracking-wide">Focus areas</p>
         <div className="flex flex-wrap gap-1.5">
           {FOCUS_OPTIONS.map((opt) => (
             <button
               key={opt.id}
               type="button"
               onClick={() => toggleFocus(opt.id)}
-              className={`rounded-full px-2.5 py-1 text-[11px] border transition-colors ${
+              className={`rounded-full px-2.5 py-1 text-[11px] border transition-all duration-150 ${
                 selectedFocus.includes(opt.id)
-                  ? "border-[#295a8a]/60 bg-[#295a8a]/10 text-[#295a8a] font-medium dark:border-blue-400/40 dark:bg-blue-900/25 dark:text-blue-300"
-                  : "border-neutral-300 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400"
+                  ? "border-[#c96442]/50 bg-[#c96442]/12 text-[#b05530] font-semibold dark:border-[#d97757]/35 dark:bg-[#d97757]/15 dark:text-[#d97757]"
+                  : "border-[#d1cfc5] text-[#87867f] hover:border-[#c96442]/30 hover:text-[#b05530] dark:border-[#4d4c48] dark:text-[#87867f] dark:hover:border-[#d97757]/25 dark:hover:text-[#d97757]"
               }`}
             >
               {opt.label}
@@ -108,18 +112,18 @@ export const DailyGoalChipsCard = memo(function DailyGoalChipsCard({
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-1">
+      <div className="flex items-center justify-between pt-1.5 border-t border-[#e8e6dc]/80 dark:border-[#30302e]">
         <button
           type="button"
           onClick={onSkip}
-          className="text-xs text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+          className="text-xs text-[#b0aea5] hover:text-[#5e5d59] dark:text-[#5e5d59] dark:hover:text-[#b0aea5] transition-colors"
         >
           Skip for today
         </button>
         <button
           type="button"
           onClick={handleConfirm}
-          className="rounded-xl bg-foreground px-4 py-1.5 text-xs font-medium text-background hover:opacity-90 transition-opacity"
+          className="rounded-xl bg-[#c96442] px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-[#b05530] active:scale-[0.97] transition-all duration-150 dark:bg-[#d97757] dark:hover:bg-[#c96442]"
         >
           Let&apos;s go
         </button>
