@@ -10,19 +10,49 @@ function todayKey(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function dayLabel(dayKey: string): string {
+function formatDayHeading(dayKey: string): { date: string; sub: string } {
   const [y, m, d] = dayKey.split("-").map(Number);
-  const date = new Date(y, m - 1, d);
+  const dt = new Date(y, m - 1, d);
+  const date = dt.toLocaleDateString(undefined, { month: "long", day: "numeric" });
   const today = todayKey();
-  const base = date.toLocaleDateString(undefined, { month: "long", day: "numeric" });
-  return dayKey === today ? `${base} — Today` : base;
+  return { date, sub: dayKey === today ? "Today" : dt.toLocaleDateString(undefined, { weekday: "long" }) };
+}
+
+function strokesPath(strokes: DoodleStroke[]): string {
+  const parts: string[] = [];
+  for (const s of strokes) {
+    if (s.points.length === 0) continue;
+    const pts = s.points;
+    parts.push(`M${pts[0].x},${pts[0].y}`);
+    for (let i = 1; i < pts.length - 1; i++) {
+      const mx = (pts[i].x + pts[i + 1].x) / 2;
+      const my = (pts[i].y + pts[i + 1].y) / 2;
+      parts.push(`Q${pts[i].x},${pts[i].y} ${mx},${my}`);
+    }
+    if (pts.length > 1) {
+      const last = pts[pts.length - 1];
+      parts.push(`L${last.x},${last.y}`);
+    }
+  }
+  return parts.join(" ");
+}
+
+function DoodlePreview({ strokes }: { strokes: DoodleStroke[] }) {
+  const d = useMemo(() => strokesPath(strokes), [strokes]);
+  if (!d) return null;
+  return (
+    <svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" className="w-full h-full">
+      <path d={d} fill="none" stroke="#c96442" strokeWidth={0.018} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
 }
 
 export function LandingMobileDoodleTab() {
   const currentYear = new Date().getFullYear();
   const [doodlesByDay, setDoodlesByDay] = useState<Record<string, DoodleStroke[]>>({});
   const [loading, setLoading] = useState(true);
-  const [activeDay, setActiveDay] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string>(todayKey());
+  const [canvasOpen, setCanvasOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,111 +64,163 @@ export function LandingMobileDoodleTab() {
         const map: Record<string, DoodleStroke[]> = {};
         if (Array.isArray(data?.doodles)) {
           for (const d of data.doodles) {
-            if (d.dayKey && Array.isArray(d.strokes)) {
-              map[d.dayKey] = d.strokes;
-            }
+            if (d.dayKey && Array.isArray(d.strokes)) map[d.dayKey] = d.strokes;
           }
         }
         setDoodlesByDay(map);
       })
       .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [currentYear]);
 
   const handleDayTap = useCallback((dayKey: string) => {
-    setActiveDay(dayKey);
+    setSelectedDay(dayKey);
   }, []);
 
-  const handleSave = useCallback(
-    async (strokes: DoodleStroke[]) => {
-      if (!activeDay) return;
-      setDoodlesByDay((prev) => ({ ...prev, [activeDay]: strokes }));
-      setActiveDay(null);
-      try {
-        await fetch("/api/me/doodle", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dayKey: activeDay, strokes }),
-        });
-      } catch { /* best effort */ }
-    },
-    [activeDay],
-  );
+  const openCanvas = useCallback(() => { setCanvasOpen(true); }, []);
+
+  const handleSave = useCallback(async (strokes: DoodleStroke[]) => {
+    setDoodlesByDay((prev) => ({ ...prev, [selectedDay]: strokes }));
+    setCanvasOpen(false);
+    try {
+      await fetch("/api/me/doodle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dayKey: selectedDay, strokes }),
+      });
+    } catch { /* best effort */ }
+  }, [selectedDay]);
 
   const handleDelete = useCallback(async () => {
-    if (!activeDay) return;
     setDoodlesByDay((prev) => {
       const next = { ...prev };
-      delete next[activeDay];
+      delete next[selectedDay];
       return next;
     });
-    setActiveDay(null);
+    setCanvasOpen(false);
     try {
       await fetch("/api/me/doodle", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dayKey: activeDay }),
+        body: JSON.stringify({ dayKey: selectedDay }),
       });
     } catch { /* best effort */ }
-  }, [activeDay]);
+  }, [selectedDay]);
 
-  const handleClose = useCallback(() => {
-    setActiveDay(null);
-  }, []);
+  const handleCanvasClose = useCallback(() => { setCanvasOpen(false); }, []);
 
-  const activeStrokes = useMemo(
-    () => (activeDay ? doodlesByDay[activeDay] ?? [] : []),
-    [activeDay, doodlesByDay],
-  );
+  const selectedStrokes = doodlesByDay[selectedDay] ?? [];
+  const hasDoodle = selectedStrokes.length > 0;
+  const heading = formatDayHeading(selectedDay);
+  const isToday = selectedDay === todayKey();
 
-  const doodleCount = Object.keys(doodlesByDay).length;
+  const actionBtnClass =
+    "flex items-center justify-center w-10 h-10 rounded-full bg-neutral-200/80 dark:bg-neutral-700/60 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors shadow-sm";
 
   return (
-    <div className="flex flex-col min-h-0 flex-1 overflow-y-auto overscroll-contain pb-20">
-      <div className="px-4 pt-3 pb-1 flex items-baseline justify-between">
-        <div>
-          <p className="text-[11px] font-medium text-[#c96442]">One doodle, one memory</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setActiveDay(todayKey())}
-          className="rounded-xl bg-[#c96442] px-3.5 py-1.5 text-xs font-medium text-white hover:bg-[#b05530] transition-colors shadow-sm"
-        >
-          Draw today
-        </button>
+    <div className="flex flex-col min-h-0 flex-1">
+      {/* Year grid (scrollable) */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="w-6 h-6 border-2 border-[#c96442]/30 border-t-[#c96442] rounded-full animate-spin" />
+          </div>
+        ) : (
+          <DoodleYearGrid
+            year={currentYear}
+            doodlesByDay={doodlesByDay}
+            selectedDay={selectedDay}
+            onDayTap={handleDayTap}
+          />
+        )}
       </div>
 
-      {doodleCount > 0 && (
-        <p className="px-4 pb-2 text-[11px] text-neutral-500 dark:text-neutral-400">
-          {doodleCount} doodle{doodleCount !== 1 ? "s" : ""} this year
-        </p>
-      )}
-
-      {loading ? (
-        <div className="flex-1 flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-[#c96442]/30 border-t-[#c96442] rounded-full animate-spin" />
+      {/* Bottom detail panel */}
+      <div className="shrink-0 rounded-t-3xl bg-white dark:bg-[#1e1d1b] border-t border-[#e8e6dc] dark:border-[#3d3d3a] shadow-[0_-4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)] pb-20">
+        {/* Handle */}
+        <div className="flex justify-center pt-2.5 pb-1.5">
+          <div className="h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-600" />
         </div>
-      ) : (
-        <DoodleYearGrid
-          year={currentYear}
-          doodlesByDay={doodlesByDay}
-          onDayTap={handleDayTap}
-        />
-      )}
 
-      {activeDay && (
+        {/* Header row: actions + date + actions */}
+        <div className="flex items-center justify-between px-4 pb-3">
+          <div className="flex gap-2">
+            {/* Share placeholder */}
+            <button type="button" className={actionBtnClass} aria-label="Share" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M13 4.5a2.5 2.5 0 1 1 .702 1.737L6.97 9.604a2.518 2.518 0 0 1 0 .799l6.733 3.366a2.5 2.5 0 1 1-.671 1.341l-6.733-3.366a2.5 2.5 0 1 1 0-3.482l6.733-3.366A2.52 2.52 0 0 1 13 4.5Z" />
+              </svg>
+            </button>
+            {/* Reminder placeholder */}
+            <button type="button" className={actionBtnClass} aria-label="Reminder" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="text-center">
+            <p className="text-[15px] font-bold text-foreground">{heading.date}</p>
+            <p className={`text-[12px] font-medium ${isToday ? "text-[#c96442]" : "text-neutral-500 dark:text-neutral-400"}`}>
+              {heading.sub}
+            </p>
+          </div>
+
+          <div className="flex gap-2">
+            {/* Delete */}
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={!hasDoodle}
+              className={`${actionBtnClass} disabled:opacity-30`}
+              aria-label="Delete doodle"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-500">
+                <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
+              </svg>
+            </button>
+            {/* Draw / Edit */}
+            <button
+              type="button"
+              onClick={openCanvas}
+              className={`${actionBtnClass} !bg-[#c96442] !text-white hover:!bg-[#b05530]`}
+              aria-label="Draw doodle"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
+                <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Doodle preview or empty prompt */}
+        <div className="px-5 pb-4">
+          <div
+            className="mx-auto aspect-square max-w-[240px] rounded-2xl border border-[#e8e6dc] dark:border-[#3d3d3a] bg-[#faf9f5] dark:bg-[#2a2927] overflow-hidden flex items-center justify-center cursor-pointer hover:border-[#c96442]/40 transition-colors"
+            onClick={openCanvas}
+          >
+            {hasDoodle ? (
+              <div className="w-full h-full p-3">
+                <DoodlePreview strokes={selectedStrokes} />
+              </div>
+            ) : (
+              <p className="text-sm text-neutral-400 dark:text-neutral-500">Tap to draw</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Canvas overlay */}
+      {canvasOpen && (
         <DoodleCanvas
-          key={activeDay}
-          initialStrokes={activeStrokes}
+          key={selectedDay}
+          initialStrokes={selectedStrokes}
           onSave={handleSave}
           onDelete={handleDelete}
-          onClose={handleClose}
-          dayLabel={dayLabel(activeDay)}
+          onClose={handleCanvasClose}
+          dayLabel={`${heading.date}${isToday ? " — Today" : ""}`}
         />
       )}
     </div>
