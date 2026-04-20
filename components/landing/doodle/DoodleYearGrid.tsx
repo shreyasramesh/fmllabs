@@ -3,12 +3,15 @@
 import React, { memo, useMemo } from "react";
 import type { DoodleStroke } from "@/lib/db";
 
-interface DoodleYearGridProps {
+interface DoodleMonthGridProps {
   year: number;
+  month: number;
   doodlesByDay: Record<string, DoodleStroke[]>;
   selectedDay?: string;
   onDayTap: (dayKey: string) => void;
 }
+
+const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function toDayKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -41,66 +44,61 @@ const DoodleThumbnail = memo(function DoodleThumbnail({ strokes }: { strokes: Do
   const d = useMemo(() => strokesPath(strokes), [strokes]);
   if (!d) return null;
   return (
-    <svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" className="absolute inset-[2px]">
-      <path d={d} fill="none" stroke="#c96442" strokeWidth={0.04} strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" className="w-full h-full">
+      <path d={d} fill="none" stroke="#c96442" strokeWidth={0.035} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 });
 
-function isCurrentWeek(dayKey: string, today: string): boolean {
-  const [y, m, d] = today.split("-").map(Number);
-  const todayDate = new Date(y, m - 1, d);
-  const dow = (todayDate.getDay() + 6) % 7;
-  const monday = new Date(todayDate);
-  monday.setDate(todayDate.getDate() - dow);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  const monKey = toDayKey(monday);
-  const sunKey = toDayKey(sunday);
-  return dayKey >= monKey && dayKey <= sunKey;
-}
-
 export const DoodleYearGrid = memo(function DoodleYearGrid({
   year,
+  month,
   doodlesByDay,
   selectedDay,
   onDayTap,
-}: DoodleYearGridProps) {
+}: DoodleMonthGridProps) {
   const today = todayKey();
 
-  const days = useMemo(() => {
-    const jan1 = new Date(year, 0, 1);
-    const dec31 = new Date(year, 11, 31);
-    const startOffset = (jan1.getDay() + 6) % 7;
-    const result: { key: string; dayOfYear: number; isFuture: boolean; isToday: boolean; isThisWeek: boolean; offset: number }[] = [];
-    const current = new Date(jan1);
-    let i = 0;
-    while (current <= dec31) {
-      const key = toDayKey(current);
-      result.push({
-        key,
-        dayOfYear: i,
-        isFuture: key > today,
-        isToday: key === today,
-        isThisWeek: isCurrentWeek(key, today),
-        offset: i === 0 ? startOffset : 0,
-      });
-      current.setDate(current.getDate() + 1);
-      i++;
+  const monthName = useMemo(
+    () => new Date(year, month, 1).toLocaleDateString(undefined, { month: "long" }),
+    [year, month],
+  );
+
+  const cells = useMemo(() => {
+    const first = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const startOffset = (first.getDay() + 6) % 7;
+    const result: { key: string; day: number; isFuture: boolean; isToday: boolean }[] = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(year, month, d);
+      const key = toDayKey(dt);
+      result.push({ key, day: d, isFuture: key > today, isToday: key === today });
     }
-    return result;
-  }, [year, today]);
+    return { days: result, offset: startOffset };
+  }, [year, month, today]);
 
   return (
     <div className="px-4 pt-3 pb-4">
-      <p className="text-3xl font-bold text-foreground mb-4">{year}</p>
-      <div className="grid grid-cols-7 gap-[3px]">
-        {days[0] && days[0].offset > 0
-          ? Array.from({ length: days[0].offset }).map((_, i) => (
-              <div key={`pad-${i}`} className="aspect-square" />
-            ))
+      <div className="flex items-baseline gap-2 mb-4">
+        <p className="text-2xl font-bold text-foreground">{monthName}</p>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">{year}</p>
+      </div>
+
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 gap-1 mb-1">
+        {WEEKDAY_LABELS.map((l) => (
+          <p key={l} className="text-center text-[10px] font-medium text-neutral-400 dark:text-neutral-500">
+            {l}
+          </p>
+        ))}
+      </div>
+
+      {/* Calendar cells */}
+      <div className="grid grid-cols-7 gap-1">
+        {cells.offset > 0
+          ? Array.from({ length: cells.offset }).map((_, i) => <div key={`pad-${i}`} />)
           : null}
-        {days.map((day) => {
+        {cells.days.map((day) => {
           const strokes = doodlesByDay[day.key];
           const hasDoodle = strokes && strokes.length > 0;
           const isSelected = day.key === selectedDay;
@@ -110,7 +108,7 @@ export const DoodleYearGrid = memo(function DoodleYearGrid({
               key={day.key}
               type="button"
               onClick={() => onDayTap(day.key)}
-              className={`relative aspect-square rounded-lg transition-all ${
+              className={`relative flex flex-col items-center rounded-xl py-1 transition-all ${
                 isSelected
                   ? "ring-2 ring-[#c96442] ring-offset-1 ring-offset-background"
                   : ""
@@ -118,30 +116,35 @@ export const DoodleYearGrid = memo(function DoodleYearGrid({
                 hasDoodle
                   ? "bg-[#faf9f5] dark:bg-[#2a2927] border border-[#e8e6dc] dark:border-[#3d3d3a]"
                   : day.isToday
-                    ? "border-2 border-[#c96442] bg-transparent"
+                    ? "bg-[#c96442]/10 dark:bg-[#c96442]/15"
                     : day.isFuture
-                      ? ""
-                      : ""
+                      ? "opacity-30"
+                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800/40"
               }`}
               aria-label={`${day.key}${hasDoodle ? " (has doodle)" : day.isToday ? " (today)" : ""}`}
             >
-              {hasDoodle ? (
-                <DoodleThumbnail strokes={strokes} />
-              ) : (
-                <span className="absolute inset-0 flex items-center justify-center">
+              <span
+                className={`text-[11px] leading-none font-medium ${
+                  day.isToday
+                    ? "text-[#c96442]"
+                    : day.isFuture
+                      ? "text-neutral-400 dark:text-neutral-600"
+                      : "text-neutral-700 dark:text-neutral-300"
+                }`}
+              >
+                {day.day}
+              </span>
+              <div className="w-8 h-8 mt-0.5 flex items-center justify-center">
+                {hasDoodle ? (
+                  <DoodleThumbnail strokes={strokes} />
+                ) : !day.isFuture ? (
                   <span
                     className={`rounded-full ${
-                      day.isToday
-                        ? "w-2.5 h-2.5 bg-[#c96442]"
-                        : day.isThisWeek && !day.isFuture
-                          ? "w-2 h-2 bg-foreground dark:bg-neutral-200"
-                          : day.isFuture
-                            ? "w-1 h-1 bg-neutral-300/40 dark:bg-neutral-700/30"
-                            : "w-1.5 h-1.5 bg-neutral-400/50 dark:bg-neutral-600/40"
+                      day.isToday ? "w-1.5 h-1.5 bg-[#c96442]" : "w-1 h-1 bg-neutral-300 dark:bg-neutral-600"
                     }`}
                   />
-                </span>
-              )}
+                ) : null}
+              </div>
             </button>
           );
         })}

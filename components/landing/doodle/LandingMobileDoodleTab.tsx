@@ -120,7 +120,7 @@ export function LandingMobileDoodleTab() {
 
   return (
     <div className="flex flex-col min-h-0 flex-1">
-      {/* Year grid (scrollable) */}
+      {/* Month grid (scrollable) */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -129,6 +129,7 @@ export function LandingMobileDoodleTab() {
         ) : (
           <DoodleYearGrid
             year={currentYear}
+            month={new Date().getMonth()}
             doodlesByDay={doodlesByDay}
             selectedDay={selectedDay}
             onDayTap={handleDayTap}
