@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 export type MobileBottomTab =
   | "quickNote"
+  | "doodle"
   | "commonplace"
   | "nutrition"
   | "exercise"
@@ -30,6 +31,7 @@ export const MOBILE_BOTTOM_TABS: ReadonlyArray<{
   description: string;
 }> = [
   { key: "quickNote", label: "Notes", ariaLabel: "Quick Notes", description: "Capture journals, reflections, and quick notes." },
+  { key: "doodle", label: "Doodle", ariaLabel: "Daily Doodle", description: "Draw a doodle to capture your day." },
   { key: "nutrition", label: "Food", ariaLabel: "Nutrition", description: "Log meals and track calories, protein, and carbs." },
   { key: "exercise", label: "Move", ariaLabel: "Exercise", description: "Record workouts and see daily movement." },
   { key: "spend", label: "Spend", ariaLabel: "Spend", description: "Track purchases and stay within your budget." },
@@ -54,6 +56,13 @@ export function MobileTabIcon({ tab, active }: { tab: MobileBottomTab; active: b
           <path d="M8 7h8M8 11h6" />
           <path d="m15.5 13.5 4.5-4.5a1.2 1.2 0 0 1 1.7 0l.3.3a1.2 1.2 0 0 1 0 1.7l-4.5 4.5" />
           <path d="M14 15l3.5-3.5M13 21l3-1-2-2" />
+        </svg>
+      );
+    case "doodle":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" className={cls}>
+          <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+          <path d="m15 5 4 4" />
         </svg>
       );
     case "commonplace":

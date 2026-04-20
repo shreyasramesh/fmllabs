@@ -36,6 +36,7 @@ import { LandingBrainDump, type LandingBrainDumpHandle } from "@/components/land
 import { LandingDesktopJournalSpeedDial } from "@/components/landing/LandingDesktopJournalSpeedDial";
 import { LandingMobileQuickNoteTab } from "@/components/landing/LandingMobileQuickNoteTab";
 import { LandingMobileCommonplaceTab } from "@/components/landing/LandingMobileCommonplaceTab";
+import { LandingMobileDoodleTab } from "@/components/landing/doodle/LandingMobileDoodleTab";
 import type { BrainDumpJournalContextRow } from "@/components/landing/brain-dump/BrainDumpNoteSheet";
 import { HighlightedQuickNoteText } from "@/components/landing/brain-dump/HighlightedQuickNoteText";
 import { BrandTaglineTypewriter } from "@/components/BrandTaglineTypewriter";
@@ -16626,6 +16627,7 @@ export default function ChatPage() {
                           useAccentHover: true,
                         })}
                         mobileCommonplace={<LandingMobileCommonplaceTab />}
+                        mobileDoodle={<LandingMobileDoodleTab />}
                         mobileQuickNote={
                           <LandingMobileQuickNoteTab
                             journalContextRows={brainDumpJournalContextRows}

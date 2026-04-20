@@ -462,6 +462,8 @@ interface LandingShellProps {
   dashboardScrollRootRef?: React.RefObject<HTMLElement | null>;
   /** Mobile first tab: full-screen quick capture (brain dump) UI. */
   mobileQuickNote?: React.ReactNode;
+  /** Mobile doodle tab: daily drawing canvas with year grid. */
+  mobileDoodle?: React.ReactNode;
   /** Mobile commonplace book tab. */
   mobileCommonplace?: React.ReactNode;
   /** Mobile "More" tab — library / sidebar body (signed-in nav or anonymous upsell). */
@@ -649,6 +651,7 @@ export function LandingShell({
   weeklySpentUsd = 0,
   dashboardScrollRootRef,
   mobileQuickNote,
+  mobileDoodle,
   mobileCommonplace,
   mobileAndMore,
   mobileLibraryTabOpenerRef,
@@ -849,6 +852,8 @@ export function LandingShell({
     switch (activeMobileTab) {
       case "quickNote":
         return mobileQuickNote ?? null;
+      case "doodle":
+        return mobileDoodle ?? null;
       case "commonplace":
         return mobileCommonplace ?? null;
       case "nutrition":

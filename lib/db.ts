@@ -2986,6 +2986,59 @@ export async function upsertDailyGoal(
   );
 }
 
+export interface DoodleStroke {
+  points: { x: number; y: number }[];
+  color: string;
+  width: number;
+}
+
+export interface DoodleDoc {
+  userId: string;
+  dayKey: string;
+  strokes: DoodleStroke[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export async function getDoodle(userId: string, dayKey: string): Promise<DoodleDoc | null> {
+  const db = await getDb();
+  return db.collection<DoodleDoc>("user_doodles").findOne({ userId, dayKey });
+}
+
+export async function getDoodlesForYear(
+  userId: string,
+  year: number,
+): Promise<Pick<DoodleDoc, "dayKey" | "strokes">[]> {
+  const db = await getDb();
+  const startKey = `${year}-01-01`;
+  const endKey = `${year}-12-31`;
+  return db
+    .collection<DoodleDoc>("user_doodles")
+    .find({ userId, dayKey: { $gte: startKey, $lte: endKey } })
+    .project<Pick<DoodleDoc, "dayKey" | "strokes">>({ dayKey: 1, strokes: 1, _id: 0 })
+    .toArray();
+}
+
+export async function upsertDoodle(
+  userId: string,
+  dayKey: string,
+  strokes: DoodleStroke[],
+): Promise<void> {
+  const db = await getDb();
+  const now = new Date();
+  await db.collection<DoodleDoc>("user_doodles").updateOne(
+    { userId, dayKey },
+    { $set: { strokes, userId, dayKey, updatedAt: now }, $setOnInsert: { createdAt: now } },
+    { upsert: true },
+  );
+}
+
+export async function deleteDoodle(userId: string, dayKey: string): Promise<boolean> {
+  const db = await getDb();
+  const result = await db.collection<DoodleDoc>("user_doodles").deleteOne({ userId, dayKey });
+  return result.deletedCount > 0;
+}
+
 export async function addSleepEntry(
   userId: string,
   input: {
