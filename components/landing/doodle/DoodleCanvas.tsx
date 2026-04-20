@@ -64,12 +64,15 @@ export function DoodleCanvas({
 }: DoodleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const [strokes, setStrokes] = useState<DoodleStroke[]>(initialStrokes);
   const [redoStack, setRedoStack] = useState<DoodleStroke[]>([]);
   const activeStrokeRef = useRef<{ x: number; y: number }[]>([]);
   const isDrawingRef = useRef(false);
   const [isDark, setIsDark] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
+  const dragStartYRef = useRef<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -197,15 +200,49 @@ export function DoodleCanvas({
     onSave(strokes);
   }, [onSave, strokes]);
 
+  const handleDragStart = useCallback((clientY: number) => {
+    dragStartYRef.current = clientY;
+  }, []);
+
+  const handleDragMove = useCallback((clientY: number) => {
+    if (dragStartYRef.current === null) return;
+    const delta = Math.max(0, clientY - dragStartYRef.current);
+    setDragOffset(delta);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    if (dragStartYRef.current === null) return;
+    dragStartYRef.current = null;
+    if (dragOffset > 120) {
+      onClose();
+    } else {
+      setDragOffset(0);
+    }
+  }, [dragOffset, onClose]);
+
   const btnClass =
     "flex items-center justify-center w-10 h-10 rounded-full bg-neutral-800/80 dark:bg-neutral-700/80 text-neutral-200 hover:bg-neutral-700 dark:hover:bg-neutral-600 transition-colors disabled:opacity-30";
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black/60 animate-fade-in">
       <div className="flex-1" onClick={onClose} />
-      <div className="relative mx-auto w-full max-w-lg rounded-t-3xl bg-[#1e1d1b] dark:bg-[#1e1d1b] pb-safe shadow-2xl animate-fade-in-up overflow-hidden flex flex-col" style={{ maxHeight: "85dvh" }}>
-        {/* Handle bar */}
-        <div className="flex justify-center pt-2.5 pb-1">
+      <div
+        ref={sheetRef}
+        className="relative mx-auto w-full max-w-lg rounded-t-3xl bg-[#1e1d1b] dark:bg-[#1e1d1b] pb-safe shadow-2xl animate-fade-in-up overflow-hidden flex flex-col"
+        style={{
+          maxHeight: "85dvh",
+          transform: dragOffset > 0 ? `translateY(${dragOffset}px)` : undefined,
+          transition: dragStartYRef.current !== null ? "none" : "transform 0.25s ease-out",
+        }}
+      >
+        {/* Handle bar — drag to dismiss */}
+        <div
+          className="flex justify-center pt-2.5 pb-1 cursor-grab active:cursor-grabbing"
+          onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
+          onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
+          onTouchEnd={handleDragEnd}
+          onMouseDown={(e) => { handleDragStart(e.clientY); const move = (ev: MouseEvent) => handleDragMove(ev.clientY); const up = () => { handleDragEnd(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); }; window.addEventListener("mousemove", move); window.addEventListener("mouseup", up); }}
+        >
           <div className="h-1 w-10 rounded-full bg-neutral-600" />
         </div>
 
