@@ -57,15 +57,20 @@ function DoodlePreview({ strokes }: { strokes: DoodleStroke[] }) {
   return (
     <svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" className="w-full h-full">
       {strokes.map((s, i) => {
+        const isEraser = s.color === "__eraser__";
+        const color = isEraser ? "#faf9f5" : s.color;
+        if (s.points.length === 1) {
+          const p = s.points[0];
+          return <circle key={i} cx={p.x} cy={p.y} r={Math.max(s.width * 0.004, 0.008)} fill={color} />;
+        }
         const d = singleStrokePath(s);
         if (!d) return null;
-        const isEraser = s.color === "__eraser__";
         return (
           <path
             key={i}
             d={d}
             fill="none"
-            stroke={isEraser ? "#faf9f5" : s.color}
+            stroke={color}
             strokeWidth={s.width * 0.006}
             strokeLinecap="round"
             strokeLinejoin="round"

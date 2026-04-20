@@ -11,12 +11,18 @@ interface DoodleCanvasProps {
   dayLabel: string;
 }
 
-const COLOR_PALETTE = [
-  "#c96442", "#e8913a", "#e5c344", "#5daa68", "#4a90c4",
-  "#7b68c4", "#c45c8a", "#30302e", "#87867f", "#f5f4ed",
-];
 const THICKNESS_OPTIONS = [1.5, 3, 5, 8];
 const ERASER_COLOR = "__eraser__";
+
+function hslToHex(h: number, s: number, l: number): string {
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
 
 function drawStroke(ctx: CanvasRenderingContext2D, stroke: DoodleStroke, w: number, h: number, dpr: number, bgColor: string) {
   const isEraser = stroke.color === ERASER_COLOR;
@@ -26,7 +32,7 @@ function drawStroke(ctx: CanvasRenderingContext2D, stroke: DoodleStroke, w: numb
       const p = stroke.points[0];
       ctx.fillStyle = isEraser ? bgColor : stroke.color;
       ctx.beginPath();
-      ctx.arc(p.x * w, p.y * h, scaledWidth / 2, 0, Math.PI * 2);
+      ctx.arc(p.x * w, p.y * h, Math.max(scaledWidth / 2, 1.5 * dpr), 0, Math.PI * 2);
       ctx.fill();
     }
     return;
@@ -69,7 +75,7 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
   const dragStartYRef = useRef<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
 
-  const [penColor, setPenColor] = useState(COLOR_PALETTE[0]);
+  const [penColor, setPenColor] = useState("#c96442");
   const [penWidth, setPenWidth] = useState(THICKNESS_OPTIONS[1]);
   const [isEraser, setIsEraser] = useState(false);
 
@@ -129,7 +135,7 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
     const bg = isDark ? "#1e1d1b" : "#ffffff";
     ctx.fillStyle = isEraser ? bg : penColor;
     ctx.beginPath();
-    ctx.arc(p.x * canvasSize.w, p.y * canvasSize.h, scaledW / 2, 0, Math.PI * 2);
+    ctx.arc(p.x * canvasSize.w, p.y * canvasSize.h, Math.max(scaledW / 2, 1.5 * dprRef.current), 0, Math.PI * 2);
     ctx.fill();
   }, [toNorm, canvasSize.w, canvasSize.h, penColor, activeWidth, isEraser, isDark]);
 
@@ -170,8 +176,7 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
   const handleUndo = useCallback(() => {
     setStrokes((prev) => {
       if (prev.length === 0) return prev;
-      const removed = prev[prev.length - 1];
-      setRedoStack((r) => [...r, removed]);
+      setRedoStack((r) => [...r, prev[prev.length - 1]]);
       return prev.slice(0, -1);
     });
   }, []);
@@ -179,8 +184,7 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
   const handleRedo = useCallback(() => {
     setRedoStack((prev) => {
       if (prev.length === 0) return prev;
-      const restored = prev[prev.length - 1];
-      setStrokes((s) => [...s, restored]);
+      setStrokes((s) => [...s, prev[prev.length - 1]]);
       return prev.slice(0, -1);
     });
   }, []);
@@ -204,6 +208,28 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
     if (dragOffset > 120) onClose(); else setDragOffset(0);
   }, [dragOffset, onClose]);
 
+  const handleSpectrumPick = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const hue = Math.round(x * 360);
+    const hex = hslToHex(hue, 0.65, 0.50);
+    setPenColor(hex);
+    setIsEraser(false);
+  }, []);
+
+  const spectrumRef = useRef(false);
+  const onSpectrumDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+    spectrumRef.current = true;
+    handleSpectrumPick(e);
+  }, [handleSpectrumPick]);
+  const onSpectrumMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!spectrumRef.current) return;
+    handleSpectrumPick(e);
+  }, [handleSpectrumPick]);
+  const onSpectrumUp = useCallback(() => { spectrumRef.current = false; }, []);
+
   const topBtnClass = "flex items-center justify-center w-9 h-9 rounded-full bg-neutral-800/80 dark:bg-neutral-700/80 text-neutral-200 hover:bg-neutral-700 dark:hover:bg-neutral-600 transition-colors disabled:opacity-30";
 
   return (
@@ -212,14 +238,14 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
       <div
         className="relative mx-auto w-full max-w-lg rounded-t-3xl bg-[#1e1d1b] pb-safe shadow-2xl animate-fade-in-up overflow-hidden flex flex-col"
         style={{
-          maxHeight: "88dvh",
+          maxHeight: "92dvh",
           transform: dragOffset > 0 ? `translateY(${dragOffset}px)` : undefined,
           transition: dragStartYRef.current !== null ? "none" : "transform 0.25s ease-out",
         }}
       >
         {/* Handle */}
         <div
-          className="flex justify-center pt-2.5 pb-1 cursor-grab active:cursor-grabbing"
+          className="flex justify-center pt-2 pb-0.5 cursor-grab active:cursor-grabbing"
           onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
           onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
           onTouchEnd={handleDragEnd}
@@ -228,8 +254,8 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
           <div className="h-1 w-10 rounded-full bg-neutral-600" />
         </div>
 
-        {/* Top toolbar: trash, undo/redo, save */}
-        <div className="flex items-center justify-between px-3 py-1.5">
+        {/* Top toolbar */}
+        <div className="flex items-center justify-between px-3 py-1">
           <button type="button" onClick={handleClear} className={topBtnClass} aria-label="Clear all" disabled={strokes.length === 0}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
               <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
@@ -254,10 +280,10 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
           </button>
         </div>
 
-        <p className="px-4 pb-1 text-[11px] text-neutral-500 text-center">{dayLabel}</p>
+        <p className="px-4 pb-0.5 text-[11px] text-neutral-500 text-center">{dayLabel}</p>
 
         {/* Canvas */}
-        <div ref={containerRef} className="flex-1 mx-3 rounded-2xl overflow-hidden bg-white dark:bg-[#2a2927]" style={{ touchAction: "none", minHeight: "260px" }}>
+        <div ref={containerRef} className="flex-1 mx-2.5 rounded-2xl overflow-hidden bg-white dark:bg-[#2a2927]" style={{ touchAction: "none", minHeight: "200px" }}>
           <canvas
             ref={canvasRef}
             className="block w-full h-full"
@@ -270,77 +296,63 @@ export function DoodleCanvas({ initialStrokes, onSave, onDelete, onClose, dayLab
           />
         </div>
 
-        {/* Bottom tools: colors, thickness, eraser */}
-        <div className="px-3 pt-2.5 pb-1 space-y-2.5">
-          {/* Color palette */}
-          <div className="flex items-center justify-center gap-1.5">
-            {COLOR_PALETTE.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => { setPenColor(c); setIsEraser(false); }}
-                className={`w-7 h-7 rounded-full border-2 transition-all ${
-                  penColor === c && !isEraser
-                    ? "border-white scale-110 shadow-lg"
-                    : "border-transparent opacity-70 hover:opacity-100"
-                }`}
-                style={{ backgroundColor: c }}
-                aria-label={`Color ${c}`}
-              />
-            ))}
+        {/* Bottom tools */}
+        <div className="shrink-0 px-3 pt-2 pb-2 space-y-2">
+          {/* Color spectrum bar */}
+          <div className="flex items-center gap-2">
+            <div
+              className="flex-1 h-8 rounded-full overflow-hidden cursor-crosshair"
+              style={{
+                background: "linear-gradient(to right, hsl(0,65%,50%), hsl(30,65%,50%), hsl(60,65%,50%), hsl(120,65%,50%), hsl(180,65%,50%), hsl(240,65%,50%), hsl(300,65%,50%), hsl(360,65%,50%))",
+                touchAction: "none",
+              }}
+              onPointerDown={onSpectrumDown}
+              onPointerMove={onSpectrumMove}
+              onPointerUp={onSpectrumUp}
+              onPointerCancel={onSpectrumUp}
+              onPointerLeave={onSpectrumUp}
+            />
+            {/* Current color + black/white quick picks */}
+            <div className="flex items-center gap-1">
+              <span className="w-7 h-7 rounded-full border-2 border-neutral-600" style={{ backgroundColor: penColor }} />
+              <button type="button" onClick={() => { setPenColor("#1a1a1a"); setIsEraser(false); }} className="w-6 h-6 rounded-full bg-[#1a1a1a] border border-neutral-600" aria-label="Black" />
+              <button type="button" onClick={() => { setPenColor("#f5f4ed"); setIsEraser(false); }} className="w-6 h-6 rounded-full bg-[#f5f4ed] border border-neutral-600" aria-label="White" />
+            </div>
           </div>
 
           {/* Thickness + eraser row */}
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2.5">
             {THICKNESS_OPTIONS.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => { setPenWidth(t); setIsEraser(false); }}
-                className={`flex items-center justify-center w-9 h-9 rounded-full transition-all ${
-                  penWidth === t && !isEraser
-                    ? "bg-neutral-600 ring-1 ring-neutral-400"
-                    : "bg-neutral-800/60 hover:bg-neutral-700"
+                className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${
+                  penWidth === t && !isEraser ? "bg-neutral-600 ring-1 ring-neutral-400" : "bg-neutral-800/60 hover:bg-neutral-700"
                 }`}
                 aria-label={`Thickness ${t}`}
               >
-                <span
-                  className="rounded-full"
-                  style={{
-                    width: `${Math.max(4, t * 2.5)}px`,
-                    height: `${Math.max(4, t * 2.5)}px`,
-                    backgroundColor: isEraser ? "#87867f" : penColor,
-                  }}
-                />
+                <span className="rounded-full" style={{ width: `${Math.max(4, t * 2.2)}px`, height: `${Math.max(4, t * 2.2)}px`, backgroundColor: penColor }} />
               </button>
             ))}
-
-            <div className="w-px h-6 bg-neutral-700 mx-1" />
-
-            {/* Eraser */}
+            <div className="w-px h-5 bg-neutral-700 mx-0.5" />
             <button
               type="button"
               onClick={() => setIsEraser((v) => !v)}
-              className={`flex items-center justify-center w-9 h-9 rounded-full transition-all ${
-                isEraser
-                  ? "bg-neutral-600 ring-1 ring-neutral-400"
-                  : "bg-neutral-800/60 hover:bg-neutral-700"
-              }`}
+              className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${isEraser ? "bg-neutral-600 ring-1 ring-neutral-400" : "bg-neutral-800/60 hover:bg-neutral-700"}`}
               aria-label="Eraser"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-neutral-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-neutral-300">
                 <path d="M8.785 9.896l3.11-3.111 4.148 4.148-3.11 3.11-4.148-4.147Z" />
                 <path fillRule="evenodd" d="M3.545 12.033a2.75 2.75 0 0 1 0-3.889l5.6-5.6a2.75 2.75 0 0 1 3.889 0l4.422 4.422a2.75 2.75 0 0 1 0 3.89l-5.6 5.599a2.75 2.75 0 0 1-3.89 0l-4.42-4.422Zm1.06-2.828a1.25 1.25 0 0 0 0 1.768l4.421 4.42a1.25 1.25 0 0 0 1.768 0l5.6-5.6a1.25 1.25 0 0 0 0-1.767l-4.422-4.421a1.25 1.25 0 0 0-1.768 0l-5.6 5.6Z" clipRule="evenodd" />
               </svg>
             </button>
+            <button type="button" onClick={() => { handleClear(); onDelete(); }} className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-800/60 hover:bg-red-900/60 transition-colors" aria-label="Delete doodle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-red-400">
+                <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clipRule="evenodd" />
+              </svg>
+            </button>
           </div>
-        </div>
-
-        {/* Delete */}
-        <div className="px-4 pb-3 pt-1 flex justify-center">
-          <button type="button" onClick={() => { handleClear(); onDelete(); }} className="text-[11px] text-neutral-500 hover:text-red-400 transition-colors">
-            Delete this doodle
-          </button>
         </div>
       </div>
     </div>
