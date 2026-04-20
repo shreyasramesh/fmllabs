@@ -42,12 +42,41 @@ function strokesPath(strokes: DoodleStroke[]): string {
   return parts.join(" ");
 }
 
+function singleStrokePath(stroke: DoodleStroke): string {
+  if (stroke.points.length === 0) return "";
+  const pts = stroke.points;
+  const parts = [`M${pts[0].x},${pts[0].y}`];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const mx = (pts[i].x + pts[i + 1].x) / 2;
+    const my = (pts[i].y + pts[i + 1].y) / 2;
+    parts.push(`Q${pts[i].x},${pts[i].y} ${mx},${my}`);
+  }
+  if (pts.length > 1) {
+    const last = pts[pts.length - 1];
+    parts.push(`L${last.x},${last.y}`);
+  }
+  return parts.join(" ");
+}
+
 const DoodleThumbnail = memo(function DoodleThumbnail({ strokes }: { strokes: DoodleStroke[] }) {
-  const d = useMemo(() => strokesPath(strokes), [strokes]);
-  if (!d) return null;
   return (
     <svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet" className="w-full h-full">
-      <path d={d} fill="none" stroke="#c96442" strokeWidth={0.035} strokeLinecap="round" strokeLinejoin="round" />
+      {strokes.map((s, i) => {
+        const d = singleStrokePath(s);
+        if (!d) return null;
+        const isEraser = s.color === "__eraser__";
+        return (
+          <path
+            key={i}
+            d={d}
+            fill="none"
+            stroke={isEraser ? "#faf9f5" : s.color}
+            strokeWidth={s.width * 0.008}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        );
+      })}
     </svg>
   );
 });
