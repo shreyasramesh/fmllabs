@@ -12,21 +12,22 @@ interface DoodleCanvasProps {
 }
 
 const PEN_COLOR = "#c96442";
-const PEN_WIDTH = 3;
+const PEN_WIDTH_CSS = 3.5;
 
-function drawStroke(ctx: CanvasRenderingContext2D, stroke: DoodleStroke, w: number, h: number) {
+function drawStroke(ctx: CanvasRenderingContext2D, stroke: DoodleStroke, w: number, h: number, dpr: number) {
+  const scaledWidth = stroke.width * dpr;
   if (stroke.points.length < 2) {
     if (stroke.points.length === 1) {
       const p = stroke.points[0];
       ctx.fillStyle = stroke.color;
       ctx.beginPath();
-      ctx.arc(p.x * w, p.y * h, stroke.width / 2, 0, Math.PI * 2);
+      ctx.arc(p.x * w, p.y * h, scaledWidth / 2, 0, Math.PI * 2);
       ctx.fill();
     }
     return;
   }
   ctx.strokeStyle = stroke.color;
-  ctx.lineWidth = stroke.width;
+  ctx.lineWidth = scaledWidth;
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.beginPath();
@@ -48,11 +49,12 @@ function renderAll(
   w: number,
   h: number,
   isDark: boolean,
+  dpr: number,
 ) {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = isDark ? "#1e1d1b" : "#ffffff";
   ctx.fillRect(0, 0, w, h);
-  for (const s of strokes) drawStroke(ctx, s, w, h);
+  for (const s of strokes) drawStroke(ctx, s, w, h, dpr);
 }
 
 export function DoodleCanvas({
@@ -71,6 +73,7 @@ export function DoodleCanvas({
   const isDrawingRef = useRef(false);
   const [isDark, setIsDark] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 });
+  const dprRef = useRef(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1);
   const dragStartYRef = useRef<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
 
@@ -84,8 +87,8 @@ export function DoodleCanvas({
     if (!container) return;
     const measure = () => {
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      setCanvasSize({ w: Math.round(rect.width * dpr), h: Math.round(rect.height * dpr) });
+      dprRef.current = window.devicePixelRatio || 1;
+      setCanvasSize({ w: Math.round(rect.width * dprRef.current), h: Math.round(rect.height * dprRef.current) });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -100,7 +103,7 @@ export function DoodleCanvas({
     canvas.height = canvasSize.h;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    renderAll(ctx, strokes, canvasSize.w, canvasSize.h, isDark);
+    renderAll(ctx, strokes, canvasSize.w, canvasSize.h, isDark, dprRef.current);
   }, [strokes, canvasSize.w, canvasSize.h, isDark]);
 
   const toNorm = useCallback(
@@ -128,9 +131,10 @@ export function DoodleCanvas({
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
+      const scaledW = PEN_WIDTH_CSS * dprRef.current;
       ctx.fillStyle = PEN_COLOR;
       ctx.beginPath();
-      ctx.arc(p.x * canvasSize.w, p.y * canvasSize.h, PEN_WIDTH / 2, 0, Math.PI * 2);
+      ctx.arc(p.x * canvasSize.w, p.y * canvasSize.h, scaledW / 2, 0, Math.PI * 2);
       ctx.fill();
     },
     [toNorm, canvasSize.w, canvasSize.h],
@@ -149,8 +153,9 @@ export function DoodleCanvas({
       const ctx = canvas.getContext("2d");
       if (!ctx || pts.length < 2) return;
       const prev = pts[pts.length - 2];
+      const scaledW = PEN_WIDTH_CSS * dprRef.current;
       ctx.strokeStyle = PEN_COLOR;
-      ctx.lineWidth = PEN_WIDTH;
+      ctx.lineWidth = scaledW;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.beginPath();
@@ -166,7 +171,7 @@ export function DoodleCanvas({
     isDrawingRef.current = false;
     const pts = activeStrokeRef.current;
     if (pts.length === 0) return;
-    const newStroke: DoodleStroke = { points: [...pts], color: PEN_COLOR, width: PEN_WIDTH };
+    const newStroke: DoodleStroke = { points: [...pts], color: PEN_COLOR, width: PEN_WIDTH_CSS };
     activeStrokeRef.current = [];
     setStrokes((prev) => [...prev, newStroke]);
     setRedoStack([]);
