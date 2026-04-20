@@ -4216,9 +4216,25 @@ export default function ChatPage() {
     };
   } | null>(null);
   const skipGoalsMacroRecalculateRef = useRef(false);
-  const [dailyGoalsConfirmed, setDailyGoalsConfirmed] = useState(false);
-  const handleConfirmDailyGoals = useCallback(async (data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] }) => {
+  const [dailyGoalsConfirmed, setDailyGoalsConfirmed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const stored = localStorage.getItem("dailyGoalsDismissedDate");
+      const today = new Date();
+      const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      return stored === todayKey;
+    } catch { return false; }
+  });
+  const dismissDailyGoals = useCallback(() => {
     setDailyGoalsConfirmed(true);
+    try {
+      const today = new Date();
+      const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      localStorage.setItem("dailyGoalsDismissedDate", todayKey);
+    } catch { /* localStorage unavailable */ }
+  }, []);
+  const handleConfirmDailyGoals = useCallback(async (data: { caloriesTarget: number; exercisePlan: string; focusAreas: string[] }) => {
+    dismissDailyGoals();
     if (isAnonymous || incognitoMode) return;
     try {
       await fetch("/api/me/daily-goals", {
@@ -4227,8 +4243,8 @@ export default function ChatPage() {
         body: JSON.stringify(data),
       });
     } catch { /* best-effort */ }
-  }, [isAnonymous, incognitoMode]);
-  const handleSkipDailyGoals = useCallback(() => { setDailyGoalsConfirmed(true); }, []);
+  }, [dismissDailyGoals, isAnonymous, incognitoMode]);
+  const handleSkipDailyGoals = useCallback(() => { dismissDailyGoals(); }, [dismissDailyGoals]);
   const [conceptSavedToast, setConceptSavedToast] = useState(false);
   const [convertToDeepSuccess, setConvertToDeepSuccess] = useState(false);
   const [restartLoading, setRestartLoading] = useState(false);
