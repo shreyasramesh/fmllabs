@@ -9,6 +9,8 @@ interface DoodleMonthGridProps {
   doodlesByDay: Record<string, DoodleStroke[]>;
   selectedDay?: string;
   onDayTap: (dayKey: string) => void;
+  onExpand?: () => void;
+  hideYearHeader?: boolean;
 }
 
 const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -56,6 +58,8 @@ export const DoodleYearGrid = memo(function DoodleYearGrid({
   doodlesByDay,
   selectedDay,
   onDayTap,
+  onExpand,
+  hideYearHeader = false,
 }: DoodleMonthGridProps) {
   const today = todayKey();
 
@@ -79,9 +83,23 @@ export const DoodleYearGrid = memo(function DoodleYearGrid({
 
   return (
     <div className="px-4 pt-3 pb-4">
-      <div className="flex items-baseline gap-2 mb-4">
-        <p className="text-2xl font-bold text-foreground">{monthName}</p>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">{year}</p>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-baseline gap-2">
+          <p className={`font-bold text-foreground ${hideYearHeader ? "text-lg" : "text-2xl"}`}>{monthName}</p>
+          {!hideYearHeader && <p className="text-sm text-neutral-500 dark:text-neutral-400">{year}</p>}
+        </div>
+        {onExpand && (
+          <button
+            type="button"
+            onClick={onExpand}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/70 dark:bg-neutral-700/50 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+            aria-label="Show all months"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+              <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Weekday headers */}

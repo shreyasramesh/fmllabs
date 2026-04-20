@@ -53,6 +53,7 @@ export function LandingMobileDoodleTab() {
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string>(todayKey());
   const [canvasOpen, setCanvasOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -120,11 +121,38 @@ export function LandingMobileDoodleTab() {
 
   return (
     <div className="flex flex-col min-h-0 flex-1">
-      {/* Month grid (scrollable) */}
+      {/* Calendar (scrollable) */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-6 h-6 border-2 border-[#c96442]/30 border-t-[#c96442] rounded-full animate-spin" />
+          </div>
+        ) : expanded ? (
+          <div>
+            <div className="flex items-center justify-between px-4 pt-3 pb-1">
+              <p className="text-2xl font-bold text-foreground">{currentYear}</p>
+              <button
+                type="button"
+                onClick={() => setExpanded(false)}
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/70 dark:bg-neutral-700/50 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                aria-label="Collapse to current month"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+            {Array.from({ length: 12 }).map((_, m) => (
+              <DoodleYearGrid
+                key={m}
+                year={currentYear}
+                month={m}
+                doodlesByDay={doodlesByDay}
+                selectedDay={selectedDay}
+                onDayTap={handleDayTap}
+                hideYearHeader
+              />
+            ))}
           </div>
         ) : (
           <DoodleYearGrid
@@ -133,6 +161,7 @@ export function LandingMobileDoodleTab() {
             doodlesByDay={doodlesByDay}
             selectedDay={selectedDay}
             onDayTap={handleDayTap}
+            onExpand={() => setExpanded(true)}
           />
         )}
       </div>
