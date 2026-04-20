@@ -168,7 +168,7 @@ export function LandingMobileDoodleTab() {
   return (
     <div className="flex flex-col min-h-0 flex-1">
       {/* Calendar (scrollable) */}
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+      <div className={`flex-1 min-h-0 overflow-y-auto overscroll-contain ${panelCollapsed ? "flex flex-col justify-center" : ""}`}>
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-6 h-6 border-2 border-[#c96442]/30 border-t-[#c96442] rounded-full animate-spin" />
