@@ -1445,12 +1445,11 @@ function QuickNoteBottomStrip({
           next.delete(nudge.id);
         } else {
           next.add(nudge.id);
-          onNudgeInsert?.(nudge);
         }
         return next;
       });
     },
-    [onNudgeInsert],
+    [],
   );
 
   // ── Prompts state ──
