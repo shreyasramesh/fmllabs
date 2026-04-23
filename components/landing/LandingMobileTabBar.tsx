@@ -31,16 +31,11 @@ export const MOBILE_BOTTOM_TABS: ReadonlyArray<{
   description: string;
 }> = [
   { key: "quickNote", label: "Notes", ariaLabel: "Quick Notes", description: "Capture journals, reflections, and quick notes." },
-  { key: "doodle", label: "Doodle", ariaLabel: "Daily Doodle", description: "Draw a doodle to capture your day." },
-  { key: "nutrition", label: "Food", ariaLabel: "Nutrition", description: "Log meals and track calories, protein, and carbs." },
-  { key: "exercise", label: "Move", ariaLabel: "Exercise", description: "Record workouts and see daily movement." },
-  { key: "spend", label: "Spend", ariaLabel: "Spend", description: "Track purchases and stay within your budget." },
+  { key: "nutrition", label: "Nutrition", ariaLabel: "Nutrition", description: "Log meals and track calories, protein, and carbs." },
+  { key: "exercise", label: "Exercise", ariaLabel: "Exercise", description: "Record workouts and see daily movement." },
   { key: "weight", label: "Weight", ariaLabel: "Weight", description: "Log weight entries and watch your trend." },
   { key: "sleep", label: "Sleep", ariaLabel: "Sleep", description: "Track sleep duration, HRV, and recovery." },
-  { key: "commonplace", label: "Quotes", ariaLabel: "Commonplace", description: "Save quotes and build a commonplace book." },
-  { key: "metacognition", label: "Meta", ariaLabel: "Metacognition", description: "Chat with mentors and run metacognition sessions." },
-  { key: "life", label: "Life", ariaLabel: "Life Calendar", description: "Visualize your life in weeks, track goals, and plan for financial freedom." },
-  { key: "andMore", label: "More", ariaLabel: "Library and more", description: "Habits, groups, mental models, long-term memory, and more." },
+  { key: "metacognition", label: "Think", ariaLabel: "Think", description: "Chat with mentors and run metacognition sessions." },
 ];
 
 export function MobileTabIcon({ tab, active }: { tab: MobileBottomTab; active: boolean }) {

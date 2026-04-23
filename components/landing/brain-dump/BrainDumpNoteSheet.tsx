@@ -1431,7 +1431,7 @@ function QuickNoteBottomStrip({
     [habits, habitCompletions, today],
   );
   const habitsDone = habitRows.filter((r) => r.doneToday).length;
-  const showHabits = habits.length > 0 && onHabitToggle != null;
+  const showHabits = false;
 
   // ── Nudges state ──
   const [nudgeActiveCategory, setNudgeActiveCategory] = useState<WellnessCategory>("oxytocin");
@@ -1472,12 +1472,12 @@ function QuickNoteBottomStrip({
         ) : null}
         {showNudges ? (
           <button type="button" onClick={() => togglePanel("nudges")} className={`${PILL_BASE} ${activePanel === "nudges" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "nudges"}>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Neuro Nudges</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Feels</span>
           </button>
         ) : null}
         {showPrompts ? (
           <button type="button" onClick={() => togglePanel("prompts")} className={`${PILL_BASE} ${activePanel === "prompts" ? PILL_ACTIVE : PILL_INACTIVE}`} aria-expanded={activePanel === "prompts"}>
-            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Journal Ideas</span>
+            <span className="whitespace-nowrap font-normal text-[#5e5d59] opacity-90 dark:text-[#87867f]">Write</span>
           </button>
         ) : null}
         {imageIngestSlot ? (
@@ -2502,17 +2502,7 @@ export function BrainDumpCaptureView({
                 </div>
               </div>
             ) : null}
-            {displayRows.length === 0 && captureEntries.length === 0 && !dailyGoalsConfirmed && onConfirmDailyGoals && onSkipDailyGoals ? (
-              <div className="px-1 pt-2 pb-1">
-                <DailyGoalChipsCard
-                  defaultCalories={goalCaloriesTarget}
-                  defaultExerciseMinutes={goalExerciseSessionMinutes}
-                  nutritionChallenges={goalNutritionChallenges}
-                  onConfirm={onConfirmDailyGoals}
-                  onSkip={onSkipDailyGoals}
-                />
-              </div>
-            ) : displayRows.length === 0 && captureEntries.length === 0 ? (
+            {displayRows.length === 0 && captureEntries.length === 0 ? (
               <div className="flex flex-col items-center gap-1 py-8 text-center">
                 <p className="text-sm text-neutral-400 dark:text-neutral-500">Nothing logged yet</p>
                 <p className="text-xs text-neutral-300 dark:text-neutral-600">Start typing below to add your first entry</p>
