@@ -4103,7 +4103,7 @@ export default function ChatPage() {
   const activeResponseVerbosityRef = useRef<ResponseVerbosity>("compact");
   const [pendingSecondOrder, setPendingSecondOrder] = useState(false);
   /** Default on: cite mental models + saved context in second-order mode. */
-  const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(true);
+  const [secondOrderCitationsEnabled, setSecondOrderCitationsEnabled] = useState(false);
   /** When true, Gemini responds in ultra-terse caveman style. */
   const [cavemanMode, setCavemanMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22070,62 +22070,13 @@ export default function ChatPage() {
                 </div>
 
                     <div className="flex items-center justify-between gap-4 py-4">
-                      <span className="text-[15px] font-medium text-foreground">Detailed responses</span>
-                <button
-                  type="button"
-                        role="switch"
-                        aria-checked={newConversationResponseVerbosity === "detailed"}
-                        aria-label="Detailed responses"
-                  onClick={() => {
-                          const next = newConversationResponseVerbosity === "detailed" ? "compact" : "detailed";
-                          setNewConversationResponseVerbosity(next);
-                          if (next === "detailed" && cavemanMode) setCavemanMode(false);
-                        }}
-                        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
-                          newConversationResponseVerbosity === "detailed"
-                            ? "bg-[#D1833C]"
-                            : "bg-neutral-300 dark:bg-neutral-600"
-                        }`}
-                      >
-                        <span
-                          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
-                            newConversationResponseVerbosity === "detailed" ? "translate-x-7" : "translate-x-1"
-                          }`}
-                        />
-                </button>
+                      <span className="text-[15px] font-medium text-foreground">Response length</span>
+                      <div className="flex rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+                        <button type="button" onClick={() => setNewConversationResponseVerbosity("compact")} className={`px-4 py-2 text-sm font-medium transition-colors ${newConversationResponseVerbosity !== "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}>Short</button>
+                        <button type="button" onClick={() => setNewConversationResponseVerbosity("detailed")} className={`px-4 py-2 text-sm font-medium transition-colors ${newConversationResponseVerbosity === "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}>Long</button>
+                      </div>
                     </div>
-
-                    <div className="flex items-center justify-between gap-4 py-4">
-                      <span className="text-[15px] font-medium text-foreground">Caveman mode</span>
-                    <button
-                      type="button"
-                      role="switch"
-                        aria-checked={cavemanMode}
-                        aria-label="Caveman mode"
-                        onClick={() => {
-                          const next = !cavemanMode;
-                          setCavemanMode(next);
-                          if (next && newConversationResponseVerbosity === "detailed") {
-                            setNewConversationResponseVerbosity("compact");
-                          }
-                          fetch("/api/me/settings", {
-                            method: "PATCH",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ cavemanMode: next }),
-                          }).catch(() => {});
-                        }}
-                        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors ${
-                          cavemanMode ? "bg-[#D1833C]" : "bg-neutral-300 dark:bg-neutral-600"
-                      }`}
-                    >
-                      <span
-                          className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition ${
-                            cavemanMode ? "translate-x-7" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
                   </div>
-                </div>
 
               <button
                 type="button"

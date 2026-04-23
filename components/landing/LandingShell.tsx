@@ -1049,24 +1049,13 @@ export function LandingShell({
                         checked={secondOrderCitationsEnabled}
                         onChange={onToggleSecondOrderCitations}
                       />
-                      <ToggleRow
-                        label="Detailed responses"
-                        checked={responseVerbosity === "detailed"}
-                        onChange={() => {
-                          const next = responseVerbosity === "detailed" ? "compact" : "detailed";
-                          onResponseVerbosityChange(next);
-                          if (next === "detailed" && cavemanMode) onCavemanModeChange(false);
-                        }}
-                      />
-                      <ToggleRow
-                        label="Caveman mode"
-                        checked={cavemanMode}
-                        onChange={() => {
-                          const next = !cavemanMode;
-                          onCavemanModeChange(next);
-                          if (next && responseVerbosity === "detailed") onResponseVerbosityChange("compact");
-                        }}
-                      />
+                      <div className="flex items-center justify-between gap-3 py-2">
+                        <span className="text-[12px] font-medium text-[#141413] dark:text-[#faf9f5]">Response length</span>
+                        <div className="flex rounded-lg border border-[#e8e6dc] dark:border-[#3d3d3a] overflow-hidden">
+                          <button type="button" onClick={() => onResponseVerbosityChange("compact")} className={`px-3 py-1 text-[11px] font-medium transition-colors ${responseVerbosity !== "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-[#5e5d59] dark:text-[#87867f] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e]"}`}>Short</button>
+                          <button type="button" onClick={() => onResponseVerbosityChange("detailed")} className={`px-3 py-1 text-[11px] font-medium transition-colors ${responseVerbosity === "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-[#5e5d59] dark:text-[#87867f] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e]"}`}>Long</button>
+                        </div>
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -1855,24 +1844,13 @@ export function LandingShell({
                   checked={secondOrderCitationsEnabled}
                   onChange={onToggleSecondOrderCitations}
                 />
-                <ToggleRow
-                  label="Detailed responses"
-                  checked={responseVerbosity === "detailed"}
-                  onChange={() => {
-                    const next = responseVerbosity === "detailed" ? "compact" : "detailed";
-                    onResponseVerbosityChange(next);
-                    if (next === "detailed" && cavemanMode) onCavemanModeChange(false);
-                  }}
-                />
-                <ToggleRow
-                  label="Caveman mode"
-                  checked={cavemanMode}
-                  onChange={() => {
-                    const next = !cavemanMode;
-                    onCavemanModeChange(next);
-                    if (next && responseVerbosity === "detailed") onResponseVerbosityChange("compact");
-                  }}
-                />
+                <div className="flex items-center justify-between gap-3 py-2">
+                  <span className="text-[12px] font-medium text-[#141413] dark:text-[#faf9f5]">Response length</span>
+                  <div className="flex rounded-lg border border-[#e8e6dc] dark:border-[#3d3d3a] overflow-hidden">
+                    <button type="button" onClick={() => onResponseVerbosityChange("compact")} className={`px-3 py-1 text-[11px] font-medium transition-colors ${responseVerbosity !== "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-[#5e5d59] dark:text-[#87867f] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e]"}`}>Short</button>
+                    <button type="button" onClick={() => onResponseVerbosityChange("detailed")} className={`px-3 py-1 text-[11px] font-medium transition-colors ${responseVerbosity === "detailed" ? "bg-[#c96442] text-white" : "bg-transparent text-[#5e5d59] dark:text-[#87867f] hover:bg-[#f5f4ed] dark:hover:bg-[#30302e]"}`}>Long</button>
+                  </div>
+                </div>
               </div>
               <button
                 type="button"
